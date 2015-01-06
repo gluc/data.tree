@@ -1,0 +1,9 @@
+Package: ahp
+Type: Package
+Title: Take decisions using the Analytic Hierarchy Process (AHP)
+Version: 1.0
+Date: 2015-01-06
+Author: Christoph Glur
+Maintainer: Christoph Glur <christoph.glur@ipub.ch>
+Description: Uses the Analytic Hierarchy Process (AHP) according to Saaty
+License: GPL-2
