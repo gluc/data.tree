@@ -19,8 +19,8 @@ NodeBase <- setRefClass(Class = "NodeBase",
                       
                       
                       GetGlobalPriority = function() {
-                        if (!isNull(parent)) {
-                          return (priority * parent$GetGlobalPriority)
+                        if (!parent$name == "NA") {
+                          return (priority * parent$GetGlobalPriority())
                         } else {
                           return (priority)
                         }
