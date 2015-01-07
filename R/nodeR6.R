@@ -3,10 +3,10 @@ library(R6)
 Node <- R6Class("Node",
                 lock = FALSE,
                     public = list(
-                      preferences = NA,
                       children = list(),
-                      priority = NA,
-                      parent = NULL,
+                      childPriorities = NA,
+                      preferenceMatrix = NA,
+                      parents = list(),
                       
                       initialize=function(name, ...) {
                         
@@ -14,19 +14,25 @@ Node <- R6Class("Node",
                         invisible (self)
                       },
                       
-                      SetPreferences = function(preferences) {
-                        self$preferences <- preferences
-                        priorities <- Ahp(preferences)$ahp
-                        for (childName in names(priorities)) {
-                          self$children[[childName]]$priority <<- priorities[[childName]]
-                        }
-                        invisible (self) 
+                      CalculatePreferences = function(preferenceFunction) {
+                        combo <- self$preferenceCombinations
+                        prefs <- apply(combo, 2, function(x) preferenceFunction(self$children[[ x[1] ]], self$children[[ x[2] ]]))
+                        mat <- AhpMatrix(combo[1,], combo[2,], prefs)
+                        self$SetPreferenceMatrix(mat)
+                        invisible (self)
                       },
                       
                       
-                      
+                      SetPreferenceMatrix = function(preferenceMatrix) {
+                        
+                        if (missing(preferenceMatrix)) return (self$preferenceMatrix)
+                        
+                        self$preferenceMatrix <- preferenceMatrix
+                        self$childPriorities <- Ahp(preferenceMatrix)$ahp
+                      },
                       
                       AddAlternatives = function(alternativesList) {
+                        
                         for (child in self$children) {
                           if (child$count == 0) {
                             #leave
@@ -49,7 +55,7 @@ Node <- R6Class("Node",
                       
                       AddChildNode = function(child) {
                         self$children[[child$name]] <- child
-                        child$parent <- self
+                        child$parents[[self$name]] <- self
                         invisible (child)
                       },
                       
@@ -61,10 +67,13 @@ Node <- R6Class("Node",
                       
                       AddSiblingNode = function(sibling) {
                         if (self$isRoot) stop("Cannot add sibling to root!")
-                        self$parent$children[[sibling$name]] <- sibling
-                        sibling$parent <- self$parent
+                        for (parent in self$parents) {
+                          parent$AddChildNode(sibling)
+                        }
                         invisible (sibling)
                       },
+                      
+                      
                       
                       
                       
@@ -90,13 +99,27 @@ Node <- R6Class("Node",
                     ),
                     active = list(
                       
+                      
+                      
+                      
                       name = function(value) {
                         if (missing(value)) return (self$p_name)
                         else self$p_name <- value
                       },
                       
+                      
+                      priority = function() {
+                        if (self$isRoot) {
+                          return (1)
+                        } else if (length(self$parents) > 1) {
+                          stop("Cannot find priority if node has more than one parents.")
+                        } else {
+                          return (self$parents[[1]]$childPriorities[[self$name]])
+                        }
+                      },
+                      
                       isRoot = function() {
-                        return (is.null(self$parent))
+                        return (length(self$parents) == 0)
                       },
                       
                       count = function() {
@@ -109,11 +132,16 @@ Node <- R6Class("Node",
                       
                       globalPriority = function() {
                         if (!self$isRoot) {
-                          return (self$priority * self$parent$globalPriority)
+                          return ( sum( sapply (self$parents, function(x) x$childPriorities[self$name] * x$globalPriority) ) )
                         } else {
                           return (1)
                         }
+                      },
+                      
+                      globalChildPriorities = function() {
+                        return (self$childPriorities * self$globalPriority)
                       }
+                      
                     ),
                 
                 
