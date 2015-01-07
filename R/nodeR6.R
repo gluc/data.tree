@@ -1,12 +1,18 @@
 library(R6)
 
 Node <- R6Class("Node",
+                lock = FALSE,
                     public = list(
-                      name = NA,
                       preferences = NA,
                       children = list(),
                       priority = NA,
                       parent = NULL,
+                      
+                      initialize=function(name, ...) {
+                        
+                        if (!missing(name)) self$name <- name
+                        invisible (self)
+                      },
                       
                       SetPreferences = function(preferences) {
                         self$preferences <- preferences
@@ -14,40 +20,53 @@ Node <- R6Class("Node",
                         for (childName in names(priorities)) {
                           self$children[[childName]]$priority <<- priorities[[childName]]
                         }
-                          
+                        invisible (self) 
                       },
                       
                       
-                      Count = function() {
-                        return (length(self$children))
-                      },
+                      
                       
                       AddAlternatives = function(alternativesList) {
                         for (child in self$children) {
-                          if (child$Count() == 0) {
+                          if (child$count == 0) {
                             #leave
                             for (alternative in alternativesList) {
-                              child$AddChild(alternative)
+                              child$AddChildNode(alternative)
                             }
                           } else {
                             child$AddAlternatives(alternativesList)
                           }
                         }
+                        invisible (self)
                         
                       },
                       
-                      GetPreferenceCombinations = function() {
-                          combn(names(self$children), 2)
+                      
+                      AddChild = function(name) {
+                        child <- Node$new(name)
+                        invisible (self$AddChildNode(child))
                       },
                       
-                      AddChild = function(child) {
+                      AddChildNode = function(child) {
                         self$children[[child$name]] <- child
                         child$parent <- self
+                        invisible (child)
                       },
                       
-                      IsRoot = function() {
-                        return (is.null(self$parent))
+                      
+                      AddSibling = function(name) {
+                        sibling <- Node$new(name)
+                        invisible (self$AddSiblingNode(sibling))
                       },
+                      
+                      AddSiblingNode = function(sibling) {
+                        if (self$isRoot) stop("Cannot add sibling to root!")
+                        self$parent$children[[sibling$name]] <- sibling
+                        sibling$parent <- self$parent
+                        invisible (sibling)
+                      },
+                      
+                      
                       
                       Find = function(path) {
                         if (length(path) == 0) {
@@ -62,22 +81,44 @@ Node <- R6Class("Node",
                             return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
                           }
                         }
+                      }
+                      
+                      
+                      
+                      
+                      
+                    ),
+                    active = list(
+                      
+                      name = function(value) {
+                        if (missing(value)) return (self$p_name)
+                        else self$p_name <- value
                       },
                       
-                      GetGlobalPriority = function() {
-                        if (!self$IsRoot()) {
-                          return (self$priority * self$parent$GetGlobalPriority())
+                      isRoot = function() {
+                        return (is.null(self$parent))
+                      },
+                      
+                      count = function() {
+                        return (length(self$children))
+                      },
+                      
+                      preferenceCombinations = function() {
+                        combn(names(self$children), 2)
+                      },
+                      
+                      globalPriority = function() {
+                        if (!self$isRoot) {
+                          return (self$priority * self$parent$globalPriority)
                         } else {
                           return (1)
                         }
-                      },
-                      
-                      initialize=function(name, ...) {
-                      
-                        if (!missing(name)) self$name <- name
-                        
                       }
-                      
+                    ),
+                
+                
+                    private = list(
+                      p_name = ""
                     )
                   )
 
