@@ -18,14 +18,6 @@ NodeBase <- setRefClass(Class = "NodeBase",
                       },
                       
                       
-                      GetGlobalPriority = function() {
-                        if (!parent$name == "NA") {
-                          return (priority * parent$GetGlobalPriority())
-                        } else {
-                          return (priority)
-                        }
-                      },
-                      
                       Count = function() {
                         return (length(children))
                       },
@@ -64,7 +56,7 @@ NodeBase <- setRefClass(Class = "NodeBase",
                     )
                   )
 
-
+#http://stackoverflow.com/questions/25613238/document-reference-class-and-its-methods-with-roxygen2
 Node <- setRefClass(Class = "Node", 
                     contains = "NodeBase",
                     fields = list(parent = "NodeBase"),
@@ -72,10 +64,22 @@ Node <- setRefClass(Class = "Node",
                     methods = list(
                       AddChild = function(child) {
                         callSuper(child)
-                        child$parent <- .self
+                        #child$parent <- .self
                       },
                       
-                      initialize=function(name = "NA", ...) {
+                      IsRoot = function() {
+                        return (parent$name == "NA")
+                      },
+                      
+                      GetGlobalPriority = function() {
+                        if (!parent$name == "NA") {
+                          return (priority * parent$GetGlobalPriority())
+                        } else {
+                          return (priority)
+                        }
+                      },
+                      
+                      initialize=function(name, ...) {
                         callSuper(name, ...)
                         .self
                       }
