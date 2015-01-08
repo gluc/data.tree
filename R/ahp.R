@@ -134,57 +134,18 @@ GetAhpAdjustment <- function(oldValue, adjustment)
 }
 
 
-#derive AHP preference linearly based on sample
-Sim <- function(x){ 
-  n <- length(x)
-  if (max(x) > min(x)) r = 1 + 8 * (x - min(x)) / (max(x) - min(x))
-  if (max(x) <= min(x)) r = matrix(1, n, 1)
-  w = r / sum(r)
-  return (w)
-}
- 
-#derive AHP preference of x logarithmically based on a min and a max value
-Band <- function(x, mini, maxi){
-  n <- length(x)
-  if (max(x) <= min(x)) return (matrix(1, n, 1))
-  
-  
-  r = 1 + 8 * (log(x) - log(mini)) / (log(maxi) - log(mini))
-  r[which(r > 9)] = 9
-  r[which(r < 1)] = 1
-  
-  M = matrix(0, n, n)
-  for (i in 1:n) {
-    for (j in 1:n) {
-      M[i, j] = r[[i]] / r[[j]]
-    }
+LinearComparison <- function(a, b, min_x, max_x, preferSmall = FALSE, fieldName = NA) {
+  #scale to 1...9
+  if (!is.na(fieldName)) {
+    a <- a[[fieldName]]
+    b <- b[[fieldName]]
   }
-  M[which(M > 9)] = 9
-  M[which(M < 0)] = 0
-  
-  w = Ahp(M)
-  return (w) 
+  v <- 1 + 8 * abs(a - b) / (max_x - min_x)
+  if (xor(a < b, preferSmall)) v <- 1 / v
+  return (v)
 }
 
 
-PreferredString <- function(x, dom){
-
-  n <- length(x)
-  r = matrix(9, n, 1)
-  r[grep(dom, x)] = 1
-  
-  M = matrix(0,n,n)
-  for (i in 1:n) {
-    for (j in 1:n) {
-      M[i,j] = r[[j]] / r[[i]]
-    }
-  }
-  M[which(M > 9)] = 9
-  M[which(M < 0)] = 0
-  
-  w = Ahp(M)
-  return (w)
-}
 
 
 

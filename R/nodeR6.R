@@ -6,21 +6,24 @@ Node <- R6Class("Node",
                       children = list(),
                       childPriorities = NA,
                       preferenceMatrix = NA,
+                      classifierName = NA,
                       parents = list(),
                       
-                      initialize=function(name, ...) {
+                      initialize=function(name, classifierName, ...) {
                         
                         if (!missing(name)) self$name <- name
+                        if (!missing(classifierName)) self$classifierName <- classifierName
                         invisible (self)
                       },
                       
-                      CalculatePreferences = function(preferenceFunction) {
+                      CalculatePreferences = function(FUN, ...) {
                         combo <- self$preferenceCombinations
-                        prefs <- apply(combo, 2, function(x) preferenceFunction(self$children[[ x[1] ]], self$children[[ x[2] ]]))
+                        prefs <- apply(combo, 2, function(x) FUN(self$children[[ x[1] ]], self$children[[ x[2] ]], ...))
                         mat <- AhpMatrix(combo[1,], combo[2,], prefs)
                         self$SetPreferenceMatrix(mat)
                         invisible (self)
                       },
+                      
                       
                       
                       SetPreferenceMatrix = function(preferenceMatrix) {
@@ -33,23 +36,33 @@ Node <- R6Class("Node",
                       
                       AddAlternatives = function(alternativesList) {
                         
-                        for (child in self$children) {
-                          if (child$count == 0) {
-                            #leave
-                            for (alternative in alternativesList) {
-                              child$AddChildNode(alternative)
-                            }
-                          } else {
-                            child$AddAlternatives(alternativesList)
+                        if(length(self$parents) == 1) {
+                          parent = self$parents[[1]]
+                          if(!is.na(parent$classifierName)) {
+                            alternativesList <- alternativesList[which(sapply(alternativesList, function(x) x[[parent$classifierName]]) == self$name)]
                           }
                         }
+                        
+                        for (child in self$children) {
+                          child$AddAlternatives(alternativesList)
+                        }
+                        
+                        if (self$count == 0) {
+                          #leaf
+                          for (alternative in alternativesList) {
+                            #if (is.na(self$parent$classifierName) || alternative[[self$parent$classifierName]] == self$name) {
+                              self$AddChildNode(alternative)
+                            #}
+                          }
+                        }
+                        
                         invisible (self)
                         
                       },
                       
                       
-                      AddChild = function(name) {
-                        child <- Node$new(name)
+                      AddChild = function(name, classifierName = NA) {
+                        child <- Node$new(name, classifierName)
                         invisible (self$AddChildNode(child))
                       },
                       

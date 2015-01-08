@@ -1,17 +1,24 @@
 
-#awkward but very concise form to define our ahp category
-
 root <- Node$new("Chose the best car for the Jones family")
-  root$AddChild("Cost"
-        )$AddChild("Purchase Price"
-              )$AddSibling("Fuel Costs"
-              )$AddSibling("Maintenance Costs"
-              )$AddSibling("Resale Value")
-  root$AddChild("Safety")
-  root$AddChild("Style")
-  root$AddChild("Capacity"
-        )$AddChild("Cargo Capacity"
-        )$AddSibling("Passenger Capacity")
+  cost <- root$AddChild("Cost")
+    purchasePrice <- cost$AddChild("Purchase Price")
+    fuelCosts <- cost$AddChild("Fuel Costs")
+    maintenanceCosts <- cost$AddChild("Maintenance Costs")
+    resaleValue <- cost$AddChild("Resale Value")
+  safety <- root$AddChild("Safety")
+    curbWeight <- safety$AddChild("Curb Weight")
+    safetyClass <- safety$AddChild("Safety Class", "safetyClass")
+      midsizeCar <- safetyClass$AddChild("Midsize Car")
+      midsizeSUV <- safetyClass$AddChild("Midsize SUV")
+      smallSUV <- safetyClass$AddChild("Small SUV")
+      minivan <- safetyClass$AddChild("Minivan")
+    crashRating <- safety$AddChild("Crash Rating")
+  style <- root$AddChild("Style")
+  capacity <- root$AddChild("Capacity")
+    cargoCapacity <- capacity$AddChild("Cargo Capacity")
+    passengerCapacity <- capacity$AddChild("Passenger Capacity")
+
+
 
 print(root)
 
@@ -48,6 +55,15 @@ crv <- Node$new("CR-V SUV")
 element <- Node$new("Element SUV")
 odyssey <- Node$new("Odyssey Minivan")
 
+
+accord_sedan$safetyClass <- "Midsize Car"
+accord_hybrid$safetyClass <- "Midsize Car"
+pilot$safetyClass <- "Midsize SUV"
+crv$safetyClass <- "Small SUV"
+element$safetyClass <- "Small SUV"
+odyssey$safetyClass <- "Minivan"
+
+
 # add alternatives to leaves
 
 alternatives <- list(accord_sedan,
@@ -70,6 +86,8 @@ names(pilot2$parents)
 pilot2 <- root$Find(c("Capacity", "Cargo Capacity", "Pilot SUV"))
 names(pilot2$parents)
 
+# PURCHASE PRICE
+# ==============
 
 # Let's start setting preferences for our alternatives
 # First, we do this for the purchase price.
@@ -132,7 +150,53 @@ root$Find(c("Cost", "Purchase Price"))$preferenceMatrix
 
 root$Find(c("Cost", "Purchase Price"))$childPriorities
 
+# CURB WEIGHT
+# ==============
 
-# Let's move on to the next criteria: Safety.
-# Here, we don't have a function, but we set the the preferenceMatrix 
-# TODO: add Curb Weight, Safety Class and Crash Rating as AHP categories!
+# Let's move on to the next criteria: Safety.Curb Weight. 
+
+accord_sedan$curb_weight <- 3289
+accord_hybrid$curb_weight <- 3501
+pilot$curb_weight <- 4264
+crv$curb_weight <- 3389
+element$curb_weight <- 3433
+odyssey$curb_weight <- 4385
+
+# The Jones' believe that a heavier car is safer. 
+# We use the ahp function LinearComparison, assuming that the overall lightest existing car is 3000, and the heaviest ist 5000.
+# Note that we pass along additional parameters to the LinearComparison function.
+
+
+root$Find(c("Safety", "Curb Weight"))$CalculatePreferences(LinearComparison, fieldName = "curb_weight", min_x = 3000, max_x = 5000)
+
+# SAFETY CLASS
+# ============
+
+safetyClass <- Node$new("Safety Class")
+safetyClass$AddChild("Midsize Car")
+safetyClass$AddChild("Midsize SUV")
+safetyClass$AddChild("Small SUV")
+safetyClass$AddChild("Minivan")
+
+prefs <- safetyClass$preferenceCombinations
+print(prefs)
+
+prefs1 <- c("Midsize Car", "Midsize Car", "Midsize Car", "Midsize SUV", "Midsize SUV", "Small SUV")
+prefs2 <- c("Midsize SUV", "Small SUV"  , "Minivan"    , "Small SUV"  , "Minivan"    , "Minivan")
+prefs3 <- c( 1/4         ,  1/2         ,  1/2         ,  4           ,  3           ,  1)
+
+ahp <- AhpMatrix(prefs1, prefs2, prefs3)
+
+#Let's check the consistency of our choices:
+
+Ahp(ahp)
+
+
+accord_sedan$safetyClass <- "Midsize Car"
+accord_hybrid$safetyClass <- "Midsize Car"
+pilot$safetyClass <- "Midsize SUV"
+crv$safetyClass <- "Small SUV"
+element$safetyClass <- "Small SUV"
+odyssey$safetyClass <- "Minivan"
+
+root$Find(c("Safety", "Safety Class"))
