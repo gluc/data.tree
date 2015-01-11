@@ -48,13 +48,13 @@ Ahp <- function(mat){
 #' AhpMatrix(cat1, cat2, pref)
 #' @seealso \code{\link{ahp}}
 #' @export AhpMatrix
-AhpMatrix <- function(cat1, cat2, pref){
-	cats <- unique(c(cat1, cat2))
+AhpMatrix <- function(p){
+	cats <- unique(c(levels(p$a), levels(p$b)))
 	mat <- matrix(1, nrow = length(cats), length(cats), byrow = TRUE, dimnames = list(cats, cats))
-	for (i in 1:length(cat1))
+	for (i in 1:dim(p)[1])
 	{
-		mat[cat1[i], cat2[i]] <- pref[i]
-		mat[cat2[i], cat1[i]] <- 1/ pref[i]
+		mat[as.character(p[i,1]), as.character(p[i,2])] <- p[i,3]
+		mat[as.character(p[i,2]), as.character(p[i,1])] <- 1/ p[i,3]
 	}
 	
 	return(mat)

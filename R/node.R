@@ -1,92 +1,89 @@
-NodeBase <- setRefClass(Class = "NodeBase",
-                    fields = list(
-                      name = "character",
-                      preferences = "matrix",
-                      children = "list",
-                      priority = "numeric"
-                    ),
-                    methods = list(
-                      
-                      
-                      SetPreferences = function(preferences) {
-                        preferences <<- preferences
-                        priorities <- Ahp(preferences)$ahp
-                        for (childName in names(priorities)) {
-                          children[[childName]]$priority <<- priorities[[childName]]
-                        }
-                          
-                      },
-                      
-                      
-                      Count = function() {
-                        return (length(children))
-                      },
-                      
-                      AddChild = function(child) {
-                        children[[child$name]] <<- child
-                      },
-                      
-                      AddAlternatives = function(alternativesList) {
-                        for (child in children) {
-                          if (child$Count() == 0) {
-                            #leave
-                            for (alternative in alternativesList) {
-                              child$AddChild(alternative)
-                            }
-                          } else {
-                            child$AddAlternatives(alternativesList)
-                          }
-                        }
-                        
-                      },
-                      
-                      GetPreferenceCombinations = function() {
-                          combn(names(children), 2)
-                      },
-                      
-                      initialize=function(name = "NA", ...) {
-                      
-                        callSuper(...)
-                        
-                        .self$name <<- name
-                        
-                        .self
-                      }
-                      
-                    )
-                  )
+library(R6)
 
-#http://stackoverflow.com/questions/25613238/document-reference-class-and-its-methods-with-roxygen2
-Node <- setRefClass(Class = "Node", 
-                    contains = "NodeBase",
-                    fields = list(parent = "NodeBase"),
-                    
-                    methods = list(
-                      AddChild = function(child) {
-                        callSuper(child)
-                        #child$parent <- .self
-                      },
-                      
-                      IsRoot = function() {
-                        return (parent$name == "NA")
-                      },
-                      
-                      GetGlobalPriority = function() {
-                        if (!parent$name == "NA") {
-                          return (priority * parent$GetGlobalPriority())
-                        } else {
-                          return (priority)
-                        }
-                      },
+Node <- R6Class("Node",
+                lock = FALSE,
+                    public = list(
+                      children = list(),
+                      parent = NULL,
                       
                       initialize=function(name, ...) {
-                        callSuper(name, ...)
-                        .self
+                        if (!missing(name)) self$name <- name
+                        invisible (self)
+                      },
+                      
+                      
+                      AddChild = function(name) {
+                        child <- Node$new(name)
+                        invisible (self$AddChildNode(child))
+                      },
+                      
+                      AddChildNode = function(child) {
+                        self$children[[child$name]] <- child
+                        child$parent <- self
+                        invisible (child)
+                      },
+                      
+                      
+                      AddSibling = function(name) {
+                        sibling <- Node$new(name)
+                        invisible (self$AddSiblingNode(sibling))
+                      },
+                      
+                      AddSiblingNode = function(sibling) {
+                        if (self$isRoot) stop("Cannot add sibling to root!")
+                        self$parent$AddChildNode(sibling)
+                        invisible (sibling)
+                      },
+                      
+                      
+                      
+                      
+                      
+                      Find = function(path) {
+                        if (length(path) == 0) {
+                          return (self)
+                        } else {
+                          child <- self$children[[path[1]]]
+                          if (is.null(child)) {
+                            return (NULL)
+                          } else if (length(path) == 1) {
+                            return (child)
+                          } else {
+                            return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
+                          }
+                        }
                       }
-                    
-                      )
-                    
+                      
+                      
+                      
+                      
+                      
+                    ),
+                    active = list(
+                      
+                      
+                      
+                      
+                      name = function(value) {
+                        if (missing(value)) return (self$p_name)
+                        else self$p_name <- value
+                      },
+                      
+                      
+                      isRoot = function() {
+                        return (is.null(self$parent))
+                      },
+                      
+                      count = function() {
+                        return (length(self$children))
+                      }
+                      
+                    ),
+                
+                    private = list(
+                      p_name = ""
                     )
+                  )
 
 
 
