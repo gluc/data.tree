@@ -110,28 +110,18 @@ globalPriorities <- function(ahpNode) {
 
 
 
-print.Node <- function(root, level = 0) {
-  nq <- noquote(paste0(paste(rep("* ", level), collapse=""), 
-                       root$name,
-                       "                             "))
-                
-  nq <- paste0(substr(nq, 1, 25), 
-               " ",
-               FormatPercent(root$priority, 1),
-               "                        ")
-  
-  
-  nq <- paste0(substr(nq, 1, 35), 
-               " ",
-               FormatPercent(root$globalPriority, 1),
-               "                        ")
-  
-  nq <- paste0(nq, "\n")
-  
-  
-  cat(nq)
-  for (child in root$children) {
-    print(child, level+1)
-  }
+print.Node <- function(root) {
+  print(as.data.frame(root))
 }
 
+
+
+as.data.frame.AhpNode <- function(root) {
+  
+  df <- as.data.frame.Node(root)
+  df$priority <- FormatPercent(root$IterateAttributes('priority'))
+  df$globalPriority <- FormatPercent(root$IterateAttributes('globalPriority'))
+  
+  return (df)
+  
+}

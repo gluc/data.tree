@@ -55,15 +55,17 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      Print = function(attribute) {
+                      IterateAttributes = function(attribute) {
                         mypath <- self[[attribute]]
-                        childPaths <- as.character(unlist(sapply(self$children, function(x) x$Print(attribute))))
+                        childPaths <- as.vector(unlist(sapply(self$children, function(x) x$IterateAttributes(attribute))))
                         #browser()
                         x <- c(mypath, childPaths)
                         return (x)
                       }
                       
                     ),
+                
+                
                     active = list(
                       
                       
@@ -86,12 +88,9 @@ Node <- R6Class("Node",
                         return (length(self$children))
                       },
                       
-                      
                       totalCount = function() {
-                        return (1 + sum(sapply(self$children, function(x) x$totalCount)))
+                        return (1 + sum(as.numeric(sapply(self$children, function(x) x$totalCount))))
                       }, 
-                      
-                      
                       
                       path = function() {
                         c(self$parent$path, self$name)
@@ -99,6 +98,10 @@ Node <- R6Class("Node",
                       
                       pathString = function() {
                         paste(self$path, collapse="/")
+                      },
+                      
+                      levelName = function() {
+                        paste0(paste(rep("* ", self$level), collapse=""), self$name)
                       },
                       
                       leaves = function() {
@@ -131,23 +134,20 @@ Node <- R6Class("Node",
 
 
 
-print.Node <- function(root, level = 0) {
-  nq <- noquote(paste0(paste(rep("* ", level), collapse=""), "", root$name, "\n"))
-  cat(nq)
-  for (child in root$children) {
-    print(child, level+1)
-  }
+print.Node <- function(root) {
+  print(as.data.frame(root))
 }
 
 
-as.data.frame <- function(root) {
-  l <- root$totalCount
-  df <- data.frame( name = vector(mode = "character", length = l),
-                    path = vector(mode = "character", length = l),
-                    level = vector(mode = "numeric", length = l),
-                    row.names = root$paths)
+as.data.frame.Node <- function(root) {
   
+  df <- data.frame( #name = root$IterateAttributes('name'),
+                    
+                    level = root$IterateAttributes('level'),
+                    #  row.names = root$IterateAttributes('pathString'),
+                    row.names = root$IterateAttributes('levelName'),
+                    stringsAsFactors = FALSE)
   
-  
+  return (df)
                                   
 }

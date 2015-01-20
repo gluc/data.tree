@@ -1,5 +1,5 @@
 
-root <- AhpNode$new("Chose the best car for the Jones family")
+root <- AhpNode$new("Car")
   cost <- root$AddChild("Cost")
     purchasePrice <- cost$AddChild("Purchase Price")
     fuelCosts <- cost$AddChild("Fuel Costs")
@@ -14,10 +14,11 @@ root <- AhpNode$new("Chose the best car for the Jones family")
     cargoCapacity <- capacity$AddChild("Cargo Capacity")
     passengerCapacity <- capacity$AddChild("Passenger Capacity")
 
+print(root)
 
-root$Print('pathString')
-root$Print('name')
-root$paths
+root$IterateAttributes('pathString')
+root$IterateAttributes('name')
+root$IterateAttributes('isLeaf')
 root$Find(c("Cost", "Purchase Price"))$path
 
 
@@ -68,8 +69,9 @@ p <- setPreference(p, "Cargo Capacity", "Passenger Capacity", 1/5)
 ahp <- AhpMatrix(p)
 root$Find("Capacity")$SetChildPreferenceMatrix(ahp)
 
-print(root)
-
+x <- as.data.frame(root)
+x[x$level == 1,]
+x
 # alternatives: we create a node for each car on the short list
 
 accord_sedan <- Node$new("Accord Sedan")
