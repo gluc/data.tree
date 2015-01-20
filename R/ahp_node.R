@@ -1,5 +1,5 @@
 library(R6)
-library(data.table)
+#library(data.table)
 
 AhpNode <- R6Class("AhpNode",
                 inherit = Node,

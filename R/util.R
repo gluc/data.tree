@@ -12,3 +12,4 @@
 FormatPercent <- function(x, digits = 2, format = "f", ...) {
   paste(formatC(100 * x, format = format, digits = digits, ...), "%")
 }
+

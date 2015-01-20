@@ -52,11 +52,16 @@ Node <- R6Class("Node",
                             return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
                           }
                         }
+                      },
+                      
+                      
+                      Print = function(attribute) {
+                        mypath <- self[[attribute]]
+                        childPaths <- as.character(unlist(sapply(self$children, function(x) x$Print(attribute))))
+                        #browser()
+                        x <- c(mypath, childPaths)
+                        return (x)
                       }
-                      
-                      
-                      
-                      
                       
                     ),
                     active = list(
@@ -69,6 +74,9 @@ Node <- R6Class("Node",
                         else self$p_name <- value
                       },
                       
+                      isLeaf = function() {
+                        return (length(self$children) == 0) 
+                      },
                       
                       isRoot = function() {
                         return (is.null(self$parent))
@@ -76,7 +84,41 @@ Node <- R6Class("Node",
                       
                       count = function() {
                         return (length(self$children))
+                      },
+                      
+                      
+                      totalCount = function() {
+                        return (1 + sum(sapply(self$children, function(x) x$totalCount)))
+                      }, 
+                      
+                      
+                      
+                      path = function() {
+                        c(self$parent$path, self$name)
+                      }, 
+                      
+                      pathString = function() {
+                        paste(self$path, collapse="/")
+                      },
+                      
+                      leaves = function() {
+                        if (self$isLeaf) {
+                          return (self)
+                        } else {
+                          l <- unlist(sapply(self$children, function(x) x$leaves))
+                        }
+                      },
+                      
+                      level = function() {
+                        if (self$isRoot) {
+                          return (0)
+                        } else {
+                          return (1 + self$parent$level)
+                        }
                       }
+                      
+                      
+                      
                       
                     ),
                 
@@ -84,6 +126,8 @@ Node <- R6Class("Node",
                       p_name = ""
                     )
                   )
+
+
 
 
 
@@ -95,3 +139,15 @@ print.Node <- function(root, level = 0) {
   }
 }
 
+
+as.data.frame <- function(root) {
+  l <- root$totalCount
+  df <- data.frame( name = vector(mode = "character", length = l),
+                    path = vector(mode = "character", length = l),
+                    level = vector(mode = "numeric", length = l),
+                    row.names = root$paths)
+  
+  
+  
+                                  
+}

@@ -15,6 +15,11 @@ root <- AhpNode$new("Chose the best car for the Jones family")
     passengerCapacity <- capacity$AddChild("Passenger Capacity")
 
 
+root$Print('pathString')
+root$Print('name')
+root$paths
+root$Find(c("Cost", "Purchase Price"))$path
+
 
 print(root)
 
