@@ -1,5 +1,18 @@
-library(R6)
-
+#' Node
+#' 
+#' @description A generic node in a tree
+#' 
+#' @docType class
+#' @importFrom R6 R6Class
+#' @usage Node$new()
+#' @field children A list of children
+#' @field parent The node's parent Node
+#' @section Methods:
+#' \describe{
+#'   \item{\code{AddChild(name = "MyNode")}}{Creates a new Node called \code{name} and adds it to this node.}
+#' }
+#' @export
+#' @format An \code{\link{R6Class}} generator object
 Node <- R6Class("Node",
                 lock = FALSE,
                     public = list(
@@ -133,12 +146,12 @@ Node <- R6Class("Node",
 
 
 
-
+#' @export
 print.Node <- function(root) {
   print(as.data.frame(root))
 }
 
-
+#' @export
 as.data.frame.Node <- function(root) {
   
   df <- data.frame( #name = root$IterateAttributes('name'),
@@ -150,4 +163,14 @@ as.data.frame.Node <- function(root) {
   
   return (df)
                                   
+}
+
+#' @export
+as.Node <- function(node) {
+  UseMethod("as.Node", node)
+}
+
+#' @export
+as.Node.AhpNode <- function(node) {
+  class(node) <- c("Node", "R6")
 }

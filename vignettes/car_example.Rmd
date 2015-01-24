@@ -1,0 +1,60 @@
+---
+title: "AHP Car Example"
+author: "Christoph Glur"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## Introduction
+
+This document follows the example from [Wikipedia AHP Car Example](http://en.wikipedia.org/wiki/Analytic_hierarchy_process_%E2%80%94_Car_example). Even though a few details are different, it is required to follow along the Wikipedia example to fully understand the problem.
+
+## What is AHP
+
+AHP is a field of decision theory. 
+
+## Car Example
+
+In this example, the Jones family wants to buy a new car.
+
+### Creating the AHP criteria tree
+
+When deciding which car to buy, the family considers the following criteria: cost, safety, style, and capacity, and their sub-criteria. Using the ahp package, the hierarchy can be constructed like so:
+
+```{r}
+library(ahp)
+root <- AhpNode$new("Car")
+  cost <- root$AddChild("Cost")
+    purchasePrice <- cost$AddChild("Purchase Price")
+    fuelCosts <- cost$AddChild("Fuel Costs")
+    maintenanceCosts <- cost$AddChild("Maintenance Costs")
+    resaleValue <- cost$AddChild("Resale Value")
+  safety <- root$AddChild("Safety")
+    curbWeight <- safety$AddChild("Curb Weight")
+    safetyClass <- safety$AddChild("Safety Class")
+    crashRating <- safety$AddChild("Crash Rating")
+  style <- root$AddChild("Style")
+  capacity <- root$AddChild("Capacity")
+    cargoCapacity <- capacity$AddChild("Cargo Capacity")
+    passengerCapacity <- capacity$AddChild("Passenger Capacity")
+
+print(as.Node(root))
+```
+
+
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

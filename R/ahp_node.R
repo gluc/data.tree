@@ -1,6 +1,13 @@
-library(R6)
-#library(data.table)
+#' @include node.R
+NULL
 
+#' A node in the Ahp Tree
+#' 
+#' @docType class
+#' @importFrom R6 R6Class
+#' @export
+#' @format An \code{\link{R6Class}} generator object
+#' @seealso \code{\link{Node}}
 AhpNode <- R6Class("AhpNode",
                 inherit = Node,
                 lock = FALSE,
@@ -98,24 +105,25 @@ AhpNode <- R6Class("AhpNode",
 )
 
 
-
+#' @export
 priorities <- function(ahpNode) {
   sapply(ahpNode$children, function(x) x$priority)
 }
 
+#' @export
 globalPriorities <- function(ahpNode) {
   sapply(ahpNode$children, function(x) x$globalPriority)
 }
 
 
 
-
+#' @export
 print.Node <- function(root) {
   print(as.data.frame(root))
 }
 
 
-
+#' @export
 as.data.frame.AhpNode <- function(root) {
   
   df <- as.data.frame.Node(root)
