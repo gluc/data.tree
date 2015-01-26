@@ -47,14 +47,14 @@ Ahp <- function(mat){
 #' pref <- c(1,5,4)
 #' AhpMatrix(cat1, cat2, pref)
 #' @seealso \code{\link{ahp}}
-#' @export AhpMatrix
-AhpMatrix <- function(p){
-	cats <- unique(c(levels(p$a), levels(p$b)))
+#' @export
+AhpMatrix <- function(preferenceCombinations){
+	cats <- unique(c(levels(preferenceCombinations$a), levels(preferenceCombinations$b)))
 	mat <- matrix(1, nrow = length(cats), length(cats), byrow = TRUE, dimnames = list(cats, cats))
-	for (i in 1:dim(p)[1])
+	for (i in 1:dim(preferenceCombinations)[1])
 	{
-		mat[as.character(p[i,1]), as.character(p[i,2])] <- p[i,3]
-		mat[as.character(p[i,2]), as.character(p[i,1])] <- 1/ p[i,3]
+		mat[as.character(preferenceCombinations[i,1]), as.character(preferenceCombinations[i,2])] <- preferenceCombinations[i,3]
+		mat[as.character(preferenceCombinations[i,2]), as.character(preferenceCombinations[i,1])] <- 1/ preferenceCombinations[i,3]
 	}
 	
 	return(mat)
@@ -133,7 +133,7 @@ GetAhpAdjustment <- function(oldValue, adjustment)
 	
 }
 
-
+#' @export
 LinearComparison <- function(a, b, min_x, max_x, preferSmall = FALSE, fieldName = NA) {
   #scale to 1...9
   if (!is.na(fieldName)) {

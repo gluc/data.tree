@@ -23,23 +23,32 @@ AhpNode <- R6Class("AhpNode",
                   childConsistency = NA,
                   
                   CalculatePreferences = function(FUN, ...) {
-                    combo <- self$preferenceCombinations
-                    prefs <- apply(combo, 2, function(x) FUN(self$children[[ x[1] ]], self$children[[ x[2] ]], ...))
-                    mat <- AhpMatrix(combo[1,], combo[2,], prefs)
-                    self$SetPreferenceMatrix(mat)
+                    
+                    pp <- self$GetChildCombinations()
+                    
+                    
+                    for(i in 1:dim(pp)[1]) {
+                      name1 <- as.character(pp[i, 'a'])
+                      name2 <- as.character(pp[i, 'b'])
+                      pp <- setPreference(pp, 
+                                          name1, 
+                                          name2, 
+                                          FUN(
+                                            self$children[[name1]]$alternative, 
+                                            self$children[[name2]]$alternative, 
+                                            ...)
+                                          )                      
+                    }
+                    
+                   
+                    preferenceMatrix <- AhpMatrix(pp)
+                    self$SetChildPreferenceMatrix(preferenceMatrix)
                     invisible (self)
                   },
                   
                   
                   
-                  AddAlternatives = function(alternativesTree) {
-                    
-                    if(length(self$parents) == 1) {
-                      parent = self$parents[[1]]
-                      if(!is.na(parent$classifierName)) {
-                        alternativesList <- alternativesList[which(sapply(alternativesList, function(x) x[[parent$classifierName]]) == self$name)]
-                      }
-                    }
+                  AddAlternatives = function(alternativesList) {
                     
                     for (child in self$children) {
                       child$AddAlternatives(alternativesList)
@@ -49,7 +58,8 @@ AhpNode <- R6Class("AhpNode",
                       #leaf
                       for (alternative in alternativesList) {
                         #if (is.na(self$parent$classifierName) || alternative[[self$parent$classifierName]] == self$name) {
-                        self$AddChildNode(alternative)
+                        alternativeNode <- AhpAlternativeNode$new(alternative)
+                        super$AddChildNode(alternativeNode)
                         #}
                       }
                     }
@@ -58,11 +68,14 @@ AhpNode <- R6Class("AhpNode",
                     
                   },
                   
+                  
+                  
       
                   AddChild = function(name) {
                     child <- AhpNode$new(name)
                     invisible (super$AddChildNode(child))
                   },
+                  
                   
                   GetChildCombinations = function() {
                     combos <- t(combn(names(self$children), 2))
@@ -85,7 +98,23 @@ AhpNode <- R6Class("AhpNode",
                     sapply(self$children, function(x) x$priority <- as.numeric(priorities[x$name]))
                     
                     invisible (self)
+                  },
+                  
+                  
+                  ApplyPreferenceMatrix = function(preferenceMatrix, fieldName) {
+                    cats <- dimnames(preferenceMatrix)[1]
+                    mat <- matrix(1, nrow = length(self$children), length(self$children), byrow = TRUE, dimnames = list(names(self$children), names(self$children)))
+                    for (i in self$children) {
+                      for (j in self$children) {
+                        class1 <- i$alternative[[fieldName]]
+                        class2 <- j$alternative[[fieldName]]
+                        mat[i$name, j$name] <- preferenceMatrix[class1, class2]
+                      }
+                    }
+                    self$SetChildPreferenceMatrix(mat)
                   }
+                  
+                  
                   
                   
                 ),
@@ -138,12 +167,6 @@ globalPriorities <- function(ahpNode) {
   sapply(ahpNode$children, function(x) x$globalPriority)
 }
 
-
-
-#' @export
-print.Node <- function(root) {
-  print(as.data.frame(root))
-}
 
 
 #' @export

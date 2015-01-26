@@ -4,7 +4,7 @@
 \alias{AhpMatrix}
 \title{Create the AHP pairwise preference matrix from vectors}
 \usage{
-AhpMatrix(p)
+AhpMatrix(preferenceCombinations)
 }
 \arguments{
 \item{cat1}{A vector of n category names}

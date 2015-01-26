@@ -13,7 +13,16 @@
 AhpAlternative <- R6Class("AhpAlternative",
                         lock = FALSE,
                         public = list(
-                          alternativeNodes = list()
+                          name = "",
+                          alternativeNodes = list(),
+                          
+                          initialize=function(name, ...) {
+                            if (!missing(name)) {
+                              self$name <- name
+                            }
+                            
+                            invisible (self)
+                          }
                         ) 
                   
  

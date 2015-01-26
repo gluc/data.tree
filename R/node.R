@@ -147,18 +147,19 @@ Node <- R6Class("Node",
 
 
 #' @export
-print.Node <- function(root) {
-  print(as.data.frame(root))
+print.Node <- function(node) {
+  #print(as.data.frame(node), right=FALSE)
+  print(as.data.frame(node))
 }
 
 #' @export
-as.data.frame.Node <- function(root) {
+as.data.frame.Node <- function(node) {
   
-  df <- data.frame( #name = root$IterateAttributes('name'),
+  df <- data.frame( name = format(node$IterateAttributes('levelName')),
                     
-                    level = root$IterateAttributes('level'),
-                    #  row.names = root$IterateAttributes('pathString'),
-                    row.names = root$IterateAttributes('levelName'),
+                    level = node$IterateAttributes('level'),
+                    #  row.names = node$IterateAttributes('pathString'),
+                    #row.names = node$IterateAttributes('levelName'),
                     stringsAsFactors = FALSE)
   
   return (df)
