@@ -12,8 +12,15 @@ AhpNode <- R6Class("AhpNode",
                 inherit = Node,
                 lock = FALSE,
                 public = list(
-                  priority = 1,
                   
+                  initialize=function(name, priority, ...) {
+                    if (!missing(name)) self$name <- name
+                    if (!missing(priority)) self$priority <- priority
+                    else self$priority <- NA
+                    invisible (self)
+                  },
+                  
+                  childConsistency = NA,
                   
                   CalculatePreferences = function(FUN, ...) {
                     combo <- self$preferenceCombinations
@@ -70,20 +77,36 @@ AhpNode <- R6Class("AhpNode",
                                         
                     self$preferenceMatrix <- preferenceMatrix
                     
-                    priorities <- Ahp(preferenceMatrix)$ahp
+                    ahpResult <- Ahp(preferenceMatrix)
+                    
+                    priorities <- ahpResult$ahp
+                    self$childConsistency <- ahpResult$consistency
                     
                     sapply(self$children, function(x) x$priority <- as.numeric(priorities[x$name]))
                     
                     invisible (self)
                   }
-    
                   
                   
                 ),
                 active = list(
                   
-                  
-                  
+                  priority = function(value) {
+                    
+                    if (missing(value)) {
+                              
+                      if(self$isRoot) {
+                        
+                        return (1)
+                      } else {
+                        #return (0.2)
+                        return (self$p_priority)
+                      }
+                    } else {
+                      self$p_priority <- value
+                      #print(self$p_priority)
+                    }
+                  },
  
                   
        
@@ -99,7 +122,7 @@ AhpNode <- R6Class("AhpNode",
                 ),
                 
                 private = list(
-                  p_name = "",
+                  p_priority = NA,
                   preferenceMatrix = NA
                 )
 )
@@ -129,6 +152,7 @@ as.data.frame.AhpNode <- function(root) {
   df <- as.data.frame.Node(root)
   df$priority <- FormatPercent(root$IterateAttributes('priority'))
   df$globalPriority <- FormatPercent(root$IterateAttributes('globalPriority'))
+  df$childConsistency <- root$IterateAttributes('childConsistency')
   
   return (df)
   

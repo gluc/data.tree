@@ -1,17 +1,22 @@
 ---
 title: "AHP Car Example"
 author: "Christoph Glur"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    theme: united
+    toc: yes
+    toc_depth: 4
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+vignette: |
+  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
 
 ## Introduction
 
-This document follows the example from [Wikipedia AHP Car Example](http://en.wikipedia.org/wiki/Analytic_hierarchy_process_%E2%80%94_Car_example). Even though a few details are different, it is required to follow along the Wikipedia example to fully understand the problem.
+This document follows the [Wikipedia AHP Car Example](http://en.wikipedia.org/wiki/Analytic_hierarchy_process_%E2%80%94_Car_example). Even though a few details are different, the original article is required to follow along.
 
 ## What is AHP
 
@@ -23,38 +28,204 @@ In this example, the Jones family wants to buy a new car.
 
 ### Creating the AHP criteria tree
 
-When deciding which car to buy, the family considers the following criteria: cost, safety, style, and capacity, and their sub-criteria. Using the ahp package, the hierarchy can be constructed like so:
+When deciding which car to buy, the family considers the following criteria: cost, safety, style, and capacity, and their sub-criteria. Using the ahp package, the ahp hierarchy tree can be constructed like so:
 
-```{r}
+```{r tidy=FALSE}
 library(ahp)
-root <- AhpNode$new("Car")
-  cost <- root$AddChild("Cost")
+goal <- AhpNode$new("Car")
+  cost <- goal$AddChild("Cost")
     purchasePrice <- cost$AddChild("Purchase Price")
     fuelCosts <- cost$AddChild("Fuel Costs")
     maintenanceCosts <- cost$AddChild("Maintenance Costs")
     resaleValue <- cost$AddChild("Resale Value")
-  safety <- root$AddChild("Safety")
+  safety <- goal$AddChild("Safety")
     curbWeight <- safety$AddChild("Curb Weight")
     safetyClass <- safety$AddChild("Safety Class")
     crashRating <- safety$AddChild("Crash Rating")
-  style <- root$AddChild("Style")
-  capacity <- root$AddChild("Capacity")
+  style <- goal$AddChild("Style")
+  capacity <- goal$AddChild("Capacity")
     cargoCapacity <- capacity$AddChild("Cargo Capacity")
     passengerCapacity <- capacity$AddChild("Passenger Capacity")
 
-print(as.Node(root))
+#as.Node(goal)
+goal
 ```
 
+#### A few technical details
+
+A few technical details may be helpful to understand what is going on behind the scene, but not really required to follow this example. 
+
+`AhpNode` is an `R6` reference class. This is an S3 class, with the specific property that it has its own environment, and can be modified without having to reassign to a variable. For example:
+
+```{r}
+goal$name <- "Choose car"
+goal$name
+```
+
+Please see [here](http://cran.r-project.org/web/packages/R6/vignettes/Introduction.html) to learn more about R6. 
+
+Ahp is a subclass of the more generic `Node`:
+
+```{r}
+class(goal)
+is.object(goal)
+```
+
+Each `AhpNode` has a parent, and a list of children. Specific `AhpNode` instances in the tree can be queried using the `Find` method. Method calls can be chained:
 
 
 ```{r}
-summary(cars)
+goal$Find(c("Cost", "Fuel Costs"))$parent$name
+names(goal$Find("Safety")$children)
 ```
 
-You can also embed plots, for example:
+Each `AhpNode` has a field `priority`, storing the criteria's local priority relative to it's siblings. The `globalPriority` calculates the product of local priorities of each node in the node's path.
 
-```{r, echo=FALSE}
-plot(cars)
+
+### Level 1 Criteria
+
+What is more important, style or safety? AHP allows expressing an individual's or a group's opinion by polling the pairwise preferences on a scale of 1 to 9, and their inverse. 1 means two categories are equally important. 9 means A is strictly preferred to B. 1/9 means B is strictly preferrable to A.
+
+In order to apply the AHP algorithm in order to calculate the *priorities*, one needs to construct a *preference matrix*. The ahp package, however, provides a utility method to construct such a matrix.
+
+#### Setting the Preferences
+
+We start by setting the level one criteria preferences. These are:
+
+```{r}
+names(goal$children)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Since AHP requires setting preferences for each pairwise combination of criteria, the ahp package provides a utility method to quickly list all such pairwise preferences:
+
+```{r}
+pp <- goal$GetChildCombinations()
+pp
+```
+
+Note that, by default, all preferences are set to 1. The cost criteria, say, is equally important as the style criteria. This is, however, not the case for the Jones family. So we now fill the pairwise preferences, as perceived by the Jones':
+
+```{r}
+pp <- setPreference(pp, "Cost"   , "Safety"  , 3) #For the Jones family, cost is more important than safety
+pp <- setPreference(pp, "Cost"   , "Style"   , 7) #cost is much more important than style
+pp <- setPreference(pp, "Cost"   , "Capacity", 3) #cost is more important than capacity
+pp <- setPreference(pp, "Safety" , "Style"   , 9)
+pp <- setPreference(pp, "Safety" , "Capacity", 1) #safety and capacity are equally important
+pp <- setPreference(pp, "Style"  , "Capacity", 1/7) #capacity is much more important than style
+```
+
+A technical side node: you may have realised that `pp`, the pairwise child combinations of our categories, is a standard `data.frame`, and not an R6 reference class. As a result, we must re-assign `pp`, using e.g. `pp <- setPreference(pp, "Cost"   , "Safety"  , 3)`.
+
+From the pairwise preferences, we create the ahp preference matrix:
+
+```{r}
+preferenceMatrix <- AhpMatrix(pp)
+preferenceMatrix
+```
+
+This matrix has 1's along the diagonal, obviously, and $E_{i,j}=\frac{1}{E_{j,i}}  \forall i,j$
+
+#### Calculating the Priorities
+
+From the *preference matrix*, we can directly calculate the *priorities* by using the AHP algorithm. The `AhpNode` class provides this functionality out of the box. All we need to do is to set the preference matrix in the ahp tree, on the parent node. This will then automatically calculate the level 1 priorities:
+
+```{r}
+goal$SetChildPreferenceMatrix(preferenceMatrix)
+```
+
+The level 1 priorities have now been calculated for us:
+
+```{r}
+priorities(goal)
+```
+
+As preferences are expressed *pairwise*, it is possible that our preferences are inconsistent. The AHP algorithm introduces a consistency measure to check whether our pairwise preferences make sense. This consistency measure is obtained like this:
+
+```{r}
+goal$childConsistency
+```
+
+Remember that the lower the consistency, the better.
+
+The ahp tree now looks like this:
+
+```{r}
+goal
+```
+
+### Level 2 Sub-Criteria: Setting the Preferences and Calculating the Priorities
+
+#### Cost
+
+The AHP tree looks still incomplete. We need to set pairwise preferences for each combination, at each node. Let us continue with the preferences of the sub-categories below the *Cost* node:
+
+
+```{r}
+pp <- goal$Find("Cost")$GetChildCombinations()
+print(pp)
+
+pp <- setPreference(pp, "Purchase Price"   , "Fuel Costs"       , 2)
+pp <- setPreference(pp, "Purchase Price"   , "Maintenance Costs", 5)
+pp <- setPreference(pp, "Purchase Price"   , "Resale Value"     , 3)
+pp <- setPreference(pp, "Fuel Costs"       , "Maintenance Costs", 2)
+pp <- setPreference(pp, "Fuel Costs"       , "Resale Value"     , 2)
+pp <- setPreference(pp, "Maintenance Costs", "Resale Value"     , 1/2)
+
+preferenceMatrix <- AhpMatrix(pp)
+goal$Find("Cost")$SetChildPreferenceMatrix(preferenceMatrix)
+
+priorities(goal$Find("Cost"))
+```
+
+Note that the sum of the priorities is equal to 1:
+
+```{r}
+sum(priorities(goal$Find("Cost")))
+```
+
+Our AHP tree looks already a bit more complete:
+
+```{r}
+goal
+```
+
+We now need to do the same thing for Safety and Capacity. Note that we do not have to do anything for style, as style does not have sub-criteria.
+
+#### Safety
+
+This should be straight forward by now:
+
+```{r}
+pp <- goal$Find("Safety")$GetChildCombinations()
+pp
+
+pp <- setPreference(pp, "Curb Weight"   , "Safety Class", 1/3)
+pp <- setPreference(pp, "Curb Weight"   , "Crash Rating", 1/2)
+pp <- setPreference(pp, "Safety Class"  , "Crash Rating", 2)
+
+preferenceMatrix <- AhpMatrix(pp)
+goal$Find("Safety")$SetChildPreferenceMatrix(preferenceMatrix)
+
+goal$Find("Safety")
+
+```
+
+#### Capacity
+
+```{r}
+pp <- goal$Find("Capacity")$GetChildCombinations()
+pp
+
+pp <- setPreference(pp, "Cargo Capacity", "Passenger Capacity", 1/5)
+preferenceMatrix <- AhpMatrix(pp)
+goal$Find("Capacity")$SetChildPreferenceMatrix(preferenceMatrix)
+```
+
+Our AHP tree now looks like this:
+
+```{r}
+goal
+```
+
+We establish that consistency is acceptable everywhere, and that for example purchase price is more than five times more important than cargo capacity.
