@@ -3,12 +3,12 @@ title: "AHP Car Example"
 author: "Christoph Glur"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    theme: united
-    toc: yes
-    toc_depth: 4
   pdf_document:
     highlight: tango
+    toc: yes
+    toc_depth: 4
+  html_document:
+    theme: united
     toc: yes
     toc_depth: 4
 vignette: |
@@ -64,13 +64,20 @@ Since AHP requires setting preferences for each pairwise combination of criteria
 
 ```{r}
 pp <- goal$GetChildCombinations()
-pp
 ```
 
-Note that, by default, all preferences are set to 1. The cost criteria, say, is equally important as the style criteria. This is, however, not the case for the Jones family. So we now fill the pairwise preferences, as perceived by the Jones':
+Note that, by default, all preferences are set to 1. The cost criteria, say, is equally important as the style criteria. This is, however, not the case for the Jones family. So we now fill the pairwise preferences, as perceived by the Jones'. To do this, we can use the utility function `printForInput`:
 
 ```{r}
-pp <- setPreference(pp, "Cost"   , "Safety"  , 3) #For the Jones family, cost is more important than safety
+printForInput(pp)
+```
+
+We can copy and paste the output and replace the 1's with the appropriate subjective value:
+
+
+
+```{r}
+pp <- setPreference(pp, "Cost"   , "Safety"  , 3) #cost is more important than safety
 pp <- setPreference(pp, "Cost"   , "Style"   , 7) #cost is much more important than style
 pp <- setPreference(pp, "Cost"   , "Capacity", 3) #cost is more important than capacity
 pp <- setPreference(pp, "Safety" , "Style"   , 9)
@@ -126,7 +133,7 @@ The AHP tree looks still incomplete. We need to set pairwise preferences for eac
 
 ```{r}
 pp <- goal$Find("Cost")$GetChildCombinations()
-print(pp)
+#printForInput(pp)
 
 pp <- setPreference(pp, "Purchase Price"   , "Fuel Costs"       , 2)
 pp <- setPreference(pp, "Purchase Price"   , "Maintenance Costs", 5)
@@ -161,7 +168,7 @@ This should be straight forward by now:
 
 ```{r}
 pp <- goal$Find("Safety")$GetChildCombinations()
-pp
+#printForInput(pp)
 
 pp <- setPreference(pp, "Curb Weight"   , "Safety Class", 3)
 pp <- setPreference(pp, "Curb Weight"   , "Crash Rating", 2)
@@ -178,7 +185,7 @@ goal$Find("Safety")
 
 ```{r}
 pp <- goal$Find("Capacity")$GetChildCombinations()
-pp
+#printForInput(pp)
 
 pp <- setPreference(pp, "Cargo Capacity", "Passenger Capacity", 1/5)
 preferenceMatrix <- AhpMatrix(pp)
@@ -194,6 +201,8 @@ goal
 We establish that consistency is acceptable everywhere, and that for example purchase price is roughly six times more important than cargo capacity.
 
 ## Alternatives
+
+### Adding the Alternatives
 
 We are now ready to move to the next steps: Alternatives.
 
@@ -230,9 +239,9 @@ head(as.data.frame(goal), 20)
 
 The next step is to set our alternative-preferences for each category. Let us start with the purchase price.
 
-### Cost
+### Cost Alternatives
 
-#### Purchase Price
+#### Purchase Price: Using a preference function
 
 We start by adding a custom attribute, price, to each alternative:
 
@@ -311,7 +320,7 @@ priorities(goal$Find(c("Cost", "Purchase Price")))
 Sticking to the somewhat odd order of the Wikipedia example, we now enter preferences for the Safety sub-categories. Note that in the Wikipedia example, the Safety sub-categories are all processed as a single category. However, thanks to the ahp facility, separating them into single sub-categories is very intuitive.
 However, if you had rather follow the Wikipedia example, you should now be fit to do this on your own as an exercise.
 
-#### Curb Weight
+#### Curb Weight: Using the built-in LinearComparison function
 
 We first add the curb weight as a property to the `Alternative`:
 
@@ -351,7 +360,7 @@ goal$Find(c("Safety", "Curb Weight"))$CalculatePreferences(LinearComparison, fie
 goal$Find(c("Safety", "Curb Weight"))
 ```
 
-#### Safety Class
+#### Safety Class: Using ApplyPreferenceMatrix
 
 Safety class is a classification of cars. 
 Let's start, again, by classifying our cars:
@@ -375,7 +384,7 @@ safetyClassGoal$AddChild("Small SUV")
 safetyClassGoal$AddChild("Minivan")
 
 pp <- safetyClassGoal$GetChildCombinations()
-pp
+#printForInput(pp)
 
 pp <- setPreference(pp, "Midsize Car", "Midsize SUV", 1/4)
 pp <- setPreference(pp, "Midsize Car", "Small SUV"  , 1/2)
@@ -391,7 +400,7 @@ priorities(safetyClassGoal)
 
 ```
 
-We apply the preferenceMatrix to the Safety Class criteria in our original AHP tree. The method `ApplyPreferenceMatrix` makes sure that the preferences are inherited from the `safetyClassGoal`, according to the car `alternative$safetyClass`:
+We apply the preferenceMatrix to the Safety Class criteria in our original AHP tree. The method `ApplyPreferenceMatrix` makes sure that the preferences are inherited from the `safetyClassGoal`, according to the car `alternative$safetyClass`. The second argument, `safetyClass`, specifies the name of the property in our Alternatives list which contains the safety class.
 
 ```{r}
 
@@ -399,4 +408,43 @@ goal$Find(c("Safety", "Safety Class"))$ApplyPreferenceMatrix(preferenceMatrix, '
 priorities(goal$Find(c("Safety", "Safety Class")))
 ```
 
-Note that the second argument specifies the name of the property in our Alternatives list which contains the safety class.
+
+#### Crash Rating
+
+All the cars have a 5 star rating, except in specific categories:
+
+```{r}
+accord_sedan$crashRating <- "4 in Side Impact Front"
+accord_hybrid$crashRating <- "4 in Side Impact Front"
+pilot$crashRating <- "4 in Rollover"
+crv$crashRating <- "4 in Rollover"
+element$crashRating <- "3 in Rollover"
+odyssey$crashRating <- "All 5 Stars"
+```
+
+Again, we model the ratings as a separate little AHP problem:
+
+```{r}
+crashRatingGoal <- AhpNode$new("Crash Rating Goal")
+crashRatingGoal$AddChild("4 in Side Impact Front")
+crashRatingGoal$AddChild("4 in Rollover")
+crashRatingGoal$AddChild("3 in Rollover")
+crashRatingGoal$AddChild("All 5 Stars")
+
+pp <- crashRatingGoal$GetChildCombinations()
+#printForInput(pp)
+
+pp <- setPreference(pp, "4 in Side Impact Front", "4 in Rollover", 2)
+pp <- setPreference(pp, "4 in Side Impact Front", "3 in Rollover", 5)
+pp <- setPreference(pp, "4 in Side Impact Front", "All 5 Stars"  , 3)
+pp <- setPreference(pp, "4 in Rollover"         , "3 in Rollover", 3)
+pp <- setPreference(pp, "4 in Rollover"         , "All 5 Stars"  , 1/4)
+pp <- setPreference(pp, "3 in Rollover"         , "All 5 Stars"  , 1/6)
+
+preferenceMatrix <- AhpMatrix(pp)
+
+goal$Find(c("Safety", "Crash Rating"))$ApplyPreferenceMatrix(preferenceMatrix, 'crashRating')
+priorities(goal$Find(c("Safety", "Crash Rating")))
+```
+
+

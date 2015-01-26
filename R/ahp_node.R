@@ -81,6 +81,7 @@ AhpNode <- R6Class("AhpNode",
                     combos <- t(combn(names(self$children), 2))
                     colnames(combos)=c("a", "b")
                     df <- data.frame(combos)
+                    class(df) <- c(class(df), "PreferenceTable")
                     df$pref <- 1
                     return (df)
                   },
