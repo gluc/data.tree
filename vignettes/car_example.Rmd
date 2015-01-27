@@ -11,6 +11,7 @@ output:
     theme: united
     toc: yes
     toc_depth: 4
+  word_document: default
 vignette: |
   %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
@@ -22,7 +23,15 @@ This document follows the [Wikipedia AHP Car Example](http://en.wikipedia.org/wi
 
 ## Creating the AHP criteria tree
 
-When deciding which car to buy, the family considers the following criteria: cost, safety, style, and capacity, and their sub-criteria. Using the ahp package, the ahp hierarchy tree can be constructed like so:
+When deciding which car to buy, the family considers the following criteria: cost, safety, style, and capacity, and their sub-criteria. 
+
+The Jones' have a shortlist of 6 cars.
+
+We can draw the hierarchy like this:
+
+![Ahp Tree](AHP_tree.png)
+
+Using the ahp package, the ahp hierarchy tree can be constructed like so:
 
 ```{r tidy=FALSE}
 library(ahp)
@@ -202,10 +211,7 @@ We establish that consistency is acceptable everywhere, and that for example pur
 
 ## Alternatives
 
-### Adding the Alternatives
-
 We are now ready to move to the next steps: Alternatives.
-
 The Jones family has researched and has 6 cars on their shortlist.
 
 ```{r}
@@ -215,19 +221,21 @@ pilot <- AhpAlternative$new("Pilot SUV")
 crv <- AhpAlternative$new("CR-V SUV")
 element <- AhpAlternative$new("Element SUV")
 odyssey <- AhpAlternative$new("Odyssey Minivan")
-
-alternatives <-  list(accord_sedan,
-                     accord_hybrid,
-                     pilot,
-                     crv,
-                     element,
-                     odyssey
-                     )
 ```
+
+### Adding the Alternatives
 
 We add these alternatives to the goal:
 
 ```{r}
+alternatives <-  list(accord_sedan = accord_sedan,
+                     accord_hybrid = accord_hybrid,
+                     pilot = pilot,
+                     crv = crv,
+                     element = element,
+                     odyssey = odyssey
+                     )
+
 goal$AddAlternatives(alternatives)
 ```
 
@@ -237,7 +245,9 @@ This method adds each alternative to each leaf-category. Our AHP tree now looks 
 head(as.data.frame(goal), 20)
 ```
 
-The next step is to set our alternative-preferences for each category. Let us start with the purchase price.
+The next step is to set our alternative-preferences for each category. The principle is the same: for each leaf criteria, we create a preference matrix containing the comparison of all alternative combinations.
+
+Let us start with the purchase price.
 
 ### Cost Alternatives
 
@@ -313,6 +323,95 @@ goal$Find(c("Cost", "Purchase Price"))$preferenceMatrix
 priorities(goal$Find(c("Cost", "Purchase Price")))
 
 ```
+
+#### Fuel Costs
+
+The cars have the following MPG (miles per gallon) value:
+
+```{r}
+accord_sedan$mpg <- 31
+accord_hybrid$mpg <- 35
+pilot$mpg <- 22
+crv$mpg <- 27
+element$mpg <- 25
+odyssey$mpg <- 26
+```
+
+The Jones family has the following preference function:
+
+```{r}
+fuelCostFunction <- function(car1, car2) {
+  return (car1$mpg / car2$mpg)
+}
+```
+This is all we need to calculate the preferences:
+
+```{r}
+goal$Find(c("Cost", "Fuel Costs"))$CalculatePreferences(fuelCostFunction)
+sort(priorities(goal$Find(c("Cost", "Fuel Costs"))), decreasing = TRUE)
+
+```
+
+#### Maintenance Costs: Pairwise Comparison
+
+The Jones family takes into consideration tire costs, brakes cost, consumer reports, and special costs (such as battery for the hybrid cars). Their pairwise comparison yields:
+
+```{r}
+pp <- goal$Find(c("Cost", "Maintenance Costs"))$GetChildCombinations()
+#printForInput(pp)
+pp <- setPreference(pp, "Accord Sedan", "Accord Hybrid", 1.5)
+pp <- setPreference(pp, "Accord Sedan", "Pilot SUV", 4)
+pp <- setPreference(pp, "Accord Sedan", "CR-V SUV", 4)
+pp <- setPreference(pp, "Accord Sedan", "Element SUV", 5)
+pp <- setPreference(pp, "Accord Sedan", "Odyssey Minivan", 5)
+pp <- setPreference(pp, "Accord Hybrid", "Pilot SUV", 1.5)
+pp <- setPreference(pp, "Accord Hybrid", "CR-V SUV", 4)
+pp <- setPreference(pp, "Accord Hybrid", "Element SUV", 4)
+pp <- setPreference(pp, "Accord Hybrid", "Odyssey Minivan", 5)
+pp <- setPreference(pp, "Pilot SUV", "CR-V SUV", 1)
+pp <- setPreference(pp, "Pilot SUV", "Element SUV", 1.2)
+pp <- setPreference(pp, "Pilot SUV", "Odyssey Minivan", 1)
+pp <- setPreference(pp, "CR-V SUV", "Element SUV", 1)
+pp <- setPreference(pp, "CR-V SUV", "Odyssey Minivan", 3)
+pp <- setPreference(pp, "Element SUV", "Odyssey Minivan", 2)
+
+preferenceMatrix <- AhpMatrix(pp)
+goal$Find(c("Cost", "Maintenance Costs"))$SetChildPreferenceMatrix(preferenceMatrix)
+
+priorities(goal$Find(c("Cost", "Maintenance Costs")))
+
+```
+### Resale Value
+
+The leasing residual value after 12'000 miles of the cars is:
+
+
+```{r}
+accord_sedan$residualValue <- 0.52
+accord_hybrid$residualValue <- 0.46
+pilot$residualValue <- 0.44
+crv$residualValue <- 0.55
+element$residualValue <- 0.48
+odyssey$residualValue <- 0.48
+```
+
+Their preference function is (again simplifying slightly):
+
+```{r}
+
+resaleValuePreference <- function(car1, car2) {
+  ratio <- car1$residualValue / car2$residualValue
+  if (ratio < 1) return (1/resaleValuePreference(car2, car1))
+  value <- max(1, min(9, ceiling(100*(ratio-1)/5)))
+  return (value)
+}
+
+goal$Find(c("Cost", "Resale Value"))$CalculatePreferences(resaleValuePreference)
+priorities(goal$Find(c("Cost", "Resale Value")))
+
+```
+
+
 
 
 ### Safety
@@ -445,6 +544,119 @@ preferenceMatrix <- AhpMatrix(pp)
 
 goal$Find(c("Safety", "Crash Rating"))$ApplyPreferenceMatrix(preferenceMatrix, 'crashRating')
 priorities(goal$Find(c("Safety", "Crash Rating")))
+```
+
+### Style
+
+Style is a subjective criteria, so the pairwise comparison is simply done according to personal taste:
+
+```{r}
+pp <- goal$Find("Style")$GetChildCombinations()
+#printForInput(pp)
+pp <- setPreference(pp, "Accord Sedan", "Accord Hybrid", 1)
+pp <- setPreference(pp, "Accord Sedan", "Pilot SUV", 7)
+pp <- setPreference(pp, "Accord Sedan", "CR-V SUV", 5)
+pp <- setPreference(pp, "Accord Sedan", "Element SUV", 9)
+pp <- setPreference(pp, "Accord Sedan", "Odyssey Minivan", 6)
+pp <- setPreference(pp, "Accord Hybrid", "Pilot SUV", 7)
+pp <- setPreference(pp, "Accord Hybrid", "CR-V SUV", 5)
+pp <- setPreference(pp, "Accord Hybrid", "Element SUV", 9)
+pp <- setPreference(pp, "Accord Hybrid", "Odyssey Minivan", 6)
+pp <- setPreference(pp, "Pilot SUV", "CR-V SUV", 1/6)
+pp <- setPreference(pp, "Pilot SUV", "Element SUV", 3)
+pp <- setPreference(pp, "Pilot SUV", "Odyssey Minivan", 1/3)
+pp <- setPreference(pp, "CR-V SUV", "Element SUV", 7)
+pp <- setPreference(pp, "CR-V SUV", "Odyssey Minivan", 5)
+pp <- setPreference(pp, "Element SUV", "Odyssey Minivan", 1/5)
+
+preferenceMatrix <- AhpMatrix(pp)
+goal$Find("Style")$SetChildPreferenceMatrix(preferenceMatrix)
+
+priorities(goal$Find("Style"))
+
+```
+
+### Capacity
+
+#### Cargo Capacity
+
+```{r}
+accord_sedan$cargo <- 14
+accord_hybrid$cargo <- 14
+pilot$cargo <- 87.6
+crv$cargo <- 72.9
+element$cargo <- 74.6
+odyssey$cargo <- 147.4
+```
+
+Their preference function is (again simplifying slightly):
+
+```{r}
+getCargoClass <- function(car) {
+    if (car$cargo >= 140) return (3)
+    if (car$cargo >= 70) return (2)
+    else return (1)
+}
+
+cargoPreference <- function(car1, car2) {
+   if (car1$cargo < car2$cargo) return (1/cargoPreference(car2, car1))
+   value <- getCargoClass(car1) - getCargoClass(car2) + 1
+   return (value)
+   
+}
+
+
+
+goal$Find(c("Capacity", "Cargo Capacity"))$CalculatePreferences(cargoPreference)
+priorities(goal$Find(c("Capacity", "Cargo Capacity")))
+
+```
+
+#### Passenger Capacity
+
+Again, we solve this using the ApplyPreferenceMatrix method:
+
+```{r}
+accord_sedan$passenger <- "5"
+accord_hybrid$passenger <- "5"
+pilot$passenger <- "8"
+crv$passenger <- "5"
+element$passenger <- "4"
+odyssey$passenger <- "8"
+
+passengerGoal <- AhpNode$new("Passenger Capacity Goal")
+passengerGoal$AddChild("4")
+passengerGoal$AddChild("5")
+passengerGoal$AddChild("8")
+
+pp <- passengerGoal$GetChildCombinations()
+#printForInput(pp)
+
+pp <- setPreference(pp, "4", "5", 1/3)
+pp <- setPreference(pp, "4", "8", 1/6)
+pp <- setPreference(pp, "5", "8", 1/2)
+
+goal$Find(c("Capacity", "Passenger Capacity"))$ApplyPreferenceMatrix(AhpMatrix(pp), 'passenger')
+
+priorities(goal$Find(c("Capacity", "Passenger Capacity")))
+
+
+```
+
+## Making the Decision
+
+```{r}
+priorities <- sapply(alternatives, function(y) sum(sapply(y$alternativeNodes, function(x) x$globalPriority)))
+priorities
+```
+And we have $\sum P=1$
+
+```{r}
+sum(priorities)
+```
+Finally, we can analyse our tree, in order to understand the source of our decision, and whether our choices were consistent:
+```{r}
+goal
 ```
 
 
