@@ -8,7 +8,7 @@ NULL
 #' @export
 #' @format An \code{\link{R6Class}} generator object
 #' @seealso \code{\link{AhpNode}}
-AhpAlternativeNode <- R6Class("AhpAlternativeNode",
+AlternativeNode <- R6Class("AlternativeNode",
                         inherit = AhpNode,
                         lock = FALSE,
                         public = list(
@@ -21,7 +21,7 @@ AhpAlternativeNode <- R6Class("AhpAlternativeNode",
                               self$alternative <- alternative
                               alternative$alternativeNodes <- c(alternative$alternativeNodes, self)
                             } else {
-                              stop("Cannot initialise AhpAlternativeNode without Alternative")
+                              stop("Cannot initialise AlternativeNode without Alternative")
                             }
                             
                             invisible (self)

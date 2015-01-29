@@ -13,3 +13,8 @@ FormatPercent <- function(x, digits = 2, format = "f", ...) {
   paste(formatC(100 * x, format = format, digits = digits, ...), ifelse(is.na(x), "", "%"))
 }
 
+
+#' @export
+PrintFixedDecimal <- function(x, digits = 3) {
+  ifelse(is.na(x), "", sprintf(paste0("%.",digits, "f"),x))
+}

@@ -8,9 +8,9 @@
 #' @importFrom R6 R6Class
 #' @export
 #' @format An \code{\link{R6Class}} generator object
-#' @usage AhpAlternative$new()
+#' @usage Alternative$new()
 #' @keywords ahp
-AhpAlternative <- R6Class("AhpAlternative",
+Alternative <- R6Class("Alternative",
                         lock = FALSE,
                         public = list(
                           name = "",
@@ -27,6 +27,22 @@ AhpAlternative <- R6Class("AhpAlternative",
                   
  
 )
+
+
+#' Constructor for a list of alternatives
+#' 
+#' @seealso \code{\link{AhpAlternative}}
+#' @export
+AlternativesList <- function(...) {
+  alternatives <- list(...)
+  class(alternatives) <- append(class(alternatives), "AlternativesList")
+  return (alternatives)
+}
+
+#' @export
+print.AlternativesList <- function(x, ...) {
+  stop("TODO!")
+}
 
 
 

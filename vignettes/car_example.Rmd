@@ -215,12 +215,12 @@ We are now ready to move to the next steps: Alternatives.
 The Jones family has researched and has 6 cars on their shortlist.
 
 ```{r}
-accord_sedan <- AhpAlternative$new("Accord Sedan")
-accord_hybrid <- AhpAlternative$new("Accord Hybrid")
-pilot <- AhpAlternative$new("Pilot SUV")
-crv <- AhpAlternative$new("CR-V SUV")
-element <- AhpAlternative$new("Element SUV")
-odyssey <- AhpAlternative$new("Odyssey Minivan")
+accord_sedan <- Alternative$new("Accord Sedan")
+accord_hybrid <- Alternative$new("Accord Hybrid")
+pilot <- Alternative$new("Pilot SUV")
+crv <- Alternative$new("CR-V SUV")
+element <- Alternative$new("Element SUV")
+odyssey <- Alternative$new("Odyssey Minivan")
 ```
 
 ### Adding the Alternatives
@@ -228,7 +228,7 @@ odyssey <- AhpAlternative$new("Odyssey Minivan")
 We add these alternatives to the goal:
 
 ```{r}
-alternatives <-  list(accord_sedan = accord_sedan,
+alternatives <-  AlternativesList(accord_sedan = accord_sedan,
                      accord_hybrid = accord_hybrid,
                      pilot = pilot,
                      crv = crv,

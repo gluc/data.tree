@@ -11,9 +11,9 @@ Description: Uses the Analytic Hierarchy Process (AHP) according to Saaty
 License: GPL-2
 Collate:
     'ahp.R'
-    'ahp_alternative.R'
     'node.R'
     'ahp_node.R'
-    'ahp_alternative_node.R'
+    'alternative.R'
+    'alternative_node.R'
     'preference_table.R'
     'util.R'

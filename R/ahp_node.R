@@ -58,7 +58,7 @@ AhpNode <- R6Class("AhpNode",
                       #leaf
                       for (alternative in alternativesList) {
                         #if (is.na(self$parent$classifierName) || alternative[[self$parent$classifierName]] == self$name) {
-                        alternativeNode <- AhpAlternativeNode$new(alternative)
+                        alternativeNode <- AlternativeNode$new(alternative)
                         super$AddChildNode(alternativeNode)
                         #}
                       }
@@ -171,13 +171,11 @@ globalPriorities <- function(ahpNode) {
 
 
 #' @export
-as.data.frame.AhpNode <- function(root) {
-  
-  df <- as.data.frame.Node(root)
-  df$priority <- FormatPercent(root$IterateAttributes('priority'))
-  df$globalPriority <- FormatPercent(root$IterateAttributes('globalPriority'))
-  df$childConsistency <- root$IterateAttributes('childConsistency')
-  
+as.data.frame.AhpNode <- function(root, 
+                                  row.names = c("level", "priority", "globalPriority", "childConsistency"), 
+                                  format = list(priority = FormatPercent, globalPriority = FormatPercent, childConsistency = PrintFixedDecimal) 
+                                  ) {
+                                  
+  df <- as.data.frame.Node(root, row.names = row.names, format = format)
   return (df)
-  
 }
