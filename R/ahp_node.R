@@ -172,10 +172,10 @@ globalPriorities <- function(ahpNode) {
 
 #' @export
 as.data.frame.AhpNode <- function(root, 
-                                  row.names = c("level", "priority", "globalPriority", "childConsistency"), 
+                                  cols = c("level", "priority", "globalPriority", "childConsistency"), 
                                   format = list(priority = FormatPercent, globalPriority = FormatPercent, childConsistency = PrintFixedDecimal) 
                                   ) {
                                   
-  df <- as.data.frame.Node(root, row.names = row.names, format = format)
+  df <- as.data.frame.Node(root, cols = cols, format = format)
   return (df)
 }

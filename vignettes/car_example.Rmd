@@ -50,8 +50,7 @@ goal <- AhpNode$new("Car")
     cargoCapacity <- capacity$AddChild("Cargo Capacity")
     passengerCapacity <- capacity$AddChild("Passenger Capacity")
 
-#as.Node(goal)
-goal
+print(goal, cols="level")
 ```
 
 ## Criteria
