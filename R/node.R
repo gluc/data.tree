@@ -49,10 +49,15 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      
-                      
-                      
-                      Find = function(path) {
+                      Find = function(...) {
+                        path <- as.character(match.call()[-1])
+                        #path <- as.character(as.list(match.call(expand.dots=TRUE))[-1])
+                        
+                        return (self$Find2(path))
+                      },
+                        
+                      Find2 = function(path) {
+                        
                         if (length(path) == 0) {
                           return (self)
                         } else {
@@ -62,7 +67,7 @@ Node <- R6Class("Node",
                           } else if (length(path) == 1) {
                             return (child)
                           } else {
-                            return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
+                            return (child$Find2( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
                           }
                         }
                       },

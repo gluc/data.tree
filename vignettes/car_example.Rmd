@@ -37,18 +37,18 @@ Using the ahp package, the ahp hierarchy tree can be constructed like so:
 library(ahp)
 goal <- AhpNode$new("Car")
   cost <- goal$AddChild("Cost")
-    purchasePrice <- cost$AddChild("Purchase Price")
-    fuelCosts <- cost$AddChild("Fuel Costs")
-    maintenanceCosts <- cost$AddChild("Maintenance Costs")
-    resaleValue <- cost$AddChild("Resale Value")
+    purchasePrice <- cost$AddChild("Purchase_Price")
+    fuelCosts <- cost$AddChild("Fuel_Costs")
+    maintenanceCosts <- cost$AddChild("Maintenance_Costs")
+    resaleValue <- cost$AddChild("Resale_Value")
   safety <- goal$AddChild("Safety")
-    curbWeight <- safety$AddChild("Curb Weight")
-    safetyClass <- safety$AddChild("Safety Class")
-    crashRating <- safety$AddChild("Crash Rating")
+    curbWeight <- safety$AddChild("Curb_Weight")
+    safetyClass <- safety$AddChild("Safety_Class")
+    crashRating <- safety$AddChild("Crash_Rating")
   style <- goal$AddChild("Style")
   capacity <- goal$AddChild("Capacity")
-    cargoCapacity <- capacity$AddChild("Cargo Capacity")
-    passengerCapacity <- capacity$AddChild("Passenger Capacity")
+    cargoCapacity <- capacity$AddChild("Cargo_Capacity")
+    passengerCapacity <- capacity$AddChild("Passenger_Capacity")
 
 print(goal, cols="level")
 ```
@@ -140,7 +140,7 @@ The AHP tree looks still incomplete. We need to set pairwise preferences for eac
 
 
 ```{r}
-pp <- goal$Find("Cost")$GetChildCombinations()
+pp <- goal$Find(Cost)$GetChildCombinations()
 #printForInput(pp)
 
 pp <- setPreference(pp, "Purchase Price"   , "Fuel Costs"       , 2)
@@ -151,15 +151,15 @@ pp <- setPreference(pp, "Fuel Costs"       , "Resale Value"     , 2)
 pp <- setPreference(pp, "Maintenance Costs", "Resale Value"     , 1/2)
 
 preferenceMatrix <- AhpMatrix(pp)
-goal$Find("Cost")$SetChildPreferenceMatrix(preferenceMatrix)
+goal$Find(Cost)$SetChildPreferenceMatrix(preferenceMatrix)
 
-priorities(goal$Find("Cost"))
+priorities(goal$Find(Cost))
 ```
 
 Note that the sum of the priorities is equal to 1:
 
 ```{r}
-sum(priorities(goal$Find("Cost")))
+sum(priorities(goal$Find(Cost)))
 ```
 
 Our AHP tree looks already a bit more complete:
@@ -175,7 +175,7 @@ We now need to do the same thing for Safety and Capacity. Note that we do not ha
 This should be straight forward by now:
 
 ```{r}
-pp <- goal$Find("Safety")$GetChildCombinations()
+pp <- goal$Find(Safety)$GetChildCombinations()
 #printForInput(pp)
 
 pp <- setPreference(pp, "Curb Weight"   , "Safety Class", 3)
@@ -183,21 +183,21 @@ pp <- setPreference(pp, "Curb Weight"   , "Crash Rating", 2)
 pp <- setPreference(pp, "Safety Class"  , "Crash Rating", 1/2)
 
 preferenceMatrix <- AhpMatrix(pp)
-goal$Find("Safety")$SetChildPreferenceMatrix(preferenceMatrix)
+goal$Find(Safety)$SetChildPreferenceMatrix(preferenceMatrix)
 
-goal$Find("Safety")
+goal$Find(Safety)
 
 ```
 
 ### Capacity
 
 ```{r}
-pp <- goal$Find("Capacity")$GetChildCombinations()
+pp <- goal$Find(Capacity)$GetChildCombinations()
 #printForInput(pp)
 
 pp <- setPreference(pp, "Cargo Capacity", "Passenger Capacity", 1/5)
 preferenceMatrix <- AhpMatrix(pp)
-goal$Find("Capacity")$SetChildPreferenceMatrix(preferenceMatrix)
+goal$Find(Capacity)$SetChildPreferenceMatrix(preferenceMatrix)
 ```
 
 Our AHP tree now looks like this:
@@ -305,7 +305,7 @@ purchasePricePreference <- function(car1, car2) {
 Once we have defined the preference function , we pass it to the `CalculatePreferences` method
 
 ```{r}
-goal$Find(c("Cost", "Purchase Price"))$CalculatePreferences(purchasePricePreference)
+goal$Find(Cost, Purchase_Price)$CalculatePreferences(purchasePricePreference)
 
 ```
 
@@ -313,13 +313,13 @@ The node has automatically calculated the ahp preference matrix ...
 
 
 ```{r}
-goal$Find(c("Cost", "Purchase Price"))$preferenceMatrix
+goal$Find(Cost, Purchase_Price)$preferenceMatrix
 
 ```
 
 ... as well as the priorities:
 ```{r}
-priorities(goal$Find(c("Cost", "Purchase Price")))
+priorities(goal$Find(Cost, Purchase_Price))
 
 ```
 
@@ -346,8 +346,8 @@ fuelCostFunction <- function(car1, car2) {
 This is all we need to calculate the preferences:
 
 ```{r}
-goal$Find(c("Cost", "Fuel Costs"))$CalculatePreferences(fuelCostFunction)
-sort(priorities(goal$Find(c("Cost", "Fuel Costs"))), decreasing = TRUE)
+goal$Find(Cost, Fuel_Costs)$CalculatePreferences(fuelCostFunction)
+sort(priorities(goal$Find(Cost, Fuel_Costs)), decreasing = TRUE)
 
 ```
 
@@ -356,7 +356,7 @@ sort(priorities(goal$Find(c("Cost", "Fuel Costs"))), decreasing = TRUE)
 The Jones family takes into consideration tire costs, brakes cost, consumer reports, and special costs (such as battery for the hybrid cars). Their pairwise comparison yields:
 
 ```{r}
-pp <- goal$Find(c("Cost", "Maintenance Costs"))$GetChildCombinations()
+pp <- goal$Find(Cost, Maintenance_Costs)$GetChildCombinations()
 #printForInput(pp)
 pp <- setPreference(pp, "Accord Sedan", "Accord Hybrid", 1.5)
 pp <- setPreference(pp, "Accord Sedan", "Pilot SUV", 4)
@@ -375,9 +375,9 @@ pp <- setPreference(pp, "CR-V SUV", "Odyssey Minivan", 3)
 pp <- setPreference(pp, "Element SUV", "Odyssey Minivan", 2)
 
 preferenceMatrix <- AhpMatrix(pp)
-goal$Find(c("Cost", "Maintenance Costs"))$SetChildPreferenceMatrix(preferenceMatrix)
+goal$Find(Cost, Maintenance_Costs)$SetChildPreferenceMatrix(preferenceMatrix)
 
-priorities(goal$Find(c("Cost", "Maintenance Costs")))
+priorities(goal$Find(Cost, Maintenance_Costs))
 
 ```
 ### Resale Value
@@ -405,8 +405,8 @@ resaleValuePreference <- function(car1, car2) {
   return (value)
 }
 
-goal$Find(c("Cost", "Resale Value"))$CalculatePreferences(resaleValuePreference)
-priorities(goal$Find(c("Cost", "Resale Value")))
+goal$Find(Cost, Resale_Value)$CalculatePreferences(resaleValuePreference)
+priorities(goal$Find(Cost, Resale_Value))
 
 ```
 
@@ -437,7 +437,7 @@ We use the ahp package utility function `LinearComparison`, assuming that the ov
 Note that we pass along additional parameters to the LinearComparison function.
 
 ```{r}
-goal$Find(c("Safety", "Curb Weight"))$CalculatePreferences(LinearComparison, fieldName = "curb_weight", min_x = 3000, max_x = 5000)
+goal$Find(Safety, Curb_Weight)$CalculatePreferences(LinearComparison, fieldName = "curb_weight", min_x = 3000, max_x = 5000)
 ```
 
 This will, for example 
@@ -447,15 +447,15 @@ This will, for example
 That's all there is to it. Our preferences are readily calculated:
 
 ```{r}
-goal$Find(c("Safety", "Curb Weight"))
+goal$Find(Safety, Curb_Weight)
 ```
 
 As expected, the heaviest car has the highest priority.
 If the Jones' believe that this gives too much weight to the heaviest one, they could simply recalculate the preferences with different settings, e.g.
 
 ```{r}
-goal$Find(c("Safety", "Curb Weight"))$CalculatePreferences(LinearComparison, fieldName = "curb_weight", min_x = 2000, max_x = 5500)
-goal$Find(c("Safety", "Curb Weight"))
+goal$Find(Safety, Curb_Weight)$CalculatePreferences(LinearComparison, fieldName = "curb_weight", min_x = 2000, max_x = 5500)
+goal$Find(Safety, Curb_Weight)
 ```
 
 #### Safety Class: Using ApplyPreferenceMatrix
@@ -502,8 +502,8 @@ We apply the preferenceMatrix to the Safety Class criteria in our original AHP t
 
 ```{r}
 
-goal$Find(c("Safety", "Safety Class"))$ApplyPreferenceMatrix(preferenceMatrix, 'safetyClass')
-priorities(goal$Find(c("Safety", "Safety Class")))
+goal$Find(Safety, Safety_Class)$ApplyPreferenceMatrix(preferenceMatrix, safetyClass)
+priorities(goal$Find(Safety, Safety_Class))
 ```
 
 
@@ -541,8 +541,8 @@ pp <- setPreference(pp, "3 in Rollover"         , "All 5 Stars"  , 1/6)
 
 preferenceMatrix <- AhpMatrix(pp)
 
-goal$Find(c("Safety", "Crash Rating"))$ApplyPreferenceMatrix(preferenceMatrix, 'crashRating')
-priorities(goal$Find(c("Safety", "Crash Rating")))
+goal$Find(Safety, Crash_Rating)$ApplyPreferenceMatrix(preferenceMatrix, crashRating)
+priorities(goal$Find(Safety, Crash_Rating))
 ```
 
 ### Style
@@ -606,8 +606,8 @@ cargoPreference <- function(car1, car2) {
 
 
 
-goal$Find(c("Capacity", "Cargo Capacity"))$CalculatePreferences(cargoPreference)
-priorities(goal$Find(c("Capacity", "Cargo Capacity")))
+goal$Find(Capacity, Cargo_Capacity)$CalculatePreferences(cargoPreference)
+priorities(goal$Find(Capacity, Cargo_Capacity))
 
 ```
 
@@ -635,9 +635,9 @@ pp <- setPreference(pp, "4", "5", 1/3)
 pp <- setPreference(pp, "4", "8", 1/6)
 pp <- setPreference(pp, "5", "8", 1/2)
 
-goal$Find(c("Capacity", "Passenger Capacity"))$ApplyPreferenceMatrix(AhpMatrix(pp), 'passenger')
+goal$Find(Capacity, Passenger_Capacity)$ApplyPreferenceMatrix(AhpMatrix(pp), passenger)
 
-priorities(goal$Find(c("Capacity", "Passenger Capacity")))
+priorities(goal$Find(Capacity, Passenger_Capacity))
 
 
 ```

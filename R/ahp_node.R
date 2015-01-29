@@ -72,6 +72,7 @@ AhpNode <- R6Class("AhpNode",
                   
       
                   AddChild = function(name) {
+                    name <- as.character(match.call()[-1])[1]
                     child <- AhpNode$new(name)
                     invisible (super$AddChildNode(child))
                   },
@@ -102,7 +103,8 @@ AhpNode <- R6Class("AhpNode",
                   },
                   
                   
-                  ApplyPreferenceMatrix = function(preferenceMatrix, fieldName) {
+                  ApplyPreferenceMatrix = function(preferenceMatrix, field) {
+                    fieldName <- as.character(match.call()[-1])[2]
                     cats <- dimnames(preferenceMatrix)[1]
                     mat <- matrix(1, nrow = length(self$children), length(self$children), byrow = TRUE, dimnames = list(names(self$children), names(self$children)))
                     for (i in self$children) {
@@ -113,12 +115,36 @@ AhpNode <- R6Class("AhpNode",
                       }
                     }
                     self$SetChildPreferenceMatrix(mat)
-                  }
+                  },
+                  
+                  GetAlternativePriority = function(alternative) {
+                    alternativeName <- as.character(match.call()[-1])[1]
+                    return (self$GetAlternativePriority2(alternativeName))
+                  },
+                  
+                  GetAlternativePriority2 = function(alternativeName) {
+                    
+                    if (self$isLeaf) {
+                      if (self$name == alternativeName) {
+                        return (self$globalPriority)
+                      } else {
+                        return (0)
+                      }
+                    } else {
+                      v <- sum(sapply(self$children, function(x) x$GetAlternativePriority2(alternativeName)))
+                      return (v)
+                    }
+                  }  
+
                   
                   
                   
                   
                 ),
+                
+              
+                
+                
                 active = list(
                   
                   priority = function(value) {
@@ -153,6 +179,7 @@ AhpNode <- R6Class("AhpNode",
                 
                 private = list(
                   p_priority = NA,
+                  
                   preferenceMatrix = NA
                 )
 )
