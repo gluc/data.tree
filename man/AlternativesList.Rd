@@ -10,6 +10,6 @@ AlternativesList(...)
 Constructor for a list of alternatives
 }
 \seealso{
-\code{\link{AhpAlternative}}
+\code{\link{Alternative}}
 }
 

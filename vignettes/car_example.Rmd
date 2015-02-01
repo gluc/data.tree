@@ -121,7 +121,7 @@ priorities(goal)
 As preferences are expressed *pairwise*, it is possible that our preferences are inconsistent. The AHP algorithm introduces a consistency measure to check whether our pairwise preferences make sense. This consistency measure is obtained like this:
 
 ```{r}
-goal$childConsistency
+goal$consistency
 ```
 
 Remember that the lower the consistency, the better.
@@ -645,17 +645,34 @@ priorities(goal$Find("Capacity", "Passenger Capacity"))
 ## Making the Decision
 
 ```{r}
-priorities <- sapply(alternatives, function(y) sum(sapply(y$alternativeNodes, function(x) x$globalPriority)))
-priorities
+p <- priorities(alternatives)
 ```
 And we have $\sum P=1$
 
 ```{r}
-sum(priorities)
+sum(p)
 ```
 Finally, we can analyse our tree, in order to understand the source of our decision, and whether our choices were consistent:
 ```{r}
-goal
+print(alternatives)
 ```
 
+Looking at the solution, we might find that Safety is Curb Weight has too much influence, so let's adjust:
 
+```{r}
+pp <- goal$Find("Safety")$GetChildCombinations()
+#printForInput(pp)
+
+pp <- setPreference(pp, "Curb Weight"   , "Safety Class", 3)
+pp <- setPreference(pp, "Curb Weight"   , "Crash Rating", 2)
+pp <- setPreference(pp, "Safety Class"  , "Crash Rating", 1/2)
+
+preferenceMatrix <- AhpMatrix(pp)
+goal$Find("Safety")$SetChildPreferenceMatrix(preferenceMatrix)
+```
+
+Our decision is now:
+
+```{r}
+print(alternatives)
+```

@@ -70,11 +70,20 @@ Node <- R6Class("Node",
                       Iterate = function(attribute, ...) {
                         v <- self[[attribute]]
                         if (is.function(v)) v <- v(...)
-                        childV <- as.vector(unlist(sapply(self$children, function(x) x$Iterate(attribute, ...))))
+                        childV <- as.vector(
+                                    unlist(
+                                      sapply(
+                                        self$children, 
+                                        function(x) x$Iterate(attribute, ...)
+                                      )
+                                    )
+                                  )
                         #browser()
                         x <- c(v, childV)
                         return (x)
                       }
+                      
+                      
                       
                     ),
                 
@@ -131,6 +140,14 @@ Node <- R6Class("Node",
                         } else {
                           return (1 + self$parent$level)
                         }
+                      },
+                      
+                      root = function() {
+                        if (self$isRoot) {
+                          invisible (self)
+                        } else {
+                          invisible (self$parent$root)
+                        }
                       }
                       
                       
@@ -155,15 +172,31 @@ print.Node <- function(node, ...) {
 
 
 #' @export
-as.data.frame.Node <- function(node, cols = c("level"), format = list()) {
+as.data.frame.Node <- function(node, 
+                               cols = c("level"), 
+                               args = list(), 
+                               format = list()
+                               ) {
   df <- data.frame( levelName = format(node$Iterate('levelName')),
                     stringsAsFactors = FALSE)
-  for (v in cols) {
-    if (!is.null(format[[v]])) {
-      df[v] <- format[[v]](node$Iterate(v))
+  
+  for (i in 1:length(cols)) {
+    v <- cols[i]
+    
+    if (!is.null(names(v)) && nchar(names(v)) > 0) {
+      vn <- names(v)
     } else {
-      df[v] <- node$Iterate(v)
+      vn <- v
     }
+    
+    it <- node$Iterate(v, args[[vn]])
+    
+    if (!is.null(format[[vn]])) {
+      it <- format[[vn]](it)
+    }
+    
+    df[vn] <- it
+    
   }
   return (df)
                                   

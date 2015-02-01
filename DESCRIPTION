@@ -13,7 +13,7 @@ Collate:
     'ahp.R'
     'node.R'
     'ahp_node.R'
-    'alternative.R'
     'alternative_node.R'
+    'alternative.R'
     'preference_table.R'
     'util.R'

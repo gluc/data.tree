@@ -20,7 +20,7 @@ AhpNode <- R6Class("AhpNode",
                     invisible (self)
                   },
                   
-                  childConsistency = NA,
+                  consistency = NA,
                   
                   CalculatePreferences = function(FUN, ...) {
                     
@@ -95,7 +95,7 @@ AhpNode <- R6Class("AhpNode",
                     ahpResult <- Ahp(preferenceMatrix)
                     
                     priorities <- ahpResult$ahp
-                    self$childConsistency <- ahpResult$consistency
+                    self$consistency <- ahpResult$consistency
                     
                     sapply(self$children, function(x) x$priority <- as.numeric(priorities[x$name]))
                     
@@ -180,9 +180,14 @@ AhpNode <- R6Class("AhpNode",
                 )
 )
 
+#' @export
+priorities <- function(x) {
+  UseMethod("priorities", x)
+}
+
 
 #' @export
-priorities <- function(ahpNode) {
+priorities.AhpNode <- function(ahpNode) {
   sapply(ahpNode$children, function(x) x$priority)
 }
 
@@ -195,10 +200,13 @@ globalPriorities <- function(ahpNode) {
 
 #' @export
 as.data.frame.AhpNode <- function(root, 
-                                  cols = c("level", "priority", "globalPriority", "childConsistency"), 
-                                  format = list(priority = FormatPercent, globalPriority = FormatPercent, childConsistency = PrintFixedDecimal) 
+                                  cols = c("level", "priority", "globalPriority", "consistency"), 
+                                  args = list(),
+                                  format = list(priority = FormatPercent, globalPriority = FormatPercent, consistency = PrintFixedDecimal)
                                   ) {
                                   
-  df <- as.data.frame.Node(root, cols = cols, format = format)
+  df <- as.data.frame.Node(root, cols = cols, args = args, format = format)
   return (df)
 }
+
+
