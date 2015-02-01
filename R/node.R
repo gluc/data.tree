@@ -50,14 +50,7 @@ Node <- R6Class("Node",
                       
                       
                       Find = function(...) {
-                        path <- as.character(match.call()[-1])
-                        #path <- as.character(as.list(match.call(expand.dots=TRUE))[-1])
-                        
-                        return (self$Find2(path))
-                      },
-                        
-                      Find2 = function(path) {
-                        
+                        path <- as.character(list(...))
                         if (length(path) == 0) {
                           return (self)
                         } else {
@@ -67,17 +60,19 @@ Node <- R6Class("Node",
                           } else if (length(path) == 1) {
                             return (child)
                           } else {
-                            return (child$Find2( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
+                            return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
                           }
                         }
                       },
                       
                       
-                      IterateAttributes = function(attribute) {
-                        mypath <- self[[attribute]]
-                        childPaths <- as.vector(unlist(sapply(self$children, function(x) x$IterateAttributes(attribute))))
+                      
+                      Iterate = function(attribute, ...) {
+                        v <- self[[attribute]]
+                        if (is.function(v)) v <- v(...)
+                        childV <- as.vector(unlist(sapply(self$children, function(x) x$Iterate(attribute, ...))))
                         #browser()
-                        x <- c(mypath, childPaths)
+                        x <- c(v, childV)
                         return (x)
                       }
                       
@@ -161,14 +156,13 @@ print.Node <- function(node, ...) {
 
 #' @export
 as.data.frame.Node <- function(node, cols = c("level"), format = list()) {
-  df <- data.frame( levelName = format(node$IterateAttributes('levelName')),
+  df <- data.frame( levelName = format(node$Iterate('levelName')),
                     stringsAsFactors = FALSE)
-  
   for (v in cols) {
     if (!is.null(format[[v]])) {
-      df[v] <- format[[v]](node$IterateAttributes(v))
+      df[v] <- format[[v]](node$Iterate(v))
     } else {
-      df[v] <- node$IterateAttributes(v)
+      df[v] <- node$Iterate(v)
     }
   }
   return (df)

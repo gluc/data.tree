@@ -29,6 +29,12 @@ Alternative <- R6Class("Alternative",
 )
 
 
+print.Alternative <- function(x, ...) {
+  
+}
+
+
+
 #' Constructor for a list of alternatives
 #' 
 #' @seealso \code{\link{AhpAlternative}}
@@ -41,7 +47,7 @@ AlternativesList <- function(...) {
 
 #' @export
 print.AlternativesList <- function(x, ...) {
-  stop("TODO!")
+  
 }
 
 

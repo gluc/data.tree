@@ -117,12 +117,8 @@ AhpNode <- R6Class("AhpNode",
                     self$SetChildPreferenceMatrix(mat)
                   },
                   
-                  GetAlternativePriority = function(alternative) {
-                    alternativeName <- as.character(match.call()[-1])[1]
-                    return (self$GetAlternativePriority2(alternativeName))
-                  },
-                  
-                  GetAlternativePriority2 = function(alternativeName) {
+                                   
+                  GetAlternativePriority = function(alternativeName) {
                     
                     if (self$isLeaf) {
                       if (self$name == alternativeName) {
@@ -131,7 +127,7 @@ AhpNode <- R6Class("AhpNode",
                         return (0)
                       }
                     } else {
-                      v <- sum(sapply(self$children, function(x) x$GetAlternativePriority2(alternativeName)))
+                      v <- sum(sapply(self$children, function(x) x$GetAlternativePriority(alternativeName)))
                       return (v)
                     }
                   }  
