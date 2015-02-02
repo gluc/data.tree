@@ -67,20 +67,35 @@ Node <- R6Class("Node",
                       
                       
                       
-                      Iterate = function(attribute, ...) {
+                      Flatten = function(attribute, ...) {
                         v <- self[[attribute]]
                         if (is.function(v)) v <- v(...)
-                        childV <- as.vector(
-                                    unlist(
-                                      sapply(
-                                        self$children, 
-                                        function(x) x$Iterate(attribute, ...)
-                                      )
-                                    )
-                                  )
-                        #browser()
-                        x <- c(v, childV)
+                        if (is.null(v)) v <- NA
+                        if(!self$isLeaf) {
+                          childL <- unlist(sapply(self$children, function(x) x$Flatten(attribute, ...)))
+                          childL[sapply(childL, is.null)] <- NA
+                          childV <- as.vector(childL)
+                          
+                          x <- c(v, childV)
+                        } else {
+                          x <- v
+                        }
                         return (x)
+                      },
+                      
+                      Aggregate = function(attribute, fun, ...) {
+                        v <- self[[attribute]]
+                        if (!is.null(v)) {
+                          if (is.function(v)) v <- v(...)
+                          return (v)
+                        }
+                        if (self$isLeaf) stop(paste0("Cannot find attribute ", attribute, "!"))
+                        
+                        values <- sapply(self$children, function(x) x$Aggregate(attribute, fun, ...))
+                        result <- fun(values)
+                        return (result)
+                        
+                        
                       }
                       
                       
@@ -177,7 +192,7 @@ as.data.frame.Node <- function(node,
                                args = list(), 
                                format = list()
                                ) {
-  df <- data.frame( levelName = format(node$Iterate('levelName')),
+  df <- data.frame( levelName = format(node$Flatten('levelName')),
                     stringsAsFactors = FALSE)
   
   for (i in 1:length(cols)) {
@@ -189,7 +204,7 @@ as.data.frame.Node <- function(node,
       vn <- v
     }
     
-    it <- node$Iterate(v, args[[vn]])
+    it <- node$Flatten(v, args[[vn]])
     
     if (!is.null(format[[vn]])) {
       it <- format[[vn]](it)

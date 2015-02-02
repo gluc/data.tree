@@ -1,0 +1,134 @@
+---
+title: "Node Examples"
+author: "Christoph Glur"
+date: "2.2.2015"
+output: html_document
+---
+
+## Creating a Tree
+
+Let's start by creating a tree of nodes. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year.
+
+```{r}
+library(ahp)
+acme <- Node$new("Acme Inc.")
+  accounting <- acme$AddChild("Accounting")
+    software <- accounting$AddChild("New Software")
+    standards <- accounting$AddChild("New Accounting Standards")
+  research <- acme$AddChild("Research")
+    newProductLine <- research$AddChild("New Product Line")
+    newLabs <- research$AddChild("New Labs")
+  it <- acme$AddChild("IT")
+    outsource <- it$AddChild("Outsource")
+    agile <- it$AddChild("Go agile")
+    goToR <- it$AddChild("Switch to R")
+
+print(acme)
+  
+```
+## Setting Custom Attributes
+
+Now, let's associate some costs with the projects:
+```{r}
+software$cost <- 1000000
+standards$cost <- 500000
+newProductLine$cost <- 2000000
+newLabs$cost <- 750000
+outsource$cost <- 400000
+agile$cost <- 250000
+goToR$cost <- 50000
+
+```
+And some probabilities that the projecs will be executed in the next year:
+
+```{r}
+software$p <- 0.5
+standards$p <- 0.75
+newProductLine$p <- 0.25
+newLabs$p <- 0.9
+outsource$p <- 0.2
+agile$p <- 0.05
+goToR$p <- 1
+
+```
+
+## Converting to data.frame
+
+We can now convert the tree into a data.frame:
+
+```{r}
+acmedf <- as.data.frame(acme)
+acmedf
+
+```
+Adding the cost is easy:
+```{r}
+acmedf$cost <- acme$Flatten("cost")
+```
+
+We could have achieved the same result in one go:
+```{r}
+acmedf <- as.data.frame(acme, cols = c("level", "cost"))
+acmedf
+```
+
+## Formatting Output
+
+We can use formating numbers to pretty print the output:
+
+```{r}
+printMoney <- function(x) {
+  format(x, digits=10, nsmall=2, decimal.mark=".", big.mark="'", scientific = FALSE)
+}
+
+
+acmedf <- as.data.frame(acme, 
+                        cols = c("level", "cost", probability = "p"),
+                        format = c(cost = printMoney, probability = FormatPercent))
+
+acmedf
+```
+
+## Setting Custom Functions
+
+We can decorate each node in our tree with a function:
+```{r}
+ExpectedCost <- function() {
+  self$cost * self$p
+}
+
+goToR$ExpectedCost <- ExpectedCost
+
+goToR$ExpectedCost()
+
+```
+
+
+## Aggregation
+
+
+Calculating the aggregated costs per level:
+
+```{r}
+acme$Aggregate("cost", sum)
+accounting$Aggregate("cost", mean)
+```
+
+We can Flatten using the Aggregate function:
+
+```{r}
+acme$Flatten("Aggregate", "cost", sum)
+
+```
+Or, directly as a data.frame:
+
+```{r}
+acmedf <- as.data.frame(acme, 
+                        cols = c("level", cost = "Aggregate", probability = "p"),
+                        args = list(cost = list("cost", sum)),
+                        format = c(cost = printMoney, probability = FormatPercent))
+
+acmedf
+```
+
+

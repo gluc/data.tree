@@ -151,7 +151,6 @@ AhpNode <- R6Class("AhpNode",
                         
                         return (1)
                       } else {
-                        #return (0.2)
                         return (self$p_priority)
                       }
                     } else {
