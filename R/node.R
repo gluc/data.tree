@@ -178,6 +178,7 @@ Node <- R6Class("Node",
 
 
 
+
 #' @export
 print.Node <- function(node, ...) {
   print(as.data.frame(node, ...))

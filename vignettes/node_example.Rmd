@@ -77,42 +77,135 @@ acmedf
 We can use formating numbers to pretty print the output:
 
 ```{r}
-printMoney <- function(x) {
+PrintMoney <- function(x) {
   format(x, digits=10, nsmall=2, decimal.mark=".", big.mark="'", scientific = FALSE)
 }
 
 
 acmedf <- as.data.frame(acme, 
                         cols = c("level", "cost", probability = "p"),
-                        format = c(cost = printMoney, probability = FormatPercent))
+                        format = c(cost = PrintMoney, probability = FormatPercent))
 
 acmedf
 ```
 
-## Setting Custom Functions
+## Custom Methods
 
-We can decorate each node in our tree with a function:
+If we want to add a custom method to our node class, we can create a subclass.
+
 ```{r}
-ExpectedCost <- function() {
-  self$cost * self$p
-}
+library(R6)
+MyNode <- R6Class("MyNode",
+                    inherit = Node,
+                    lock = FALSE,
+                    
+                    #public fields and function
+                    public = list(
+                        p = NULL, 
+                        cost = NULL,
+                        AddChild = function(name) {
+                          child <- MyNode$new(name)
+                          invisible (self$AddChildNode(child))
+                        }
+                    ),
+                    
+                    #active
+                    active = list(
+                      expectedCost = function() {
+                        if ( any(sapply(list(self$p, self$cost), is.null))) return (NULL)
+                        self$p * self$cost                    
+                      }
+                    )
+                )
 
-goToR$ExpectedCost <- ExpectedCost
+```
 
-goToR$ExpectedCost()
+The AddChild utility function in the subclass allows us to construct the tree just as before:
 
+```{r}
+
+
+acme <- MyNode$new("Acme Inc.")
+  accounting <- acme$AddChild("Accounting")
+    software <- accounting$AddChild("New Software")
+    standards <- accounting$AddChild("New Accounting Standards")
+  research <- acme$AddChild("Research")
+    newProductLine <- research$AddChild("New Product Line")
+    newLabs <- research$AddChild("New Labs")
+  it <- acme$AddChild("IT")
+    outsource <- it$AddChild("Outsource")
+    agile <- it$AddChild("Go agile")
+    goToR <- it$AddChild("Switch to R")
+
+```
+
+From a user's perspective, setting attributes is the same, regardless of whether the attribute was defined in the class like here, or whether the attribute was patched onto the object after construction (as above):
+
+
+```{r}
+
+
+software$cost <- 1000000
+standards$cost <- 500000
+newProductLine$cost <- 2000000
+newLabs$cost <- 750000
+outsource$cost <- 400000
+agile$cost <- 250000
+goToR$cost <- 50000
+
+software$p <- 0.5
+standards$p <- 0.75
+newProductLine$p <- 0.25
+newLabs$p <- 0.9
+outsource$p <- 0.2
+agile$p <- 0.05
+goToR$p <- 1
+```
+
+MyNode now subclasses Node:
+
+```{r}
+class(agile)
+```
+
+
+We can now call the function directly on the instance:
+
+```{r}
+agile$expectedCost == agile$p * agile$cost
 ```
 
 
 ## Aggregation
 
-
-Calculating the aggregated costs per level:
+The Aggregate method allows applying a function to a node's children, whereby the children's value again may come from an aggregate. This is best explained by example. Assume we want to sum up the costs along the tree. For a single node, this is achieved like this:
 
 ```{r}
-acme$Aggregate("cost", sum)
-accounting$Aggregate("cost", mean)
+accounting$Aggregate("cost", sum)
 ```
+
+The Aggregate method is smart enough to iterate through childs recursively, until the requested attribut is not null. This allows us to aggregate e.g. the cost for the entire company:
+
+```{r}
+acme$Aggregate("cost", mean)
+```
+
+However, we can actively make the iteration stop by setting a specific value:
+
+```{r}
+
+accounting$cost <- 5000000
+acme$Aggregate("cost", mean)
+accounting$cost <- NULL
+acme$Aggregate("cost", mean)
+```
+
+
+Of course, we can also use the custom property expectedCost in the aggregate function:
+```{r}
+it$Aggregate("expectedCost", sum)
+```
+
 
 We can Flatten using the Aggregate function:
 
@@ -123,12 +216,23 @@ acme$Flatten("Aggregate", "cost", sum)
 Or, directly as a data.frame:
 
 ```{r}
+stop("DOESN?T WORK!")
 acmedf <- as.data.frame(acme, 
                         cols = c("level", cost = "Aggregate", probability = "p"),
-                        args = list(cost = list("cost", sum)),
-                        format = c(cost = printMoney, probability = FormatPercent))
+                        args = list(cost = c("cost", sum)),
+                        format = c(cost = PrintMoney, probability = FormatPercent))
 
+
+IDEA: instead use 
+
+
+acmedf <- as.data.frame(acme, 
+                        "level", #by default, column name = variable name
+                        cost = c(args = "Aggregate", format = PrintMoney, "cost", sum), #but you can provide a name, and add ...
+                        probability = c("p", FormatPercent)
+                        )
 acmedf
 ```
+
 
 
