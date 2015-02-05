@@ -185,10 +185,71 @@ print.Node <- function(node, ...) {
 }
 
 
+#' @export
+as.data.frame.Node <- function(node, ...) {
+  df <- data.frame( levelName = format(node$Flatten('levelName')),
+                    stringsAsFactors = FALSE)
+  
+  cols <- list(...)
+  
+  if(length(cols) == 0) return (df)
+  for (i in 1:length(cols)) {
+
+    col <- ParseArg(cols, i, "col", 1)
+    
+    #column name to be displayed
+    if (!is.null(names(cols)) && nchar(names(cols)[[i]]) > 0) {
+      colName <- names(cols)[[i]]
+    } else {
+      colName <- col
+    }
+    
+    args <- ParseArg(cols, i, "args", 2)
+    myformat <- ParseArg(cols, i, "format", 3)   
+ 
+    it <- node$Flatten(col, args)
+    
+    if (!is.null(myformat)) {
+      it <- myformat(it)
+    }
+    
+    df[colName] <- it
+    
+  }
+  return (df)
+  
+}
+
+ParseArg <- function(cols, i, argName, pos) {
+  col <- cols[[i]]
+  
+  if (length(col) == 1) {
+    if (pos == 1) {
+      #only e.g. "level" is given as arg
+      return (col)
+    } else {
+      return (NULL)
+    }
+  }
+  
+  #col must be a vector or list
+  
+  if (any(names(col) == argName)) {
+    #named args
+    args <- col[[argName]]
+  } else if (length(col) >= pos && (is.null(names(col)) || nchar(names(col)[pos]) == 0)) {
+    #no name
+    args <- col[[pos]]
+  } else {
+    args <- NULL
+  }
+  return (args)
+}
+
 
 
 #' @export
-as.data.frame.Node <- function(node, 
+as.data.frame2.Node <- function(node, 
                                cols = c("level"), 
                                args = list(), 
                                format = list()

@@ -64,17 +64,18 @@ acmedf
 Adding the cost is easy:
 ```{r}
 acmedf$cost <- acme$Flatten("cost")
+acmedf
 ```
 
 We could have achieved the same result in one go:
 ```{r}
-acmedf <- as.data.frame(acme, cols = c("level", "cost"))
+acmedf <- as.data.frame(acme, "level", "cost")
 acmedf
 ```
 
 ## Formatting Output
 
-We can use formating numbers to pretty print the output:
+We can use formating functions to pretty print the output:
 
 ```{r}
 PrintMoney <- function(x) {
@@ -83,9 +84,10 @@ PrintMoney <- function(x) {
 
 
 acmedf <- as.data.frame(acme, 
-                        cols = c("level", "cost", probability = "p"),
-                        format = c(cost = PrintMoney, probability = FormatPercent))
-
+                          "level", 
+                          c("cost", format = PrintMoney), 
+                          probability = c("p", format = FormatPercent)
+                        )
 acmedf
 ```
 
@@ -204,33 +206,29 @@ acme$Aggregate("cost", mean)
 Of course, we can also use the custom property expectedCost in the aggregate function:
 ```{r}
 it$Aggregate("expectedCost", sum)
+acme$Aggregate("expectedCost", max)
 ```
 
+
+### Print aggregate function
 
 We can Flatten using the Aggregate function:
 
 ```{r}
-acme$Flatten("Aggregate", "cost", sum)
+acme$Flatten("Aggregate", "expectedCost", sum)
 
 ```
 Or, directly as a data.frame:
 
 ```{r}
-stop("DOESN?T WORK!")
-acmedf <- as.data.frame(acme, 
-                        cols = c("level", cost = "Aggregate", probability = "p"),
-                        args = list(cost = c("cost", sum)),
-                        format = c(cost = PrintMoney, probability = FormatPercent))
-
-
-IDEA: instead use 
-
 
 acmedf <- as.data.frame(acme, 
-                        "level", #by default, column name = variable name
-                        cost = c(args = "Aggregate", format = PrintMoney, "cost", sum), #but you can provide a name, and add ...
-                        probability = c("p", FormatPercent)
+                        "level",
+                        cost = c("Aggregate", args = c("cost", sum), format = PrintMoney),
+                        probability = c("p", format = FormatPercent),
+                        ec = c("Aggregate", args = c("expectedCost", sum), format = PrintMoney)
                         )
+                        
 acmedf
 ```
 
