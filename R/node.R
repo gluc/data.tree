@@ -71,6 +71,7 @@ Node <- R6Class("Node",
                         v <- self[[attribute]]
                         if (is.function(v)) v <- v(...)
                         if (is.null(v)) v <- NA
+                        names(v) <- self$name
                         if(!self$isLeaf) {
                           childL <- unlist(sapply(self$children, function(x) x$Flatten(attribute, ...)))
                           childL[sapply(childL, is.null)] <- NA
@@ -96,6 +97,18 @@ Node <- R6Class("Node",
                         return (result)
                         
                         
+                      },
+                      
+                      Traject = function(attribute, ...) {
+                        v <- self[[attribute]]
+                        if (is.function(v)) v <- v(...)
+                        if (is.null(v)) v <- NA
+                        names(v) <- self$name
+                        if (self$isRoot) return(v)
+                        parentV <- self$parent$Traject(attribute, ...)
+                        res <- c(parentV, v)
+                        return (res)
+                      
                       }
                       
                       
@@ -206,8 +219,10 @@ as.data.frame.Node <- function(node, ...) {
     
     args <- ParseArg(cols, i, "args", 2)
     myformat <- ParseArg(cols, i, "format", 3)   
- 
-    it <- node$Flatten(col, args)
+   
+    #it <- node$Flatten(col, args)
+    flattenArgs <- append(list(col), args)
+    it <- do.call(node$Flatten, flattenArgs)
     
     if (!is.null(myformat)) {
       it <- myformat(it)

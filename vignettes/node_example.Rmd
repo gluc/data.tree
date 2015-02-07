@@ -224,13 +224,51 @@ Or, directly as a data.frame:
 
 acmedf <- as.data.frame(acme, 
                         "level",
-                        cost = c("Aggregate", args = c("cost", sum), format = PrintMoney),
-                        probability = c("p", format = FormatPercent),
-                        ec = c("Aggregate", args = c("expectedCost", sum), format = PrintMoney)
+                        cost = list("Aggregate", args = c("cost", sum), format = PrintMoney),
+                        probability = list("p", format = FormatPercent),
+                        ec = list("Aggregate", args = c("expectedCost", sum), format = PrintMoney)
                         )
                         
 acmedf
 ```
 
 
+An alternative way to achieve the same thing using the magrittr package is:
+
+```{r}
+library(magrittr)
+as.data.frame(acme) %>% 
+  cbind(cost = acme$Flatten("Aggregate", "cost", sum) %>% PrintMoney) %>% 
+  cbind(p = acme$Flatten("p") %>% FormatPercent) %>% 
+  cbind(ec = acme$Flatten("Aggregate", "expectedCost", sum) %>% PrintMoney) -> acmedf
+```
+
+## Traject parents
+
+The Traject method is similar to the Flatten, except that it moves in the other direction, from a child to its parent.
+For example, let's consider the following manager salaries:
+```{r}
+acme$managerSalary <- 250000
+accounting$managerSalary <- 100000
+research$managerSalary <- 125000
+it$managerSalary <- 90000
+
+```
+
+Then, again using magrittr, the mean salary of the IT manager's business line is:
+
+```{r}
+it$Traject("managerSalary")
+
+it$Traject("managerSalary") %>% mean
+
+```
+
+Or, more as an exercise than anything else, we could write our own level function:
+```{r}
+as.data.frame(acme) %>% 
+  cbind(level = acme$Flatten("Traject", "name", length)) -> acmedf
+
+
+```
 
