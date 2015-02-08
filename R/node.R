@@ -66,22 +66,15 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      
                       Flatten = function(attribute, ...) {
-                        v <- self[[attribute]]
-                        if (is.function(v)) v <- v(...)
-                        if (is.null(v)) v <- NA
+                        v <- self$GetAttribute(attribute, ...)
                         names(v) <- self$name
                         if(!self$isLeaf) {
-                          childL <- unlist(sapply(self$children, function(x) x$Flatten(attribute, ...)))
-                          childL[sapply(childL, is.null)] <- NA
-                          childV <- as.vector(childL)
-                          
-                          x <- c(v, childV)
-                        } else {
-                          x <- v
+                          for(child in self$children) {
+                            v <- c(v, child$Flatten(attribute, ...))
+                          }
                         }
-                        return (x)
+                        return (v)
                       },
                       
                       Aggregate = function(attribute, fun, ...) {
@@ -95,20 +88,30 @@ Node <- R6Class("Node",
                         values <- sapply(self$children, function(x) x$Aggregate(attribute, fun, ...))
                         result <- fun(values)
                         return (result)
-                        
-                        
+                      },
+                      
+                      Sort = function(attribute, ..., decreasing = FALSE) {
+                        if (self$isLeaf) return()
+                        ChildL <- sapply(self$children, function(x) x$GetAttribute(attribute, ...))
+                        self$children <- self$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
+                        for(child in self$children) child$Sort(attribute, ..., decreasing = decreasing)
                       },
                       
                       Traject = function(attribute, ...) {
-                        v <- self[[attribute]]
-                        if (is.function(v)) v <- v(...)
-                        if (is.null(v)) v <- NA
+                        v <- self$GetAttribute(attribute, ...)
                         names(v) <- self$name
                         if (self$isRoot) return(v)
                         parentV <- self$parent$Traject(attribute, ...)
                         res <- c(parentV, v)
                         return (res)
                       
+                      },
+                      
+                      GetAttribute = function(attribute, ...) {
+                        v <- self[[attribute]]
+                        if (is.null(v)) return (NA)
+                        if (is.function(v)) v <- v(...)
+                        return (v)
                       }
                       
                       
@@ -184,7 +187,10 @@ Node <- R6Class("Node",
                     ),
                 
                     private = list(
+                      
                       p_name = ""
+                      
+                      
                     )
                   )
 
@@ -201,6 +207,7 @@ print.Node <- function(node, ...) {
 #' @export
 as.data.frame.Node <- function(node, ...) {
   df <- data.frame( levelName = format(node$Flatten('levelName')),
+                    row.names = 1:node$totalCount,
                     stringsAsFactors = FALSE)
   
   cols <- list(...)
@@ -263,36 +270,6 @@ ParseArg <- function(cols, i, argName, pos) {
 
 
 
-#' @export
-as.data.frame2.Node <- function(node, 
-                               cols = c("level"), 
-                               args = list(), 
-                               format = list()
-                               ) {
-  df <- data.frame( levelName = format(node$Flatten('levelName')),
-                    stringsAsFactors = FALSE)
-  
-  for (i in 1:length(cols)) {
-    v <- cols[i]
-    
-    if (!is.null(names(v)) && nchar(names(v)) > 0) {
-      vn <- names(v)
-    } else {
-      vn <- v
-    }
-    
-    it <- node$Flatten(v, args[[vn]])
-    
-    if (!is.null(format[[vn]])) {
-      it <- format[[vn]](it)
-    }
-    
-    df[vn] <- it
-    
-  }
-  return (df)
-                                  
-}
 
 #' @export
 as.Node <- function(node) {

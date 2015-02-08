@@ -1,8 +1,19 @@
 ---
 title: "Node Examples"
 author: "Christoph Glur"
-date: "2.2.2015"
-output: html_document
+date: '`r Sys.Date()`'
+output:
+  pdf_document:
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+  html_document:
+    theme: united
+    toc: yes
+    toc_depth: 4
+  word_document: default
+vignette: |
+  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
 
 ## Creating a Tree
@@ -238,6 +249,7 @@ An alternative way to achieve the same thing using the magrittr package is:
 ```{r}
 library(magrittr)
 as.data.frame(acme) %>% 
+  cbind(level = acme$Flatten("level")) %>%
   cbind(cost = acme$Flatten("Aggregate", "cost", sum) %>% PrintMoney) %>% 
   cbind(p = acme$Flatten("p") %>% FormatPercent) %>% 
   cbind(ec = acme$Flatten("Aggregate", "expectedCost", sum) %>% PrintMoney) -> acmedf
@@ -255,20 +267,26 @@ it$managerSalary <- 90000
 
 ```
 
-Then, again using magrittr, the mean salary of the IT manager's business line is:
+Then, salaries of the IT and above are:
 
 ```{r}
 it$Traject("managerSalary")
-
-it$Traject("managerSalary") %>% mean
-
 ```
 
-Or, more as an exercise than anything else, we could write our own level function:
+
+## Sorting
+
+You can sort an entire tree by using the Sort method on the root. The method will iterate through children and, for each node, sort the children by a child attribute. As before, the child attribute can also be a function. 
+
 ```{r}
-as.data.frame(acme) %>% 
-  cbind(level = acme$Flatten("Traject", "name", length)) -> acmedf
+acme$Sort("expectedCost")
+as.data.frame(acme, "expectedCost")
+```
 
+Using the Aggregate method makes the Sort even more useful:
 
+```{r}
+acme$Sort("Aggregate", "expectedCost", sum, decreasing = TRUE)
+as.data.frame(acme, ec = list("Aggregate", c("expectedCost", sum), PrintMoney))
 ```
 
