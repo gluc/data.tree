@@ -66,12 +66,21 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      Flatten = function(attribute, ...) {
+                      Traverse = function(attribute, ..., mode = "pre-order") {
+                        #traverses in pre-order. See http://en.wikipedia.org/wiki/Tree_traversal
                         v <- self$GetAttribute(attribute, ...)
                         names(v) <- self$name
-                        if(!self$isLeaf) {
-                          for(child in self$children) {
-                            v <- c(v, child$Flatten(attribute, ...))
+                        if(mode == "pre-order") {
+                          if(!self$isLeaf) {
+                            for(child in self$children) {
+                              v <- c(v, child$Traverse(attribute, ..., mode = mode))
+                            }
+                          }
+                          
+                        } else if (mode == "reverse") {
+                          if (!self$isRoot) {
+                            parentV <- self$parent$Traverse(attribute, ..., mode = mode)
+                            v <- c(parentV, v)
                           }
                         }
                         return (v)
@@ -90,27 +99,23 @@ Node <- R6Class("Node",
                         return (result)
                       },
                       
-                      Sort = function(attribute, ..., decreasing = FALSE) {
+                      Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
                         if (self$isLeaf) return()
                         ChildL <- sapply(self$children, function(x) x$GetAttribute(attribute, ...))
                         self$children <- self$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
-                        for(child in self$children) child$Sort(attribute, ..., decreasing = decreasing)
+                        if (recursive) for(child in self$children) child$Sort(attribute, ..., decreasing = decreasing)
                       },
                       
-                      Traject = function(attribute, ...) {
-                        v <- self$GetAttribute(attribute, ...)
-                        names(v) <- self$name
-                        if (self$isRoot) return(v)
-                        parentV <- self$parent$Traject(attribute, ...)
-                        res <- c(parentV, v)
-                        return (res)
-                      
-                      },
-                      
+                                          
                       GetAttribute = function(attribute, ...) {
-                        v <- self[[attribute]]
-                        if (is.null(v)) return (NA)
-                        if (is.function(v)) v <- v(...)
+                        if(is.function(attribute)) {
+                          v <- attribute(self, ...)
+                        } else {
+                          v <- self[[attribute]]
+                          if (is.function(v)) v <- v(...)
+                        }
+                        
+                        if (is.null(v)) v <- NA
                         return (v)
                       }
                       
@@ -206,7 +211,7 @@ print.Node <- function(node, ...) {
 
 #' @export
 as.data.frame.Node <- function(node, ...) {
-  df <- data.frame( levelName = format(node$Flatten('levelName')),
+  df <- data.frame( levelName = format(node$Traverse('levelName')),
                     row.names = 1:node$totalCount,
                     stringsAsFactors = FALSE)
   
@@ -227,9 +232,9 @@ as.data.frame.Node <- function(node, ...) {
     args <- ParseArg(cols, i, "args", 2)
     myformat <- ParseArg(cols, i, "format", 3)   
    
-    #it <- node$Flatten(col, args)
-    flattenArgs <- append(list(col), args)
-    it <- do.call(node$Flatten, flattenArgs)
+    #it <- node$Traverse(col, args)
+    TraverseArgs <- append(list(col), args)
+    it <- do.call(node$Traverse, TraverseArgs)
     
     if (!is.null(myformat)) {
       it <- myformat(it)

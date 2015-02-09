@@ -7,6 +7,8 @@ Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.ch>
 Imports:
     R6
+Suggests:
+    testthat
 Description: Uses the Analytic Hierarchy Process (AHP) according to Saaty
 License: GPL-2
 Collate:

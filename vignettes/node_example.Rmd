@@ -16,6 +16,24 @@ vignette: |
   %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
 
+## About Trees
+
+Trees are ubiquitious is mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing hierarchies. Some examples where trees are useful:
+
+* in decision theory (c.f. decision trees)
+* in finance, e.g. to classify financial instruments into asset classes
+* in routing algorithms
+* in computer science and programming (e.g. binary search trees, xml)
+* e.g. for family trees
+
+R provides some tree-like structures on various low levels. For example, environments can be seen as nodes in a tree. Also, R provides various packages that deal with tree-like structures (especially in the area of decision theory). Yet, there is no high-level tree data structure that could be used equally conveniently and generically as, say, data.frame. 
+
+As a consequence, people often try to resolve hierarchical problems in data.frames (or in Excel sheets). But hierarchies don't marry with tables and various workarounds are usually required. 
+
+This package tries to offer an alternative. The tree package allows creating hierarchies by the use of the Node object. Node provides basic traversal and search operations. You can decorate Nodes with attributes and methods, by that extending the package to your needs. 
+
+Also, the package provides convenience methods to print trees nicely.
+
 ## Creating a Tree
 
 Let's start by creating a tree of nodes. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year.
@@ -65,6 +83,8 @@ goToR$p <- 1
 
 ## Converting to data.frame
 
+## Tree Traversal
+
 We can now convert the tree into a data.frame:
 
 ```{r}
@@ -72,9 +92,9 @@ acmedf <- as.data.frame(acme)
 acmedf
 
 ```
-Adding the cost is easy:
+Adding the cost is easy, by using the Traverse method:
 ```{r}
-acmedf$cost <- acme$Flatten("cost")
+acmedf$cost <- acme$Traverse("cost")
 acmedf
 ```
 
@@ -84,7 +104,9 @@ acmedf <- as.data.frame(acme, "level", "cost")
 acmedf
 ```
 
-## Formatting Output
+
+
+### Formatting Output
 
 We can use formating functions to pretty print the output:
 
@@ -102,9 +124,71 @@ acmedf <- as.data.frame(acme,
 acmedf
 ```
 
+## Traversing in Reverse Order
+
+The Traverse method takes as mode parameter. By default, Travers traverses in-order. But we can use the "reverse" mode, which moves in the other direction, from a child to its parent.
+For example, let's consider the following manager salaries:
+
+```{r}
+acme$managerSalary <- 250000
+accounting$managerSalary <- 100000
+research$managerSalary <- 125000
+it$managerSalary <- 90000
+
+```
+
+Then, salaries of the IT and above are:
+
+```{r}
+it$Traverse("managerSalary", mode = "reverse")
+```
+
+Or, displaying all manager's average salaries in a data.frame:
+
+```{r}
+library(magrittr)
+AvgMgrSalary <- function(node) {
+  node$Traverse("managerSalary", mode = "reverse") %>% mean
+}
+
+as.data.frame(acme, 
+                        "level",
+                        avgMgrSal = list(AvgMgrSalary, format = PrintMoney),
+                        "managerSalary"
+                        ) %>% subset(!is.na(managerSalary), select = -4)
+```
+
+
+
 ## Custom Methods
 
-If we want to add a custom method to our node class, we can create a subclass.
+If we want to add a custom method to our node class, we have two choices:
+
+### Pass a function to the Traverse method
+
+A simple choice is to pass a standard R function to the Traverse method (or to the as.data.frame). For example:
+
+```{r}
+ExpectedCost <- function(node) {
+  result <- node$cost * node$p
+  if(length(result) == 0) result <- NA
+  return (result)
+}
+
+as.matrix(acme$Traverse(ExpectedCost))
+
+```
+
+The requirement for the function, ExpectedCost in the above example, is that:
+* the first argument of the function is a Node
+* it needs to return a scalar
+
+... added to the Traverse function will be passed on the the function.
+
+### Subclassing Node
+
+We can create a subclass of Node, and add custom methods to our subclass. This is very natural to people with experience in OO languages such as Java, Python or C#:
+
 
 ```{r}
 library(R6)
@@ -191,7 +275,7 @@ agile$expectedCost == agile$p * agile$cost
 
 ## Aggregation
 
-The Aggregate method allows applying a function to a node's children, whereby the children's value again may come from an aggregate. This is best explained by example. Assume we want to sum up the costs along the tree. For a single node, this is achieved like this:
+The Aggregate method allows applying a function to a node's children, whereby the children's value again may come from an aggregate on that node's children, and so on. This is best explained by example. Assume we want to sum up the costs along the tree. For a single node, this is achieved like this:
 
 ```{r}
 accounting$Aggregate("cost", sum)
@@ -223,10 +307,10 @@ acme$Aggregate("expectedCost", max)
 
 ### Print aggregate function
 
-We can Flatten using the Aggregate function:
+We can Traverse using the Aggregate function:
 
 ```{r}
-acme$Flatten("Aggregate", "expectedCost", sum)
+acme$Traverse("Aggregate", "expectedCost", sum)
 
 ```
 Or, directly as a data.frame:
@@ -249,34 +333,18 @@ An alternative way to achieve the same thing using the magrittr package is:
 ```{r}
 library(magrittr)
 as.data.frame(acme) %>% 
-  cbind(level = acme$Flatten("level")) %>%
-  cbind(cost = acme$Flatten("Aggregate", "cost", sum) %>% PrintMoney) %>% 
-  cbind(p = acme$Flatten("p") %>% FormatPercent) %>% 
-  cbind(ec = acme$Flatten("Aggregate", "expectedCost", sum) %>% PrintMoney) -> acmedf
-```
-
-## Traject parents
-
-The Traject method is similar to the Flatten, except that it moves in the other direction, from a child to its parent.
-For example, let's consider the following manager salaries:
-```{r}
-acme$managerSalary <- 250000
-accounting$managerSalary <- 100000
-research$managerSalary <- 125000
-it$managerSalary <- 90000
-
-```
-
-Then, salaries of the IT and above are:
-
-```{r}
-it$Traject("managerSalary")
+  cbind(level = acme$Traverse("level")) %>%
+  cbind(cost = acme$Traverse("Aggregate", "cost", sum) %>% PrintMoney) %>% 
+  cbind(p = acme$Traverse("p") %>% FormatPercent) %>% 
+  cbind(ec = acme$Traverse("Aggregate", "expectedCost", sum) %>% PrintMoney) -> acmedf
 ```
 
 
 ## Sorting
 
-You can sort an entire tree by using the Sort method on the root. The method will iterate through children and, for each node, sort the children by a child attribute. As before, the child attribute can also be a function. 
+You can sort an entire tree by using the Sort method on the root. The method will iterate through children and, for each node, sort the children by a child attribute. As before, the child attribute can also be a function or a method.
+
+Naturally, you can also sort a subtree by calling Sort on the subtree's root node.
 
 ```{r}
 acme$Sort("expectedCost")
