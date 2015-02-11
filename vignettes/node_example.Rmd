@@ -140,7 +140,7 @@ it$managerSalary <- 90000
 Then, salaries of the IT and above are:
 
 ```{r}
-it$Traverse("managerSalary", mode = "reverse")
+it$Traverse("managerSalary", mode = "ancestor")
 ```
 
 Or, displaying all manager's average salaries in a data.frame:
@@ -148,7 +148,7 @@ Or, displaying all manager's average salaries in a data.frame:
 ```{r}
 library(magrittr)
 AvgMgrSalary <- function(node) {
-  node$Traverse("managerSalary", mode = "reverse") %>% mean
+  node$Traverse("managerSalary", mode = "ancestor") %>% mean
 }
 
 as.data.frame(acme, 
@@ -184,6 +184,67 @@ The requirement for the function, ExpectedCost in the above example, is that:
 * it needs to return a scalar
 
 ... added to the Traverse function will be passed on the the function.
+
+```{r}
+ExpectedCost <- function(node) {
+  result <- node$cost * node$p
+  if(length(result) == 0) {
+    if (node$isLeaf) result <- NA
+    else {
+      node$children %>% sapply(ExpectedCost) %>% sum -> result
+    }
+  }
+  return (result)
+}
+
+acme$Traverse(ExpectedCost) %>% as.matrix
+
+```
+
+
+We can make this more flexible:
+
+```{r}
+
+ExpectedCost <- function(node, fun = sum) {
+  result <- node$cost * node$p
+  if(length(result) == 0) {
+    if (node$isLeaf) result <- NA
+    else {
+      node$children %>% sapply(ExpectedCost) %>% fun -> result
+    }
+  }
+  return (result)
+}
+
+acme$Traverse(ExpectedCost, fun = mean) %>% as.matrix
+
+```
+
+And we can avoid repetitious calculations by piggy-backing on pre-calculated values. However, this requires us to traverse the tree in post-order mode:
+
+
+```{r}
+
+ExpectedCost <- function(node, variableName = "expectedCost", fun = sum) {
+  if(!is.null(node[[variableName]])) return (node[[variableName]])
+  result <- node$cost * node$p
+  if(length(result) == 0) {
+    if (node$isLeaf) result <- NA
+    else {
+      node$children %>% sapply(ExpectedCost) %>% fun -> result
+    }
+  }
+  return (result)
+}
+
+acme$Traverse(ExpectedCost, mode = "post-order", fun = mean, assign = "expectedCost")
+
+acme$Traverse(NA, assign = "expectedCost")
+
+acme$Traverse("expectedCost") %>% as.matrix
+```
+
 
 ### Subclassing Node
 

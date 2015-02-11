@@ -66,20 +66,39 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      Traverse = function(attribute, ..., mode = "pre-order") {
+                      Traverse = function(attribute, ..., mode = "pre-order", assign = NULL) {
                         #traverses in pre-order. See http://en.wikipedia.org/wiki/Tree_traversal
-                        v <- self$GetAttribute(attribute, ...)
-                        names(v) <- self$name
+                        
                         if(mode == "pre-order") {
+                          # nice for printing. e.g. L1, L1.1 , L1.1.1, L1.1.2, L1.2, etc.
+                          v <- self$GetAttribute(attribute, ...)
+                          if(!is.null(assign)) self$SetAttribute(v, assign = assign)
+                          names(v) <- self$name
                           if(!self$isLeaf) {
                             for(child in self$children) {
-                              v <- c(v, child$Traverse(attribute, ..., mode = mode))
+                              v <- c(v, child$Traverse(attribute, ..., mode = mode, assign = assign))
                             }
                           }
+                        
+                        } else if (mode == "post-order") {
+                          # useful if leafs need to be calculated first
+                          childValues <- vector()
+                          if(!self$isLeaf) {
+                            for(child in self$children) {
+                              childValues <- c(childValues, child$Traverse(attribute, ..., mode = mode, assign = assign))
+                            }
+                          }
+                          v <- self$GetAttribute(attribute, ...)
+                          if(!is.null(assign)) self$SetAttribute(v, assign = assign)
+                          names(v) <- self$name
+                          v <- c(childValues, v)
                           
-                        } else if (mode == "reverse") {
+                        } else if (mode == "ancestor") {
+                          v <- self$GetAttribute(attribute, ...)
+                          if(!is.null(assign)) self$SetAttribute(v, assign = assign)
+                          names(v) <- self$name
                           if (!self$isRoot) {
-                            parentV <- self$parent$Traverse(attribute, ..., mode = mode)
+                            parentV <- self$parent$Traverse(attribute, ..., mode = mode, assign)
                             v <- c(parentV, v)
                           }
                         }
@@ -109,14 +128,27 @@ Node <- R6Class("Node",
                                           
                       GetAttribute = function(attribute, ...) {
                         if(is.function(attribute)) {
+                          #function
                           v <- attribute(self, ...)
-                        } else {
+                        } else if(is.character(attribute) && length(attribute) == 1) {
+                          #attribute
                           v <- self[[attribute]]
                           if (is.function(v)) v <- v(...)
+                        } else {
+                          #attribute used for setting only
+                          return (attribute)
                         }
                         
-                        if (is.null(v)) v <- NA
+                        if (is.null(v)) {
+                          v <- NA
+                        }
                         return (v)
+                      }, 
+                      
+                      SetAttribute = function(assign, v) {
+                        if (!is.null(assign)) {
+                          self[[assign]] <- v
+                        }
                       }
                       
                       
