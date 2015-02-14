@@ -66,40 +66,70 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      Traverse = function(attribute, ..., mode = "pre-order", assign = NULL, format = NULL) {
+                      Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL) {
                         #traverses in pre-order. See http://en.wikipedia.org/wiki/Tree_traversal
                         
-                        if(mode == "pre-order") {
+                        if(traversal == "pre-order") {
                           # nice for printing. e.g. L1, L1.1 , L1.1.1, L1.1.2, L1.2, etc.
-                          v <- self$GetSetAttribute(attribute, ..., assign = assign, format = format)
+                          v <- self$GetAttribute(attribute, ..., assign = assign, format = format)
                           if(!self$isLeaf) {
                             for(child in self$children) {
-                              v <- c(v, child$Traverse(attribute, ..., mode = mode, assign = assign, format = format))
+                              v <- c(v, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
                             }
                           }
                         
-                        } else if (mode == "post-order") {
+                        } else if (traversal == "post-order") {
                           # useful if leafs need to be calculated first
                           childValues <- vector()
                           if(!self$isLeaf) {
                             for(child in self$children) {
-                              childValues <- c(childValues, child$Traverse(attribute, ..., mode = mode, assign = assign, format = format))
+                              childValues <- c(childValues, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
                             }
                           }
-                          v <- self$GetSetAttribute(attribute, ..., assign = assign, format = format)
+                          v <- self$GetAttribute(attribute, ..., assign = assign, format = format)
                           v <- c(childValues, v)
                           
-                        } else if (mode == "ancestor") {
-                          v <- self$GetSetAttribute(attribute, ..., assign = assign, format = format)
+                        } else if (traversal == "ancestor") {
+                          v <- self$GetAttribute(attribute, ..., format = format)
                           if (!self$isRoot) {
-                            parentV <- self$parent$Traverse(attribute, ..., mode = mode, assign = assign, format = format)
+                            parentV <- self$parent$Get(attribute, ..., traversal = traversal, assign = assign, format = format)
                             v <- c(v, parentV)
                           }
                         }
                         return (v)
                       },
                       
-                      
+                      Set = function(attribute, values, traversal = "pre-order", returnValues = FALSE) {
+                        if(traversal == "pre-order") {
+                          
+                          values <- self$SetAttribute(attribute, values)
+                          
+                          if(!self$isLeaf) {
+                            for(child in self$children) {
+                              values <- child$Set(attribute, values, traversal = traversal, returnValues = TRUE)
+                            }
+                          }
+                          
+                        } else if (traversal == "post-order") {
+                          # useful if leafs need to be calculated first
+                          childValues <- vector()
+                          if(!self$isLeaf) {
+                            for(child in self$children) {
+                              values <- child$Set(attribute, values, traversal = traversal, returnValues = TRUE)
+                            }
+                          }
+                          values <- self$SetAttribute(attribute, values)
+                          
+                          
+                        } else if (traversal == "ancestor") {
+                          values <- self$SetAttribute(attribute, values)
+                          if (!self$isRoot) {
+                            values <- self$parent$Set(attribute, values, traversal = traversal, returnValues = TRUE)
+                          }
+                        }
+                        if (returnValues) invisible (values)
+                        else invisible (self)
+                      },
                       
                       Aggregate = function(attribute, fun, ...) {
                         v <- self[[attribute]]
@@ -115,14 +145,31 @@ Node <- R6Class("Node",
                                             
                       Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
                         if (self$isLeaf) return()
-                        ChildL <- sapply(self$children, function(x) x$GetSetAttribute(attribute, ...))
+                        ChildL <- sapply(self$children, function(x) x$GetAttribute(attribute, ...))
                         names(ChildL) <- names(self$children)
                         self$children <- self$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
                         if (recursive) for(child in self$children) child$Sort(attribute, ..., decreasing = decreasing, recursive = recursive)
                       },
                       
+                      
+                      SetAttribute = function(attribute, values) {
+                        if (length(values) == 1) {
+                          self[[attribute]] <- values
+                          return (values)
+                        } else if (length(values) > 1) {
+                          self[[attribute]] <- values[1]
+                          return (values[-1])
+                        } else if(is.null(values)) {
+                          self[[attribute]] <- NULL
+                          return (NULL)
+                        } else {
+                          stop("length of values must be 1 or equal to the number of nodes")
+                        }
+                      },
+                      
+                      
                                           
-                      GetSetAttribute = function(attribute, ..., assign = NULL, format = NULL) {
+                      GetAttribute = function(attribute, ..., assign = NULL, format = NULL) {
                         if(is.function(attribute)) {
                           #function
                           v <- attribute(self, ...)
@@ -131,18 +178,14 @@ Node <- R6Class("Node",
                           v <- self[[attribute]]
                           if (is.function(v)) v <- v(...)
                         } else {
-                          #used for setting only
-                          v <- attribute
+                          stop("attribute must be a function, the name of a public property, or the name of method")
                         }
                         
-                        if (!is.null(assign)) {
-                          self[[assign]] <- v
-                        }
                         if (is.null(v)) v <- NA
                         if (length(v) == 0) v <- NA
+                        if(!is.null(assign)) self[[assign]] <- v
                         names(v) <- self$name
-                        #x <- try(names(v) <- self$name)
-                        #if(class(x) == "try-error") browser()
+                        
                         if(!is.null(format)) v <- format(v)
                         return (v)
                       } 
@@ -238,7 +281,7 @@ print.Node <- function(node, ...) {
 
 #' @export
 as.data.frame.Node <- function(node, ...) {
-  df <- data.frame( levelName = format(node$Traverse('levelName')),
+  df <- data.frame( levelName = format(node$Get('levelName')),
                     row.names = 1:node$totalCount,
                     stringsAsFactors = FALSE)
   
@@ -248,7 +291,7 @@ as.data.frame.Node <- function(node, ...) {
   for (i in 1:length(cols)) {
     col <- cols[[i]]
     if (is.character(col) && length(col) == 1) {
-      it <- node$Traverse(col)
+      it <- node$Get(col)
       colName <- col
     } else {
       it <- col

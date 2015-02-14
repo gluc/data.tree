@@ -34,7 +34,7 @@ This package tries to offer an alternative. The tree package allows creating hie
 
 Also, the package provides convenience methods to print trees nicely.
 
-## Creating a Tree
+## Tree Creation
 
 Let's start by creating a tree of nodes. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year.
 
@@ -55,7 +55,7 @@ acme <- Node$new("Acme Inc.")
 print(acme)
   
 ```
-## Setting Custom Attributes
+## Custom Attributes
 
 Now, let's associate some costs with the projects:
 ```{r}
@@ -92,8 +92,8 @@ acmedf
 ```
 Adding the cost is easy, by using the Traverse method, which will be explained in more detail below:
 ```{r}
-acmedf$level <- acme$Traverse("level")
-acmedf$cost <- acme$Traverse("cost")
+acmedf$level <- acme$Get("level")
+acmedf$cost <- acme$Get("cost")
 acmedf
 ```
 
@@ -102,11 +102,43 @@ We could have achieved the same result in one go:
 as.data.frame(acme, "level", "cost")
 ```
 
-## Traverse
+The same is called when printing a tree:
+
+```{r}
+print(acme, "level", "cost")
+```
+
+
+### Using Get when converting to data.frame and for printing
+
+Above, we saw how we can add the name of an attribute to the ellipsis argument of the as.data.frame. However, we can also add the results of the Get method to the as.data.frame, but that giving us full flexibilitiy:
+
+```{r}
+
+as.data.frame(acme, 
+              "level",
+              cost = acme$Get("cost", format = PrintMoney),
+              probability = acme$Get("p", format = FormatPercent)
+             )
+                        
+
+```
+
+
+
+## Get Method
 
 Tree traversal is one of the core concepts of trees. See for example here: http://en.wikipedia.org/wiki/Tree_traversal 
+The Get Method traverses the tree, can collects values from each node. It then returns a vector containing the collected values. 
 
-### Traversal Mode
+Additional features of the Get Method are:
+* execute a function on each node, and add the function's result to the returned vector
+* execute a Method on each node, and add the Method's return value to the reutrned vector
+* assign the function or method return value to a Node's attribute
+
+The Get method can traverse the tree in various ways. This is called traversal order.
+
+### Traversal Order
 
 #### Pre-Order
 
@@ -115,7 +147,7 @@ The default traversal mode is pre-order. This is what is used e.g. in the as.dat
 ```{r}
 as.data.frame(acme, "level")
 
-data.frame(level = acme$Traverse('level'))
+data.frame(level = acme$Get('level'))
 
 ```
 
@@ -124,7 +156,7 @@ data.frame(level = acme$Traverse('level'))
 The post-order traversal mode first returns children:
 
 ```{r}
-data.frame(level = acme$Traverse('level', mode = "post-order"))
+data.frame(level = acme$Get('level', traversal = "post-order"))
 ```
 
 #### Ancestor
@@ -133,25 +165,25 @@ The ancestor mode starts from a node, and then walks the tree along the path fro
 
 ```{r}
 
-data.frame(level = agile$Traverse('level', mode = "ancestor"))
+data.frame(level = agile$Get('level', traversal = "ancestor"))
 
 ```
 
-### Traverse using a function
+### Get using a function
 
-#### Pass a function to the Traverse method
+#### Pass a function to the Get method
 
-You can pass a standard R function to the Traverse method. For example:
+You can pass a standard R function to the Get method. For example:
 
 ```{r}
-library(magrittr)
+
 ExpectedCost <- function(node) {
   result <- node$cost * node$p
   if(length(result) == 0) result <- NA
   return (result)
 }
 
-acme$Traverse(ExpectedCost) %>% as.data.frame
+data.frame(acme$Get(ExpectedCost))
 
 ```
 
@@ -163,6 +195,7 @@ The requirement for the function (ExpectedCost in the above example) is that:
 #### Use Recursion
 
 ```{r}
+library(magrittr)
 ExpectedCost <- function(node) {
   result <- node$cost * node$p
   if(length(result) == 0) {
@@ -174,7 +207,7 @@ ExpectedCost <- function(node) {
   return (result)
 }
 
-acme$Traverse(ExpectedCost) %>% as.matrix
+data.frame(ec = acme$Get(ExpectedCost))
 
 ```
 
@@ -195,21 +228,22 @@ ExpectedCost <- function(node, fun = sum) {
   return (result)
 }
 
-acme$Traverse(ExpectedCost, fun = mean) %>% as.matrix
+data.frame(ec = acme$Get(ExpectedCost, fun = mean))
 
 ```
 
 
-### Assigning values using Traverse
+### Assigning values using Get
 
-We can use Traverse to assign properties of our Node objects:
+We can tell the Get method to assign the value to a specific attribute for each Node it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples :
 
 ```{r}
 
-acme$Traverse(function(x) x$p * x$cost, assign = "expectedCost")
-as.data.frame(acme, "p", "cost", "expectedCost")
+acme$Get(function(x) x$p * x$cost, assign = "expectedCost")
+print(acme, "p", "cost", "expectedCost")
 
 ```
+
 
 ### Combine Assignment and Calculation
 
@@ -241,26 +275,15 @@ ExpectedCost <- function(node, variableName = "avgExpectedCost", fun = sum) {
   return (result)
 }
 
-acme$Traverse(ExpectedCost, fun = mean, mode = "post-order", assign = "avgExpectedCost")
+acme$Get(ExpectedCost, fun = mean, traversal = "post-order", assign = "avgExpectedCost")
 
-acme$Traverse("avgExpectedCost") %>% as.data.frame
-
-```
-
-### Deleting Attributes
-
-The Traverse method can also be used to assign a value directly. For example, to remove the avgExpectedCost, we assign NULL on each node like this:
-
-```{r}
-acme$Traverse(NULL, assign = "avgExpectedCost") %>% as.matrix
-acme$Traverse("avgExpectedCost") %>% as.matrix
+print(acme, "cost", "p", "avgExpectedCost")
 
 ```
 
+### Formatting Get
 
-### Formatting Traverse
-
-We can pass a formatting function to the traverse, which will convert the returned value for printing. 
+We can pass a formatting function to the Get method, which will convert the returned value to a human readable string for printing. 
 
 ```{r}
 
@@ -268,30 +291,69 @@ PrintMoney <- function(x) {
   format(x, digits=10, nsmall=2, decimal.mark=".", big.mark="'", scientific = FALSE)
 }
 
-acme$Traverse("cost", format = PrintMoney) %>% as.data.frame
+as.data.frame(acme, cost = acme$Get("cost", format = PrintMoney))
 
 ```
 
-Note that the format is not used for assignment with the assign parameter.
-
-### Using Traverse when converting to data.frame and for printing
-
-Above, we saw how we can add the name of an attribute to the ellipsis argument of the as.data.frame. However, we can also add the results of the Traverse method to the as.data.frame, but that giving us full flexibilitiy:
+Note that the format is not used for assignment with the assign parameter, but only for the values returned by Get:
 
 ```{r}
+acme$Get("cost", format = PrintMoney, assign = "cost2")
+as.data.frame(acme, cost = acme$Get("cost2"))
+```
 
-as.data.frame(acme, 
-              "level",
-              cost = acme$Traverse("cost", format = PrintMoney),
-              probability = acme$Traverse("p", format = FormatPercent)
-             )
-                        
+
+
+## Set Method
+
+The Set method is the counterpart to the Get method. It takes a vector or a single value as an input, and traverses the tree in a certain order. Each node is assigned a value from the vector.
+
+### Assigning Values
+
+The same could be achieved with the Set method:
+
+```{r}
+ec <- acme$Get(function(x) x$p * x$cost)
+acme$Set("expectedCost", ec)
+as.data.frame(acme, "p", "cost", "expectedCost")
 
 ```
+
+### Deleting Attributes
+
+The Set method can also be used to assign a single value directly. For example, to remove the avgExpectedCost, we assign NULL on each node like this:
+
+```{r}
+acme$Set("avgExpectedCost", NULL)
+
+```
+
+### Chaining
+
+Note that we can chain the arguments:
+
+```{r}
+acme$Set("avgExpectedCost", NULL)$Set("expectedCost", NA)
+as.data.frame(acme, "avgExpectedCost", "expectedCost")
+```
+
+### A Word on Null and NA
+
+Also note that setting a value to NA or to NULL looks equivalent when printing to a data.frame, but internally it is not:
+
+```{r}
+acme$avgExpectedCost
+acme$expectedCost
+
+
+```
+
+The reason is that NULL is always converted to NA for printing, and when using the Get method.
+
 
 ## Aggregate
 
-For simple cases, you don't have to write your own function to pass along to the Traverse method. For example, the Aggregate method provides a shorthand for the often used case when a parent is the aggregate of its children values:
+For simple cases, you don't have to write your own function to pass along to the Get method. For example, the Aggregate method provides a shorthand for the often used case when a parent is the aggregate of its children values:
 
 ```{r}
 
@@ -299,10 +361,10 @@ acme$Aggregate("cost", sum)
 
 ```
 
-We can use this in the Traverse method:
+We can use this in the Get method:
 
 ```{r}
-acme$Traverse("Aggregate", "cost", sum)
+acme$Get("Aggregate", "cost", sum)
 ```
 
 This is equivalent of:
@@ -320,7 +382,7 @@ GetCost <- function(node) {
   return (result)
 }
 
-acme$Traverse(GetCost)
+acme$Get(GetCost)
 
 ```
 
@@ -330,7 +392,7 @@ acme$Traverse(GetCost)
 You can sort an entire tree by using the Sort method on the root. The method will sort recursively and, for each node, sort the children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub class of Node, see below).
 
 ```{r}
-acme$Traverse(ExpectedCost, assign = "expectedCost")
+acme$Get(ExpectedCost, assign = "expectedCost")
 acme$Sort("expectedCost", decreasing = TRUE)
 print(acme, "expectedCost")
 ```
@@ -338,7 +400,7 @@ print(acme, "expectedCost")
 Naturally, you can also sort a subtree by calling Sort on the subtree's root node.
 
 
-### Subclassing Node
+## Subclassing Node
 
 We can create a subclass of Node, and add custom methods to our subclass. This is very natural to users with experience in OO languages such as Java, Python or C#:
 
@@ -362,7 +424,7 @@ MyNode <- R6Class("MyNode",
                     #active
                     active = list(
                       expectedCost = function() {
-                        if ( any(sapply(list(self$p, self$cost), is.null))) return (NULL)
+                        if ( is.null(self$p) || is.null(self$cost)) return (NULL)
                         self$p * self$cost                    
                       }
                     )
