@@ -28,15 +28,15 @@ Trees are ubiquitious is mathematics, computer science, data sciences, finance, 
 
 R provides some tree-like structures on various low levels. For example, environments can be seen as nodes in a tree. Also, R provides various packages that deal with tree-like structures (especially in the area of decision theory). Yet, there is no high-level tree data structure that could be used equally conveniently and generically as, say, data.frame. 
 
-As a consequence, people often try to resolve hierarchical problems in data.frames (or in Excel sheets). But hierarchies don't marry with tables and various workarounds are usually required. 
+As a consequence, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames (or in Excel sheets). But hierarchies don't marry with tables and various workarounds are usually required. 
 
 This package tries to offer an alternative. The tree package allows creating hierarchies by the use of the Node object. Node provides basic traversal and search operations. You can decorate Nodes with attributes and methods, by that extending the package to your needs. 
 
-Also, the package provides convenience methods to print trees nicely.
+Also, the package provides convenience methods to print trees nicely, and to convert it to a data.frame for integration with other packages.
 
 ## Tree Creation
 
-Let's start by creating a tree of nodes. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year.
+Let's start by creating a tree of nodes. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. The root (level 0) is the company. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year:
 
 ```{r}
 library(ahp)
@@ -83,14 +83,14 @@ goToR$p <- 1
 
 ## Converting to data.frame
 
-We can now convert the tree into a data.frame:
+We can now convert the tree into a `data.frame`:
 
 ```{r}
 acmedf <- as.data.frame(acme)
 acmedf
 
 ```
-Adding the cost is easy, by using the Traverse method, which will be explained in more detail below:
+Adding the cost as a column to our `data.frame` is easy, by using the `Get` method. We'll explain the `Get` method in more detail below.
 ```{r}
 acmedf$level <- acme$Get("level")
 acmedf$cost <- acme$Get("cost")
@@ -98,26 +98,25 @@ acmedf
 ```
 
 We could have achieved the same result in one go:
-```{r}
+```{r, echo=FALSE}
 as.data.frame(acme, "level", "cost")
 ```
 
-The same is called when printing a tree:
+Internally, the same is called when printing a tree:
 
-```{r}
+```{r, echo=FALSE}
 print(acme, "level", "cost")
 ```
 
 
 ### Using Get when converting to data.frame and for printing
 
-Above, we saw how we can add the name of an attribute to the ellipsis argument of the as.data.frame. However, we can also add the results of the Get method to the as.data.frame, but that giving us full flexibilitiy:
+Above, we saw how we can add the name of an attribute to the ellipsis argument of the as.data.frame. However, we can also add the results of the `Get` method directly to the `as.data.frame` . This allows for example formatting the column in a specific way. Details of the Get method are explained in the next section.
 
 ```{r}
 
 as.data.frame(acme, 
               "level",
-              cost = acme$Get("cost", format = PrintMoney),
               probability = acme$Get("p", format = FormatPercent)
              )
                         
@@ -128,21 +127,27 @@ as.data.frame(acme,
 
 ## Get Method
 
-Tree traversal is one of the core concepts of trees. See for example here: http://en.wikipedia.org/wiki/Tree_traversal 
-The Get Method traverses the tree, can collects values from each node. It then returns a vector containing the collected values. 
+Tree traversal is one of the core concepts of trees. See for example here: [Tree Traversal on Wikipedia](http://en.wikipedia.org/wiki/Tree_traversal).
+The Get Method traverses the tree, and collects values from each node. It then returns a vector containing the collected values. 
 
 Additional features of the Get Method are:
-* execute a function on each node, and add the function's result to the returned vector
-* execute a Method on each node, and add the Method's return value to the reutrned vector
+* execute a function on each node, and append the function's result to the returned vector
+* execute a Node Method on each node, and append the Method's return value to the reuturned vector
 * assign the function or method return value to a Node's attribute
 
-The Get method can traverse the tree in various ways. This is called traversal order.
+
 
 ### Traversal Order
 
+The `Get` method can traverse the tree in various ways. This is called traversal order.
+
 #### Pre-Order
 
-The default traversal mode is pre-order. This is what is used e.g. in the as.data.frame method:
+The default traversal mode is **pre-order**. 
+
+![pre-order](preorder.png)
+
+This is what is used e.g. in the `as.data.frame` method:
 
 ```{r}
 as.data.frame(acme, "level")
@@ -153,7 +158,11 @@ data.frame(level = acme$Get('level'))
 
 #### Post-Order
 
-The post-order traversal mode first returns children:
+The **post-order** traversal mode first returns children:
+
+![post-order]](postorder.png)
+
+We can use it like this on the `Get` method:
 
 ```{r}
 data.frame(level = acme$Get('level', traversal = "post-order"))
@@ -161,7 +170,7 @@ data.frame(level = acme$Get('level', traversal = "post-order"))
 
 #### Ancestor
 
-The ancestor mode starts from a node, and then walks the tree along the path from ancestor to ancestor, up to the root:
+This is a non-standard traversal mode that does not traverse the entire tree. Instead, the ancestor mode starts from a node, and then walks the tree along the path from ancestor to ancestor, up to the root:
 
 ```{r}
 
@@ -173,7 +182,7 @@ data.frame(level = agile$Get('level', traversal = "ancestor"))
 
 #### Pass a function to the Get method
 
-You can pass a standard R function to the Get method. For example:
+You can pass a standard R function to the `Get` method. For example:
 
 ```{r}
 
@@ -187,12 +196,14 @@ data.frame(acme$Get(ExpectedCost))
 
 ```
 
-The requirement for the function (ExpectedCost in the above example) is that:
+The requirement for the function (`ExpectedCost` in the above example) is that:
 * the first argument of the function is a Node
 * it needs to return a scalar
 
 
-#### Use Recursion
+#### Using Recursion
+
+In the following examples, we use `magrittr` to enhance readability of the code. 
 
 ```{r}
 library(magrittr)
@@ -213,7 +224,7 @@ data.frame(ec = acme$Get(ExpectedCost))
 
 #### Add Parameters to the Passed Function
 
-The Traverse method accepts an ellipsis (...). Any additional parameters with which Traverse is called will be passed on the the ExpectedCost function: This allows us to make this more flexible:
+The Traverse method accepts an ellipsis `...`. Any additional parameters with which `Get` is called will be passed on the the `ExpectedCost` function: This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
 
 ```{r}
 
@@ -283,7 +294,7 @@ print(acme, "cost", "p", "avgExpectedCost")
 
 ### Formatting Get
 
-We can pass a formatting function to the Get method, which will convert the returned value to a human readable string for printing. 
+We can pass a formatting function to the `Get` method, which will convert the returned value to a human readable string for printing. 
 
 ```{r}
 
@@ -291,31 +302,51 @@ PrintMoney <- function(x) {
   format(x, digits=10, nsmall=2, decimal.mark=".", big.mark="'", scientific = FALSE)
 }
 
-as.data.frame(acme, cost = acme$Get("cost", format = PrintMoney))
+print(acme, cost = acme$Get("cost", format = PrintMoney))
 
 ```
 
-Note that the format is not used for assignment with the assign parameter, but only for the values returned by Get:
+Note that the format is not used for assignment with the assign parameter, but only for the values returned by `Get`:
 
 ```{r}
 acme$Get("cost", format = PrintMoney, assign = "cost2")
-as.data.frame(acme, cost = acme$Get("cost2"))
+print(acme, cost = acme$Get("cost2"))
 ```
 
 
 
 ## Set Method
 
-The Set method is the counterpart to the Get method. It takes a vector or a single value as an input, and traverses the tree in a certain order. Each node is assigned a value from the vector.
+The `Set` method is the counterpart to the `Get` method. It takes a vector or a single value as an input, and traverses the tree in a certain order. Each node is assigned a value from the vector.
 
 ### Assigning Values
 
-The same could be achieved with the Set method:
+
+```{r}
+employees <- c(NA, 52, NA, NA, 78, NA, NA, 39, NA, NA, NA)
+acme$Set(employees)
+print(acme, "employees")
+```
+
+The Set method can take multiple vectors as an input, and optionally you can define the name of the attribute:
+
+```{r}
+secretaries <- c(NA, 5, NA, NA, 6, NA, NA, 2, NA, NA, NA)
+acme$Set(secretaries, secPerEmployee = secretaries/employees)
+print(acme, "employees", "secretaries", "secPerEmployee")
+
+
+```
+
+
+Just as for the `Get` method, the **traversal order** is important for the `Set`.
+
+Often, it is usefule to use `Get` and `Set` together:
 
 ```{r}
 ec <- acme$Get(function(x) x$p * x$cost)
 acme$Set("expectedCost", ec)
-as.data.frame(acme, "p", "cost", "expectedCost")
+print(acme, "p", "cost", "expectedCost")
 
 ```
 
@@ -324,17 +355,17 @@ as.data.frame(acme, "p", "cost", "expectedCost")
 The Set method can also be used to assign a single value directly. For example, to remove the avgExpectedCost, we assign NULL on each node like this:
 
 ```{r}
-acme$Set("avgExpectedCost", NULL)
+acme$Set(avgExpectedCost = NULL)
 
 ```
 
 ### Chaining
 
-Note that we can chain the arguments:
+Note that we can also chain the arguments:
 
 ```{r}
-acme$Set("avgExpectedCost", NULL)$Set("expectedCost", NA)
-as.data.frame(acme, "avgExpectedCost", "expectedCost")
+acme$Set(avgExpectedCost = NULL)$Set(expectedCost = NA)
+print(acme, "avgExpectedCost", "expectedCost")
 ```
 
 ### A Word on Null and NA

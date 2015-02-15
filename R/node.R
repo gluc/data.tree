@@ -99,14 +99,23 @@ Node <- R6Class("Node",
                         return (v)
                       },
                       
-                      Set = function(attribute, values, traversal = "pre-order", returnValues = FALSE) {
+                      Set = function(..., traversal = "pre-order", returnValues = FALSE) {
+                        args <- list(...)
+                        argsnames <- sapply(substitute(list(...))[-1], deparse)
+                        gargsnames <- names(args)
+                        
+                        if (is.null(gargsnames)) gargsnames <- vector(mode = "character", length = length(args))
+                        gargsnames[nchar(gargsnames) == 0] <- argsnames[nchar(gargsnames) == 0]
+                        names(args) <- gargsnames
+                        
                         if(traversal == "pre-order") {
                           
-                          values <- self$SetAttribute(attribute, values)
+                          for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
                           
                           if(!self$isLeaf) {
                             for(child in self$children) {
-                              values <- child$Set(attribute, values, traversal = traversal, returnValues = TRUE)
+                              
+                              args <- do.call(child$Set, c(args, traversal = traversal, returnValues = TRUE))
                             }
                           }
                           
@@ -115,19 +124,19 @@ Node <- R6Class("Node",
                           childValues <- vector()
                           if(!self$isLeaf) {
                             for(child in self$children) {
-                              values <- child$Set(attribute, values, traversal = traversal, returnValues = TRUE)
+                              args <- do.call(child$Set, c(args, traversal = traversal, returnValues = TRUE))
                             }
                           }
-                          values <- self$SetAttribute(attribute, values)
+                          for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
                           
                           
                         } else if (traversal == "ancestor") {
-                          values <- self$SetAttribute(attribute, values)
+                          for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
                           if (!self$isRoot) {
-                            values <- self$parent$Set(attribute, values, traversal = traversal, returnValues = TRUE)
+                            args <- do.call(self$parent$Set, c(args, traversal = traversal, returnValues = TRUE))
                           }
                         }
-                        if (returnValues) invisible (values)
+                        if (returnValues) invisible (args)
                         else invisible (self)
                       },
                       
@@ -153,6 +162,7 @@ Node <- R6Class("Node",
                       
                       
                       SetAttribute = function(attribute, values) {
+                        
                         if (length(values) == 1) {
                           self[[attribute]] <- values
                           return (values)
