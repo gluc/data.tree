@@ -1,21 +1,14 @@
-Package: ahp
+Package: data.tree
 Type: Package
-Title: Take decisions using the Analytic Hierarchy Process (AHP)
-Version: 1.0
+Title: Create, manage, and extend hierarchic tree structures.
+Version: 0.1
 Date: 2015-01-06
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.ch>
 Imports:
     R6
 Suggests:
-    testthat
-Description: Uses the Analytic Hierarchy Process (AHP) according to Saaty
+    testthat, magrittr, knitr
+Description: Create trees, and use the utility methods to travers the tree in various order. Print, convert from and to data.frame, and apply functions to your tree data.
 License: GPL-2
-Collate:
-    'ahp.R'
-    'node.R'
-    'ahp_node.R'
-    'alternative_node.R'
-    'alternative.R'
-    'preference_table.R'
-    'util.R'
+VignetteBuilder: knitr

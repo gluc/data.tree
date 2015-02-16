@@ -6,7 +6,7 @@
 \title{Node}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
-Node$new()
+Node
 }
 \description{
 A generic node in a tree
@@ -20,8 +20,15 @@ A generic node in a tree
 }}
 \section{Methods}{
 
+
 \describe{
-  \item{\code{AddChild(name = "MyNode")}}{Creates a new Node called \code{name} and adds it to this node.}
+
+  \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
+
+
+  \item{\code{\link{Get}}}
+
+
 }
 }
 \keyword{datasets}

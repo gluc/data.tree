@@ -1,15 +1,20 @@
 #' Node
 #' 
 #' @description A generic node in a tree
-#' 
 #' @docType class
 #' @importFrom R6 R6Class
-#' @usage Node$new()
 #' @field children A list of children
 #' @field parent The node's parent Node
 #' @section Methods:
+#' 
 #' \describe{
-#'   \item{\code{AddChild(name = "MyNode")}}{Creates a new Node called \code{name} and adds it to this node.}
+#' 
+#'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
+#' 
+#'   
+#'   \item{\code{\link{Get}}}
+#'   
+#'   
 #' }
 #' @export
 #' @format An \code{\link{R6Class}} generator object
@@ -103,14 +108,14 @@ Node <- R6Class("Node",
                         args <- list(...)
                         argsnames <- sapply(substitute(list(...))[-1], deparse)
                         gargsnames <- names(args)
-                        
                         if (is.null(gargsnames)) gargsnames <- vector(mode = "character", length = length(args))
                         gargsnames[nchar(gargsnames) == 0] <- argsnames[nchar(gargsnames) == 0]
                         names(args) <- gargsnames
                         
                         if(traversal == "pre-order") {
                           
-                          for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
+                          #for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
+                          args <- Map(function(name, arg) self$SetAttribute(name, arg), names(args), args)
                           
                           if(!self$isLeaf) {
                             for(child in self$children) {
@@ -196,7 +201,10 @@ Node <- R6Class("Node",
                         if(!is.null(assign)) self[[assign]] <- v
                         names(v) <- self$name
                         
-                        if(!is.null(format)) v <- format(v)
+                        if(!is.null(format)) {
+                          if (!is.function(format)) stop("form must be a function!")
+                          v <- format(v)
+                        }
                         return (v)
                       } 
                       
@@ -279,20 +287,79 @@ Node <- R6Class("Node",
                     )
                   )
 
-
-
-
-
+#' Traverses the tree and collects values, results of method calls, or results of function calls along the way.
+#' 
+#' 
+#'   @param attribute determines what is collected during traversal. The attribute can be
+#'       \itemize {
+#'         \item a.) the name of a field of each \code{Node} in the tree 
+#'         \item b.) the name of a Method of each \code{Node}.
+#'         \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by 
+#'         passing \code{...} to the function.
+#'        }
+#'  @param traversal determines the traversal order. It can be either "pre-order", "post-order", or "ascendant"
+#'  @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
+#'  @param format can be a function that transforms the collected values, e.g. for printing
+#'  
+#'  @return a vector containing the \code{atrributes} collected during traversal, in traversal order. NULL is converted
+#'  to NA, such that \code{length(Node$Get) == Node$totalCount}
+#'  
+#'  @examples
+#'data(acme)
+#'acme$Get("level")
+#'acme$Get("totalCount")
+#'  
+#'calculateAggregateChildCost <- function(node, fun) {
+#'  if (node$isLeaf) return(node$cost)
+#'  fun(sapply(node$children, function(x) x$averageCost))
+#'}
+#'
+#'myFormat <- function(x) {
+#'  format(x, nsmall=2, scientific = FALSE)
+#'}
+#'
+#'acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
+#'  
+#'  
+#'  
 #' @export
-print.Node <- function(node, ...) {
-  print(as.data.frame(node, ...))
+Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL) {
+  stop("This method can only be called on a Node!")
 }
 
 
+
+
 #' @export
-as.data.frame.Node <- function(node, ...) {
-  df <- data.frame( levelName = format(node$Get('levelName')),
-                    row.names = 1:node$totalCount,
+print.Node <- function(x, ...) {
+  print(as.data.frame(x, ...))
+}
+
+#' Convert a tree to a data.frame. 
+#' 
+#' @param x The root node to convert to a data.frame
+#' @param row.names
+#' @param optional
+#' @param ... the attributes to be added as columns of the data.frame. There are various
+#' options:
+#' \itemize{
+#'  \item a string corresponding to the name of a node attribute
+#'  \item the result of the \code{Node$Get} method
+#' }
+#' If a specific Node does not contain the attribute, the data.frame will contain NA.
+#' 
+#' @export
+as.data.frame.Node <- function(x, row.names = NULL, optional = FALSE, ...) {
+  if(is.null(row.names)) {
+    if(optional) {
+      row.names <- rep("", x$totalCount)
+    } else {
+      row.name <- 1:x$totalCount
+    }
+  }
+  
+  df <- data.frame( levelName = format(x$Get('levelName')),
+                    row.names = row.names,
                     stringsAsFactors = FALSE)
   
   cols <- list(...)
@@ -301,7 +368,7 @@ as.data.frame.Node <- function(node, ...) {
   for (i in 1:length(cols)) {
     col <- cols[[i]]
     if (is.character(col) && length(col) == 1) {
-      it <- node$Get(col)
+      it <- x$Get(col)
       colName <- col
     } else {
       it <- col
@@ -316,12 +383,3 @@ as.data.frame.Node <- function(node, ...) {
 }
 
 
-#' @export
-as.Node <- function(node) {
-  UseMethod("as.Node", node)
-}
-
-#' @export
-as.Node.AhpNode <- function(node) {
-  class(node) <- c("Node", "R6")
-}

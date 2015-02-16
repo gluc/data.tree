@@ -1,4 +1,4 @@
 library(testthat)
-library(ahp)
 
-test_check("ahp")
+test_check("data.tree")
+#devtools::test()

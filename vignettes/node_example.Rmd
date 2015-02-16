@@ -3,17 +3,16 @@ title: "Node Examples"
 author: "Christoph Glur"
 date: '`r Sys.Date()`'
 output:
-  pdf_document:
-    highlight: tango
-    toc: yes
-    toc_depth: 4
   html_document:
     theme: united
     toc: yes
     toc_depth: 4
-  word_document: default
+  pdf_document:
+    highlight: tango
+    toc: yes
+    toc_depth: 4
 vignette: |
-  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{node-examples} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
 
 ## About Trees
@@ -98,13 +97,13 @@ acmedf
 ```
 
 We could have achieved the same result in one go:
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 as.data.frame(acme, "level", "cost")
 ```
 
 Internally, the same is called when printing a tree:
 
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 print(acme, "level", "cost")
 ```
 
@@ -145,7 +144,7 @@ The `Get` method can traverse the tree in various ways. This is called traversal
 
 The default traversal mode is **pre-order**. 
 
-![pre-order](preorder.png)
+![pre-order](assets/preorder.png)
 
 This is what is used e.g. in the `as.data.frame` method:
 
@@ -158,15 +157,17 @@ data.frame(level = acme$Get('level'))
 
 #### Post-Order
 
-The **post-order** traversal mode first returns children:
+The **post-order** traversal mode first returns children, and parents only when all children have been traversed:
 
-![post-order]](postorder.png)
+![post-order](assets/postorder.png)
 
 We can use it like this on the `Get` method:
 
 ```{r}
 data.frame(level = acme$Get('level', traversal = "post-order"))
 ```
+
+This is useful if your parent's value depends on the children.
 
 #### Ancestor
 
@@ -345,7 +346,7 @@ Often, it is usefule to use `Get` and `Set` together:
 
 ```{r}
 ec <- acme$Get(function(x) x$p * x$cost)
-acme$Set("expectedCost", ec)
+acme$Set(expectedCost = ec)
 print(acme, "p", "cost", "expectedCost")
 
 ```
@@ -356,7 +357,6 @@ The Set method can also be used to assign a single value directly. For example, 
 
 ```{r}
 acme$Set(avgExpectedCost = NULL)
-
 ```
 
 ### Chaining
@@ -367,6 +367,12 @@ Note that we can also chain the arguments:
 acme$Set(avgExpectedCost = NULL)$Set(expectedCost = NA)
 print(acme, "avgExpectedCost", "expectedCost")
 ```
+
+This is equivalent to:
+```{r}
+acme$Set(avgExpectedCost =NULL, expectedCost = NA)
+```
+
 
 ### A Word on Null and NA
 
