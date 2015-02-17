@@ -2,9 +2,9 @@
 #' 
 #' acme's tree representation is accessed through its root, acme.
 #' 
-#' \itemize {
+#' \itemize{
 #'   \item cost, only available for leaf nodes. Cost of the project.
-#'   \p probability that a project will be undertaken.
+#'   \item p probability that a project will be undertaken.
 #' }
 #' 
 #' @docType data

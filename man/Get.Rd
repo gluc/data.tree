@@ -8,7 +8,7 @@ Get(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)
 }
 \arguments{
 \item{attribute}{determines what is collected during traversal. The attribute can be
-     \itemize {
+     \itemize{
        \item a.) the name of a field of each \code{Node} in the tree
        \item b.) the name of a Method of each \code{Node}.
        \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by

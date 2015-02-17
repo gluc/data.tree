@@ -22,13 +22,8 @@ A generic node in a tree
 
 
 \describe{
-
   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
-
-
-  \item{\code{\link{Get}}}
-
-
+  \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverse the tree and collect values along the way.}
 }
 }
 \keyword{datasets}

@@ -5,10 +5,10 @@ Version: 0.1
 Date: 2015-01-06
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.ch>
+VignetteBuilder: knitr
 Imports:
     R6
 Suggests:
     testthat, magrittr, knitr
 Description: Create trees, and use the utility methods to travers the tree in various order. Print, convert from and to data.frame, and apply functions to your tree data.
 License: GPL-2
-VignetteBuilder: knitr

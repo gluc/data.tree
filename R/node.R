@@ -8,13 +8,8 @@
 #' @section Methods:
 #' 
 #' \describe{
-#' 
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
-#' 
-#'   
-#'   \item{\code{\link{Get}}}
-#'   
-#'   
+#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverse the tree and collect values along the way.}
 #' }
 #' @export
 #' @format An \code{\link{R6Class}} generator object
@@ -291,7 +286,7 @@ Node <- R6Class("Node",
 #' 
 #' 
 #'   @param attribute determines what is collected during traversal. The attribute can be
-#'       \itemize {
+#'       \itemize{
 #'         \item a.) the name of a field of each \code{Node} in the tree 
 #'         \item b.) the name of a Method of each \code{Node}.
 #'         \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by 

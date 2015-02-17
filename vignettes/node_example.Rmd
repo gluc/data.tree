@@ -1,18 +1,11 @@
 ---
-title: "Node Examples"
+title: "Introduction to data.tree"
 author: "Christoph Glur"
 date: '`r Sys.Date()`'
-output:
-  html_document:
-    theme: united
-    toc: yes
-    toc_depth: 4
-  pdf_document:
-    highlight: tango
-    toc: yes
-    toc_depth: 4
-vignette: |
-  %\VignetteIndexEntry{node-examples} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Introdution to data.tree}
+output: knitr:::html_vignette
 ---
 
 ## About Trees
@@ -38,7 +31,7 @@ Also, the package provides convenience methods to print trees nicely, and to con
 Let's start by creating a tree of nodes. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. The root (level 0) is the company. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year:
 
 ```{r}
-library(ahp)
+library(data.tree)
 acme <- Node$new("Acme Inc.")
   accounting <- acme$AddChild("Accounting")
     software <- accounting$AddChild("New Software")
