@@ -201,7 +201,11 @@ Node <- R6Class("Node",
                           v <- format(v)
                         }
                         return (v)
-                      } 
+                      },
+                      
+                      ToDataFrame = function(...) {
+                        as.data.frame(self, row.names = NULL, optional = FALSE, ...)
+                      }
                       
                                             
                     ),
@@ -327,7 +331,7 @@ Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = 
 
 #' @export
 print.Node <- function(x, ...) {
-  print(as.data.frame(x, ...))
+  print(as.data.frame(x, row.names = NULL, optional = FALSE, ...))
 }
 
 #' Convert a tree to a data.frame. 

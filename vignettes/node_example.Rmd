@@ -5,7 +5,11 @@ date: '`r Sys.Date()`'
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Introdution to data.tree}
-output: knitr:::html_vignette
+output: 
+  knitr:::html_vignette
+    highlight: united
+    toc: yes
+    toc_depth: 4
 ---
 
 ## About Trees
@@ -80,8 +84,14 @@ We can now convert the tree into a `data.frame`:
 ```{r}
 acmedf <- as.data.frame(acme)
 acmedf
-
 ```
+The same thing can be achieved by using the OO-style method `Node$ToDataFrame`:
+```{r, echo=FALSE}
+acme$ToDataFrame()
+```
+
+
+
 Adding the cost as a column to our `data.frame` is easy, by using the `Get` method. We'll explain the `Get` method in more detail below.
 ```{r}
 acmedf$level <- acme$Get("level")
@@ -91,7 +101,7 @@ acmedf
 
 We could have achieved the same result in one go:
 ```{r, eval=FALSE}
-as.data.frame(acme, "level", "cost")
+acme$ToDataFrame("level", "cost")
 ```
 
 Internally, the same is called when printing a tree:
@@ -107,10 +117,9 @@ Above, we saw how we can add the name of an attribute to the ellipsis argument o
 
 ```{r}
 
-as.data.frame(acme, 
-              "level",
-              probability = acme$Get("p", format = FormatPercent)
-             )
+acme$ToDataFrame("level",
+                  probability = acme$Get("p", format = FormatPercent)
+                )
                         
 
 ```
@@ -139,13 +148,11 @@ The default traversal mode is **pre-order**.
 
 ![pre-order](assets/preorder.png)
 
-This is what is used e.g. in the `as.data.frame` method:
+This is what is used e.g. in `as.data.frame` and its OO-style counterpart `Node$ToDataFrame`:
 
 ```{r}
-as.data.frame(acme, "level")
-
+acme$ToDataFrame("level")
 data.frame(level = acme$Get('level'))
-
 ```
 
 #### Post-Order
@@ -374,8 +381,6 @@ Also note that setting a value to NA or to NULL looks equivalent when printing t
 ```{r}
 acme$avgExpectedCost
 acme$expectedCost
-
-
 ```
 
 The reason is that NULL is always converted to NA for printing, and when using the Get method.
