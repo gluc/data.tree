@@ -44,4 +44,8 @@ myFormat <- function(x) {
 
 acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
 }
+\seealso{
+\code{\link{Node}}
+}
+\keyword{internal}
 

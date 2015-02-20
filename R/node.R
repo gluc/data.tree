@@ -9,7 +9,11 @@
 #' 
 #' \describe{
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
+#'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}}
 #'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverse the tree and collect values along the way.}
+#'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverse the tree and assign attributes along the way.}
+#'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverse the tree and call \code{fun(children$Aggregate(...))} on each node. }
+#'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
 #' }
 #' @export
 #' @format An \code{\link{R6Class}} generator object
@@ -286,6 +290,32 @@ Node <- R6Class("Node",
                     )
                   )
 
+
+
+#' Finds a node having path \code{...}.
+#' 
+#' The path is relative to the Node on which this method is called. Each argument provided corresponds to an element in the path.
+#' 
+#' 
+#' @param ... the names of the nodes in the path
+#' @return the Node having path \code{...}, or NULL if such a path does not exist
+#' 
+#' @examples
+#' data(acme)
+#' acme$Find('IT', 'Outsource')$name
+#' #This is equivalent to:
+#' acme$Find('IT')$Find('Outsource')$name
+#' acme$Find('X', 'Y', 'Z')
+#'
+#' @seealso \code{\link{Node}}
+#'
+#' @keywords internal
+Find = function(...) {
+  stop("This method can only be called on a Node!")
+}
+  
+
+
 #' Traverses the tree and collects values, results of method calls, or results of function calls along the way.
 #' 
 #' 
@@ -319,14 +349,75 @@ Node <- R6Class("Node",
 #'
 #'acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
 #'  
+#' @seealso \code{\link{Node}}
 #'  
-#'  
-#' @export
+#' @keywords internal
 Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL) {
   stop("This method can only be called on a Node!")
 }
 
+#' Traverses the tree and assigns values to attributes along the way.
+#' 
+#' @param ... each argument can be a vector of values to be assigned.
+#' @param traversal any of 'pre-order', 'post-order', 'ancestor'
+#' @param returnValues if TRUE, then the non-processed arg passed in ... are returned. Otherwise the Node itself is returned for chaining. Mainly for internal use.
+#'  
+#'  
+#' @examples
+#' data(acme)
+#' acme$Set(departmentId = 1:11, head = c("Jack Brown", "Dr. Frank N. Stein", "", "", "Mona Moneyhead", "", "", "Eric Nerdahl", "", "", ""))
+#' print(acme, "departmentId", "head")
+#'  
+#' @seealso \code{\link{Node}}
+#'  
+#' @keywords internal
+Set = function(..., traversal = "pre-order", returnValues = FALSE) {
+  stop("This method can only be called on a Node!")
+}
 
+
+#' Traverse the tree and call \code{fun(children$Aggregate(...))} on each node.
+#' 
+#' This allows you to set e.g. a value on the leafs, and then sum them up along the tree.
+#' 
+#' @param attribute the attribute that is being called on every node. The attribute can be field, a property or a method. If the node contains
+#' the attribute, its value is return. Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, the attribute must be set on the leaf.
+#' @param fun a function to be applied
+#' @param ... any arguments to be passed on to fun
+#' 
+#' @examples
+#' data(acme)
+#' acme$Aggregate("cost", sum)
+#' acme$Get("Aggregate", "cost", sum)
+#' print(acme, totalCost = acme$Get("Aggregate", "cost", sum))
+#' 
+#' @seealso \code{\link{Node}}
+#'
+#' @keywords internal
+Aggregate = function(attribute, fun, ...) {
+  stop("This method can only be called on a Node!")
+}
+
+
+
+#' Sort the children of a node along attribute
+#' @param attribute a field, method or function. The result of the attribute determines the sorting. If it is a function,
+#' the attribute must take a Node as a first argument.
+#' @param ... any parameters to be passed on the the attribute (in case it's a method or a function)
+#' @param decreasing sort order
+#' @param recursive if TRUE, Sort will be called recursively on the Node's children. This allows sorting an entire tree.
+#' 
+#' @examples
+#' data(acme)
+#' acme$Get("Aggregate", "cost", sum, assign = "totalCost")
+#' acme$Sort("totalCost", decreasing = TRUE)
+#' print(acme, "totalCost")
+#' 
+#' @seealso \code{\link{Node}}
+#' @keywords internal
+Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
+  stop("This method can only be called on a Node!")
+}
 
 
 #' @export

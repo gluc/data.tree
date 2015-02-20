@@ -3,7 +3,6 @@
 S3method(as.data.frame,Node)
 S3method(print,Node)
 export(FormatPercent)
-export(Get)
 export(Node)
 export(PrintFixedDecimal)
 importFrom(R6,R6Class)

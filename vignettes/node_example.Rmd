@@ -432,7 +432,7 @@ acme$Sort("expectedCost", decreasing = TRUE)
 print(acme, "expectedCost")
 ```
 
-Naturally, you can also sort a subtree by calling Sort on the subtree's root node.
+Naturally, you can also sort a subtree by calling Sort on the subtree's parent node.
 
 
 ## Subclassing Node

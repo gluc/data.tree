@@ -25,7 +25,7 @@ Maintainer: Christoph Glur <christoph.glur@ipub.ch>
 \references{
 }
 
-\keyword{ tree }
+\keyword{ tree data manip datagen }
 \seealso{
 
 
