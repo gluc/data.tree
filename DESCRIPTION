@@ -11,4 +11,4 @@ Imports:
 Suggests:
     testthat, magrittr, knitr
 Description: Create trees, and use the utility methods to travers the tree in various order. Print, convert from and to data.frame, and apply functions to your tree data.
-License: GPL-2
+License: GPL (>= 2)
