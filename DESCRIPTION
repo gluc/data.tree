@@ -12,3 +12,7 @@ Suggests:
     testthat, magrittr, knitr
 Description: Create trees, and use the utility methods to travers the tree in various order. Print, convert from and to data.frame, and apply functions to your tree data.
 License: GPL (>= 2)
+URL: http://github.com/gluc/data.tree
+BugReports: http://github.com/gluc/data.tree/issues
+Depends:
+    R (>= 3.0)
