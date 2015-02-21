@@ -7,9 +7,6 @@ vignette: >
   %\VignetteIndexEntry{Introdution to data.tree}
 output: 
   knitr:::html_vignette
-    highlight: united
-    toc: yes
-    toc_depth: 4
 ---
 
 ## About Trees
@@ -113,7 +110,7 @@ print(acme, "level", "cost")
 
 ### Using Get when converting to data.frame and for printing
 
-Above, we saw how we can add the name of an attribute to the ellipsis argument of the as.data.frame. However, we can also add the results of the `Get` method directly to the `as.data.frame` . This allows for example formatting the column in a specific way. Details of the Get method are explained in the next section.
+Above, we saw how we can add the name of an attribute to the ellipsis argument of the `as.data.frame`. However, we can also add the results of the `Get` method directly to the `as.data.frame` . This allows for example formatting the column in a specific way. Details of the Get method are explained in the next section.
 
 ```{r}
 
