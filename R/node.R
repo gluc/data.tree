@@ -428,8 +428,8 @@ print.Node <- function(x, ...) {
 #' Convert a tree to a data.frame. 
 #' 
 #' @param x The root node to convert to a data.frame
-#' @param row.names
-#' @param optional
+#' @param row.names NULL or a character vector giving the row names for the data frame. Missing values are not allowed.
+#' @param optional logical. If TRUE, setting row names and converting column names (to syntactic names: see make.names) is optional.
 #' @param ... the attributes to be added as columns of the data.frame. There are various
 #' options:
 #' \itemize{
