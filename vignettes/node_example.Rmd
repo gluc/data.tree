@@ -11,7 +11,7 @@ output:
 
 ## About Trees
 
-Trees are ubiquitious is mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing hierarchies. Some examples where trees are useful:
+Trees are ubiquitious in mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing hierarchic data. Some examples where trees are useful:
 
 * in decision theory (c.f. decision trees)
 * in finance, e.g. to classify financial instruments into asset classes
@@ -19,17 +19,17 @@ Trees are ubiquitious is mathematics, computer science, data sciences, finance, 
 * in computer science and programming (e.g. binary search trees, xml)
 * e.g. for family trees
 
-R provides some tree-like structures on various low levels. For example, environments can be seen as nodes in a tree. Also, R provides various packages that deal with tree-like structures (especially in the area of decision theory). Yet, there is no high-level tree data structure that could be used equally conveniently and generically as, say, data.frame. 
+R provides tree-like structures on various low levels. For example, environments can be seen as nodes in a tree. Also, R provides various packages that deal with tree-like structures (especially in the area of decision theory). Yet, there is no high-level tree data structure that could be used equally conveniently and generically as, say, data.frame. 
 
-As a consequence, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames (or in Excel sheets). But hierarchies don't marry with tables and various workarounds are usually required. 
+As a consequence, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames (or - perish the thought! - in Excel sheets). But hierarchies don't marry with tables and various workarounds are usually required. 
 
-This package tries to offer an alternative. The tree package allows creating hierarchies by the use of the Node object. Node provides basic traversal and search operations. You can decorate Nodes with attributes and methods, by that extending the package to your needs. 
+This package tries to offer an alternative. The tree package allows creating hierarchies by the use of the `Node` object. `Node` provides basic traversal, search, and sort operations. You can decorate Nodes with attributes and methods, by that extending the package to your needs. 
 
 Also, the package provides convenience methods to print trees nicely, and to convert it to a data.frame for integration with other packages.
 
 ## Tree Creation
 
-Let's start by creating a tree of nodes. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. The root (level 0) is the company. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year:
+Let's start by creating a tree of `Node`s. In our example, we are looking at a company, Acme Inc., and the tree reflects its oranisational structure. The root (level 0) is the company. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year:
 
 ```{r}
 library(data.tree)
@@ -46,11 +46,22 @@ acme <- Node$new("Acme Inc.")
     goToR <- it$AddChild("Switch to R")
 
 print(acme)
-  
 ```
+Note that `Node` is an `R6` reference class. Essentially, this has two implications:
+
+1. You can call methods on a `Node` in OO style
+2. You can call methods on a `Node` that modify it it, without having to re-assign to a new variable
+
+## Calling Methods in OO Style
+
+For example, we can check if a `Node` is the root like this:
+```{r}
+acme$isRoot
+```
+
 ## Custom Attributes
 
-Now, let's associate some costs with the projects:
+Now, let's associate some costs with the projects. We do this by setting custom attributes on the leaf `Node`s:
 ```{r}
 software$cost <- 1000000
 standards$cost <- 500000
@@ -61,7 +72,7 @@ agile$cost <- 250000
 goToR$cost <- 50000
 
 ```
-And some probabilities that the projecs will be executed in the next year:
+Also, we set the probabilities that the projects will be executed in the next year:
 
 ```{r}
 software$p <- 0.5
@@ -76,7 +87,7 @@ goToR$p <- 1
 
 ## Converting to data.frame
 
-We can now convert the tree into a `data.frame`:
+We can now convert the tree into a `data.frame`. Note that we call such methods always on the root `Node`:
 
 ```{r}
 acmedf <- as.data.frame(acme)
@@ -86,8 +97,6 @@ The same thing can be achieved by using the OO-style method `Node$ToDataFrame`:
 ```{r, echo=FALSE}
 acme$ToDataFrame()
 ```
-
-
 
 Adding the cost as a column to our `data.frame` is easy, by using the `Get` method. We'll explain the `Get` method in more detail below.
 ```{r}
@@ -145,16 +154,19 @@ The default traversal mode is **pre-order**.
 
 ![pre-order](assets/preorder.png)
 
+```{r}
+data.frame(level = acme$Get('level'))
+```
+
 This is what is used e.g. in `as.data.frame` and its OO-style counterpart `Node$ToDataFrame`:
 
 ```{r}
 acme$ToDataFrame("level")
-data.frame(level = acme$Get('level'))
 ```
 
 #### Post-Order
 
-The **post-order** traversal mode first returns children, and parents only when all children have been traversed:
+The **post-order** traversal mode first returns children, and parents only once all its children have been traversed:
 
 ![post-order](assets/postorder.png)
 
@@ -164,11 +176,11 @@ We can use it like this on the `Get` method:
 data.frame(level = acme$Get('level', traversal = "post-order"))
 ```
 
-This is useful if your parent's value depends on the children.
+This is useful if your parent's value depends on the children, as we'll see below.
 
 #### Ancestor
 
-This is a non-standard traversal mode that does not traverse the entire tree. Instead, the ancestor mode starts from a node, and then walks the tree along the path from ancestor to ancestor, up to the root:
+This is a non-standard traversal mode that does not traverse the entire tree. Instead, the ancestor mode starts from a node, and then walks the tree along the path from ancestor to ancestor, up to the root.
 
 ```{r}
 
@@ -194,7 +206,7 @@ data.frame(acme$Get(ExpectedCost))
 
 ```
 
-The requirement for the function (`ExpectedCost` in the above example) is that:
+The requirements for the function (`ExpectedCost` in the above example) are the following:
 * the first argument of the function is a Node
 * it needs to return a scalar
 
@@ -222,7 +234,7 @@ data.frame(ec = acme$Get(ExpectedCost))
 
 #### Add Parameters to the Passed Function
 
-The Traverse method accepts an ellipsis `...`. Any additional parameters with which `Get` is called will be passed on the the `ExpectedCost` function: This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
+The Traverse method accepts an ellipsis `...`. Any additional parameters with which `Get` is called will be passed on the the `ExpectedCost` function. This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
 
 ```{r}
 
@@ -244,7 +256,7 @@ data.frame(ec = acme$Get(ExpectedCost, fun = mean))
 
 ### Assigning values using Get
 
-We can tell the Get method to assign the value to a specific attribute for each Node it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples :
+We can tell the Get method to assign the value to a specific attribute for each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. Like this, we can for instance store the calculated expected cost for later use and printing:
 
 ```{r}
 
@@ -258,9 +270,9 @@ print(acme, "p", "cost", "expectedCost")
 
 In the above Recursion example, we recurse for each node to all descendants straight to the leaf, by that repeating the same calculations various times.
 
-We can avoid these repetitious calculations by piggy-backing on pre-calculated values. Obviously, this requires us to traverse the tree in post-order mode: We want to start calculating at the leafes, and then walk back towards the root.
+We can avoid these repetitious calculations by piggy-backing on pre-calculated values. Obviously, this requires us to traverse the tree in post-order mode: We want to start calculating at the leaves, and then walk back towards the root.
 
-In the following example, we calculate the average expected cost. As this depends now only of a node's children, and because we walk the tree in post-order mode, we can be sure that our children have the value calculated when we traverse the parent.
+In the following example, we calculate the average expected cost, just as above. As this depends now only on a node's children, and because we walk the tree in post-order mode, we can be sure that our children have the value calculated when we traverse the parent.
 
 
 ```{r}
@@ -315,7 +327,7 @@ print(acme, cost = acme$Get("cost2"))
 
 ## Set Method
 
-The `Set` method is the counterpart to the `Get` method. It takes a vector or a single value as an input, and traverses the tree in a certain order. Each node is assigned a value from the vector.
+The `Set` method is the counterpart to the `Get` method. It takes a vector or a single value as an input, and traverses the tree in a certain order. Each node is assigned a value from the vector, one after the other.
 
 ### Assigning Values
 
@@ -339,7 +351,7 @@ print(acme, "employees", "secretaries", "secPerEmployee")
 
 Just as for the `Get` method, the **traversal order** is important for the `Set`.
 
-Often, it is usefule to use `Get` and `Set` together:
+Often, it is useful to use `Get` and `Set` together:
 
 ```{r}
 ec <- acme$Get(function(x) x$p * x$cost)
@@ -347,6 +359,7 @@ acme$Set(expectedCost = ec)
 print(acme, "p", "cost", "expectedCost")
 
 ```
+This is equivalent to using `Get` with the `assign` parameter.
 
 ### Deleting Attributes
 
@@ -355,10 +368,14 @@ The Set method can also be used to assign a single value directly. For example, 
 ```{r}
 acme$Set(avgExpectedCost = NULL)
 ```
+Note that un-assigned values have also NULL:
+```{r}
+acme$newAttribute
+```
 
 ### Chaining
 
-Note that we can also chain the arguments:
+As `Node` is an R6 reference object, we can **chain** the arguments:
 
 ```{r}
 acme$Set(avgExpectedCost = NULL)$Set(expectedCost = NA)
@@ -385,7 +402,7 @@ The reason is that NULL is always converted to NA for printing, and when using t
 
 ## Aggregate
 
-For simple cases, you don't have to write your own function to pass along to the Get method. For example, the Aggregate method provides a shorthand for the often used case when a parent is the aggregate of its children values:
+For simple cases, you don't have to write your own function to be passed along to the Get method. For example, the Aggregate method provides a shorthand for the often used case when a parent is the aggregate of its children values:
 
 ```{r}
 
@@ -421,7 +438,7 @@ acme$Get(GetCost)
 
 ## Sorting
 
-You can sort an entire tree by using the Sort method on the root. The method will sort recursively and, for each node, sort the children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub class of Node, see below).
+You can sort an entire tree by using the Sort method on the root. The method will sort recursively and, for each `Node`, sort the children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub-class of Node, see below).
 
 ```{r}
 acme$Get(ExpectedCost, assign = "expectedCost")
@@ -432,7 +449,7 @@ print(acme, "expectedCost")
 Naturally, you can also sort a subtree by calling Sort on the subtree's parent node.
 
 
-## Subclassing Node
+## Subclassing `Node`
 
 We can create a subclass of Node, and add custom methods to our subclass. This is very natural to users with experience in OO languages such as Java, Python or C#:
 

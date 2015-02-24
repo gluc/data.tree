@@ -4,7 +4,8 @@
 \alias{Find}
 \title{Finds a node having path \code{...}.}
 \usage{
-Find(...)
+Node$Find(...)
+#Node$Find("this", "is", "my", "path")
 }
 \arguments{
 \item{...}{the names of the nodes in the path}

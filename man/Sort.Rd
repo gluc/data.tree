@@ -2,9 +2,9 @@
 % Please edit documentation in R/node.R
 \name{Sort}
 \alias{Sort}
-\title{Sort the children of a node along attribute}
+\title{Sort the children of a node along attribute, or the entire tree.}
 \usage{
-Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
+Node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
 }
 \arguments{
 \item{attribute}{a field, method or function. The result of the attribute determines the
@@ -19,7 +19,7 @@ function)}
 This allows sorting an entire tree.}
 }
 \description{
-Sort the children of a node along attribute
+Sort the children of a node along attribute, or the entire tree.
 }
 \examples{
 data(acme)

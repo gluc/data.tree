@@ -4,7 +4,7 @@
 \alias{Aggregate}
 \title{Traverse the tree and call \code{fun(children$Aggregate(...))} on each node.}
 \usage{
-Aggregate(attribute, fun, ...)
+Node$Aggregate(attribute, fun, ...)
 }
 \arguments{
 \item{attribute}{the attribute that is being called on every node. The attribute can be

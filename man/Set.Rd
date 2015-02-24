@@ -4,7 +4,7 @@
 \alias{Set}
 \title{Traverses the tree and assigns values to attributes along the way.}
 \usage{
-Set(..., traversal = "pre-order", returnValues = FALSE)
+Node$Set(..., traversal = "pre-order", returnValues = FALSE)
 }
 \arguments{
 \item{...}{each argument can be a vector of values to be assigned.}

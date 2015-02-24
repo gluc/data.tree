@@ -10,10 +10,11 @@
 #' \describe{
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
 #'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}}
-#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverse the tree and collect values along the way.}
-#'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverse the tree and assign attributes along the way.}
-#'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverse the tree and call \code{fun(children$Aggregate(...))} on each node. }
+#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
+#'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
+#'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
 #'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
+#'   \item{\code{\link{ToDataFrame}(row.names = NULL, optional = FALSE, ...)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
 #' }
 #' @export
 #' @format An \code{\link{R6Class}} generator object
@@ -297,6 +298,8 @@ Node <- R6Class("Node",
 #' The path is relative to the Node on which this method is called. Each argument provided corresponds to an 
 #' element in the path.
 #' 
+#' @usage Node$Find(...)
+#' #Node$Find("this", "is", "my", "path")
 #' 
 #' @param ... the names of the nodes in the path
 #' @return the Node having path \code{...}, or NULL if such a path does not exist
@@ -319,6 +322,7 @@ Find = function(...) {
 
 #' Traverses the tree and collects values, results of method calls, or results of function calls along the way.
 #' 
+#' @usage Node$Get(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)
 #' 
 #'   @param attribute determines what is collected during traversal. The attribute can be
 #'       \itemize{
@@ -327,7 +331,7 @@ Find = function(...) {
 #'         \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by 
 #'         passing \code{...} to the function.
 #'        }
-#'  @param traversal determines the traversal order. It can be either "pre-order", "post-order", or "ascendant"
+#'  @param traversal determines the traversal order. It can be either "pre-order", "post-order", or "ancestor"
 #'  @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
 #'  @param format can be a function that transforms the collected values, e.g. for printing
 #'  
@@ -363,6 +367,8 @@ Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = 
 
 #' Traverses the tree and assigns values to attributes along the way.
 #' 
+#' @usage Node$Set(..., traversal = "pre-order", returnValues = FALSE)
+#' 
 #' @param ... each argument can be a vector of values to be assigned.
 #' @param traversal any of 'pre-order', 'post-order', 'ancestor'
 #' @param returnValues if TRUE, then the non-processed arg passed in ... are returned. 
@@ -397,6 +403,8 @@ Set = function(..., traversal = "pre-order", returnValues = FALSE) {
 #' 
 #' This allows you to set e.g. a value on the leafs, and then sum them up along the tree.
 #' 
+#' @usage Node$Aggregate(attribute, fun, ...)
+#' 
 #' @param attribute the attribute that is being called on every node. The attribute can be 
 #' field, a property or a method. If the node contains #' the attribute, its value is return. 
 #' Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, 
@@ -419,7 +427,10 @@ Aggregate = function(attribute, fun, ...) {
 
 
 
-#' Sort the children of a node along attribute
+#' Sort the children of a node along attribute, or the entire tree.
+#' 
+#' @usage Node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
+#' 
 #' @param attribute a field, method or function. The result of the attribute determines the 
 #' sorting. If it is a function, #' the attribute must take a Node as a first argument.
 #' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
@@ -437,6 +448,30 @@ Aggregate = function(attribute, fun, ...) {
 #' @seealso \code{\link{Node}}
 #' @keywords internal
 Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
+  stop("This method can only be called on a Node!")
+}
+
+
+
+#' Convert a \code{\link{Node}} to a data.frame.
+#' 
+#' @usage Node$ToDataFrame(row.names = NULL, optional = FALSE, ...)
+#'
+#' @param row.names NULL or a character vector giving the row names for the data frame. 
+#' Missing values are not allowed.
+#' @param optional logical. If TRUE, setting row names and converting column names 
+#' (to syntactic names: see make.names) is optional.
+#' @param ... the attributes to be added as columns of the data.frame. There are various
+#' options:
+#' \itemize{
+#'  \item a string corresponding to the name of a node attribute
+#'  \item the result of the \code{Node$Get} method
+#' }
+#' If a specific Node does not contain the attribute, the data.frame will contain NA.
+#'
+#' @seealso \code{\link{Node}}, \code{\link{as.data.frame.Node}} 
+#' @keywords internal
+ToDataFrame <- function(row.names = NULL, optional = FALSE, ...) {
   stop("This method can only be called on a Node!")
 }
 
