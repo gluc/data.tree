@@ -11,14 +11,26 @@ Set(..., traversal = "pre-order", returnValues = FALSE)
 
 \item{traversal}{any of 'pre-order', 'post-order', 'ancestor'}
 
-\item{returnValues}{if TRUE, then the non-processed arg passed in ... are returned. Otherwise the Node itself is returned for chaining. Mainly for internal use.}
+\item{returnValues}{if TRUE, then the non-processed arg passed in ... are returned.
+Otherwise the Node itself is returned for chaining. Mainly for internal use.}
 }
 \description{
 Traverses the tree and assigns values to attributes along the way.
 }
 \examples{
 data(acme)
-acme$Set(departmentId = 1:11, head = c("Jack Brown", "Dr. Frank N. Stein", "", "", "Mona Moneyhead", "", "", "Eric Nerdahl", "", "", ""))
+acme$Set(departmentId = 1:11,
+         head = c("Jack Brown",
+                  "Dr. Frank N. Stein",
+                  "",
+                  "",
+                  "Mona Moneyhead",
+                  "",
+                  "",
+                  "Eric Nerdahl",
+                  "",
+                  "",
+                  ""))
 print(acme, "departmentId", "head")
 }
 \seealso{

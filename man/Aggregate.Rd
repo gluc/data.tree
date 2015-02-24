@@ -7,8 +7,10 @@
 Aggregate(attribute, fun, ...)
 }
 \arguments{
-\item{attribute}{the attribute that is being called on every node. The attribute can be field, a property or a method. If the node contains
-the attribute, its value is return. Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, the attribute must be set on the leaf.}
+\item{attribute}{the attribute that is being called on every node. The attribute can be
+field, a property or a method. If the node contains #' the attribute, its value is return.
+Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method,
+the attribute must be set on the leaf.}
 
 \item{fun}{a function to be applied}
 

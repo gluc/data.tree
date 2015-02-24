@@ -294,7 +294,8 @@ Node <- R6Class("Node",
 
 #' Finds a node having path \code{...}.
 #' 
-#' The path is relative to the Node on which this method is called. Each argument provided corresponds to an element in the path.
+#' The path is relative to the Node on which this method is called. Each argument provided corresponds to an 
+#' element in the path.
 #' 
 #' 
 #' @param ... the names of the nodes in the path
@@ -347,7 +348,11 @@ Find = function(...) {
 #'  format(x, nsmall=2, scientific = FALSE)
 #'}
 #'
-#'acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
+#'acme$Get(calculateAggregateChildCost, 
+#'         mean, 
+#'         traversal = "post-order", 
+#'         assign = "averageCost", 
+#'         format = myFormat)
 #'  
 #' @seealso \code{\link{Node}}
 #'  
@@ -360,12 +365,24 @@ Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = 
 #' 
 #' @param ... each argument can be a vector of values to be assigned.
 #' @param traversal any of 'pre-order', 'post-order', 'ancestor'
-#' @param returnValues if TRUE, then the non-processed arg passed in ... are returned. Otherwise the Node itself is returned for chaining. Mainly for internal use.
+#' @param returnValues if TRUE, then the non-processed arg passed in ... are returned. 
+#' Otherwise the Node itself is returned for chaining. Mainly for internal use.
 #'  
 #'  
 #' @examples
 #' data(acme)
-#' acme$Set(departmentId = 1:11, head = c("Jack Brown", "Dr. Frank N. Stein", "", "", "Mona Moneyhead", "", "", "Eric Nerdahl", "", "", ""))
+#' acme$Set(departmentId = 1:11, 
+#'          head = c("Jack Brown", 
+#'                   "Dr. Frank N. Stein", 
+#'                   "", 
+#'                   "", 
+#'                   "Mona Moneyhead", 
+#'                   "", 
+#'                   "", 
+#'                   "Eric Nerdahl", 
+#'                   "", 
+#'                   "", 
+#'                   ""))
 #' print(acme, "departmentId", "head")
 #'  
 #' @seealso \code{\link{Node}}
@@ -380,8 +397,10 @@ Set = function(..., traversal = "pre-order", returnValues = FALSE) {
 #' 
 #' This allows you to set e.g. a value on the leafs, and then sum them up along the tree.
 #' 
-#' @param attribute the attribute that is being called on every node. The attribute can be field, a property or a method. If the node contains
-#' the attribute, its value is return. Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, the attribute must be set on the leaf.
+#' @param attribute the attribute that is being called on every node. The attribute can be 
+#' field, a property or a method. If the node contains #' the attribute, its value is return. 
+#' Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, 
+#' the attribute must be set on the leaf.
 #' @param fun a function to be applied
 #' @param ... any arguments to be passed on to fun
 #' 
@@ -401,11 +420,13 @@ Aggregate = function(attribute, fun, ...) {
 
 
 #' Sort the children of a node along attribute
-#' @param attribute a field, method or function. The result of the attribute determines the sorting. If it is a function,
-#' the attribute must take a Node as a first argument.
-#' @param ... any parameters to be passed on the the attribute (in case it's a method or a function)
+#' @param attribute a field, method or function. The result of the attribute determines the 
+#' sorting. If it is a function, #' the attribute must take a Node as a first argument.
+#' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
+#' function)
 #' @param decreasing sort order
-#' @param recursive if TRUE, Sort will be called recursively on the Node's children. This allows sorting an entire tree.
+#' @param recursive if TRUE, Sort will be called recursively on the Node's children. 
+#' This allows sorting an entire tree.
 #' 
 #' @examples
 #' data(acme)
@@ -428,8 +449,10 @@ print.Node <- function(x, ...) {
 #' Convert a tree to a data.frame. 
 #' 
 #' @param x The root node to convert to a data.frame
-#' @param row.names NULL or a character vector giving the row names for the data frame. Missing values are not allowed.
-#' @param optional logical. If TRUE, setting row names and converting column names (to syntactic names: see make.names) is optional.
+#' @param row.names NULL or a character vector giving the row names for the data frame. 
+#' Missing values are not allowed.
+#' @param optional logical. If TRUE, setting row names and converting column names 
+#' (to syntactic names: see make.names) is optional.
 #' @param ... the attributes to be added as columns of the data.frame. There are various
 #' options:
 #' \itemize{

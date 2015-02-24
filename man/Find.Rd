@@ -13,7 +13,8 @@ Find(...)
 the Node having path \code{...}, or NULL if such a path does not exist
 }
 \description{
-The path is relative to the Node on which this method is called. Each argument provided corresponds to an element in the path.
+The path is relative to the Node on which this method is called. Each argument provided corresponds to an
+element in the path.
 }
 \examples{
 data(acme)

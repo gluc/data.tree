@@ -42,7 +42,11 @@ myFormat <- function(x) {
  format(x, nsmall=2, scientific = FALSE)
 }
 
-acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
+acme$Get(calculateAggregateChildCost,
+        mean,
+        traversal = "post-order",
+        assign = "averageCost",
+        format = myFormat)
 }
 \seealso{
 \code{\link{Node}}
