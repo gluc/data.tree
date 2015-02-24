@@ -1,6 +1,6 @@
 Package: data.tree
 Type: Package
-Title: Create, manage, and extend hierarchic tree structures.
+Title: data.tree is to hierarchical data whata data.frame is to tabular data.
 Version: 0.1
 Date: 2015-01-06
 Author: Christoph Glur
@@ -10,7 +10,7 @@ Imports:
     R6
 Suggests:
     testthat, magrittr, knitr
-Description: Create trees, and use the utility methods to travers the tree in various order. Print, convert from and to data.frame, and apply functions to your tree data.
+Description: Create tree structures from hierarchical data, and use the utility methods to traverse the tree in various orders and to aggregate. Print, convert from and to data.frame, and apply functions to your tree data.
 License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
