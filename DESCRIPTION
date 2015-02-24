@@ -1,8 +1,8 @@
 Package: data.tree
 Type: Package
 Title: data.tree is to hierarchical data whata data.frame is to tabular data.
-Version: 0.1.0.11
-Date: 2015-01-06
+Version: 0.1.0
+Date: 2015-02-24
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.ch>
 VignetteBuilder: knitr
