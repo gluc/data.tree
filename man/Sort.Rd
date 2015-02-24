@@ -4,7 +4,7 @@
 \alias{Sort}
 \title{Sort the children of a node along attribute, or the entire tree.}
 \usage{
-Node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
+Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
 }
 \arguments{
 \item{attribute}{a field, method or function. The result of the attribute determines the

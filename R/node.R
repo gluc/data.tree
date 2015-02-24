@@ -295,11 +295,10 @@ Node <- R6Class("Node",
 
 #' Finds a node having path \code{...}.
 #' 
+#' 
 #' The path is relative to the Node on which this method is called. Each argument provided corresponds to an 
 #' element in the path.
 #' 
-#' @usage Node$Find(...)
-#' #Node$Find("this", "is", "my", "path")
 #' 
 #' @param ... the names of the nodes in the path
 #' @return the Node having path \code{...}, or NULL if such a path does not exist
@@ -322,7 +321,6 @@ Find = function(...) {
 
 #' Traverses the tree and collects values, results of method calls, or results of function calls along the way.
 #' 
-#' @usage Node$Get(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)
 #' 
 #'   @param attribute determines what is collected during traversal. The attribute can be
 #'       \itemize{
@@ -367,7 +365,6 @@ Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = 
 
 #' Traverses the tree and assigns values to attributes along the way.
 #' 
-#' @usage Node$Set(..., traversal = "pre-order", returnValues = FALSE)
 #' 
 #' @param ... each argument can be a vector of values to be assigned.
 #' @param traversal any of 'pre-order', 'post-order', 'ancestor'
@@ -403,7 +400,6 @@ Set = function(..., traversal = "pre-order", returnValues = FALSE) {
 #' 
 #' This allows you to set e.g. a value on the leafs, and then sum them up along the tree.
 #' 
-#' @usage Node$Aggregate(attribute, fun, ...)
 #' 
 #' @param attribute the attribute that is being called on every node. The attribute can be 
 #' field, a property or a method. If the node contains #' the attribute, its value is return. 
@@ -429,8 +425,6 @@ Aggregate = function(attribute, fun, ...) {
 
 #' Sort the children of a node along attribute, or the entire tree.
 #' 
-#' @usage Node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
-#' 
 #' @param attribute a field, method or function. The result of the attribute determines the 
 #' sorting. If it is a function, #' the attribute must take a Node as a first argument.
 #' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
@@ -455,8 +449,6 @@ Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
 
 #' Convert a \code{\link{Node}} to a data.frame.
 #' 
-#' @usage Node$ToDataFrame(row.names = NULL, optional = FALSE, ...)
-#'
 #' @param row.names NULL or a character vector giving the row names for the data frame. 
 #' Missing values are not allowed.
 #' @param optional logical. If TRUE, setting row names and converting column names 

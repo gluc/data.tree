@@ -4,7 +4,7 @@
 \alias{Get}
 \title{Traverses the tree and collects values, results of method calls, or results of function calls along the way.}
 \usage{
-Node$Get(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)
+Get(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)
 }
 \arguments{
 \item{attribute}{determines what is collected during traversal. The attribute can be
