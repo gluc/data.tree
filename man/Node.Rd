@@ -31,5 +31,26 @@ A generic node in a tree
   \item{\code{\link{ToDataFrame}(row.names = NULL, optional = FALSE, ...)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
 }
 }
+
+\section{Properties}{
+
+
+\describe{
+ \item{\code{children}}{Returns a list containing all the children of this \code{Node}}
+ \item{\code{parent}}{Returns the parent \code{Node} of this \code{Node}}
+ \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
+ \item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
+ \item{\code{isRoot}}{Returns \code{TRUE} if the \code{Node} is the root, \code{FALSE} otherwise}
+ \item{\code{count}}{Returns the number of children of a \code{Node}}
+ \item{\code{totalCount}}{Returns the total number of \code{Node}s in the tree}
+ \item{\code{path}}{Returns a vector of mode \code{character} containing the names of the \code{Node}s in the path from the root to this \code{Node}}
+ \item{\code{pathString}}{Returns a string representing the path to this \code{Node}, separated by backslash}
+ \item{\code{levelName}}{Returns the name of the \code{Node}, preceded by level times '*'. Useful for printing.}
+ \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
+ \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
+ \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
+
+}
+}
 \keyword{datasets}
 
