@@ -10,9 +10,10 @@ Imports:
     R6
 Suggests:
     testthat, magrittr, knitr
-Description: data.tree is to hierarchical data whata data.frame is to tabular data. You can create
+Description: data.tree is to hierarchical data what data.frame is to tabular data. You can create 
     tree structures from hierarchical data, and use the utility methods to traverse the tree in 
-    various orders and to aggregate. Print, convert from and to data.frame, and apply functions to your tree data.
+    various orders. Aggregate, print, convert from and to data.frame, and apply functions
+    to your tree data.
 License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
