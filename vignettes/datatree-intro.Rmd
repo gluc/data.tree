@@ -4,7 +4,7 @@ author: "Christoph Glur"
 date: '`r Sys.Date()`'
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Introduction to data.tree}
+  %\VignetteIndexEntry{Quick intro}
 output: 
   knitr:::html_vignette
 ---
