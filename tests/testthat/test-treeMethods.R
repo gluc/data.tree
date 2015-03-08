@@ -22,16 +22,17 @@ test_that("Get pre-order", {
   get <- acme$Get("name", traversal = "pre-order")
   
   exp <- c('Acme Inc.', 
-           'Research', 
-           'New Labs', 
-           'New Product Line', 
            'Accounting', 
            'New Software', 
            'New Accounting Standards', 
+           'Research', 
+           'New Product Line', 
+           'New Labs',
            'IT', 
            'Outsource', 
-           'Switch to R', 
-           'Go agile')
+           'Go agile',
+           'Switch to R' 
+           )
   
   names(exp) <- exp
   
@@ -41,16 +42,17 @@ test_that("Get pre-order", {
 
 
 test_that("Get post-order", {
+  data(acme)
   get <- acme$Get("name", traversal = "post-order")
-  
-  exp <- c('New Labs', 
-           'New Product Line', 
-           'Research', 
-           'New Software', 
+  exp <- c('New Software',
            'New Accounting Standards', 
-           'Accounting', 'Outsource', 
-           'Switch to R', 
+           'Accounting',
+           'New Product Line', 
+           'New Labs', 
+           'Research', 
+           'Outsource', 
            'Go agile', 
+           'Switch to R', 
            'IT', 
            'Acme Inc.')
   
@@ -87,22 +89,9 @@ test_that("Get format", {
     format(x, nsmall=2, scientific = FALSE)
   }
   
-  get <- acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
+  get <- acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)["New Product Line"]
   
-  exp <- c("750000.00", "2000000.00", "1375000.00", "1000000.00", "500000.00", "750000.00", "400000.00", "50000.00", "250000.00", "233333.33", "786111.11")
-  names(exp) <- c('New Labs',
-                  'New Product Line',
-                  'Research',
-                  'New Software',
-                  'New Accounting Standards',
-                  'Accounting',
-                  'Outsource',
-                  'Switch to R',
-                  'Go agile',
-                  'IT',
-                  'Acme Inc.')
-  
-  expect_equal(get, exp)
+  expect_equal(as.character(get), "2000000.00")
   
 
 })
@@ -121,22 +110,10 @@ test_that("Get assign", {
   }
   
   acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
-  get <- acme$Get('averageCost', traversal = "post-order")
+  get <- acme$Get('averageCost', traversal = "post-order")["New Product Line"]
   
-  exp <- c(750000.00, 2000000.00, 1375000.00, 1000000.00, 500000.00, 750000.00, 400000.00, 50000.00, 250000.00, 233333.33, 786111.11)
-  names(exp) <- c('New Labs',
-                  'New Product Line',
-                  'Research',
-                  'New Software',
-                  'New Accounting Standards',
-                  'Accounting',
-                  'Outsource',
-                  'Switch to R',
-                  'Go agile',
-                  'IT',
-                  'Acme Inc.')
   
-  expect_equal(get, exp)
+  expect_equal(as.numeric(get), 2000000)
   
   
 })
