@@ -228,6 +228,14 @@ Node <- R6Class("Node",
                         return (v)
                       },
                       
+                      #Copy = function() {
+                        #return a deep copy of the Node and all its children (but not the parent)
+                        #selfCopy <- as.environment(as.list(self, all.names = TRUE))
+                        #privateCopy <- as.environment(as.list(private, all.names = TRUE))
+                      #},
+                      
+                      #Filter = function(){}
+                      
                       ToDataFrame = function(...) {
                         as.data.frame(self, row.names = NULL, optional = FALSE, ...)
                       }
