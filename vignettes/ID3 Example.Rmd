@@ -1,0 +1,51 @@
+---
+title: "ID3 Classification using data.tree"
+author: "Christoph Glur"
+date: '`r Sys.Date()`'
+output: 
+  html_document:
+    theme: united
+    toc: yes
+    toc_depth: 3
+---
+
+<!--
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Example of using data.tree for ID3 classification}
+-->
+
+# The ID3 algorithm
+
+http://www.uni-weimar.de/medien/webis/teaching/lecturenotes/machine-learning/unit-en-decision-trees-algorithms.pdf
+
+This algorithm was one of the first ones
+
+```{r}
+data(mushrooms)
+mushrooms
+```
+
+Let's define the conditional entropy method:
+
+```{r}
+conditionalEntropy <- function( tble ) {
+  tble <- as.data.frame.matrix(tble)
+  tble$p <- rowSums(tble)/sum(tble)
+  tble$a <- tble$edible / (tble$edible + tble$toxic)
+  tble$b <- tble$toxic / (tble$edible + tble$toxic)
+  -sum(tble$p * (tble$a * log2(tble$a) + tble$b * log2(tble$b)), na.rm = TRUE)
+}
+```
+
+
+As a first recursion step we split with respect to each attribute:
+```{r}
+
+h <- sapply(colnames(mushrooms)[1:3], 
+           function(x) {
+             conditionalEntropy(table(mushrooms[,x], mushrooms$edible))
+           })
+h
+```
+
+We take the attribute having the lowest entropy
