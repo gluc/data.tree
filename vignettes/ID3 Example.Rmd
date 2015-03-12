@@ -21,11 +21,11 @@ http://www.uni-weimar.de/medien/webis/teaching/lecturenotes/machine-learning/uni
 This algorithm was one of the first ones
 
 ```{r}
+library(data.tree)
 data(mushrooms)
-mushrooms
 ```
 
-Let's define the conditional entropy method:
+In ID3, the decision criteria is conditional entropy method:
 
 ```{r}
 conditionalEntropy <- function( tble ) {
@@ -38,14 +38,77 @@ conditionalEntropy <- function( tble ) {
 ```
 
 
-As a first recursion step we split with respect to each attribute:
+As a first recursion step we take the attribute having the largest information gain (i.e. the one with the smallest conditional entropy):
 ```{r}
 
-h <- sapply(colnames(mushrooms)[1:3], 
-           function(x) {
-             conditionalEntropy(table(mushrooms[,x], mushrooms$edible))
-           })
-h
+
+train <- function(node) {
+  
+  if(FALSE) {
+    if(is.null(dim(node$obs))) {
+      #browser()
+      node$obsCount <- length(node$obs)
+      t <- table(node$obs)
+      for(l in levels(node$obs)) {
+        node[[l]] <- t[[l]]
+      }
+      return()
+    } 
+  }
+    
+  node$obsCount <- dim(node$obs)[1]
+  x <- node$obs[,ncol(node$obs)]
+  t <- table(x)
+  for(l in levels(x)) {
+    node[[l]] <- t[[l]]
+  }
+
+  #check if pure
+  browser()
+  if (length(unique(x)) == 1) {
+    node$x <- node$obs[[1]]
+    return()
+  }
+  
+  #calculate conditional entropy for each attribute
+  h <- sapply(colnames(node$obs)[-dim(node$obs)[2]], 
+            function(x) conditionalEntropy(
+              table(node$obs[,x], node$obs$edible)
+              )
+            )
+
+  
+  
+  #select the attribute with the highest information gain (i.e. the one with the smalles conditional entropy)
+  attribute <- names(h)[h == min(h)][1]
+  node$entropy <- h[attribute]
+  
+  #find the next level observations
+  childObs <- split(node$obs[,!(names(node$obs) %in% attribute)], node$obs[,attribute], drop = TRUE)
+  
+  #for each, create a child node and recursively call id3
+  
+  for(i in 1:length(childObs)) {
+      
+      child <- node$AddChild(names(childObs)[i])
+      child$attribute <- attribute
+      child$obs <- childObs[[i]]
+      id3(child)
+    
+  }
+  
+  
+}
 ```
 
-We take the attribute having the lowest entropy
+We are ready to run the function:
+
+```{r}
+tree <- Node$new("root")
+tree$obs <- mushrooms
+train(tree)
+
+print(tree, "attribute", "x", "obsCount", "edible", "toxic")
+
+```
+
