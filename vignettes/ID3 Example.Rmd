@@ -14,101 +14,181 @@ output:
   %\VignetteIndexEntry{Example of using data.tree for ID3 classification}
 -->
 
+# About this Vignette
+
+This vignette provides a real-world example of the capabilities of the data.tree package. Note that 
+the data.tree package is by no means optimised for speed. Quite the contrary: for any specialised task,
+you will probably find a faster implementation. The data.tree package is useful always when implementation speed
+is more important than computation speed. This is usually the case when
+
+* you want to develop and test a new algorithm
+* when you don't expect large data sets
+* when you just want to play around with data
+* when you want to test another package, to compare it with your own results
+* when you need to do homework
+
+For example, the code for this vignette was written in an hour. The reason for this is that, thanks to the data.tree package,
+the implementation of the training algorithm follows almost line by line the algorithm's pseudo code.
+
 # The ID3 algorithm
+
+You will find lots of documentation on the internet. 
+
+For example:
 
 http://www.uni-weimar.de/medien/webis/teaching/lecturenotes/machine-learning/unit-en-decision-trees-algorithms.pdf
 
-This algorithm was one of the first ones
+# Entropy and Information Gain
 
 ```{r}
 library(data.tree)
 data(mushrooms)
 ```
 
-In ID3, the decision criteria is conditional entropy method:
+In ID3, the decision criteria is the informationGain, which measures the difference in purity we achieve by splitting. More
+precisely, we measure the difference between the entropy before the split, and the weighted sum of the entropies after the split:
 
 ```{r}
-conditionalEntropy <- function( tble ) {
+
+entropy <- function( vls ) {
+  res <- vls/sum(vls) * log2(vls/sum(vls))
+  res[vls == 0] <- 0
+  -sum(res)
+}
+
+
+informationGain <- function( tble ) {
   tble <- as.data.frame.matrix(tble)
-  tble$p <- rowSums(tble)/sum(tble)
-  tble$a <- tble$edible / (tble$edible + tble$toxic)
-  tble$b <- tble$toxic / (tble$edible + tble$toxic)
-  -sum(tble$p * (tble$a * log2(tble$a) + tble$b * log2(tble$b)), na.rm = TRUE)
+  entropyBefore <- entropy(colSums(tble))
+  s <- rowSums(tble)
+  entropyAfter <- sum (s / sum(s) * apply(tble, MARGIN = 1, FUN = entropy ))
+  informationGain <- entropyBefore - entropyAfter
+  return (informationGain)
 }
 ```
 
 
-As a first recursion step we take the attribute having the largest information gain (i.e. the one with the smallest conditional entropy):
+For example:
+
+```{r}
+tble <- table(mushrooms[,c('color', 'edible')])
+tble
+informationGain(tble)
+informationGain(table(mushrooms[,c('size', 'edible')]))
+informationGain(table(mushrooms[,c('points', 'edible')]))
+```
+
+```{r}
+isPure <- function(data) {
+  length(unique(data[,ncol(data)])) == 1
+}
+```
+
+
+# The ID3 Algorithm
+
+## Pseudo Code
+
+We are all set for the ID3 algorithm:
+
+1. if the data-set is pure (e.g. all toxic), then  
+    1. construct a leaf having the name of the pure attribute (e.g. 'toxic')
+2. else  
+    1. chose the attribute with the highest information gain (e.g. 'color')
+    2. for each value of that attribute (e.g. 'red', 'brown', 'green')
+        1. take the subset of the data-set having that attribute value
+        2. construct a child having the name of that attribute value (e.g. 'red')
+        3. call the algorithm recursively on the child and the subset
+
+## Implementation with the data.tree package
+
 ```{r}
 
 
-train <- function(node) {
+trainID3 <- function(node, data) {
   
-  if(FALSE) {
-    if(is.null(dim(node$obs))) {
-      #browser()
-      node$obsCount <- length(node$obs)
-      t <- table(node$obs)
-      for(l in levels(node$obs)) {
-        node[[l]] <- t[[l]]
-      }
-      return()
-    } 
-  }
-    
-  node$obsCount <- dim(node$obs)[1]
-  x <- node$obs[,ncol(node$obs)]
-  t <- table(x)
-  for(l in levels(x)) {
-    node[[l]] <- t[[l]]
-  }
-
-  #check if pure
-  browser()
-  if (length(unique(x)) == 1) {
-    node$x <- node$obs[[1]]
-    return()
-  }
-  
-  #calculate conditional entropy for each attribute
-  h <- sapply(colnames(node$obs)[-dim(node$obs)[2]], 
-            function(x) conditionalEntropy(
-              table(node$obs[,x], node$obs$edible)
+  #if the data-set is pure (e.g. all toxic), then
+  if (isPure(data)) {
+    #construct a leaf having the name of the pure attribute (e.g. 'toxic')
+    child <- node$AddChild(unique(data[,ncol(data)]))
+    node$attribute <- tail(names(data), 1)
+  } else {
+    #chose the attribute with the highest information gain (e.g. 'color')
+    ig <- sapply(colnames(data)[-ncol(data)], 
+            function(x) informationGain(
+              table(data[,x], data[,ncol(data)])
               )
             )
-
-  
-  
-  #select the attribute with the highest information gain (i.e. the one with the smalles conditional entropy)
-  attribute <- names(h)[h == min(h)][1]
-  node$entropy <- h[attribute]
-  
-  #find the next level observations
-  childObs <- split(node$obs[,!(names(node$obs) %in% attribute)], node$obs[,attribute], drop = TRUE)
-  
-  #for each, create a child node and recursively call id3
-  
-  for(i in 1:length(childObs)) {
-      
+    attribute <- names(ig)[ig == max(ig)][1]
+    
+    node$attribute <- attribute
+    
+    #take the subset of the data-set having that attribute value
+    childObs <- split(data[,!(names(data) %in% attribute)], data[,attribute], drop = TRUE)
+    
+    for(i in 1:length(childObs)) {
+      #construct a child having the name of that attribute value (e.g. 'red')
       child <- node$AddChild(names(childObs)[i])
-      child$attribute <- attribute
-      child$obs <- childObs[[i]]
-      id3(child)
+      #call the algorithm recursively on the child and the subset      
+      trainID3(child, childObs[[i]])
+    }
     
   }
   
   
+
 }
 ```
+
+# Training with Data
 
 We are ready to run the function:
 
 ```{r}
-tree <- Node$new("root")
-tree$obs <- mushrooms
-train(tree)
-
-print(tree, "attribute", "x", "obsCount", "edible", "toxic")
+tree <- Node$new("mushrooms")
+trainID3(tree, mushrooms)
+print(tree, "attribute")
 
 ```
 
+Another example is the well-known plaiying tennis example:
+
+```{r}
+data(ball)
+ballTree <- Node$new("ball")
+trainID3(ballTree, ball)
+print(ballTree, "attribute")
+
+```
+
+Now, let's predict some variables. For this, we need a predict function, which will route data through our tree:
+
+```{r}
+
+predict <- function(tree, attributes) {
+  if (tree$children[[1]]$isLeaf) return (tree$children[[1]]$name)
+  child <- tree$children[[attributes[[tree$attribute]]]]
+  return ( predict(child, attributes))
+}
+
+```
+
+And now we use it to predict:
+
+```{r}
+predict(ballTree, c(Outlook = 'Sunny', 
+                    Temperature = 'Mild', 
+                    Humidity = 'High', 
+                    Wind = 'Strong')
+        )
+```
+
+So, let's compare the prediction with the actual values, as a sorts of double-check:
+
+```{r}
+
+ball$predict <- apply(ball, MARGIN = 1, FUN = function(x) predict(ballTree, x))
+
+```
+
+Looking pretty good!

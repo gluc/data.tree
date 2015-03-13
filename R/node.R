@@ -51,7 +51,7 @@ Node <- R6Class("Node",
                       
                       
                       AddChild = function(name) {
-                        child <- Node$new(name)
+                        child <- Node$new(as.character(name))
                         invisible (self$AddChildNode(child))
                       },
                       
