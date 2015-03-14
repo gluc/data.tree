@@ -14,6 +14,8 @@ output:
   %\VignetteIndexEntry{Example of using data.tree for ID3 classification}
 -->
 
+![id3](assets/collage.jpg)
+
 # About this Vignette
 
 This vignette provides a real-world example of the capabilities of the data.tree package. Note that 
@@ -42,7 +44,7 @@ http://www.uni-weimar.de/medien/webis/teaching/lecturenotes/machine-learning/uni
 
 ```{r}
 library(data.tree)
-data(mushrooms)
+data(mushroom)
 ```
 
 In ID3, the decision criteria is the informationGain, which measures the difference in purity we achieve by splitting. More
@@ -71,11 +73,11 @@ informationGain <- function( tble ) {
 For example:
 
 ```{r}
-tble <- table(mushrooms[,c('color', 'edible')])
+tble <- table(mushroom[,c('color', 'edibility')])
 tble
 informationGain(tble)
-informationGain(table(mushrooms[,c('size', 'edible')]))
-informationGain(table(mushrooms[,c('points', 'edible')]))
+informationGain(table(mushroom[,c('size', 'edibility')]))
+informationGain(table(mushroom[,c('points', 'edibility')]))
 ```
 
 ```{r}
@@ -145,8 +147,8 @@ trainID3 <- function(node, data) {
 We are ready to run the function:
 
 ```{r}
-tree <- Node$new("mushrooms")
-trainID3(tree, mushrooms)
+tree <- Node$new("mushroom")
+trainID3(tree, mushroom)
 print(tree, "attribute")
 
 ```
@@ -176,10 +178,10 @@ predict <- function(tree, attributes) {
 And now we use it to predict:
 
 ```{r}
-predict(ballTree, c(Outlook = 'Sunny', 
-                    Temperature = 'Mild', 
-                    Humidity = 'High', 
-                    Wind = 'Strong')
+predict(ballTree, c(outlook = 'sunny', 
+                    temperature = 'mild', 
+                    humidity = 'high', 
+                    wind = 'strong')
         )
 ```
 
