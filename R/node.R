@@ -7,6 +7,7 @@
 #' library(data.tree)
 #' acme <- Node$new("Acme Inc.")
 #' accounting <- acme$AddChild("Accounting")
+#' print(acme)
 #' @seealso For more details see the \code{data.tree} vignette: \code{vignette("data.tree")}
 #' @importFrom R6 R6Class
 #' @field children A list of children
