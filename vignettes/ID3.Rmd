@@ -2,7 +2,7 @@
 title: "ID3 Classification using data.tree"
 author: "Christoph Glur"
 date: '`r Sys.Date()`'
-output: 
+output:
   html_document:
     theme: united
     toc: yes
@@ -14,9 +14,9 @@ output:
   %\VignetteIndexEntry{Example of using data.tree for ID3 classification}
 -->
 
-![id3](assets/collage.jpg)
-
 # About this Vignette
+
+![id3](assets/banner_id3.jpg)
 
 This vignette provides a real-world example of the capabilities of the data.tree package. Note that 
 the data.tree package is by no means optimised for speed. Quite the contrary: for any specialised task,

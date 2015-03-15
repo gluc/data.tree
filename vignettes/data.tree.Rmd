@@ -2,7 +2,7 @@
 title: "Introduction to data.tree"
 author: "Christoph Glur"
 date: '`r Sys.Date()`'
-output: 
+output:
   html_document:
     theme: united
     toc: yes
@@ -14,7 +14,10 @@ output:
   %\VignetteIndexEntry{Quick introduction to data.tree}
 -->
 
+
 ## About Trees
+
+![banner](assets/banner_intro.jpg)
 
 Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing hierarchic data. Some examples where trees are useful:
 
