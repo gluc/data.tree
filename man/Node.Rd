@@ -9,7 +9,8 @@
 Node
 }
 \description{
-A generic node in a tree
+\code{Node} is at the very heart of the \code{data.tree} package. All trees are constructed
+by tying toghether \code{Node} objects.
 }
 \section{Fields}{
 
@@ -22,6 +23,7 @@ A generic node in a tree
 
 
 \describe{
+  \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}}
   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
@@ -51,6 +53,14 @@ A generic node in a tree
  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
 
 }
+}
+\examples{
+library(data.tree)
+acme <- Node$new("Acme Inc.")
+accounting <- acme$AddChild("Accounting")
+}
+\seealso{
+For more details see the \code{data.tree} vignette: \code{vignette("data.tree")}
 }
 \keyword{datasets}
 
