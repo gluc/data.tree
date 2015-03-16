@@ -35,6 +35,8 @@ This package tries to offer an alternative. The tree package allows creating hie
 
 Also, the package provides convenience methods to print trees nicely, and to convert it to a data.frame for integration with other packages.
 
+This vignette follows loosely the creation of a [decision trees](http://en.wikipedia.org/wiki/Decision_tree).
+
 ## Tree Creation
 
 Let's start by creating a tree of `Node`s. In our example, we are looking at a company, Acme Inc., and the tree reflects its organisational structure. The root (level 0) is the company. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year:
