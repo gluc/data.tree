@@ -12,6 +12,7 @@ output:
 <!--
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Example of using data.tree for ID3 classification}
+  %\SweaveUTF8
 -->
 
 # Introduction

@@ -284,7 +284,28 @@ Node <- R6Class("Node",
                       },
                       
                       levelName = function() {
-                        paste0(paste(rep("* ", self$level), collapse=""), self$name)
+                        paste0(self$separator, self$name)
+                      },
+                      
+                                  
+                      position = function() {
+                        if (self$isRoot) return (0)
+                        match(self$name, names(self$parent$children))
+                      },
+                      
+                      separator = function() {
+                        if (self$isRoot) return("")
+                        if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--")
+                        else mySeparator <- paste0(" ", "\u00A6", "--")
+                        return (paste0(self$parent$parentSeparator, mySeparator))
+                      },
+                      
+                      parentSeparator = function() {
+                        if (self$isRoot) return("")
+                        if (self$position == self$parent$count) mySeparator <- "    "
+                        else mySeparator <- paste0(" ", "\u00A6", " ")
+                        paste0(self$parent$parentSeparator, mySeparator)
+                        
                       },
                       
                       leaves = function() {

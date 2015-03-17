@@ -6,8 +6,8 @@
 \alias{data.tree-package}
 \title{\code{data.tree} Easily Manage Hierarchical Data in R}
 \description{
-\code{data.tree} is to hierarchical data what `data.frame` is to tabular data: A highly usable, extensible, general purpose structure to store, manipulate,
-and display data.
+\code{data.tree} is to hierarchical data what `data.frame` is to tabular data: An extensible, general purpose structure to store, manipulate,
+and display hierarchical data.
 }
 \details{
 Hierarchical data is ubiquitous. However, no general-use \bold{tree data structure} is available in R.
@@ -24,13 +24,12 @@ in R, which is following value-semantics most of the time.
 
 \code{data.frame} is not optimised for computation speed, but for implementation speed. As a result, it is useful always when implementation speed
 is more important than computation speed, which is usually the case when
-\itemize {
-\item {- you want to develop and test a new algorithm}
-\item {- you don't expect large data sets}
-\item {- you just want to play around with data}
-\item {- you want to test another package, to compare it with your own results}
-\item {- you need to do homework}
-}
+- you want to develop and test a new algorithm
+- you don't expect large data sets
+- you just want to play around with data
+- you want to test another package, to compare it with your own results
+- you need to do homework
+
 For a quick overview of the features, read the \code{\link{data.tree}} vignette by running \code{vignette("data.tree")}. For an example
 in the area of classification trees, you might also be interested in \code{vignette("ID3")}
 }
