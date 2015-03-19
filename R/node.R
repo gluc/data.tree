@@ -93,13 +93,19 @@ Node <- R6Class("Node",
                           } else if (length(path) == 1) {
                             return (child)
                           } else {
-                            return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
+                            return (do.call(child$Find, list(...)[-1]))
+                            #return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
                           }
                         }
                       },
                       
                       
-                      Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL) {
+                      Get = function(attribute, 
+                                     ..., 
+                                     traversal = "pre-order", 
+                                     filterFun = function(x) TRUE, 
+                                     assign = NULL, 
+                                     format = NULL) {
                         #traverses in pre-order. See http://en.wikipedia.org/wiki/Tree_traversal
                         
                         if(traversal == "pre-order") {
@@ -107,7 +113,9 @@ Node <- R6Class("Node",
                           v <- self$GetAttribute(attribute, ..., assign = assign, format = format)
                           if(!self$isLeaf) {
                             for(child in self$children) {
-                              v <- c(v, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
+                              if (filterFun(child)) {
+                                v <- c(v, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
+                              }
                             }
                           }
                         
@@ -116,7 +124,9 @@ Node <- R6Class("Node",
                           childValues <- vector()
                           if(!self$isLeaf) {
                             for(child in self$children) {
-                              childValues <- c(childValues, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
+                              if (filterFun(child)) {
+                                childValues <- c(childValues, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
+                              }
                             }
                           }
                           v <- self$GetAttribute(attribute, ..., assign = assign, format = format)
@@ -125,8 +135,10 @@ Node <- R6Class("Node",
                         } else if (traversal == "ancestor") {
                           v <- self$GetAttribute(attribute, ..., format = format)
                           if (!self$isRoot) {
-                            parentV <- self$parent$Get(attribute, ..., traversal = traversal, assign = assign, format = format)
-                            v <- c(v, parentV)
+                            if (filterFun(self$parent)) {
+                              parentV <- self$parent$Get(attribute, ..., traversal = traversal, assign = assign, format = format)
+                              v <- c(v, parentV)
+                            }
                           }
                         }
                         return (v)
@@ -283,27 +295,27 @@ Node <- R6Class("Node",
                         paste(self$path, collapse="/")
                       },
                       
-                      levelName = function() {
-                        paste0(self$separator, self$name)
-                      },
-                      
-                                  
                       position = function() {
                         if (self$isRoot) return (0)
                         match(self$name, names(self$parent$children))
                       },
                       
-                      separator = function() {
+                      levelName = function() {
+                        paste0(self$.separator, self$name)
+                      },
+                      
+                      
+                      .separator = function() {
                         if (self$isRoot) return("")
                         if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--")
                         else mySeparator <- paste0(" ", "\u00A6", "--")
-                        return (paste0(self$parent$parentSeparator, mySeparator))
+                        return (paste0(self$parent$.parentSeparator, mySeparator))
                       },
                       
-                      parentSeparator = function() {
+                      .parentSeparator = function() {
                         if (self$isRoot) return("")
                         if (self$position == self$parent$count) mySeparator <- "    "
-                        else mySeparator <- paste0(" ", "\u00A6", " ")
+                        else mySeparator <- paste0(" ", "\u00A6", "  ")
                         paste0(self$parent$parentSeparator, mySeparator)
                         
                       },
