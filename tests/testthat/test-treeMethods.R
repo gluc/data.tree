@@ -25,6 +25,26 @@ test_that("Find 3rd Level", {
 
 
 
+test_that("Get filter", {
+  acme$Set(myvalue = c(1.3, 1.5, 0.9, 1, 2, 1.1, 0.8, -1, 0.7, 1.0, 1.01))
+  
+  myFilter <- function(x) {
+    return (!is.null(x$myvalue) && x$myvalue > 1)
+  }
+  
+  
+  get <- acme$Get("myvalue", filterFun = myFilter)
+  #NOTE: 1.01 is filtered out because its parent is -1!
+  exp <- c(1.3, 1.5, 2, 1.1)
+  names(exp) <- c('Acme Inc.', 'Accounting', 'Research', 'New Product Line')
+  
+  expect_equal(get, exp)
+  data(acme)
+  
+})
+  
+  
+
 test_that("Get pre-order", {
   get <- acme$Get("name", traversal = "pre-order")
   

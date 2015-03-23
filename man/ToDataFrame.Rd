@@ -4,7 +4,8 @@
 \alias{ToDataFrame}
 \title{Convert a \code{\link{Node}} to a data.frame.}
 \usage{
-ToDataFrame(row.names = NULL, optional = FALSE, ...)
+ToDataFrame(row.names = NULL, optional = FALSE, ...,
+  filterFun = function(x) TRUE)
 }
 \arguments{
 \item{row.names}{NULL or a character vector giving the row names for the data frame.

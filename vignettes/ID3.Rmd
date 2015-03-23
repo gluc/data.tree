@@ -4,6 +4,8 @@ author: "Christoph Glur"
 date: '`r Sys.Date()`'
 output:
   html_document:
+    includes:
+      before_body: ID3.banner.html
     theme: cerulean
     toc: yes
     toc_depth: 3
@@ -18,8 +20,6 @@ output:
 # Introduction
 
 ## About this Vignette
-
-![id3](assets/banner_id3.jpg)
 
 This vignette provides a stylized example of the capabilities of the data.tree package. 
 The code for this vignette was written in less than an hour. This is possible because, thanks to the data.tree package,

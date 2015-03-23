@@ -18,7 +18,7 @@
 #'   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
 #'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}}
-#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
+#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", filterFun = function(x) TRUE, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
 #'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
 #'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
@@ -106,7 +106,9 @@ Node <- R6Class("Node",
                                      filterFun = function(x) TRUE, 
                                      assign = NULL, 
                                      format = NULL) {
-                        #traverses in pre-order. See http://en.wikipedia.org/wiki/Tree_traversal
+                        #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
+                        
+                        if (!filterFun(self)) return (NULL)
                         
                         if(traversal == "pre-order") {
                           # nice for printing. e.g. L1, L1.1 , L1.1.1, L1.1.2, L1.2, etc.
@@ -114,10 +116,11 @@ Node <- R6Class("Node",
                           if(!self$isLeaf) {
                             for(child in self$children) {
                               if (filterFun(child)) {
-                                v <- c(v, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
+                                v <- c(v, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format))
                               }
                             }
                           }
+                          
                         
                         } else if (traversal == "post-order") {
                           # useful if leafs need to be calculated first
@@ -125,7 +128,7 @@ Node <- R6Class("Node",
                           if(!self$isLeaf) {
                             for(child in self$children) {
                               if (filterFun(child)) {
-                                childValues <- c(childValues, child$Get(attribute, ..., traversal = traversal, assign = assign, format = format))
+                                childValues <- c(childValues, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format))
                               }
                             }
                           }
@@ -136,7 +139,7 @@ Node <- R6Class("Node",
                           v <- self$GetAttribute(attribute, ..., format = format)
                           if (!self$isRoot) {
                             if (filterFun(self$parent)) {
-                              parentV <- self$parent$Get(attribute, ..., traversal = traversal, assign = assign, format = format)
+                              parentV <- self$parent$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format)
                               v <- c(v, parentV)
                             }
                           }
@@ -256,8 +259,8 @@ Node <- R6Class("Node",
                       
                       #Filter = function(){}
                       
-                      ToDataFrame = function(...) {
-                        as.data.frame(self, row.names = NULL, optional = FALSE, ...)
+                      ToDataFrame = function(..., filterFun = function(x) TRUE) {
+                        as.data.frame(self, row.names = NULL, optional = FALSE, ..., filterFun = filterFun)
                       }
                       
                                             
@@ -396,6 +399,8 @@ Find = function(...) {
 #'         passing \code{...} to the function.
 #'        }
 #'  @param traversal determines the traversal order. It can be either "pre-order", "post-order", or "ancestor"
+#'  @param filterFun allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
+#'  Note that if filter returns \code{FALSE}, then the node and its entire subtree are ignored and neither traversed nor returned.
 #'  @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
 #'  @param format can be a function that transforms the collected values, e.g. for printing
 #'  
@@ -425,7 +430,7 @@ Find = function(...) {
 #' @seealso \code{\link{Node}}
 #'  
 #' @keywords internal
-Get = function(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL) {
+Get = function(attribute, ..., traversal = "pre-order", filterFun = function(x) TRUE, assign = NULL, format = NULL) {
   stop("This method can only be called on a Node!")
 }
 
@@ -529,7 +534,7 @@ Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
 #'
 #' @seealso \code{\link{Node}}, \code{\link{as.data.frame.Node}} 
 #' @keywords internal
-ToDataFrame <- function(row.names = NULL, optional = FALSE, ...) {
+ToDataFrame <- function(row.names = NULL, optional = FALSE, ..., filterFun = function(x) TRUE) {
   stop("This method can only be called on a Node!")
 }
 
@@ -552,10 +557,13 @@ print.Node <- function(x, ...) {
 #'  \item a string corresponding to the name of a node attribute
 #'  \item the result of the \code{Node$Get} method
 #' }
-#' If a specific Node does not contain the attribute, the data.frame will contain NA.
+#' If a specific Node does not contain the attribute, NA is added to the data.frame.
+#' @param filterFun a function which filters the Nodes added to the \code{data.frame}. The function must
+#' take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the
+#' \code{Node} and its subtree should be displayed.
 #' 
 #' @export
-as.data.frame.Node <- function(x, row.names = NULL, optional = FALSE, ...) {
+as.data.frame.Node <- function(x, row.names = NULL, optional = FALSE, ..., filterFun = function(x) TRUE) {
   if(is.null(row.names)) {
     if(optional) {
       row.names <- rep("", x$totalCount)
@@ -564,7 +572,7 @@ as.data.frame.Node <- function(x, row.names = NULL, optional = FALSE, ...) {
     }
   }
   
-  df <- data.frame( levelName = format(x$Get('levelName')),
+  df <- data.frame( levelName = format(x$Get('levelName', filterFun = filterFun)),
                     row.names = row.names,
                     stringsAsFactors = FALSE)
   
@@ -574,7 +582,7 @@ as.data.frame.Node <- function(x, row.names = NULL, optional = FALSE, ...) {
   for (i in 1:length(cols)) {
     col <- cols[[i]]
     if (is.character(col) && length(col) == 1) {
-      it <- x$Get(col)
+      it <- x$Get(col, filterFun = filterFun)
       colName <- col
     } else {
       it <- col

@@ -4,9 +4,14 @@ author: "Christoph Glur"
 date: '`r Sys.Date()`'
 output:
   html_document:
-    theme: united
+    includes:
+      before_body: intro.banner.html
+    self_contained: yes
+    theme: cerulean
     toc: yes
     toc_depth: 3
+  pdf_document:
+    toc: yes
 ---
 
 <!--
@@ -16,8 +21,6 @@ output:
 
 
 ## About Trees
-
-![banner](assets/banner_intro.jpg)
 
 Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing hierarchic data. Some examples where trees are useful:
 
@@ -104,7 +107,7 @@ acmedf <- as.data.frame(acme)
 acmedf
 ```
 The same thing can be achieved by using the OO-style method `Node$ToDataFrame`:
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 acme$ToDataFrame()
 ```
 
@@ -163,10 +166,6 @@ The `Get` method can traverse the tree in various ways. This is called traversal
 The default traversal mode is **pre-order**. 
 
 ![pre-order](assets/preorder.png)
-
-```{r}
-data.frame(level = acme$Get('level'))
-```
 
 This is what is used e.g. in `as.data.frame` and its OO-style counterpart `Node$ToDataFrame`:
 
@@ -306,11 +305,19 @@ ExpectedCost <- function(node, variableName = "avgExpectedCost", fun = sum) {
   return (result)
 }
 
-acme$Get(ExpectedCost, fun = mean, traversal = "post-order", assign = "avgExpectedCost")
+```
 
+We can use our method like this:
+
+```{r}
+
+invisible(
+  acme$Get(ExpectedCost, fun = mean, traversal = "post-order", assign = "avgExpectedCost")
+)
 print(acme, "cost", "p", "avgExpectedCost")
 
 ```
+
 
 ### Formatting Get
 
@@ -332,7 +339,7 @@ Note that the format is not used for assignment with the assign parameter, but o
 acme$Get("cost", format = PrintMoney, assign = "cost2")
 print(acme, cost = acme$Get("cost2"))
 ```
-
+The `format` function is not only usefule for formatting numbers, but also to display a printable representation of a node field that is not a number (but e.g. a `matrix`)
 
 
 ## Set Method

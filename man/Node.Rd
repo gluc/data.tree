@@ -26,7 +26,7 @@ by tying toghether \code{Node} objects.
   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}}
-  \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
+  \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", filterFun = function(x) TRUE, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}

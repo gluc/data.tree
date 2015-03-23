@@ -4,7 +4,8 @@
 \alias{as.data.frame.Node}
 \title{Convert a tree to a data.frame.}
 \usage{
-\method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...)
+\method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
+  filterFun = function(x) TRUE)
 }
 \arguments{
 \item{x}{The root node to convert to a data.frame}
@@ -21,7 +22,11 @@ options:
  \item a string corresponding to the name of a node attribute
  \item the result of the \code{Node$Get} method
 }
-If a specific Node does not contain the attribute, the data.frame will contain NA.}
+If a specific Node does not contain the attribute, NA is added to the data.frame.}
+
+\item{filterFun}{a function which filters the Nodes added to the \code{data.frame}. The function must
+take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the
+\code{Node} and its subtree should be displayed.}
 }
 \description{
 Convert a tree to a data.frame.
