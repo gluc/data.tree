@@ -31,7 +31,9 @@ While preparing this example, I asked my nine year old daughter: "Anaïs, imagin
 
 "Dad, why would I want to know?", she replies rolling her eyes. "No matter if they are poisonous or not, they are _dis-gust-ing_."
 
-"OK", I sigh, "fair enough. Wrong daughter." So I try my luck with Naomi, the seven year old: 
+"OK, fair enough", I sigh, "Wrong daughter." 
+
+I try my luck with Naomi, the seven year old: 
 
 "Naomi, how could you find out if a mushroom is poisonous?", I ask her. 
 
@@ -41,7 +43,7 @@ While preparing this example, I asked my nine year old daughter: "Anaïs, imagin
 
 "Think? Well, ask mom then, that's _her_ specialty!", she groans.
 
-So I did.
+So I do.
 
 "Where did you buy them?", my wife asks back. 
 
@@ -51,15 +53,17 @@ So I did.
 
 "Why?", I ask dubiously.
 
-"I'd have to to know if they are organic, obviously", replies my personal schoolmaster.
+"I'd have to to know if they are _organic_, obviously", replies my personal schoolmaster.
 
-"Eh, why? ... I don't know... well, whatever, ... so, fine, assume they are organic.", I reply in exasperation.
+"Eh, why? ... I don't know... well, whatever, ... so, fine, assume I found them in the forest, so they are all organic.", I reply in exasperation.
 
-"Aha!", she jubilates triumphantly, "that makes it easy! If they are organic, they _must_ be good for you. So they simply _cannot_ be poisonous!" 
+"Aha!", she jubilates triumphantly, "that makes it easy! If they are organic, they simply _must_ be good for you. Hence they simply _cannot_ be poisonous!" 
+
+Quod erat whatever.
 
 ## Why ID3
 
-If you are not a blind believer in organic food, and if you are older than 9, then there is a non-zero probability that you'd tackle this problem differently. Still, there are dozens of different methods. Yet, chances are you'd come across a class of models that are called [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *attributes*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom at the *root* of the tree, and then, depending on the mushroom's *attributes* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom, together with a prediction on its edibility. 
+If you are not a blind believer in organic food, and if you are older than 9, there is a non-zero probability that you'd tackle this problem differently. Still, there are dozens of different methods. Yet, chances are you'd come across a class of models that are called [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *attributes*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom at the *root* of the tree, and then, depending on the mushroom's *attributes* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom, together with a prediction on its edibility. 
 
 You might already have guessed that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete attributes: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm).
 
@@ -71,11 +75,11 @@ On the contrary, the only reason why we chose this example is to provide a simpl
 
 # Training
 
-As mentioned above, when predicting, each node routes our mushroom according to an attribute? But how do we chose the attribute? That is where classification models differ. In ID3, we pick at each node the attribute with the highest *Information Gain*. In a nutshell, this is the attribute which splits the sample in possibly *purest* subset. For example, for mushrooms, "dots" might be a more sensible attribute then "organic". 
+As mentioned above, when predicting, each node routes our mushroom according to an attribute? But how do we chose the attribute? That is where classification models differ. In ID3, we pick at each node the attribute with the highest *Information Gain*. In a nutshell, this is the attribute which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible attribute then "organic". 
 
 ## Purity
 
-We consider a subset to be completely pure if it contains only a single class. For example, if a subset contains only poisonous mushrooms, it is completely pure. In R, assuming that the last column contains the variable to be predicted, this can be written as:
+We define a subset to be completely pure if it contains only a *single* class. For example, if a subset contains only poisonous mushrooms, it is completely pure. In R, assuming that the last column contains the variable to be predicted, this can be written as:
 
 ```{r}
 IsPure <- function(data) {
@@ -145,9 +149,8 @@ We are all set for the ID3 training algorithm. We start with the entire training
 
 ## Implementation in R with the data.tree package
 
+For the following implementation, we assume that the classifying attributes are in columns 1 to n-1, whereas the variable to predict (the edibility) is in the last column.
 ```{r}
-
-
 TrainID3 <- function(node, data) {
     
   node$obsCount <- nrow(data)
@@ -227,4 +230,4 @@ Predict(tree, c(color = 'red',
         )
 ```
 
-Oops, maybe _organic_ wasn't such a bad predictor, after all :-)
+Oops! Maybe _organic_ wasn't such a bad predictor, after all :-)
