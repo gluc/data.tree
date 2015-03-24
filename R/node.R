@@ -310,7 +310,8 @@ Node <- R6Class("Node",
                       
                       .separator = function() {
                         if (self$isRoot) return("")
-                        if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--")
+                        if (isTRUE(all.equal(self$path, c('mushroom', 'red', 'large', 'edible')))) browser()
+                        if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--") 
                         else mySeparator <- paste0(" ", "\u00A6", "--")
                         return (paste0(self$parent$.parentSeparator, mySeparator))
                       },
@@ -319,7 +320,7 @@ Node <- R6Class("Node",
                         if (self$isRoot) return("")
                         if (self$position == self$parent$count) mySeparator <- "    "
                         else mySeparator <- paste0(" ", "\u00A6", "  ")
-                        paste0(self$parent$parentSeparator, mySeparator)
+                        paste0(self$parent$.parentSeparator, mySeparator)
                         
                       },
                       
