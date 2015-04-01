@@ -19,7 +19,7 @@ output:
   %\VignetteIndexEntry{Quick introduction to data.tree}
 -->
 
-## About Trees
+## About trees
 
 Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing *hierarchic data*. Some examples where trees are useful:
 
@@ -39,7 +39,7 @@ Also, the package provides convenience methods to print trees nicely, and to con
 
 This vignette follows loosely the creation of a [decision trees](http://en.wikipedia.org/wiki/Decision_tree).
 
-## Tree Creation
+## Tree creation
 
 Let's start by creating a tree of `Node`s. In our example, we are looking at a company, Acme Inc., and the tree reflects its organisational structure. The root (level 0) is the company. On level 1, the nodes represent departments, and the leaves of the tree represent projects the company considers for next year:
 
@@ -64,14 +64,14 @@ Note that `Node` is an `R6` reference class. Essentially, this has two implicati
 1. You can call methods on a `Node` in OO style
 2. You can call methods on a `Node` that modify it it, without having to re-assign to a new variable
 
-## Calling Methods in OO Style
+## Calling methods in OO style
 
 For example, we can check if a `Node` is the root like this:
 ```{r}
 acme$isRoot
 ```
 
-## Custom Attributes
+## Custom attributes
 
 Now, let's associate some costs with the projects. We do this by setting custom attributes on the leaf `Node`s:
 ```{r}
@@ -97,13 +97,12 @@ goToR$p <- 1
 
 ```
 
-## Converting to data.frame
+## Converting to `data.frame`
 
 We can now convert the tree into a `data.frame`. Note that we call such methods always on the root `Node`:
 
 ```{r}
 acmedf <- as.data.frame(acme)
-acmedf
 ```
 The same thing can be achieved by using the OO-style method `Node$ToDataFrame`:
 ```{r, eval=FALSE}
@@ -114,11 +113,10 @@ Adding the cost as a column to our `data.frame` is easy, by using the `Get` meth
 ```{r}
 acmedf$level <- acme$Get("level")
 acmedf$cost <- acme$Get("cost")
-acmedf
 ```
 
 We could have achieved the same result in one go:
-```{r, eval=FALSE}
+```{r}
 acme$ToDataFrame("level", "cost")
 ```
 
@@ -129,9 +127,9 @@ print(acme, "level", "cost")
 ```
 
 
-### Using Get when converting to data.frame and for printing
+### Using `Get` when converting to `data.frame` and for printing
 
-Above, we saw how we can add the name of an attribute to the ellipsis argument of the `as.data.frame`. However, we can also add the results of the `Get` method directly to the `as.data.frame` . This allows for example formatting the column in a specific way. Details of the Get method are explained in the next section.
+Above, we saw how we can add the name of an attribute to the ellipsis argument of the `as.data.frame`. However, we can also add the results of the `Get` method directly to the `as.data.frame` . This allows for example formatting the column in a specific way. Details of the `Get` method are explained in the next section.
 
 ```{r}
 
@@ -144,7 +142,7 @@ acme$ToDataFrame("level",
 
 
 
-## Get Method
+## `Get` method (Tree Traversal)
 
 Tree traversal is one of the core concepts of trees. See for example here: [Tree Traversal on Wikipedia](http://en.wikipedia.org/wiki/Tree_traversal).
 The Get Method traverses the tree, and collects values from each node. It then returns a vector containing the collected values. 
@@ -156,7 +154,7 @@ Additional features of the Get Method are:
 
 
 
-### Traversal Order
+### Traversal order
 
 The `Get` method can traverse the tree in various ways. This is called traversal order.
 
@@ -196,9 +194,9 @@ data.frame(level = agile$Get('level', traversal = "ancestor"))
 
 ```
 
-### Get using a function
+### `Get` using a function
 
-#### Pass a function to the Get method
+#### Pass a function to the `Get` method
 
 You can pass a standard R function to the `Get` method. For example:
 
@@ -215,11 +213,11 @@ data.frame(acme$Get(ExpectedCost))
 ```
 
 The requirements for the function (`ExpectedCost` in the above example) are the following:
-* the first argument of the function is a Node
+* the first argument of the function is a `Node`
 * it needs to return a scalar
 
 
-#### Using Recursion
+#### Using recursion
 
 In the following examples, we use `magrittr` to enhance readability of the code. 
 
@@ -240,9 +238,9 @@ data.frame(ec = acme$Get(ExpectedCost))
 
 ```
 
-#### Add Parameters to the Passed Function
+#### Add parameters to the passed function
 
-The Traverse method accepts an ellipsis `...`. Any additional parameters with which `Get` is called will be passed on the the `ExpectedCost` function. This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
+The `Traverse` method accepts an ellipsis `...`. Any additional parameters with which `Get` is called will be passed on the the `ExpectedCost` function. This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
 
 ```{r}
 
@@ -262,9 +260,9 @@ data.frame(ec = acme$Get(ExpectedCost, fun = mean))
 ```
 
 
-### Assigning values using Get
+### Assigning values using `Get`
 
-We can tell the Get method to assign the value to a specific attribute for each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. Like this, we can for instance store the calculated expected cost for later use and printing:
+We can tell the `Get` method to assign the value to a specific attribute for each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. Like this, we can for instance store the calculated expected cost for later use and printing:
 
 ```{r}
 
@@ -274,9 +272,9 @@ print(acme, "p", "cost", "expectedCost")
 ```
 
 
-### Combine Assignment and Calculation
+### Combine assignment and calculation
 
-In the above Recursion example, we iterate for each node to all descendants straight to the leaf, by that repeating the same calculations various times.
+In the above Recursion example, we iterate - for each node - to all descendants straight to the leaf, by that repeating the same calculations various times.
 
 We can avoid these repetitious calculations by piggy-backing on precalculated values. Obviously, this requires us to traverse the tree in post-order mode: We want to start calculating at the leaves, and then walk back towards the root.
 
@@ -318,7 +316,7 @@ print(acme, "cost", "p", "avgExpectedCost")
 ```
 
 
-### Formatting Get
+### Formatting `Get`
 
 We can pass a formatting function to the `Get` method, which will convert the returned value to a human readable string for printing. 
 
@@ -338,14 +336,14 @@ Note that the format is not used for assignment with the assign parameter, but o
 acme$Get("cost", format = PrintMoney, assign = "cost2")
 print(acme, cost = acme$Get("cost2"))
 ```
-The `format` function is not only usefule for formatting numbers, but also to display a printable representation of a node field that is not a number (but e.g. a `matrix`)
+The `format` function is not only useful for formatting numbers, but also to display a printable representation of a node field that is not a number (but e.g. a `matrix`)
 
 
-## Set Method
+## `Set` method
 
 The `Set` method is the counterpart to the `Get` method. It takes a vector or a single value as an input, and traverses the tree in a certain order. Each node is assigned a value from the vector, one after the other.
 
-### Assigning Values
+### Assigning values
 
 
 ```{r}
@@ -354,7 +352,7 @@ acme$Set(employees)
 print(acme, "employees")
 ```
 
-The Set method can take multiple vectors as an input, and optionally you can define the name of the attribute:
+The `Set` method can take multiple vectors as an input, and optionally you can define the name of the attribute:
 
 ```{r}
 secretaries <- c(NA, 5, NA, NA, 6, NA, NA, 2, NA, NA, NA)
@@ -377,9 +375,9 @@ print(acme, "p", "cost", "expectedCost")
 ```
 This is equivalent to using `Get` with the `assign` parameter.
 
-### Deleting Attributes
+### Deleting attributes
 
-The Set method can also be used to assign a single value directly. For example, to remove the avgExpectedCost, we assign NULL on each node like this:
+The `Set` method can also be used to assign a single value directly. For example, to remove the avgExpectedCost, we assign NULL on each node like this:
 
 ```{r}
 acme$Set(avgExpectedCost = NULL)
@@ -404,21 +402,21 @@ acme$Set(avgExpectedCost =NULL, expectedCost = NA)
 ```
 
 
-### A Word on Null and NA
+### A word on `Null` and `NA`
 
-Also note that setting a value to NA or to NULL looks equivalent when printing to a data.frame, but internally it is not:
+Also note that setting a value to `NA` or to `NULL` looks equivalent when printing to a data.frame, but internally it is not:
 
 ```{r}
 acme$avgExpectedCost
 acme$expectedCost
 ```
 
-The reason is that NULL is always converted to NA for printing, and when using the Get method.
+The reason is that `NULL` is always converted to NA for printing, and when using the `Get` method.
 
 
-## Aggregate Method
+## `Aggregate` method
 
-For simple cases, you don't have to write your own function to be passed along to the Get method. For example, the Aggregate method provides a shorthand for the often used case when a parent is the aggregate of its children values:
+For simple cases, you don't have to write your own function to be passed along to the `Get` method. For example, the `Aggregate` method provides a shorthand for the often used case when a parent is the aggregate of its children values:
 
 ```{r}
 
@@ -426,7 +424,7 @@ acme$Aggregate("cost", sum)
 
 ```
 
-We can use this in the Get method:
+We can use this in the `Get` method:
 
 ```{r}
 acme$Get("Aggregate", "cost", sum)
@@ -452,9 +450,9 @@ acme$Get(GetCost)
 ```
 
 
-## Sort Method
+## `Sort` method
 
-You can sort an entire tree by using the Sort method on the root. The method will sort recursively and, for each `Node`, sort the children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub-class of Node, see below).
+You can sort an entire tree by using the `Sort` method on the root. The method will sort recursively and, for each `Node`, sort the children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub-class of `Node`, see below).
 
 ```{r}
 acme$Get(ExpectedCost, assign = "expectedCost")
@@ -467,7 +465,7 @@ Naturally, you can also sort a sub-tree by calling Sort on the sub-tree's parent
 
 ## Subclassing `Node`
 
-We can create a subclass of Node, and add custom methods to our subclass. This is very natural to users with experience in OO languages such as Java, Python or C#:
+We can create a subclass of `Node`, and add custom methods to our subclass. This is very natural to users with experience in OO languages such as Java, Python or C#:
 
 
 ```{r}
@@ -497,7 +495,7 @@ MyNode <- R6Class("MyNode",
 
 ```
 
-The AddChild utility function in the subclass allows us to construct the tree just as before.
+The `AddChild` utility function in the subclass allows us to construct the tree just as before.
 
-The expectedCost function is now a Method, and we can call it in a more R6-ish way.
+The `expectedCost` function is now a Method, and we can call it in a more R6-ish way.
 

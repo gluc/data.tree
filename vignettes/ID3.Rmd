@@ -20,49 +20,13 @@ output:
 
 # Introduction
 
-## About this Vignette
+## About this vignette
 
 This vignette provides a stylized example of the capabilities of the data.tree package. 
 The code for this vignette was written in less than an hour. This is possible because, thanks to the data.tree package,
 the implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
 
-## Why Mushrooms? (trivia)
-
-While preparing this example, I asked my nine year old daughter: "Anaïs, imagine you have a big basket full of mushrooms. How would you go about finding out which ones are poisonous?"
-
-"Dad, why would I want to know?", she replies rolling her eyes. "No matter if they are poisonous or not, they are _dis-gust-ing_."
-
-"OK, fair enough", I sigh, "Wrong daughter." 
-
-I try my luck with Naomi, the seven year old: 
-
-"Naomi, how could you find out if a mushroom is poisonous?", I ask her. 
-
-"Well", she says. "I'd just eat it. If it makes me puke, it's poisonous." 
-
-"But, common, there must be a better way! Think, please!"
-
-"Think? Well, ask mom then, that's _her_ specialty!", she groans.
-
-So I do.
-
-"Where did you buy them?", my wife asks back. 
-
-"Good question, but ... it doesn't matter." 
-
-"No Sir, it _does_ matter!"
-
-"Why?", I ask dubiously.
-
-"I'd have to to know if they are _organic_, obviously", replies my personal schoolmaster.
-
-"Eh, why? ... I don't know... well, whatever, ... so, fine, assume I found them in the forest, so they are all organic.", I reply in exasperation.
-
-"Aha!", she jubilates triumphantly, "that makes it easy! If they are organic, they simply _must_ be good for you. Hence they simply _cannot_ be poisonous!" 
-
-Quod erat whatever.
-
-## Why ID3
+## What is ID3?
 
 If you are not a blind believer in organic food, and if you are older than 9, there is a non-zero probability that you'd tackle this problem differently. Still, there are dozens of different methods. Yet, chances are you'd come across a class of models that are called [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *attributes*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom at the *root* of the tree, and then, depending on the mushroom's *attributes* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom, together with a prediction on its edibility. 
 
@@ -89,7 +53,7 @@ IsPure <- function(data) {
 ```
 
 
-## Attribute Selection: Entropy and Information Gain
+## Attribute selection: entropy and information gain
 
 Mathematically, the information gain IG is defined as:
 
@@ -133,9 +97,9 @@ InformationGain(table(mushroom[,c('points', 'edibility')]))
 ```
 
 
-# The ID3 Algorithm
+# The ID3 algorithm
 
-## Pseudo Code
+## Pseudo code
 
 We are all set for the ID3 training algorithm. We start with the entire training data, and with a root. Then:
 
@@ -192,7 +156,7 @@ TrainID3 <- function(node, data) {
 }
 ```
 
-## Training with Data
+## Training with data
 
 We are ready to run the function:
 
@@ -206,7 +170,7 @@ print(tree, "attribute", "obsCount")
 
 # Prediction
 
-## The Prediction Method
+## The prediction method
 
 Now, let's predict some variables. For this, we need a predict function, which will route data through our tree:
 
@@ -220,7 +184,7 @@ Predict <- function(tree, attributes) {
 
 ```
 
-## Using the Prediction Method
+## Using the prediction method
 
 And now we use it to predict:
 
