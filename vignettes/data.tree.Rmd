@@ -19,10 +19,9 @@ output:
   %\VignetteIndexEntry{Quick introduction to data.tree}
 -->
 
-
 ## About Trees
 
-Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing hierarchic data. Some examples where trees are useful:
+Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other fields. Trees are useful always when we are facing *hierarchic data*. Some examples where trees are useful:
 
 * in decision theory (c.f. decision trees)
 * in finance, e.g. to classify financial instruments into asset classes
@@ -30,7 +29,7 @@ Trees are ubiquitous in mathematics, computer science, data sciences, finance, a
 * in computer science and programming (e.g. binary search trees, XML)
 * e.g. for family trees
 
-R provides tree-like structures on various low levels. For example, environments can be seen as nodes in a tree. Also, R provides various packages that deal with tree-like structures (especially in the area of decision theory). Yet, there is no high-level tree data structure that could be used equally conveniently and generically as, say, data.frame. 
+R provides tree-like structures on various low levels. For example, environments can be seen as nodes in a tree. Also, R provides various packages that deal with tree-like structures (especially in the area of decision theory). Yet, there is no high-level hierarchic data structure that could be used equally conveniently and generically as, say, data.frame. 
 
 As a consequence, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames (or - perish the thought! - in Excel sheets). But hierarchies don't marry with tables and various workarounds are usually required. 
 
