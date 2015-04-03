@@ -9,6 +9,7 @@ output:
     theme: cerulean
     toc: yes
     toc_depth: 3
+  word_document: default
 ---
 
 <!--
@@ -28,23 +29,23 @@ the implementation of the training algorithm follows the algorithm's pseudo code
 
 ## What is ID3?
 
-If you are not a blind believer in organic food, and if you are older than 9, there is a non-zero probability that you'd tackle this problem differently. Still, there are dozens of different methods. Yet, chances are you'd come across a class of models that are called [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *attributes*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom at the *root* of the tree, and then, depending on the mushroom's *attributes* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom, together with a prediction on its edibility. 
+If you are not a blind believer in organic food, and if you are older than 9, there is a non-zero probability that you'd tackle this problem differently. Still, there are dozens of different methods. Yet, chances are you'd come across a class of models that are called [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edibel or not. 
 
-You might already have guessed that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete attributes: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm).
+You might already have guessed that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm).
 
 We will not go into more details about ID3. You will find lots of documentation on this and more refined algorithms on the internet. For example, lecture notes that build on similar data can be found [here](http://www.uni-weimar.de/medien/webis/teaching/lecturenotes/machine-learning/unit-en-decision-trees-algorithms.pdf).
 
 Also, be assured that this example is by no means meant to be used in the real world. It is overly simplistic, and far too little data is used for training. Nor do we claim that this is a complete discussion of the ID3 algorithm, let alone classification models. 
 
-On the contrary, the only reason why we chose this example is to provide a simple to grasp application of the `data.tree` package, in order to demonstrate how easy it is to build hierarchic models with it.
+On the contrary, the only reason why we chose this example is to provide a simple to grasp application of the `data.tree` package, in order to demonstrate how easy it is to build hierarchical models with it.
 
 # Training
 
-As mentioned above, when predicting, each node routes our mushroom according to an attribute? But how do we chose the attribute? That is where classification models differ. In ID3, we pick at each node the attribute with the highest *Information Gain*. In a nutshell, this is the attribute which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible attribute then "organic". 
+As mentioned above, during the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? That is where classification models differ. In ID3, we pick at each node the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible feature then "organic". 
 
-## Purity
+## Purity and Entropy
 
-We define a subset to be completely pure if it contains only a *single* class. For example, if a subset contains only poisonous mushrooms, it is completely pure. In R, assuming that the last column contains the variable to be predicted, this can be written as:
+We define a subset to be *completely pure* if it contains only a *single* class. For example, if a subset contains only poisonous mushrooms, it is completely pure. In R, assuming that the last column contains the class (i.e. the category to be predicted), this can be written as:
 
 ```{r}
 IsPure <- function(data) {
@@ -52,26 +53,50 @@ IsPure <- function(data) {
 }
 ```
 
-
-## Attribute selection: entropy and information gain
-
-Mathematically, the information gain IG is defined as:
-
-$$ IG(T,a) = H(T)-\sum_{v\in vals(a)}\frac{|\{\textbf{x}\in T|x_a=v\}|}{|T|} \cdot H(\{\textbf{x}\in T|x_a=v\}) $$
-
-So, let's rewrite that in R:
-
-Again, the InformationGain of an attribute measures the purity we achieve by splitting. More
-precisely, we measure the difference between the entropy before the split, and the weighted sum of the entropies after the split:
+The *entropy* is a measure for the purity of a dataset. 
 
 ```{r}
-
 Entropy <- function( vls ) {
   res <- vls/sum(vls) * log2(vls/sum(vls))
   res[vls == 0] <- 0
   -sum(res)
 }
+```
 
+If a dataset is *completely pure*, then it has entropy 0:
+
+```{r}
+Entropy(c(10, 0))
+Entropy(c(0, 10))
+```
+
+If a set contains 5 poisonous and 5 edible mushrooms, the entropy becomes 1:
+
+```{r}
+Entropy(c(5, 5))
+```
+
+We can plot the entropy as a function of the number of edible mushrooms in a set of 100 mushrooms:
+
+```{r}
+entropy <- function(edible) Entropy(c(edible, 100-edible))
+entropy <- Vectorize(entropy)
+curve( entropy, from = 0, to = 100, xname = 'edible')
+```
+
+
+## Feature selection: entropy and information gain
+
+Mathematically, the information gain IG is defined as:
+
+$$ IG(T,a) = H(T)-\sum_{v\in vals(a)}\frac{|\{\textbf{x}\in T|x_a=v\}|}{|T|} \cdot H(\{\textbf{x}\in T|x_a=v\}) $$
+
+In words, the information gain measures the *difference* between the entropy *before the split*, and the weighted sum of the entropies *after the split*:
+
+So, let's rewrite that in R:
+
+
+```{r}
 
 InformationGain <- function( tble ) {
   tble <- as.data.frame.matrix(tble)
@@ -104,17 +129,17 @@ InformationGain(table(mushroom[,c('points', 'edibility')]))
 We are all set for the ID3 training algorithm. We start with the entire training data, and with a root. Then:
 
 1. if the data-set is pure (e.g. all toxic), then  
-    1. construct a leaf having the name of the pure attribute (e.g. 'toxic')
+    1. construct a leaf having the name of the class (e.g. 'toxic')
 2. else  
-    1. chose the attribute with the highest information gain (e.g. 'color')
-    2. for each value of that attribute (e.g. 'red', 'brown', 'green')
-        1. take the subset of the data-set having that attribute value
-        2. construct a child having the name of that attribute value (e.g. 'red')
-        3. call the algorithm recursively on the child and the subset
+    1. chose the feature with the highest information gain (e.g. 'color')
+    2. for each value of that feature (e.g. 'red', 'brown', 'green')
+        1. take the subset of the data-set having that feature value
+        2. construct a child node having the name of that feature value (e.g. 'red')
+        3. call the algorithm recursively on the child node and the subset
 
 ## Implementation in R with the data.tree package
 
-For the following implementation, we assume that the classifying attributes are in columns 1 to n-1, whereas the variable to predict (the edibility) is in the last column.
+For the following implementation, we assume that the classifying features are in columns 1 to n-1, whereas the class (the edibility) is in the last column.
 ```{r}
 TrainID3 <- function(node, data) {
     
@@ -122,27 +147,27 @@ TrainID3 <- function(node, data) {
   
   #if the data-set is pure (e.g. all toxic), then
   if (IsPure(data)) {
-    #construct a leaf having the name of the pure attribute (e.g. 'toxic')
+    #construct a leaf having the name of the pure feature (e.g. 'toxic')
     child <- node$AddChild(unique(data[,ncol(data)]))
-    node$attribute <- tail(names(data), 1)
+    node$feature <- tail(names(data), 1)
     child$obsCount <- nrow(data)
-    child$attribute <- ''
+    child$feature <- ''
   } else {
-    #chose the attribute with the highest information gain (e.g. 'color')
+    #chose the feature with the highest information gain (e.g. 'color')
     ig <- sapply(colnames(data)[-ncol(data)], 
             function(x) InformationGain(
               table(data[,x], data[,ncol(data)])
               )
             )
-    attribute <- names(ig)[ig == max(ig)][1]
+    feature <- names(ig)[ig == max(ig)][1]
     
-    node$attribute <- attribute
+    node$feature <- feature
     
-    #take the subset of the data-set having that attribute value
-    childObs <- split(data[,!(names(data) %in% attribute)], data[,attribute], drop = TRUE)
+    #take the subset of the data-set having that feature value
+    childObs <- split(data[,!(names(data) %in% feature)], data[,feature], drop = TRUE)
     
     for(i in 1:length(childObs)) {
-      #construct a child having the name of that attribute value (e.g. 'red')
+      #construct a child having the name of that feature value (e.g. 'red')
       child <- node$AddChild(names(childObs)[i])
       
       #call the algorithm recursively on the child and the subset      
@@ -163,7 +188,7 @@ We are ready to run the function:
 ```{r}
 tree <- Node$new("mushroom")
 TrainID3(tree, mushroom)
-print(tree, "attribute", "obsCount")
+print(tree, "feature", "obsCount")
 
 ```
 
@@ -172,14 +197,14 @@ print(tree, "attribute", "obsCount")
 
 ## The prediction method
 
-Now, let's predict some variables. For this, we need a predict function, which will route data through our tree:
+Now, let's predict some classes. For this, we need a predict function, which will route data through our tree:
 
 ```{r}
 
-Predict <- function(tree, attributes) {
+Predict <- function(tree, features) {
   if (tree$children[[1]]$isLeaf) return (tree$children[[1]]$name)
-  child <- tree$children[[attributes[[tree$attribute]]]]
-  return ( Predict(child, attributes))
+  child <- tree$children[[features[[tree$feature]]]]
+  return ( Predict(child, features))
 }
 
 ```
