@@ -29,9 +29,9 @@ the implementation of the training algorithm follows the algorithm's pseudo code
 
 ## What is ID3?
 
-If you are not a blind believer in organic food, and if you are older than 9, there is a non-zero probability that you'd tackle this problem differently. Still, there are dozens of different methods. Yet, chances are you'd come across a class of models that are called [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edibel or not. 
+If you are not a blind believer in organic food, and if you are older than 9, there is a non-zero probability that you'd tackle this problem differently. Still, there are dozens of different methods to choose from, but chances are you'd come across a class of models that are called [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edibel or not. 
 
-You might already have guessed that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm).
+You might have guessed already that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm).
 
 We will not go into more details about ID3. You will find lots of documentation on this and more refined algorithms on the internet. For example, lecture notes that build on similar data can be found [here](http://www.uni-weimar.de/medien/webis/teaching/lecturenotes/machine-learning/unit-en-decision-trees-algorithms.pdf).
 
@@ -39,9 +39,9 @@ Also, be assured that this example is by no means meant to be used in the real w
 
 On the contrary, the only reason why we chose this example is to provide a simple to grasp application of the `data.tree` package, in order to demonstrate how easy it is to build hierarchical models with it.
 
-# Training
+# Feature Selection
 
-As mentioned above, during the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? That is where classification models differ. In ID3, we pick at each node the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible feature then "organic". 
+As mentioned above, during the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? That is where classification models differ. In ID3, we pick at each node the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible feature than "organic". 
 
 ## Purity and Entropy
 
@@ -53,7 +53,7 @@ IsPure <- function(data) {
 }
 ```
 
-The *entropy* is a measure for the purity of a dataset. 
+The *entropy* is a measure of the purity of a dataset. 
 
 ```{r}
 Entropy <- function( vls ) {
@@ -70,22 +70,22 @@ Entropy(c(10, 0))
 Entropy(c(0, 10))
 ```
 
-If a set contains 5 poisonous and 5 edible mushrooms, the entropy becomes 1:
+If a set contains 5 poisonous and 5 edible mushrooms, the entropy becomes 1, as the purity is at its lowest:
 
 ```{r}
 Entropy(c(5, 5))
 ```
 
-We can plot the entropy as a function of the number of edible mushrooms in a set of 100 mushrooms:
+We can plot the entropy as a function of the number of edible mushrooms in a set of, say, 100 mushrooms:
 
 ```{r}
-entropy <- function(edible) Entropy(c(edible, 100-edible))
+entropy <- function(edible) Entropy(c(edible, 100 - edible))
 entropy <- Vectorize(entropy)
 curve( entropy, from = 0, to = 100, xname = 'edible')
 ```
 
 
-## Feature selection: entropy and information gain
+## Information Gain
 
 Mathematically, the information gain IG is defined as:
 
@@ -131,7 +131,7 @@ We are all set for the ID3 training algorithm. We start with the entire training
 1. if the data-set is pure (e.g. all toxic), then  
     1. construct a leaf having the name of the class (e.g. 'toxic')
 2. else  
-    1. chose the feature with the highest information gain (e.g. 'color')
+    1. choose the feature with the highest information gain (e.g. 'color')
     2. for each value of that feature (e.g. 'red', 'brown', 'green')
         1. take the subset of the data-set having that feature value
         2. construct a child node having the name of that feature value (e.g. 'red')

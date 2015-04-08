@@ -1,7 +1,7 @@
 Package: data.tree
 Type: Package
 Title: Work with Hierarchical Data Structures
-Version: 0.1.2
+Version: 0.1.3
 Date: 2015-04-01
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.ch>
@@ -12,7 +12,7 @@ Suggests:
     testthat, magrittr, knitr
 Description: data.tree is to hierarchical data what data.frame is to tabular data. You can create 
     tree structures from hierarchical data, and use the utility methods to traverse the tree in 
-    various orders. Aggregate, print, convert from and to data.frame, and apply functions
+    various orders. You can also aggregate, print, convert to and from data.frame, and apply functions
     to your tree data.
 License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree

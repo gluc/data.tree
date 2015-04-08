@@ -11,13 +11,13 @@
 #' @seealso For more details see the \code{data.tree} vignette: \code{vignette("data.tree")}
 #' @importFrom R6 R6Class
 #' @field children A list of children
-#' @field parent The node's parent Node
+#' @field parent The node's parent \code{Node}
 #' @section Methods:
 #' 
 #' \describe{
 #'   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
-#'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}}
+#'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
 #'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", filterFun = function(x) TRUE, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
 #'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
@@ -365,12 +365,12 @@ Node <- R6Class("Node",
 #' Finds a node having path \code{...}.
 #' 
 #' 
-#' The path is relative to the Node on which this method is called. Each argument provided corresponds to an 
-#' element in the path.
+#' The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
+#' element in the path, specified by the \code{Node}'s name.
 #' 
 #' 
 #' @param ... the names of the nodes in the path
-#' @return the Node having path \code{...}, or NULL if such a path does not exist
+#' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 #' 
 #' @examples
 #' data(acme)
@@ -378,6 +378,7 @@ Node <- R6Class("Node",
 #' #This is equivalent to:
 #' acme$Find('IT')$Find('Outsource')$name
 #' acme$Find('X', 'Y', 'Z')
+#'
 #'
 #' @seealso \code{\link{Node}}
 #'
@@ -404,7 +405,7 @@ Find = function(...) {
 #'  @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
 #'  @param format can be a function that transforms the collected values, e.g. for printing
 #'  
-#'  @return a vector containing the \code{atrributes} collected during traversal, in traversal order. NULL is converted
+#'  @return a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
 #'  to NA, such that \code{length(Node$Get) == Node$totalCount}
 #'  
 #'  @examples
@@ -439,8 +440,8 @@ Get = function(attribute, ..., traversal = "pre-order", filterFun = function(x) 
 #' 
 #' @param ... each argument can be a vector of values to be assigned.
 #' @param traversal any of 'pre-order', 'post-order', 'ancestor'
-#' @param returnValues if TRUE, then the non-processed arg passed in ... are returned. 
-#' Otherwise the Node itself is returned for chaining. Mainly for internal use.
+#' @param returnValues if \code{TRUE}, then the non-processed arg passed in ... are returned. 
+#' Otherwise the \code{Node} itself is returned for chaining. Mainly for internal use.
 #'  
 #'  
 #' @examples
@@ -497,11 +498,11 @@ Aggregate = function(attribute, fun, ...) {
 #' Sort the children of a node along attribute, or the entire tree.
 #' 
 #' @param attribute a field, method or function. The result of the attribute determines the 
-#' sorting. If it is a function, #' the attribute must take a Node as a first argument.
+#' sorting. If it is a function, #' the attribute must take a \code{Node} as a first argument.
 #' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
 #' function)
 #' @param decreasing sort order
-#' @param recursive if TRUE, Sort will be called recursively on the Node's children. 
+#' @param recursive if \code{TRUE}, Sort will be called recursively on the \code{Node}'s children. 
 #' This allows sorting an entire tree.
 #' 
 #' @examples
@@ -520,9 +521,9 @@ Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
 
 #' Convert a \code{\link{Node}} to a data.frame.
 #' 
-#' @param row.names NULL or a character vector giving the row names for the data frame. 
+#' @param row.names \code{NULL} or a character vector giving the row names for the data frame. 
 #' Missing values are not allowed.
-#' @param optional logical. If TRUE, setting row names and converting column names 
+#' @param optional logical. If \code{TRUE}, setting row names and converting column names 
 #' (to syntactic names: see make.names) is optional.
 #' @param ... the attributes to be added as columns of the data.frame. There are various
 #' options:
@@ -547,9 +548,9 @@ print.Node <- function(x, ...) {
 #' Convert a tree to a data.frame. 
 #' 
 #' @param x The root node to convert to a data.frame
-#' @param row.names NULL or a character vector giving the row names for the data frame. 
+#' @param row.names \code{NULL} or a character vector giving the row names for the data frame. 
 #' Missing values are not allowed.
-#' @param optional logical. If TRUE, setting row names and converting column names 
+#' @param optional logical. If \code{TRUE}, setting row names and converting column names 
 #' (to syntactic names: see make.names) is optional.
 #' @param ... the attributes to be added as columns of the data.frame. There are various
 #' options:
@@ -557,7 +558,7 @@ print.Node <- function(x, ...) {
 #'  \item a string corresponding to the name of a node attribute
 #'  \item the result of the \code{Node$Get} method
 #' }
-#' If a specific Node does not contain the attribute, NA is added to the data.frame.
+#' If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.
 #' @param filterFun a function which filters the Nodes added to the \code{data.frame}. The function must
 #' take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the
 #' \code{Node} and its subtree should be displayed.
