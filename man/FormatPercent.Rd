@@ -2,7 +2,7 @@
 % Please edit documentation in R/util.R
 \name{FormatPercent}
 \alias{FormatPercent}
-\title{Format a number as a percentage, suitable for printing}
+\title{Format a Number as a Percentage}
 \usage{
 FormatPercent(x, digits = 2, format = "f", ...)
 }
@@ -19,7 +19,7 @@ FormatPercent(x, digits = 2, format = "f", ...)
 A string corresponding to x, suitable for printing
 }
 \description{
-Format a number as a percentage, suitable for printing
+This utility method can be used as a format function when converting trees to a \code{data.frame}
 }
 \seealso{
 formatC

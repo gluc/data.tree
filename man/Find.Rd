@@ -2,7 +2,7 @@
 % Please edit documentation in R/node.R
 \name{Find}
 \alias{Find}
-\title{Finds a node having path \code{...}.}
+\title{Find a \code{Node} by its path}
 \usage{
 Find(...)
 }
@@ -13,7 +13,7 @@ Find(...)
 the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 }
 \description{
-The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an
+Find returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an
 element in the path, specified by the \code{Node}'s name.
 }
 \examples{

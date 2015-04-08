@@ -2,7 +2,7 @@
 % Please edit documentation in R/node.R
 \name{Sort}
 \alias{Sort}
-\title{Sort the children of a node along attribute, or the entire tree.}
+\title{Sort Children of a Node or an Entire Tree}
 \usage{
 Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
 }
@@ -19,7 +19,7 @@ function)}
 This allows sorting an entire tree.}
 }
 \description{
-Sort the children of a node along attribute, or the entire tree.
+You can sort with respect to any argument of the tree.
 }
 \examples{
 data(acme)

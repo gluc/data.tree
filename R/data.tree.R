@@ -1,4 +1,4 @@
-#' \code{data.tree} Easily Manage Hierarchical Data in R
+#' Manage Hierarchical Data in R
 #' 
 #' \code{data.tree} is to hierarchical data what `data.frame` is to tabular data: An extensible, general purpose structure to store, manipulate, 
 #' and display hierarchical data.

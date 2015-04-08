@@ -3,7 +3,7 @@
 \docType{class}
 \name{Node}
 \alias{Node}
-\title{Node}
+\title{Create Trees With \code{Node}s}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
 Node
@@ -15,7 +15,7 @@ by tying toghether \code{Node} objects.
 \section{Fields}{
 
 \describe{
-\item{\code{children}}{A list of children}
+\item{\code{children}}{A list of children \code{Node}s}
 
 \item{\code{parent}}{The node's parent \code{Node}}
 }}

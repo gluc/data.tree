@@ -1,6 +1,8 @@
 
 
-#' Format a number as a percentage, suitable for printing
+#' Format a Number as a Percentage
+#' 
+#' This utility method can be used as a format function when converting trees to a \code{data.frame}
 #' 
 #' @param x A number
 #' @param digits The number of digits to print
@@ -13,7 +15,9 @@ FormatPercent <- function(x, digits = 2, format = "f", ...) {
   ifelse(is.na(x), "", paste(formatC(100 * x, format = format, digits = digits, ...), "%"))
 }
 
-#' Format a number as a decimal with a fixed number of decimals.
+#' Format a Number as a Decimal
+#' 
+#' Simple function that can be used as a format function when converting trees to a \code{data.frame}
 #' 
 #' @param x a numeric scalar or vector
 #' @param digits the number of digits to print after the decimal point

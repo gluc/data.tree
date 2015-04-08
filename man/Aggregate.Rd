@@ -2,7 +2,7 @@
 % Please edit documentation in R/node.R
 \name{Aggregate}
 \alias{Aggregate}
-\title{Traverse the tree and call \code{fun(children$Aggregate(...))} on each node.}
+\title{Traverse a Tree and Perform Aggregation Operations}
 \usage{
 Aggregate(attribute, fun, ...)
 }
@@ -17,7 +17,7 @@ the attribute must be set on the leaf.}
 \item{...}{any arguments to be passed on to fun}
 }
 \description{
-This allows you to set e.g. a value on the leafs, and then sum them up along the tree.
+The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum them up along the tree.
 }
 \examples{
 data(acme)

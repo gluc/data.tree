@@ -2,7 +2,7 @@
 % Please edit documentation in R/node.R
 \name{Get}
 \alias{Get}
-\title{Traverses the tree and collects values, results of method calls, or results of function calls along the way.}
+\title{Traverse a Tree and Collect Values}
 \usage{
 Get(attribute, ..., traversal = "pre-order", filterFun = function(x) TRUE,
   assign = NULL, format = NULL)
@@ -30,7 +30,8 @@ a vector containing the \code{atrributes} collected during traversal, in travers
  to NA, such that \code{length(Node$Get) == Node$totalCount}
 }
 \description{
-Traverses the tree and collects values, results of method calls, or results of function calls along the way.
+The \code{Get} function is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
+and collect values along the way. Alternatively, you can call a method or a function on each \code{Node}.
 }
 \examples{
 data(acme)

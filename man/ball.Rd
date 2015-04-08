@@ -3,7 +3,7 @@
 \docType{data}
 \name{ball}
 \alias{ball}
-\title{ball is a simple dataset used by the ID3 vignette.}
+\title{Is Jack playing ball today?}
 \format{data.frame}
 \usage{
 data(ball)

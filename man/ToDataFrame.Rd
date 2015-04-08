@@ -2,7 +2,7 @@
 % Please edit documentation in R/node.R
 \name{ToDataFrame}
 \alias{ToDataFrame}
-\title{Convert a \code{\link{Node}} to a data.frame.}
+\title{Convert a \code{\link{Node}} to a \code{data.frame}}
 \usage{
 ToDataFrame(row.names = NULL, optional = FALSE, ...,
   filterFun = function(x) TRUE)
@@ -23,7 +23,7 @@ options:
 If a specific Node does not contain the attribute, the data.frame will contain NA.}
 }
 \description{
-Convert a \code{\link{Node}} to a data.frame.
+Convert a \code{\link{Node}} to a \code{data.frame}
 }
 \seealso{
 \code{\link{Node}}, \code{\link{as.data.frame.Node}}

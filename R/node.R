@@ -1,4 +1,4 @@
-#' Node
+#' Create Trees With \code{Node}s
 #' 
 #' @description \code{Node} is at the very heart of the \code{data.tree} package. All trees are constructed
 #' by tying toghether \code{Node} objects.
@@ -10,7 +10,7 @@
 #' print(acme)
 #' @seealso For more details see the \code{data.tree} vignette: \code{vignette("data.tree")}
 #' @importFrom R6 R6Class
-#' @field children A list of children
+#' @field children A list of children \code{Node}s
 #' @field parent The node's parent \code{Node}
 #' @section Methods:
 #' 
@@ -362,10 +362,10 @@ Node <- R6Class("Node",
 
 
 
-#' Finds a node having path \code{...}.
+#' Find a \code{Node} by its path
 #' 
 #' 
-#' The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
+#' Find returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
 #' element in the path, specified by the \code{Node}'s name.
 #' 
 #' 
@@ -389,7 +389,10 @@ Find = function(...) {
   
 
 
-#' Traverses the tree and collects values, results of method calls, or results of function calls along the way.
+#' Traverse a Tree and Collect Values
+#' 
+#' The \code{Get} function is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
+#' and collect values along the way. Alternatively, you can call a method or a function on each \code{Node}.
 #' 
 #' 
 #'   @param attribute determines what is collected during traversal. The attribute can be
@@ -435,7 +438,10 @@ Get = function(attribute, ..., traversal = "pre-order", filterFun = function(x) 
   stop("This method can only be called on a Node!")
 }
 
-#' Traverses the tree and assigns values to attributes along the way.
+#' Traverse a Tree and Assign Values
+#' 
+#' The method takes a vector as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked
+#' from the vector.
 #' 
 #' 
 #' @param ... each argument can be a vector of values to be assigned.
@@ -468,9 +474,9 @@ Set = function(..., traversal = "pre-order", returnValues = FALSE) {
 }
 
 
-#' Traverse the tree and call \code{fun(children$Aggregate(...))} on each node.
+#' Traverse a Tree and Perform Aggregation Operations
 #' 
-#' This allows you to set e.g. a value on the leafs, and then sum them up along the tree.
+#' The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum them up along the tree.
 #' 
 #' 
 #' @param attribute the attribute that is being called on every node. The attribute can be 
@@ -495,7 +501,9 @@ Aggregate = function(attribute, fun, ...) {
 
 
 
-#' Sort the children of a node along attribute, or the entire tree.
+#' Sort Children of a Node or an Entire Tree
+#' 
+#' You can sort with respect to any argument of the tree.
 #' 
 #' @param attribute a field, method or function. The result of the attribute determines the 
 #' sorting. If it is a function, #' the attribute must take a \code{Node} as a first argument.
@@ -519,7 +527,7 @@ Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
 
 
 
-#' Convert a \code{\link{Node}} to a data.frame.
+#' Convert a \code{\link{Node}} to a \code{data.frame}
 #' 
 #' @param row.names \code{NULL} or a character vector giving the row names for the data frame. 
 #' Missing values are not allowed.
@@ -545,7 +553,7 @@ print.Node <- function(x, ...) {
   print(as.data.frame(x, row.names = NULL, optional = FALSE, ...))
 }
 
-#' Convert a tree to a data.frame. 
+#' Convert a \code{\link{Node}} to a \code{data.frame}
 #' 
 #' @param x The root node to convert to a data.frame
 #' @param row.names \code{NULL} or a character vector giving the row names for the data frame. 

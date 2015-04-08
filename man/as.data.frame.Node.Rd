@@ -2,7 +2,7 @@
 % Please edit documentation in R/node.R
 \name{as.data.frame.Node}
 \alias{as.data.frame.Node}
-\title{Convert a tree to a data.frame.}
+\title{Convert a \code{\link{Node}} to a \code{data.frame}}
 \usage{
 \method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
   filterFun = function(x) TRUE)
@@ -29,6 +29,6 @@ take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, 
 \code{Node} and its subtree should be displayed.}
 }
 \description{
-Convert a tree to a data.frame.
+Convert a \code{\link{Node}} to a \code{data.frame}
 }
 

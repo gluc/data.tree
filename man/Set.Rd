@@ -2,7 +2,7 @@
 % Please edit documentation in R/node.R
 \name{Set}
 \alias{Set}
-\title{Traverses the tree and assigns values to attributes along the way.}
+\title{Traverse a Tree and Assign Values}
 \usage{
 Set(..., traversal = "pre-order", returnValues = FALSE)
 }
@@ -15,7 +15,8 @@ Set(..., traversal = "pre-order", returnValues = FALSE)
 Otherwise the \code{Node} itself is returned for chaining. Mainly for internal use.}
 }
 \description{
-Traverses the tree and assigns values to attributes along the way.
+The method takes a vector as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked
+from the vector.
 }
 \examples{
 data(acme)

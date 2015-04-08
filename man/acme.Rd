@@ -3,7 +3,7 @@
 \docType{data}
 \name{acme}
 \alias{acme}
-\title{acme is a simple company with three departments.}
+\title{acme: A Simple Company with Departments}
 \format{A data.tree root Node}
 \usage{
 data(acme)

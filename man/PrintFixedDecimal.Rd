@@ -2,7 +2,7 @@
 % Please edit documentation in R/util.R
 \name{PrintFixedDecimal}
 \alias{PrintFixedDecimal}
-\title{Format a number as a decimal with a fixed number of decimals.}
+\title{Format a Number as a Decimal}
 \usage{
 PrintFixedDecimal(x, digits = 3)
 }
@@ -15,6 +15,6 @@ PrintFixedDecimal(x, digits = 3)
 A string corresponding to x, suitable for printing
 }
 \description{
-Format a number as a decimal with a fixed number of decimals.
+Simple function that can be used as a format function when converting trees to a \code{data.frame}
 }
 

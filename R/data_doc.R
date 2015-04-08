@@ -1,4 +1,4 @@
-#' acme is a simple company with three departments. 
+#' acme: A Simple Company with Departments
 #' 
 #' acme's tree representation is accessed through its root, acme.
 #' 
@@ -15,7 +15,7 @@
 NULL
 
 
-#' ball is a simple dataset used by the ID3 vignette. 
+#' Is Jack playing ball today? 
 #' 
 #' Ball contains daily weather conditions, and whether hypothetical Jack, a tennis player, 
 #' played ball on a given day. We can use this data for classification trees, to check whether
@@ -37,7 +37,7 @@ NULL
 #' @format data.frame
 NULL
 
-#' mushroom is a simple dataset used by the ID3 vignette. 
+#' Data Used by the ID3 Vignette
 #' 
 #' mushroom contains attributes of mushrooms. We can use this data to predict a
 #' mushroom's toxicity based on its attributes.

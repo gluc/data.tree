@@ -4,7 +4,7 @@
 \name{data.tree}
 \alias{data.tree}
 \alias{data.tree-package}
-\title{\code{data.tree} Easily Manage Hierarchical Data in R}
+\title{Manage Hierarchical Data in R}
 \description{
 \code{data.tree} is to hierarchical data what `data.frame` is to tabular data: An extensible, general purpose structure to store, manipulate,
 and display hierarchical data.
