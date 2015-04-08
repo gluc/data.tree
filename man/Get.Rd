@@ -26,7 +26,7 @@ Note that if filter returns \code{FALSE}, then the node and its entire subtree a
 \item{format}{can be a function that transforms the collected values, e.g. for printing}
 }
 \value{
-a vector containing the \code{atrributes} collected during traversal, in traversal order. NULL is converted
+a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
  to NA, such that \code{length(Node$Get) == Node$totalCount}
 }
 \description{

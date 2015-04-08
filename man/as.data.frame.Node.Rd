@@ -10,10 +10,10 @@
 \arguments{
 \item{x}{The root node to convert to a data.frame}
 
-\item{row.names}{NULL or a character vector giving the row names for the data frame.
+\item{row.names}{\code{NULL} or a character vector giving the row names for the data frame.
 Missing values are not allowed.}
 
-\item{optional}{logical. If TRUE, setting row names and converting column names
+\item{optional}{logical. If \code{TRUE}, setting row names and converting column names
 (to syntactic names: see make.names) is optional.}
 
 \item{...}{the attributes to be added as columns of the data.frame. There are various
@@ -22,7 +22,7 @@ options:
  \item a string corresponding to the name of a node attribute
  \item the result of the \code{Node$Get} method
 }
-If a specific Node does not contain the attribute, NA is added to the data.frame.}
+If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.}
 
 \item{filterFun}{a function which filters the Nodes added to the \code{data.frame}. The function must
 take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the

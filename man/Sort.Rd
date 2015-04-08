@@ -8,14 +8,14 @@ Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)
 }
 \arguments{
 \item{attribute}{a field, method or function. The result of the attribute determines the
-sorting. If it is a function, #' the attribute must take a Node as a first argument.}
+sorting. If it is a function, #' the attribute must take a \code{Node} as a first argument.}
 
 \item{...}{any parameters to be passed on the the attribute (in case it's a method or a
 function)}
 
 \item{decreasing}{sort order}
 
-\item{recursive}{if TRUE, Sort will be called recursively on the Node's children.
+\item{recursive}{if \code{TRUE}, Sort will be called recursively on the \code{Node}'s children.
 This allows sorting an entire tree.}
 }
 \description{

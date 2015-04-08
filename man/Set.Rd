@@ -11,8 +11,8 @@ Set(..., traversal = "pre-order", returnValues = FALSE)
 
 \item{traversal}{any of 'pre-order', 'post-order', 'ancestor'}
 
-\item{returnValues}{if TRUE, then the non-processed arg passed in ... are returned.
-Otherwise the Node itself is returned for chaining. Mainly for internal use.}
+\item{returnValues}{if \code{TRUE}, then the non-processed arg passed in ... are returned.
+Otherwise the \code{Node} itself is returned for chaining. Mainly for internal use.}
 }
 \description{
 Traverses the tree and assigns values to attributes along the way.

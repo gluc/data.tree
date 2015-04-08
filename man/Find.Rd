@@ -10,11 +10,11 @@ Find(...)
 \item{...}{the names of the nodes in the path}
 }
 \value{
-the Node having path \code{...}, or NULL if such a path does not exist
+the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 }
 \description{
-The path is relative to the Node on which this method is called. Each argument provided corresponds to an
-element in the path.
+The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an
+element in the path, specified by the \code{Node}'s name.
 }
 \examples{
 data(acme)

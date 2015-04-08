@@ -17,7 +17,7 @@ by tying toghether \code{Node} objects.
 \describe{
 \item{\code{children}}{A list of children}
 
-\item{\code{parent}}{The node's parent Node}
+\item{\code{parent}}{The node's parent \code{Node}}
 }}
 \section{Methods}{
 
