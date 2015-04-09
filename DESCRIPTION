@@ -1,8 +1,8 @@
 Package: data.tree
 Type: Package
-Title: Work with Hierarchical Data Structures
-Version: 0.1.3
-Date: 2015-04-08
+Title: Hierarchical Data Structures
+Version: 0.1.4
+Date: 2015-04-09
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.ch>
 VignetteBuilder: knitr
@@ -10,7 +10,7 @@ Imports:
     R6
 Suggests:
     testthat, magrittr, knitr
-Description: data.tree is to hierarchical data what data.frame is to tabular data. You can create 
+Description: This package is to hierarchical data what data.frame is to tabular data. You can create 
     tree structures from hierarchical data, and use the utility methods to traverse the tree in 
     various orders. You can also aggregate, print, convert to and from data.frame, and apply functions
     to your tree data.
