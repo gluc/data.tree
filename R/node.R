@@ -1,3 +1,19 @@
+
+NODE_RESERVED_NAMES_CONST <- c( 'count',
+                                'children',
+                                'isLeaf',
+                                'isRoot',
+                                'leaves',
+                                'level',
+                                'levelName',
+                                'parent',
+                                'path',
+                                'pathString',
+                                'position', 
+                                'root',
+                                'totalCount')
+
+
 #' Create Trees With \code{Node}s
 #' 
 #' @description \code{Node} is at the very heart of the \code{data.tree} package. All trees are constructed
@@ -265,8 +281,7 @@ Node <- R6Class("Node",
                       
                       
                       ToList = function(...) {
-                        TODO: implement
-                        
+                        as.list(self, ...)
                       }
                       
                                             
@@ -276,8 +291,8 @@ Node <- R6Class("Node",
                     active = list(
                       
                       name = function(value) {
-                        if (missing(value)) return (self$p_name)
-                        else self$p_name <- value
+                        if (missing(value)) return (private$p_name)
+                        else private$p_name <- value
                       },
                       
                       isLeaf = function() {
@@ -374,8 +389,32 @@ print.Node <- function(x, ...) {
 }
 
 #' @export
+as.Node.list <- function(x, ...) {
+  n <- Node$new(x$name)
+  
+  
+  
+}
+
+
+#' @export
 as.list.Node <- function(x, ...) {
-  return ( x$ToList() )
+  self <- x
+  res <- list()
+  for (fieldName in ls(self)) {
+    #print(fieldName)
+    field <- self[[fieldName]]
+    if(!is.function(field) 
+       && !is.environment(field)
+       && (fieldName == 'name' || !(fieldName %in% NODE_RESERVED_NAMES_CONST)) {
+      res[fieldName] <- field
+    }
+  }
+  if(!self$isLeaf) {
+    res$children <- lapply(self$children, FUN = function(x) as.list(x, ...))
+  }
+  return (res)
+  
 }
 
 
