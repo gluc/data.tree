@@ -1,7 +1,7 @@
 Package: data.tree
 Type: Package
 Title: Hierarchical Data Structures
-Version: 0.1.6
+Version: 0.1.7
 Date: 2015-04-10
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.ch>

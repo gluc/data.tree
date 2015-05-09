@@ -1,16 +1,31 @@
 
-NODE_RESERVED_NAMES_CONST <- c( 'count',
+NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
+                                'AddChildNode',
+                                'AddSibling',
+                                'AddSiblingNode',
+                                'Aggregate',
                                 'children',
+                                'count',
+                                'Find',
+                                'Get',
+                                'GetAttribute',
+                                'initialize',
                                 'isLeaf',
                                 'isRoot',
                                 'leaves',
                                 'level',
                                 'levelName',
+                                'name',
                                 'parent',
                                 'path',
                                 'pathString',
                                 'position', 
                                 'root',
+                                'Set',
+                                'SetAttribute',
+                                'Sort',
+                                'ToDataFrame',
+                                'ToList',
                                 'totalCount')
 
 
@@ -388,10 +403,22 @@ print.Node <- function(x, ...) {
   print(as.data.frame(x, row.names = NULL, optional = FALSE, ...))
 }
 
+#' Converts a list to a Node
+#' 
+#' @param x The list to be converted.
+#' @param ... Any other argument to be passed to generic sub implementations
+#' 
+#' @details x should contained named elements, where the name will be converted to the Node's public attribute
+#' name, and the value to its value.
+#' x should not contain any element whose name is in NODE_RESERVED_NAMES_CONST, except the ones mentioned below.
+#' x has to contain an element called name, which must be convertible to a character string.
+#' x can contain an element called children, which should be of class list. This will be converted to the Node's
+#' children.
+#' 
 #' @export
 as.Node.list <- function(x, ...) {
   n <- Node$new(x$name)
-  
+  stop('not yet implemented')
   
   
 }
@@ -406,7 +433,8 @@ as.list.Node <- function(x, ...) {
     field <- self[[fieldName]]
     if(!is.function(field) 
        && !is.environment(field)
-       && (fieldName == 'name' || !(fieldName %in% NODE_RESERVED_NAMES_CONST)) {
+       && (fieldName == 'name' || !(fieldName %in% NODE_RESERVED_NAMES_CONST)) 
+       ) {
       res[fieldName] <- field
     }
   }
