@@ -4,7 +4,7 @@
 \alias{as.Node.list}
 \title{Converts a list to a Node}
 \usage{
-as.Node.list(x, ...)
+\method{as.Node}{list}(x, ...)
 }
 \arguments{
 \item{x}{The list to be converted.}

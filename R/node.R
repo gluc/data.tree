@@ -1,4 +1,8 @@
-
+#' Names that are reserved by the Node class.
+#'
+#' These are reserved by the Node class, you cannot use these as 
+#' Attribute names.
+#' 
 NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddChildNode',
                                 'AddSibling',
@@ -397,11 +401,29 @@ Node <- R6Class("Node",
                   )
 
 
-
+#' @param x The Node
+#' @param ... Additional parameters
+#' 
+#' @details Print the Node in a human-readable fashion.
+#'
 #' @export
 print.Node <- function(x, ...) {
   print(as.data.frame(x, row.names = NULL, optional = FALSE, ...))
 }
+
+
+#' Convert an object to a Node
+#' 
+#' @param x The object to be converted
+#' @param ... Additional arguments
+#' 
+#' @details Convert an object to a Node
+#' 
+#' @export
+as.Node <- function(x, ...) {
+  UseMethod("as.Node")
+}
+
 
 #' Converts a list to a Node
 #' 
@@ -418,8 +440,17 @@ print.Node <- function(x, ...) {
 #' @export
 as.Node.list <- function(x, ...) {
   n <- Node$new(x$name)
-  stop('not yet implemented')
   
+  for (name in names(x)[!(names(x) %in% NODE_RESERVED_NAMES_CONST)]) {
+    n[[name]] <- x[[name]]
+  }
+  
+  #children
+  for (child in x$children) {
+    n$AddChildNode(as.Node(child, ...))
+  }
+  
+  return (n)
   
 }
 

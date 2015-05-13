@@ -14,3 +14,15 @@ test_that("as.list.Node", {
  
 })
 
+
+test_that("as.Node.list", {
+  
+  l <- as.Node(acme$ToList())
+  
+  expect_equal("Acme Inc.", l$name)
+  expect_equal(3, acme$count)
+  expect_equal(11, acme$totalCount)
+  expect_equal(0.05, acme$Find("IT", "Go agile")$p)
+  
+})
+
