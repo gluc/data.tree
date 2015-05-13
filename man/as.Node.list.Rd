@@ -4,10 +4,14 @@
 \alias{as.Node.list}
 \title{Converts a list to a Node}
 \usage{
-\method{as.Node}{list}(x, ...)
+\method{as.Node}{list}(x, nameName = "name", childrenName = "children", ...)
 }
 \arguments{
 \item{x}{The list to be converted.}
+
+\item{nameName}{The name of the element that should be used as the name}
+
+\item{childrenName}{The name of the element that contains the child list}
 
 \item{...}{Any other argument to be passed to generic sub implementations}
 }
@@ -15,11 +19,11 @@
 Converts a list to a Node
 }
 \details{
-x should contained named elements, where the name will be converted to the Node's public attribute
+x should be of class list, and contain named elements, where the nameName will be converted to the Node's public attribute
 name, and the value to its value.
 x should not contain any element whose name is in NODE_RESERVED_NAMES_CONST, except the ones mentioned below.
-x has to contain an element called name, which must be convertible to a character string.
-x can contain an element called children, which should be of class list. This will be converted to the Node's
+x has to contain an element called nameName, which must be convertible to a character string.
+x can contain an element called childrenName, which should be of class list. This will be converted to the Node's
 children.
 }
 

@@ -17,12 +17,36 @@ test_that("as.list.Node", {
 
 test_that("as.Node.list", {
   
-  l <- as.Node(acme$ToList())
+  n <- as.Node(acme$ToList())
   
-  expect_equal("Acme Inc.", l$name)
-  expect_equal(3, acme$count)
-  expect_equal(11, acme$totalCount)
-  expect_equal(0.05, acme$Find("IT", "Go agile")$p)
+  expect_equal("Acme Inc.", n$name)
+  expect_equal(3, n$count)
+  expect_equal(11, n$totalCount)
+  expect_equal(0.05, n$Find("IT", "Go agile")$p)
+  
+})
+
+
+test_that("as.list.Node unname", {
+  l <- acme$ToList(unname = TRUE, nameName = 'id', childrenName = 'sub')
+  
+  expect_equal("list", class(l))
+  expect_equal(2, length(l))
+  expect_equal(c('id', 'sub'), names(l))
+  expect_equal(0.9, l$sub[[2]]$sub[[2]]$p)
+  expect_equal('New Product Line', l$sub[[2]]$sub[[1]]$id)
+  
+})
+
+test_that("as.Node.list unname", {
+  
+  l <- acme$ToList(unname = TRUE, nameName = 'id', childrenName = 'sub')
+  n <- as.Node(l, nameName = 'id', childrenName = 'sub')
+  
+  expect_equal("Acme Inc.", n$name)
+  expect_equal(3, n$count)
+  expect_equal(11, n$totalCount)
+  expect_equal(0.05, n$Find("IT", "Go agile")$p)
   
 })
 

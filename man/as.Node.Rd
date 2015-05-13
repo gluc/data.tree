@@ -14,4 +14,7 @@ as.Node(x, ...)
 \description{
 Convert an object to a Node
 }
+\details{
+Convert an object to a Node
+}
 
