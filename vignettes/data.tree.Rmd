@@ -470,6 +470,48 @@ print(acme, "expectedCost")
 
 Naturally, you can also sort a sub-tree by calling Sort on the sub-tree's parent node.
 
+## `Clone` method
+
+You can create a deep copy of a tree by using the `Clone` method on the root.
+
+```{r}
+data(acme)
+acme2 <- acme$Clone()
+acme2$name <- 'Acme2 Inc.'
+acme2$name != acme$name
+
+```
+
+## `ToList` method
+
+You can convert a tree to a nested list by using the `ToList` method on the root.
+
+```{r}
+data(acme)
+acmeList <- acme$ToList()
+```
+
+You can call the `name` field and the `children` field differently, if you want:
+
+```{r}
+acmeList2 <- acme$ToList(nameName = 'id', childrenName = 'subNodes')
+acmeList2$subNodes$IT$subNodes$Outsource$cost
+```
+
+You can also chose whether or not to have the nested lists named. This can be especially useful for conversion to JSON:
+
+```{r}
+acmeList3 <- acme$ToList(unname = TRUE)
+acmeList3$children[[3]]$children[[1]]$cost
+```
+
+Finally, you can use `as.Node.List` to convert a nested list into a tree:
+```{r}
+as.Node(acmeList)
+```
+
+
+
 
 ## Subclassing `Node`
 

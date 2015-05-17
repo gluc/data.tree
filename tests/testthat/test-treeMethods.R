@@ -191,3 +191,24 @@ test_that("Sort", {
   
 })
 
+
+test_that("Clone", {
+  data(acme)
+  n <- acme$Clone()
+  
+  expect_equal(class(n), class(acme))
+  expect_equal(n$name, acme$name)
+  expect_equal(n$count, acme$count)
+  expect_equal(n$totalCount, acme$totalCount)
+  expect_equal(n$Find("IT", "Go agile")$p, acme$Find("IT", "Go agile")$p)
+  
+  expect_equal(n, acme)
+  acme2 <- acme
+  expect_identical(acme, acme2)
+  
+  #expect_false(n, is_identical_to(acme))
+  n$name <- 'Acme2'
+  expect_false(n$name == acme$name)
+  
+})
+

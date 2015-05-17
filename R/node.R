@@ -9,6 +9,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddSiblingNode',
                                 'Aggregate',
                                 'children',
+                                'Clone',
                                 'count',
                                 'Find',
                                 'Get',
@@ -57,9 +58,10 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
 #'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
 #'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
+#'   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
 #'   \item{\code{\link{ToDataFrame}(row.names = NULL, optional = FALSE, ...)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
 #'   \item{\code{\link{ToList}(unname = FALSE, nameName = 'name', childrenName = 'children', ...)}}{Converts the tree below this \code{Node} to a \code{list}}
-
+#'
 #' }
 #' 
 #' @section Properties:
@@ -288,11 +290,9 @@ Node <- R6Class("Node",
                         return (v)
                       },
                       
-                      #Copy = function() {
-                        #return a deep copy of the Node and all its children (but not the parent)
-                        #selfCopy <- as.environment(as.list(self, all.names = TRUE))
-                        #privateCopy <- as.environment(as.list(private, all.names = TRUE))
-                      #},
+                      Clone = function() {
+                        return (as.Node(self$ToList()))
+                      },
                       
                       #Filter = function(){}
                       

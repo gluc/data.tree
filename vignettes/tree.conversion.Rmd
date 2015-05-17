@@ -1,0 +1,79 @@
+---
+title: "Tree Conversion"
+author: "Christoph Glur"
+date: "13.5.2015"
+output: html_document
+---
+
+Converting a data.tree Node to a list is really simple:
+
+```{r}
+library(data.tree)
+ 
+data(acme)
+l <- acme$ToList()
+```
+
+Alternatively, you might prefer the "traditional" generic method:
+
+```{r eval=FALSE}
+
+
+as.list(acme)
+```
+
+Conversion to JSON becomes trivial:
+
+```{r}
+library(rjson)
+cat(toJSON(l))
+ 
+```
+
+
+If we prefer our children to be in an array, we can do the following:
+
+```{r}
+cat(toJSON(acme$ToList(unname = TRUE)))
+```
+
+
+As a side note: you can also convert a list to a Node:
+
+```{r}
+
+as.Node(l)
+```
+
+
+There are multiple options in the ToList method. Type the following to learn more:
+
+```{r}
+?ToList
+?as.list.Node
+```
+
+
+This opens endless possibilities for integration with other packags. For example, to draw a tree with the networkD3 package:
+
+```{r eval=FALSE}
+
+library(networkD3)
+treeNetwork(acme$ToList(unname = TRUE))
+
+
+```
+
+```{r echo=FALSE}
+library(networkD3)
+treeNetwork(acme$ToList(unname = TRUE), fontSize = 16, linkColour = "steelblue", nodeColour = "steelblue", opacity = 1, margin = 100)
+```
+
+Or we could save this:
+
+```{r}
+library(htmlwidgets)
+w <- treeNetwork(acme$ToList(unname = TRUE), fontSize = 16, linkColour = "steelblue", nodeColour = "steelblue", opacity = 1, margin = 100)
+saveWidget(w, "acme_networkD3.html")
+```
+
