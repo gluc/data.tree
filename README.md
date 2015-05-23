@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree)
+
 # data.tree
 An R package to manage hierarchical data and tree structures
 
