@@ -44,6 +44,7 @@ by tying toghether \code{Node} objects.
  \item{\code{children}}{Returns a list containing all the children of this \code{Node}}
  \item{\code{parent}}{Returns the parent \code{Node} of this \code{Node}}
  \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
+ \item{\code{fields}}{Gets the names of the set properties of a \code{Node}}
  \item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
  \item{\code{isRoot}}{Returns \code{TRUE} if the \code{Node} is the root, \code{FALSE} otherwise}
  \item{\code{count}}{Returns the number of children of a \code{Node}}

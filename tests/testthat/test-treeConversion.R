@@ -50,3 +50,17 @@ test_that("as.Node.list unname", {
   
 })
 
+
+test_that("as.Node.data.frame", {
+  
+  acmedf <- as.data.frame(acme, row.names = NULL, optional = FALSE, 'p', 'cost', 'pathString')
+  acme2 <- as.Node(acmedf, na.rm = TRUE)
+  expect_equal(as.list(acme), as.list(acme2))
+  expect_equal(as.data.frame(acme, row.names = NULL, optional = FALSE, 'p', 'cost'), as.data.frame(acme2, row.names = NULL, optional = FALSE, 'p', 'cost'))
+  #test that if they are not different it fails
+  # acc2 <- acme2$Find("Accounting")
+  # acc2$newField <- 'new value'
+  # expect_equal(as.list(acme), as.list(acme2))
+  
+})
+

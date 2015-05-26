@@ -3,5 +3,6 @@
 ## Version 0.1.7 Chestnut
 
 - Added conversion to and from list
+- Added conversion from data.frame
 - Added Clone
 

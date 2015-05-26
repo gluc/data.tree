@@ -11,6 +11,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'children',
                                 'Clone',
                                 'count',
+                                'fields',
                                 'Find',
                                 'Get',
                                 'GetAttribute',
@@ -70,6 +71,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'  \item{\code{children}}{Returns a list containing all the children of this \code{Node}}
 #'  \item{\code{parent}}{Returns the parent \code{Node} of this \code{Node}}
 #'  \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
+#'  \item{\code{fields}}{Gets the names of the set properties of a \code{Node}}
 #'  \item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
 #'  \item{\code{isRoot}}{Returns \code{TRUE} if the \code{Node} is the root, \code{FALSE} otherwise}
 #'  \item{\code{count}}{Returns the number of children of a \code{Node}}
@@ -352,6 +354,11 @@ Node <- R6Class("Node",
                       },
                       
                       
+                      fields = function() {
+                        ls(self)[!(ls(self) %in% NODE_RESERVED_NAMES_CONST)]
+                      },
+                      
+                      
                       .separator = function() {
                         if (self$isRoot) return("")
                         if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--") 
@@ -476,6 +483,7 @@ as.Node.list <- function(x, nameName = 'name', childrenName = 'children', ...) {
 #' @param childrenName The name that should be given to the children nested list
 #' @param ... Additional parameters
 #' 
+#' 
 #' @export
 as.list.Node <- function(x, 
                          unname = FALSE, 
@@ -556,4 +564,44 @@ as.data.frame.Node <- function(x, row.names = NULL, optional = FALSE, ..., filte
   
 }
 
+#' Convert a data.frame to a data.tree
+#' 
+#' @param x The data.frame
+#' @param ... Any other argument
+#' @param pathName The name of the column in x containing the path of the row
+#' @param pathDelimiter The delimiter used
+#' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
+#' 
+#' @details x should be of class x
+#' 
+#' @export
+as.Node.data.frame <- function(x, ..., pathName = 'pathString', pathDelimiter = '/', na.rm = FALSE) {
+  root <- NULL
+  mycols <- names(x)[ !(names(x) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
+  for (i in 1:nrow(x)) {
+    myrow <- x[ i, ]
+    mypath <- myrow[[pathName]]
+    myvalues <- myrow[!colnames(myrow) == pathName]
+    
+    #create node and ancestors if necessary (might already have been created)
+    paths <- strsplit(mypath, pathDelimiter)[[1]]
+    if (is.null(root)) root <- Node$new(paths[1])
+    mynode <- root
+    for (path in paths[-1]) {
+      child <- mynode$Find(path)
+      if(is.null(child)) mynode <- mynode$AddChild(path)
+      else mynode <- child
+    }
+    
+    #fill values (always)
+    for (mycol in mycols) {
+      if ( !( na.rm && is.na(myrow[[mycol]]) )) {
+        mynode[[mycol]] <- myrow[[mycol]]
+      }
+    }
+    
+    
+  }
+  return (root)
+}
 
