@@ -605,3 +605,76 @@ as.Node.data.frame <- function(x, ..., pathName = 'pathString', pathDelimiter = 
   return (root)
 }
 
+
+#' Convert a \code{\link{dendrogram}} to a data.tree \code{Node}
+#' 
+#' @param x The dendrogram
+#' @return The root \code{Node} of a \code{data.tree}
+#' @export
+as.Node.dendrogram <- function(x, ...) {
+  #str(unclass(dend1))
+  if (!is.leaf(x)) {
+    name <- tempfile(pattern = '', tmpdir = '')
+  } else {
+    name <- attr(x, 'label')
+  }
+  
+  n <- Node$new(name)
+  reserved <- c('label', 'class', 'comment', 'dim', 'dimnames', 'names', 'row.names', 'tsp')
+  for (a in names(attributes(x))[!(attributes(x) %in% NODE_RESERVED_NAMES_CONST) && !(attributes(x) %in% reserved)]) {
+    n[[a]] <- attr(x, a)
+  }
+  
+  if (!is.leaf(x)) {
+    for (i in 1:length(x)) {
+      n$AddChildNode(as.Node(x[[i]], ...))
+    }
+  } else {
+    n$value <- as.vector(x)
+  }
+  
+  return (n)
+  
+}
+
+
+#' Convert a Node to a dendrogram
+#' 
+#' @details Convert a Node to a dendrogram
+#' 
+#' @param x The Node to convert
+#' @param ... Additional parameters
+#' 
+#' 
+#' @export
+as.dendrogram.Node <- function(x, ...) {
+  self <- x
+  
+  #NOT YET WORKING
+  
+  if (self$isLeaf) {
+    res <- self$value
+    class(res) <- "dendrogram"
+    attr(res, 'label') <- self$name
+
+  } else {
+    #res <- list()
+    #class(res) <- "dendrogram"
+    res <- lapply(self$children, FUN = function(x) as.list(x, ...))
+    class(res) <- "dendrogram"
+  }
+  
+  for (fieldName in ls(self)) {
+    #print(fieldName)
+    field <- self[[fieldName]]
+    if(!is.function(field) 
+       && !is.environment(field)
+       && !(fieldName %in% NODE_RESERVED_NAMES_CONST)
+    ) {
+      attr(self, fieldName) <- field
+    }
+  }
+  return (res)
+  
+}
+
