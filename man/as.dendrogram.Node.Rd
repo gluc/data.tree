@@ -4,10 +4,10 @@
 \alias{as.dendrogram.Node}
 \title{Convert a Node to a dendrogram}
 \usage{
-\method{as.dendrogram}{Node}(x, ...)
+\method{as.dendrogram}{Node}(object, ...)
 }
 \arguments{
-\item{x}{The Node to convert}
+\item{object}{The Node to convert}
 
 \item{...}{Additional parameters}
 }

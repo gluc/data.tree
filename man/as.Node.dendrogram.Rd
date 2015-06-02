@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{The dendrogram}
+
+\item{...}{Additional parameters}
 }
 \value{
 The root \code{Node} of a \code{data.tree}

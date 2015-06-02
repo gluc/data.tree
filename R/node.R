@@ -609,6 +609,8 @@ as.Node.data.frame <- function(x, ..., pathName = 'pathString', pathDelimiter = 
 #' Convert a \code{\link{dendrogram}} to a data.tree \code{Node}
 #' 
 #' @param x The dendrogram
+#' @param ... Additional parameters
+#' 
 #' @return The root \code{Node} of a \code{data.tree}
 #' @export
 as.Node.dendrogram <- function(x, ...) {
@@ -642,13 +644,13 @@ as.Node.dendrogram <- function(x, ...) {
 #' 
 #' @details Convert a Node to a dendrogram
 #' 
-#' @param x The Node to convert
+#' @param object The Node to convert
 #' @param ... Additional parameters
 #' 
-#' 
+#' @import stats
 #' @export
-as.dendrogram.Node <- function(x, ...) {
-  self <- x
+as.dendrogram.Node <- function(object, ...) {
+  self <- object
   
   #NOT YET WORKING
   
