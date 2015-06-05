@@ -662,8 +662,9 @@ as.dendrogram.Node <- function(object, ...) {
   } else {
     #res <- list()
     #class(res) <- "dendrogram"
-    res <- lapply(self$children, FUN = function(x) as.list(x, ...))
+    res <- lapply(self$children, FUN = function(x) as.dendrogram(x, ...))
     class(res) <- "dendrogram"
+    res <- unname(res)
   }
   
   for (fieldName in ls(self)) {
@@ -673,7 +674,7 @@ as.dendrogram.Node <- function(object, ...) {
        && !is.environment(field)
        && !(fieldName %in% NODE_RESERVED_NAMES_CONST)
     ) {
-      attr(self, fieldName) <- field
+      attr(res, fieldName) <- field
     }
   }
   return (res)
