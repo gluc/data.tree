@@ -5,7 +5,7 @@
 \title{Convert a \code{\link{Node}} to a \code{data.frame}}
 \usage{
 \method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
-  filterFun = function(x) TRUE)
+  filterFun = function(x) TRUE, inheritFromParent = FALSE)
 }
 \arguments{
 \item{x}{The root node to convert to a data.frame}

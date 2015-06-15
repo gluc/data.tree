@@ -5,7 +5,7 @@
 \title{Convert a data.frame to a data.tree}
 \usage{
 \method{as.Node}{data.frame}(x, ..., pathName = "pathString",
-  pathDelimiter = "/", na.rm = FALSE)
+  pathDelimiter = "/", colLevels = NULL, na.rm = FALSE)
 }
 \arguments{
 \item{x}{The data.frame}
@@ -15,6 +15,8 @@
 \item{pathName}{The name of the column in x containing the path of the row}
 
 \item{pathDelimiter}{The delimiter used}
+
+\item{colLevels}{Nested vector of column names, determining on what node levels the values are written to.}
 
 \item{na.rm}{If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes}
 }
