@@ -26,11 +26,13 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'path',
                                 'pathString',
                                 'position', 
+                                'Prune',
                                 'root',
                                 'Set',
                                 'SetAttribute',
                                 'Sort',
                                 'ToDataFrame',
+                                'ToDataFrameTable',
                                 'ToList',
                                 'totalCount')
 
@@ -55,7 +57,8 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
 #'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
-#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", filterFun = function(x) TRUE, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
+#'   \item{\code{\link{Prune}(filterFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{filterFun} }
+#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", filterFun = NULL, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
 #'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
 #'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
@@ -152,42 +155,35 @@ Node <- R6Class("Node",
                         v <- vector()
                         if(traversal == "pre-order") {
                           
-                          if(!self$isLeaf) {
+                          if(is.null(filterFun) || filterFun(self)) {
                             
                             for(child in self$children) {
                               v <- c(v, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
                             }
-                            
-                          }
-                          
-                          if(is.null(filterFun) || filterFun(self)) {
                             me <- self$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
                             v <- c(me, v)
                           }
-                        
+                          
                         } else if (traversal == "post-order") {
                           # useful if leafs need to be calculated first
-                          
-                          v <- vector()
-                          if(!self$isLeaf) {
-                            for(child in self$children) {
-                              v <- c(childValues, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
-                            }
-                          }
+                         
                           if(is.null(filterFun) || filterFun(self)) {
+                            for(child in self$children) {
+                              v <- c(v, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
+                            }
                             me <- self$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
                             v <- c(v, me)
                           }
                           
                         } else if (traversal == "ancestor") {
-                          v <- vector()
+                          
                           
                           if (!self$isRoot) {
                             v <- self$parent$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
                           }
                           if(is.null(filterFun) || filterFun(self)) {
                             me <- self$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-                            v <- c(v, parentV)
+                            v <- c(me, v)
                             
                           }
                         }
@@ -245,6 +241,30 @@ Node <- R6Class("Node",
                         values <- sapply(self$children, function(x) x$Aggregate(attribute, fun, ...))
                         result <- fun(values)
                         return (result)
+                      },
+                      
+                      
+                      Prune = function(filterFun, traversal = "pre-order") {
+                        if ( self$isLeaf) return()
+                        if ( traversal == "pre-order") {
+                          for( i in length(self$children):1 ) {
+                            if ( !filterFun(self$children[[i]]) ) {
+                              self$children <- self$children[-i]
+                            }
+                          }
+                          for( child in self$children) {
+                            child$Filter(filterFun)
+                          }
+                        } else if( traversal == "post-order") {
+                          for( child in self$children) {
+                            child$Filter(filterFun)
+                          }
+                          for( i in length(self$children):1 ) {
+                            if ( !filterFun(self$children[[i]]) ) {
+                              self$children <- self$children[-i]
+                            }
+                          }
+                        }
                       },
                                             
                       Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
@@ -316,10 +336,16 @@ Node <- R6Class("Node",
                       }, 
                       
                       
-                      ToList = function(..., unname = FALSE, 
+                      ToDataFrameTable = function(...) {
+                        df <- as.data.frame(self, row.names = NULL, optional = FALSE, ..., filterFun = NULL, inheritFromAncestors = TRUE)
+                        df[self$Get("isLeaf"),-1]
+                      },
+                      
+                      ToList = function(unname = FALSE, 
                                         nameName = 'name', 
-                                        childrenName = 'children') {
-                        as.list(self, ..., unname, nameName, childrenName)
+                                        childrenName = 'children',
+                                        ...) {
+                        as.list(self, unname, nameName, childrenName, ...)
                       }
                       
                                             
@@ -498,10 +524,11 @@ as.Node.list <- function(x, nameName = 'name', childrenName = 'children', ...) {
 #' 
 #' 
 #' @export
-as.list.Node <- function(x, ...,
+as.list.Node <- function(x, 
                          unname = FALSE, 
                          nameName = 'name', 
-                         childrenName = 'children') {
+                         childrenName = 'children',
+                         ...) {
   self <- x
   res <- list()
   res[nameName] <- x$name
@@ -560,7 +587,12 @@ as.data.frame.Node <- function(x,
     }
   }
   
-  df <- data.frame( levelName = format(x$Get('levelName', filterFun = filterFun)),
+  if( !is.null(filterFun)) {
+    x <- x$Clone()
+    x$Filter(filterFun)
+  }
+  
+  df <- data.frame( levelName = format(x$Get('levelName')),
                     row.names = row.names,
                     stringsAsFactors = FALSE)
   
@@ -570,7 +602,7 @@ as.data.frame.Node <- function(x,
   for (i in 1:length(cols)) {
     col <- cols[[i]]
     if (is.character(col) && length(col) == 1) {
-      it <- x$Get(col, filterFun = filterFun, inheritFromAncestors = inheritFromAncestors)
+      it <- x$Get(col, inheritFromAncestors = inheritFromAncestors)
       colName <- col
     } else {
       it <- col
@@ -581,10 +613,7 @@ as.data.frame.Node <- function(x,
     df[colName] <- it
     
   }
-  if(!is.null(filterFun)) {
-
-    df <- df[ , -1]
-  }
+  
   return (df)
   
 }

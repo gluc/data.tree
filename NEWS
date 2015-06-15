@@ -4,5 +4,6 @@
 
 - Added conversion to and from list
 - Added conversion from data.frame
-- Added Clone
-
+- Added Node$Clone (returning a deep copy)
+- Added Node$Filter (pruning the tree)
+- Added Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)

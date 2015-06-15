@@ -28,6 +28,7 @@ test_that("as.Node.list", {
 
 
 test_that("as.list.Node unname", {
+  data(acme)
   l <- acme$ToList(unname = TRUE, nameName = 'id', childrenName = 'sub')
   
   expect_equal("list", class(l))
@@ -52,7 +53,7 @@ test_that("as.Node.list unname", {
 
 
 test_that("as.Node.data.frame", {
-  
+  data(acme)
   acmedf <- as.data.frame(acme, row.names = NULL, optional = FALSE, 'p', 'cost', 'pathString')
   acme2 <- as.Node(acmedf, na.rm = TRUE)
   expect_equal(as.list(acme), as.list(acme2))

@@ -5,7 +5,7 @@
 \title{Convert a \code{\link{Node}} to a \code{data.frame}}
 \usage{
 \method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
-  filterFun = function(x) TRUE, inheritFromParent = FALSE)
+  filterFun = NULL, inheritFromAncestors = FALSE)
 }
 \arguments{
 \item{x}{The root node to convert to a data.frame}
@@ -25,7 +25,10 @@ options:
 If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.}
 
 \item{filterFun}{a function which filters the Nodes added to the \code{data.frame}. The function must
-take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the
+take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the}
+
+\item{inheritFromAncestors}{if TRUE, then any attribute specified in \code{...} is fetched from a Node, or from any
+of its ancestors
 \code{Node} and its subtree should be displayed.}
 }
 \description{
