@@ -181,7 +181,7 @@ Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
 #'
 #' @seealso \code{\link{Node}}, \code{\link{as.data.frame.Node}} 
 #' @keywords internal
-ToDataFrame <- function(row.names = NULL, optional = FALSE, ..., filterFun = function(x) TRUE) {
+ToDataFrame <- function(row.names = NULL, optional = FALSE, ..., filterFun = NULL) {
   stop("This method can only be called on a Node!")
 }
 

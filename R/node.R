@@ -253,11 +253,11 @@ Node <- R6Class("Node",
                             }
                           }
                           for( child in self$children) {
-                            child$Filter(filterFun)
+                            child$Prune(filterFun)
                           }
                         } else if( traversal == "post-order") {
                           for( child in self$children) {
-                            child$Filter(filterFun)
+                            child$Prune(filterFun)
                           }
                           for( i in length(self$children):1 ) {
                             if ( !filterFun(self$children[[i]]) ) {
@@ -462,7 +462,7 @@ Node <- R6Class("Node",
 #'
 #' @export
 print.Node <- function(x, ...) {
-  print(as.data.frame(x, row.names = NULL, optional = FALSE, ...))
+  print(as.data.frame(x, row.names = NULL, optional = FALSE, ...), na.print = "")
 }
 
 
@@ -589,7 +589,7 @@ as.data.frame.Node <- function(x,
   
   if( !is.null(filterFun)) {
     x <- x$Clone()
-    x$Filter(filterFun)
+    x$Prune(filterFun)
   }
   
   df <- data.frame( levelName = format(x$Get('levelName')),
