@@ -570,12 +570,18 @@ as.data.frame.Node <- function(x, row.names = NULL, optional = FALSE, ..., filte
 #' @param ... Any other argument
 #' @param pathName The name of the column in x containing the path of the row
 #' @param pathDelimiter The delimiter used
+#' @param colLevels Nested vector of column names, determining on what node levels the values are written to.
 #' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
 #' 
 #' @details x should be of class x
 #' 
 #' @export
-as.Node.data.frame <- function(x, ..., pathName = 'pathString', pathDelimiter = '/', na.rm = FALSE) {
+as.Node.data.frame <- function(x, 
+                               ..., 
+                               pathName = 'pathString', 
+                               pathDelimiter = '/', 
+                               colLevels = NULL,
+                               na.rm = FALSE) {
   root <- NULL
   mycols <- names(x)[ !(names(x) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
   for (i in 1:nrow(x)) {
@@ -584,26 +590,48 @@ as.Node.data.frame <- function(x, ..., pathName = 'pathString', pathDelimiter = 
     myvalues <- myrow[!colnames(myrow) == pathName]
     
     #create node and ancestors if necessary (might already have been created)
-    paths <- strsplit(mypath, pathDelimiter)[[1]]
+    paths <- strsplit(mypath, pathDelimiter, fixed = TRUE)[[1]]
     if (is.null(root)) root <- Node$new(paths[1])
     mynode <- root
+    colsToSet <- mycols
+    colsToSetForLeaf <- mycols
     for (path in paths[-1]) {
       child <- mynode$Find(path)
-      if(is.null(child)) mynode <- mynode$AddChild(path)
-      else mynode <- child
+      
+      if( is.null(child)) {
+        mynode <- mynode$AddChild(path)
+      } else {
+        mynode <- child
+      }
+      
+      if( length(colLevels) >= mynode$level ) {
+        colsToSet <- intersect(colLevels[[mynode$level]], mycols) 
+        
+        #fill values on appropriate level
+        for (mycol in colsToSet) {
+          if ( !( na.rm && is.na(myrow[[mycol]]) )) {
+            mynode[[mycol]] <- myrow[[mycol]]
+          }
+        }
+        colsToSetForLeaf <- colsToSetForLeaf[!(colsToSetForLeaf %in% colsToSet)]
+      }
+      
     }
     
-    #fill values (always)
-    for (mycol in mycols) {
+    #put the rest in the leaf
+    for (mycol in colsToSetForLeaf) {
       if ( !( na.rm && is.na(myrow[[mycol]]) )) {
         mynode[[mycol]] <- myrow[[mycol]]
       }
-    }
+      #remove
+    }    
     
     
   }
   return (root)
 }
+
+
 
 
 #' Convert a \code{\link{dendrogram}} to a data.tree \code{Node}
@@ -677,6 +705,9 @@ as.dendrogram.Node <- function(object, ...) {
       attr(res, fieldName) <- field
     }
   }
+  
+  attr(res, "members") <- self$totalCount
+  
   return (res)
   
 }
