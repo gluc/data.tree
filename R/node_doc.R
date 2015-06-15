@@ -204,3 +204,34 @@ ToList <- function(unname = FALSE,
                    childrenName = 'children', ...) {
   stop("This method can only be called on a Node!")
 }
+
+
+
+
+#' Prunes a tree by applying the filterFun to each node. 
+#' 
+#' You can apply this to any \code{\link{Node}}
+#' in a tree; the filterFun is applied to the children of the \code{\link{Node}} only. Note that as
+#' soon as the filter criteria is not matched anymore, the algorithm stops, and neither the \code{\link{Node}}
+#' nor its children are kept, regardless of whether the child would satisfy the filter.
+#' 
+#' @param traversal one of the traversal modes (pre-order, post-order)
+#' @param filterFun A function taking a \code{\link{Node}} as an argument, an returning \code{TRUE}
+#' if the \code{\link{Node}} should be kept, false otherwise.
+#' @keywords internal
+Prune <- function(traversal = "pre-order", filterFun) {
+  stop("This method can only be called on a Node!")
+}
+
+#' Converts the tree to tabular form, keeping only the leafs.
+#' 
+#' This method is especially useful when you need to apply a specific function that is only available 
+#' for \code{\link{data.frame}}. 
+#' 
+#' @param ... character strings representing the attributes to be returned. Note that these may not be 
+#' available on a leaf, in which case the algorithm inherits the values from its ancestors.
+#' 
+#' @keywords internal
+ToDataFrameTable <- function(...) {
+  stop("This method can only be called on a Node!")
+}

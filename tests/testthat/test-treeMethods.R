@@ -28,6 +28,7 @@ test_that("Find 3rd Level", {
 
 
 test_that("Get filter", {
+  data(acme)
   acme$Set(myvalue = c(1.3, 1.5, 0.9, 1, 2, 1.1, 0.8, -1, 0.7, 1.0, 1.01))
   
   myFilter <- function(x) {
