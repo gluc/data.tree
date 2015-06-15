@@ -673,7 +673,7 @@ as.dendrogram.Node <- function(object, ...) {
        && !is.environment(field)
        && !(fieldName %in% NODE_RESERVED_NAMES_CONST)
     ) {
-      attr(self, fieldName) <- field
+      attr(res, fieldName) <- field
     }
   }
   return (res)
