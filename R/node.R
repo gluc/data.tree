@@ -187,7 +187,8 @@ Node <- R6Class("Node",
                             
                           }
                         }
-                        return (v)
+                        if (is.null(assign)) return (v)
+                        invisible (v)
                       },
                       
                       Set = function(..., traversal = "pre-order", returnValues = FALSE) {
@@ -339,6 +340,8 @@ Node <- R6Class("Node",
                       ToDataFrameTable = function(...) {
                         df <- as.data.frame(self, row.names = NULL, optional = FALSE, ..., filterFun = NULL, inheritFromAncestors = TRUE)
                         df[self$Get("isLeaf"),-1]
+                        row.names(df) <- 1:nrow(df)
+                        return (df)
                       },
                       
                       ToList = function(unname = FALSE, 
@@ -587,8 +590,11 @@ as.data.frame.Node <- function(x,
     }
   }
   
-  if( !is.null(filterFun)) {
+  if( !is.null(filterFun) || !x$isRoot) {
     x <- x$Clone()
+  }
+  
+  if( !is.null(filterFun)) {
     x$Prune(filterFun)
   }
   

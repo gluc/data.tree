@@ -46,7 +46,7 @@ test_that("Get filter", {
   
 })
   
-  
+
 
 test_that("Get pre-order", {
   get <- acme$Get("name", traversal = "pre-order")
