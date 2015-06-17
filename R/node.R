@@ -339,7 +339,7 @@ Node <- R6Class("Node",
                       
                       ToDataFrameTable = function(...) {
                         df <- as.data.frame(self, row.names = NULL, optional = FALSE, ..., filterFun = NULL, inheritFromAncestors = TRUE)
-                        df[self$Get("isLeaf"),-1]
+                        df <- df[self$Get("isLeaf"),-1]
                         row.names(df) <- 1:nrow(df)
                         return (df)
                       },
