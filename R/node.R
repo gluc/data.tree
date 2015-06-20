@@ -18,6 +18,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'initialize',
                                 'isLeaf',
                                 'isRoot',
+                                'leafCount',
                                 'leaves',
                                 'level',
                                 'levelName',
@@ -751,25 +752,35 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
 as.dendrogram.Node <- function(object, ...) {
   self <- object
   
-  #NOT YET WORKING
+  #strange: the original dendrogram will
+  # unclass the nested dendrograms as well,
+  # while ours won't?
+  #
+  # hc <- hclust(dist(USArrests), "ave")
+  # dend1 <- as.dendrogram(hc)
+  # node <- as.Node(dend1)
+  # dend2 <- as.dendrogram(node)
+  # unclass(dend1)
+  # unclass(dend2)
   
   if (self$isLeaf) {
     res <- self$value
-    attr(res, 'label') <- self$name
-    attr(res, 'members') <- 1
-    attr(res, 'height') <- 0
-    attr(res, 'leaf') <- self$isLeaf
-    class(res) <- "dendrogram"
+    res <- structure(res, 
+                     label = self$name, 
+                     members = 1,
+                     height = 0,
+                     leaf = self$isLeaf,
+                     class = "dendrogram")
 
   } else {
     #res <- list()
     #class(res) <- "dendrogram"
     res <- unname(lapply(self$children, FUN = function(x) as.dendrogram(x, ...)))
-    attr(res, 'members') <- self$leafCount
-    attr(res, 'midpoint') <- self$midpoint
-    attr(res, 'height') <- self$height
-    
-    class(res) <- "dendrogram"
+    res <- structure(res, 
+                     members = self$leafCount,
+                     midpoint = self$midpoint,
+                     height = self$height,
+                     class = "dendrogram")
     
   }
   
