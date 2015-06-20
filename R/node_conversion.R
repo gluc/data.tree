@@ -338,6 +338,7 @@ as.dendrogram.Node <- function(object, ...) {
 #' @param heightAttributeName The name of the attribute or function storing the height
 #' @param ... parameters that will be passed on the the heightAttributeName, in case it is a function
 #' 
+#' @import stringr
 #' @export 
 ToNewick <- function(node, heightAttributeName = "Height", ...) {
 
@@ -374,9 +375,17 @@ ToNewick <- function(node, heightAttributeName = "Height", ...) {
 #' @param heightAttributeName To use custom heights
 #' @param ... any other argument
 #' 
+#' @export
 as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
   txt <- x$ToNewick(heightAttributeName)
   return (ape::read.tree(text = txt))
 }
 
 
+
+GetPhyloLabels <- function(x, attribute, ...) {
+  labels <- x$Get(attribute, ..., filterFun = function(x) !x$isLeaf)
+  nodeNr <- x$leafCount + (1:length(labels))
+  attr(labels, "nodes") <- nodeNr
+  return(labels)
+}
