@@ -4,7 +4,7 @@
 \alias{as.Node.dendrogram}
 \title{Convert a \code{\link{dendrogram}} to a data.tree \code{Node}}
 \usage{
-\method{as.Node}{dendrogram}(x, ...)
+\method{as.Node}{dendrogram}(x, name = "root", ...)
 }
 \arguments{
 \item{x}{The dendrogram}

@@ -388,7 +388,10 @@ Node <- R6Class("Node",
                       
                       position = function() {
                         if (self$isRoot) return (0)
-                        match(self$name, names(self$parent$children))
+                        
+                        result <- which(unname(sapply(self$parent$children, function(x) identical(self, x))))
+                        # match(self$name, names(self$parent$children))
+                        return (result)
                       },
                       
                       levelName = function() {
@@ -420,8 +423,12 @@ Node <- R6Class("Node",
                         if (self$isLeaf) {
                           return (self)
                         } else {
-                          l <- unlist(sapply(self$children, function(x) x$leaves))
+                          unlist(sapply(self$children, function(x) x$leaves))
                         }
+                      },
+                      
+                      leafCount = function() {
+                        sum(self$Get("isLeaf"))
                       },
                       
                       level = function() {
@@ -701,12 +708,12 @@ as.Node.data.frame <- function(x,
 #' 
 #' @return The root \code{Node} of a \code{data.tree}
 #' @export
-as.Node.dendrogram <- function(x, ...) {
+as.Node.dendrogram <- function(x, name = "root", ...) {
   #str(unclass(dend1))
-  if (!is.leaf(x)) {
-    name <- tempfile(pattern = '', tmpdir = '')
-  } else {
+  if (is.leaf(x)) {
     name <- attr(x, 'label')
+  } else if(is.null(name)) {
+    name <- tempfile(pattern = '', tmpdir = '')
   }
   
   n <- Node$new(name)
@@ -717,12 +724,16 @@ as.Node.dendrogram <- function(x, ...) {
   
   if (!is.leaf(x)) {
     for (i in 1:length(x)) {
-      n$AddChildNode(as.Node(x[[i]], ...))
+      childNode <- as.Node(x[[i]], name = NULL, ...)
+      n$AddChildNode(childNode)
+      if(!is.leaf(x[[i]])) {
+        name <- as.character(childNode$position)
+        childNode$name <- name
+      }
     }
   } else {
     n$value <- as.vector(x)
   }
-  
   return (n)
   
 }
@@ -744,29 +755,23 @@ as.dendrogram.Node <- function(object, ...) {
   
   if (self$isLeaf) {
     res <- self$value
-    class(res) <- "dendrogram"
     attr(res, 'label') <- self$name
+    attr(res, 'members') <- 1
+    attr(res, 'height') <- 0
+    attr(res, 'leaf') <- self$isLeaf
+    class(res) <- "dendrogram"
 
   } else {
     #res <- list()
     #class(res) <- "dendrogram"
-    res <- lapply(self$children, FUN = function(x) as.dendrogram(x, ...))
+    res <- unname(lapply(self$children, FUN = function(x) as.dendrogram(x, ...)))
+    attr(res, 'members') <- self$leafCount
+    attr(res, 'midpoint') <- self$midpoint
+    attr(res, 'height') <- self$height
+    
     class(res) <- "dendrogram"
-    res <- unname(res)
+    
   }
-  
-  for (fieldName in ls(self)) {
-    #print(fieldName)
-    field <- self[[fieldName]]
-    if(!is.function(field) 
-       && !is.environment(field)
-       && !(fieldName %in% NODE_RESERVED_NAMES_CONST)
-    ) {
-      attr(res, fieldName) <- field
-    }
-  }
-  
-  attr(res, "members") <- self$totalCount
   
   return (res)
   
