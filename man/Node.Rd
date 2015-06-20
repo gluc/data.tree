@@ -26,14 +26,16 @@ by tying toghether \code{Node} objects.
   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
-  \item{\code{\link{Prune}(filterFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{filterFun} }
+  \item{\code{Prune}(filterFun, traversal = "pre-order")}{ Remove \code{Node}s in the tree based on the return value of \code{filterFun} }
   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", filterFun = NULL, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
   \item{\code{\link{ToDataFrame}(..., filterFun = function(x) TRUE, inheritFromAncestors)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
+  \item{\code{\link{Height}(rootHeight = 100)}}{Calculates the height of a \code{Node} given the hight of the root, assuming that nodes are equally distributed. Useful for easy printing.}
   \item{\code{\link{ToList}(..., unname = FALSE, nameName = 'name', childrenName = 'children')}}{Converts the tree below this \code{Node} to a \code{list}}
+  \item{\code{\link{ToNewick}(heightAttributeName = "Height", ...)}}{Converts the tree to Newick notation. }
 
 }
 }
@@ -46,6 +48,7 @@ by tying toghether \code{Node} objects.
  \item{\code{parent}}{Returns the parent \code{Node} of this \code{Node}}
  \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
  \item{\code{fields}}{Gets the names of the set properties of a \code{Node}}
+ \item{\code{fieldsAll}}{Gets the names of the set properties of a \code{Node} or any of its sub-Nodes}
  \item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
  \item{\code{isRoot}}{Returns \code{TRUE} if the \code{Node} is the root, \code{FALSE} otherwise}
  \item{\code{count}}{Returns the number of children of a \code{Node}}
@@ -53,8 +56,10 @@ by tying toghether \code{Node} objects.
  \item{\code{path}}{Returns a vector of mode \code{character} containing the names of the \code{Node}s in the path from the root to this \code{Node}}
  \item{\code{pathString}}{Returns a string representing the path to this \code{Node}, separated by backslash}
  \item{\code{levelName}}{Returns the name of the \code{Node}, preceded by level times '*'. Useful for printing.}
+ \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
  \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
  \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
+ \item{\code{depth}}{Returns 1 plus the maximum number of edges between a \code{Node} and any of its descendants}
  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
 
 }

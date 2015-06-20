@@ -151,6 +151,8 @@ Aggregate = function(attribute, fun, ...) {
 #' @param recursive if \code{TRUE}, Sort will be called recursively on the \code{Node}'s children. 
 #' This allows sorting an entire tree.
 #' 
+#' @return Returns the node on which Sort is called, invisibly. This can be useful to chain Node methods.
+#' 
 #' @examples
 #' data(acme)
 #' acme$Get("Aggregate", "cost", sum, assign = "totalCost")

@@ -11,10 +11,13 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'children',
                                 'Clone',
                                 'count',
+                                'depth',
                                 'fields',
+                                'fieldsAll',
                                 'Find',
                                 'Get',
                                 'GetAttribute',
+                                'Height',
                                 'initialize',
                                 'isLeaf',
                                 'isRoot',
@@ -35,6 +38,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'ToDataFrame',
                                 'ToDataFrameTable',
                                 'ToList',
+                                'ToNewick',
                                 'totalCount')
 
 
@@ -58,14 +62,17 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
 #'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
-#'   \item{\code{\link{Prune}(filterFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{filterFun} }
+#'   \item{\code{Prune}(filterFun, traversal = "pre-order")}{ Remove \code{Node}s in the tree based on the return value of \code{filterFun} }
 #'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", filterFun = NULL, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
 #'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
 #'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
 #'   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
 #'   \item{\code{\link{ToDataFrame}(..., filterFun = function(x) TRUE, inheritFromAncestors)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
+#'   \item{\code{\link{Height}(rootHeight = 100)}}{Calculates the height of a \code{Node} given the hight of the root, assuming that nodes are equally distributed. Useful for easy printing.}
 #'   \item{\code{\link{ToList}(..., unname = FALSE, nameName = 'name', childrenName = 'children')}}{Converts the tree below this \code{Node} to a \code{list}}
+#'   \item{\code{\link{ToNewick}(heightAttributeName = "Height", ...)}}{Converts the tree to Newick notation. }
+
 #'
 #' }
 #' 
@@ -76,6 +83,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'  \item{\code{parent}}{Returns the parent \code{Node} of this \code{Node}}
 #'  \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
 #'  \item{\code{fields}}{Gets the names of the set properties of a \code{Node}}
+#'  \item{\code{fieldsAll}}{Gets the names of the set properties of a \code{Node} or any of its sub-Nodes}
 #'  \item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
 #'  \item{\code{isRoot}}{Returns \code{TRUE} if the \code{Node} is the root, \code{FALSE} otherwise}
 #'  \item{\code{count}}{Returns the number of children of a \code{Node}}
@@ -83,8 +91,10 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'  \item{\code{path}}{Returns a vector of mode \code{character} containing the names of the \code{Node}s in the path from the root to this \code{Node}}
 #'  \item{\code{pathString}}{Returns a string representing the path to this \code{Node}, separated by backslash}
 #'  \item{\code{levelName}}{Returns the name of the \code{Node}, preceded by level times '*'. Useful for printing.}
+#'  \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
 #'  \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
 #'  \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
+#'  \item{\code{depth}}{Returns 1 plus the maximum number of edges between a \code{Node} and any of its descendants}
 #'  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
 #'  
 #' }
@@ -275,8 +285,8 @@ Node <- R6Class("Node",
                         names(ChildL) <- names(self$children)
                         self$children <- self$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
                         if (recursive) for(child in self$children) child$Sort(attribute, ..., decreasing = decreasing, recursive = recursive)
+                        invisible(self)
                       },
-                      
                       
                       SetAttribute = function(attribute, values) {
                         
@@ -350,6 +360,18 @@ Node <- R6Class("Node",
                                         childrenName = 'children',
                                         ...) {
                         as.list(self, unname, nameName, childrenName, ...)
+                      },
+                      
+                      Height = function(rootHeight = 100) {
+                        if (self$isRoot) return ( rootHeight )
+                        if (self$isLeaf) return ( 0 )
+                        
+                        h <- self$parent$Height(rootHeight) * (1 - 1 / self$depth)
+                        return (h)
+                      }, 
+                      
+                      ToNewick = function(heightAttributeName = "Height", ...) {
+                        ToNewick(self, heightAttributeName, ...)
                       }
                       
                                             
@@ -404,6 +426,10 @@ Node <- R6Class("Node",
                         ls(self)[!(ls(self) %in% NODE_RESERVED_NAMES_CONST)]
                       },
                       
+                      fieldsAll = function() {
+                        as.vector(na.omit(unique(self$Get("fields"))))
+                      },
+                      
                       
                       .separator = function() {
                         if (self$isRoot) return("")
@@ -440,6 +466,10 @@ Node <- R6Class("Node",
                         }
                       },
                       
+                      depth = function() {
+                        max(self$Get("level")) - self$level + 1
+                      },
+                      
                       root = function() {
                         if (self$isRoot) {
                           invisible (self)
@@ -460,331 +490,4 @@ Node <- R6Class("Node",
                       
                     )
                   )
-
-
-#' Print a Node
-#' 
-#' Print a Node in a human-readable fashion.
-#' 
-#' @param x The Node
-#' @param ... Additional parameters
-#' 
-#' @details Print the Node in a human-readable fashion.
-#'
-#' @export
-print.Node <- function(x, ...) {
-  print(as.data.frame(x, row.names = NULL, optional = FALSE, ...), na.print = "")
-}
-
-
-#' Convert an object to a Node
-#' 
-#' @param x The object to be converted
-#' @param ... Additional arguments
-#' 
-#' @details Convert an object to a Node
-#' 
-#' @export
-as.Node <- function(x, ...) {
-  UseMethod("as.Node")
-}
-
-
-#' Converts a list to a Node
-#' 
-#' @param x The list to be converted.
-#' @param nameName The name of the element that should be used as the name
-#' @param childrenName The name of the element that contains the child list
-#' @param ... Any other argument to be passed to generic sub implementations
-#' 
-#' @details x should be of class list, and contain named elements, where the nameName will be converted to the Node's public attribute
-#' name, and the value to its value.
-#' x should not contain any element whose name is in NODE_RESERVED_NAMES_CONST, except the ones mentioned below.
-#' x has to contain an element called nameName, which must be convertible to a character string.
-#' x can contain an element called childrenName, which should be of class list. This will be converted to the Node's
-#' children.
-#' 
-#' @export
-as.Node.list <- function(x, nameName = 'name', childrenName = 'children', ...) {
-  n <- Node$new(x[[nameName]])
-  
-  for (name in names(x)[!(names(x) %in% NODE_RESERVED_NAMES_CONST)]) {
-    if (name != nameName) n[[name]] <- x[[name]]
-  }
-  
-  #children
-  for (child in x[[childrenName]]) {
-    n$AddChildNode(as.Node(child, nameName, childrenName, ...))
-  }
-  
-  return (n)
-  
-}
-
-#' Convert a Node to a list
-#' 
-#' @details Convert a Node to a list
-#' 
-#' @param x The Node to convert
-#' @param unname If TRUE, then the nested children list will not have named arguments. This
-#' can be useful e.g. in the context of conversion to JSON, if you prefer the children to be
-#' an array rather than named objects.
-#' @param nameName The name that should be given to the name element
-#' @param childrenName The name that should be given to the children nested list
-#' @param ... Additional parameters
-#' 
-#' 
-#' @export
-as.list.Node <- function(x, 
-                         unname = FALSE, 
-                         nameName = 'name', 
-                         childrenName = 'children',
-                         ...) {
-  self <- x
-  res <- list()
-  res[nameName] <- x$name
-  for (fieldName in ls(self)) {
-    #print(fieldName)
-    field <- self[[fieldName]]
-    if(!is.function(field) 
-       && !is.environment(field)
-       && !(fieldName %in% NODE_RESERVED_NAMES_CONST)
-       ) {
-      res[fieldName] <- field
-    }
-  }
-  if(!self$isLeaf) {
-    res[[childrenName]] <- lapply(self$children, FUN = function(x) as.list(x, unname, nameName, childrenName, ...))
-    if (unname) res[[childrenName]] <- unname(res[[childrenName]])
-  }
-  return (res)
-  
-}
-
-
-#' Convert a \code{\link{Node}} to a \code{data.frame}
-#' 
-#' @param x The root node to convert to a data.frame
-#' @param row.names \code{NULL} or a character vector giving the row names for the data frame. 
-#' Missing values are not allowed.
-#' @param optional logical. If \code{TRUE}, setting row names and converting column names 
-#' (to syntactic names: see make.names) is optional.
-#' @param ... the attributes to be added as columns of the data.frame. There are various
-#' options:
-#' \itemize{
-#'  \item a string corresponding to the name of a node attribute
-#'  \item the result of the \code{Node$Get} method
-#' }
-#' If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.
-#' @param filterFun a function which filters the Nodes added to the \code{data.frame}. The function must
-#' take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the
-#' @param inheritFromAncestors if TRUE, then any attribute specified in \code{...} is fetched from a Node, or from any
-#' of its ancestors
-#' \code{Node} and its subtree should be displayed.
-#' 
-#' @export
-as.data.frame.Node <- function(x, 
-                               row.names = NULL, 
-                               optional = FALSE, 
-                               ..., 
-                               filterFun = NULL,
-                               inheritFromAncestors = FALSE
-                               ) {
-  if(is.null(row.names)) {
-    if(optional) {
-      row.names <- rep("", x$totalCount)
-    } else {
-      row.name <- 1:x$totalCount
-    }
-  }
-  
-  if( !is.null(filterFun) || !x$isRoot) {
-    x <- x$Clone()
-  }
-  
-  if( !is.null(filterFun)) {
-    x$Prune(filterFun)
-  }
-  
-  df <- data.frame( levelName = format(x$Get('levelName')),
-                    row.names = row.names,
-                    stringsAsFactors = FALSE)
-  
-  cols <- list(...)
-  
-  if(length(cols) == 0) return (df)
-  for (i in 1:length(cols)) {
-    col <- cols[[i]]
-    if (is.character(col) && length(col) == 1) {
-      it <- x$Get(col, inheritFromAncestors = inheritFromAncestors)
-      colName <- col
-    } else {
-      it <- col
-      colName <- names(cols)[i]
-    }
-    
-    
-    df[colName] <- it
-    
-  }
-  
-  return (df)
-  
-}
-
-#' Convert a data.frame to a data.tree
-#' 
-#' @param x The data.frame
-#' @param ... Any other argument
-#' @param pathName The name of the column in x containing the path of the row
-#' @param pathDelimiter The delimiter used
-#' @param colLevels Nested vector of column names, determining on what node levels the values are written to.
-#' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
-#' 
-#' @details x should be of class x
-#' 
-#' @export
-as.Node.data.frame <- function(x, 
-                               ..., 
-                               pathName = 'pathString', 
-                               pathDelimiter = '/', 
-                               colLevels = NULL,
-                               na.rm = FALSE) {
-  root <- NULL
-  mycols <- names(x)[ !(names(x) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
-  for (i in 1:nrow(x)) {
-    myrow <- x[ i, ]
-    mypath <- myrow[[pathName]]
-    myvalues <- myrow[!colnames(myrow) == pathName]
-    
-    #create node and ancestors if necessary (might already have been created)
-    paths <- strsplit(mypath, pathDelimiter, fixed = TRUE)[[1]]
-    if (is.null(root)) root <- Node$new(paths[1])
-    mynode <- root
-    colsToSet <- mycols
-    colsToSetForLeaf <- mycols
-    for (path in paths[-1]) {
-      child <- mynode$Find(path)
-      
-      if( is.null(child)) {
-        mynode <- mynode$AddChild(path)
-      } else {
-        mynode <- child
-      }
-      
-      if( length(colLevels) >= mynode$level ) {
-        colsToSet <- intersect(colLevels[[mynode$level]], mycols) 
-        
-        #fill values on appropriate level
-        for (mycol in colsToSet) {
-          if ( !( na.rm && is.na(myrow[[mycol]]) )) {
-            mynode[[mycol]] <- myrow[[mycol]]
-          }
-        }
-        colsToSetForLeaf <- colsToSetForLeaf[!(colsToSetForLeaf %in% colsToSet)]
-      }
-      
-    }
-    
-    #put the rest in the leaf
-    for (mycol in colsToSetForLeaf) {
-      if ( !( na.rm && is.na(myrow[[mycol]]) )) {
-        mynode[[mycol]] <- myrow[[mycol]]
-      }
-      #remove
-    }    
-    
-    
-  }
-  return (root)
-}
-
-
-
-
-#' Convert a \code{\link{dendrogram}} to a data.tree \code{Node}
-#' 
-#' @param x The dendrogram
-#' @param ... Additional parameters
-#' 
-#' @return The root \code{Node} of a \code{data.tree}
-#' @export
-as.Node.dendrogram <- function(x, name = "root", ...) {
-  #str(unclass(dend1))
-  if (is.leaf(x)) {
-    name <- attr(x, 'label')
-  } else if(is.null(name)) {
-    name <- tempfile(pattern = '', tmpdir = '')
-  }
-  
-  n <- Node$new(name)
-  reserved <- c('label', 'class', 'comment', 'dim', 'dimnames', 'names', 'row.names', 'tsp')
-  for (a in names(attributes(x))[!(attributes(x) %in% NODE_RESERVED_NAMES_CONST) && !(attributes(x) %in% reserved)]) {
-    n[[a]] <- attr(x, a)
-  }
-  
-  if (!is.leaf(x)) {
-    for (i in 1:length(x)) {
-      childNode <- as.Node(x[[i]], name = NULL, ...)
-      n$AddChildNode(childNode)
-      if(!is.leaf(x[[i]])) {
-        name <- as.character(childNode$position)
-        childNode$name <- name
-      }
-    }
-  } else {
-    n$value <- as.vector(x)
-  }
-  return (n)
-  
-}
-
-
-#' Convert a Node to a dendrogram
-#' 
-#' @details Convert a Node to a dendrogram
-#' 
-#' @param object The Node to convert
-#' @param ... Additional parameters
-#' 
-#' @import stats
-#' @export
-as.dendrogram.Node <- function(object, ...) {
-  self <- object
-  
-  #strange: the original dendrogram will
-  # unclass the nested dendrograms as well,
-  # while ours won't?
-  #
-  # hc <- hclust(dist(USArrests), "ave")
-  # dend1 <- as.dendrogram(hc)
-  # node <- as.Node(dend1)
-  # dend2 <- as.dendrogram(node)
-  # unclass(dend1)
-  # unclass(dend2)
-  
-  if (self$isLeaf) {
-    res <- self$value
-    res <- structure(res, 
-                     label = self$name, 
-                     members = 1,
-                     height = 0,
-                     leaf = self$isLeaf,
-                     class = "dendrogram")
-
-  } else {
-    #res <- list()
-    #class(res) <- "dendrogram"
-    res <- unname(lapply(self$children, FUN = function(x) as.dendrogram(x, ...)))
-    res <- structure(res, 
-                     members = self$leafCount,
-                     midpoint = self$midpoint,
-                     height = self$height,
-                     class = "dendrogram")
-    
-  }
-  
-  return (res)
-  
-}
 

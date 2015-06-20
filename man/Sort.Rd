@@ -18,6 +18,9 @@ function)}
 \item{recursive}{if \code{TRUE}, Sort will be called recursively on the \code{Node}'s children.
 This allows sorting an entire tree.}
 }
+\value{
+Returns the node on which Sort is called, invisibly. This can be useful to chain Node methods.
+}
 \description{
 You can sort with respect to any argument of the tree.
 }
