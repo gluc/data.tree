@@ -9,7 +9,9 @@ ToNewick(node, heightAttributeName = "Height", ...)
 \arguments{
 \item{node}{The node to convert}
 
-\item{heightAttributeName}{The name of the attribute storing the height}
+\item{heightAttributeName}{The name of the attribute or function storing the height}
+
+\item{...}{parameters that will be passed on the the heightAttributeName, in case it is a function}
 }
 \description{
 Write a data.tree to Newick notation

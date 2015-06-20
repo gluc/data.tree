@@ -9,6 +9,8 @@
 \arguments{
 \item{x}{The dendrogram}
 
+\item{name}{The name of the root Node}
+
 \item{...}{Additional parameters}
 }
 \value{

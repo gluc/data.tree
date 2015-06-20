@@ -242,6 +242,7 @@ as.Node.data.frame <- function(x,
 #' Convert a \code{\link{dendrogram}} to a data.tree \code{Node}
 #' 
 #' @param x The dendrogram
+#' @param name The name of the root Node
 #' @param ... Additional parameters
 #' 
 #' @return The root \code{Node} of a \code{data.tree}
@@ -334,7 +335,8 @@ as.dendrogram.Node <- function(object, ...) {
 #' Write a data.tree to Newick notation
 #' 
 #' @param node The node to convert
-#' @param heightAttributeName The name of the attribute storing the height
+#' @param heightAttributeName The name of the attribute or function storing the height
+#' @param ... parameters that will be passed on the the heightAttributeName, in case it is a function
 #' 
 #' @export 
 ToNewick <- function(node, heightAttributeName = "Height", ...) {
@@ -343,7 +345,7 @@ ToNewick <- function(node, heightAttributeName = "Height", ...) {
     name <- str_replace_all(x$name, " ", "_")
     name <- str_replace_all(name, ",", "")
     if(!x$isRoot) {
-      edge <- x$parent$GetAttribute(heightAttributeName) - x$GetAttribute(heightAttributeName) 
+      edge <- x$parent$GetAttribute(heightAttributeName) - x$GetAttribute(heightAttributeName, ...) 
       me <- paste0(name, ":", edge)
     } else {
       me <- name
@@ -372,8 +374,6 @@ ToNewick <- function(node, heightAttributeName = "Height", ...) {
 #' @param heightAttributeName To use custom heights
 #' @param ... any other argument
 #' 
-#' @import ape
-#' @export 
 as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
   txt <- x$ToNewick(heightAttributeName)
   return (ape::read.tree(text = txt))

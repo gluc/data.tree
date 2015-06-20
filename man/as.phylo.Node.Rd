@@ -4,7 +4,7 @@
 \alias{as.phylo.Node}
 \title{Convert a node to a phylo object from the ape package.}
 \usage{
-\method{as.phylo}{Node}(x, heightAttributeName = "Height", ...)
+as.phylo.Node(x, heightAttributeName = "Height", ...)
 }
 \arguments{
 \item{x}{The \code{Node} to convert}
