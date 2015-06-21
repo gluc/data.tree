@@ -4,8 +4,8 @@
 \alias{as.list.Node}
 \title{Convert a Node to a list}
 \usage{
-\method{as.list}{Node}(x, unname = FALSE, nameName = "name",
-  childrenName = "children", ...)
+\method{as.list}{Node}(x, unname = FALSE, nameName = ifelse(unname, "name",
+  ""), childrenName = "children", ...)
 }
 \arguments{
 \item{x}{The Node to convert}

@@ -2,7 +2,7 @@ context("tree conversion")
 
 data(acme)
 
-test_that("as.list.Node", {
+test_that("as.list.Node default", {
   
   
   l <- acme$ToList()
@@ -10,8 +10,36 @@ test_that("as.list.Node", {
   expect_equal("list", class(l))
   expect_equal(2, length(l))
   expect_equal(c('name', 'children'), names(l))
+  expect_equal(c('children'), names(l$children$Research))
   expect_equal(0.9, l$children$Research$children$`New Labs`$p)
  
+})
+
+
+test_that("as.list.Node nameName=name", {
+  
+  
+  l <- acme$ToList(nameName = 'name')
+  
+  expect_equal("list", class(l))
+  expect_equal(2, length(l))
+  expect_equal(c('name', 'children'), names(l))
+  expect_equal(c('name', 'children'), names(l$children$Research))
+  expect_equal(0.9, l$children$Research$children$`New Labs`$p)
+  
+})
+
+test_that("as.list.Node nameName=id", {
+  
+  
+  l <- acme$ToList(nameName = 'id')
+  
+  expect_equal("list", class(l))
+  expect_equal(2, length(l))
+  expect_equal(c('id', 'children'), names(l))
+  expect_equal(c('id', 'children'), names(l$children$Research))
+  expect_equal(0.9, l$children$Research$children$`New Labs`$p)
+  
 })
 
 

@@ -30,8 +30,9 @@ as.Node <- function(x, ...) {
 #' Converts a list to a Node
 #' 
 #' @param x The list to be converted.
-#' @param nameName The name of the element that should be used as the name
+#' @param nameName The name of the element that should be used as the name, can be NULL if the children lists are named
 #' @param childrenName The name of the element that contains the child list
+#' @param nodeName The name of x, if no nameName is available
 #' @param ... Any other argument to be passed to generic sub implementations
 #' 
 #' @details x should be of class list, and contain named elements, where the nameName will be converted to the Node's public attribute
@@ -42,18 +43,33 @@ as.Node <- function(x, ...) {
 #' children.
 #' 
 #' @export
-as.Node.list <- function(x, nameName = 'name', childrenName = 'children', ...) {
-  n <- Node$new(x[[nameName]])
+as.Node.list <- function(x, nameName = "name", childrenName = 'children', nodeName = "", ...) {
+  if(is.null(nameName) || is.null(x[[nameName]])) {
+    if (length(nodeName)==0) myName <- tempfile(pattern = '', tmpdir = '')
+    else myName <- nodeName
+  } else {
+    myName <- x[[nameName]]
+  }
+  n <- Node$new(myName)
   
   for (name in names(x)[!(names(x) %in% NODE_RESERVED_NAMES_CONST)]) {
-    if (name != nameName) n[[name]] <- x[[name]]
+    if (is.null(nameName) || name != nameName) n[[name]] <- x[[name]]
   }
   
   #children
-  for (child in x[[childrenName]]) {
-    n$AddChildNode(as.Node(child, nameName, childrenName, ...))
+  children <- x[[childrenName]]
+  if (is.null(children)) return (n)
+  for (i in 1:length(children)) {
+    if (!is.null(names(children))) {
+      childName <- names(children)[i]
+    } else {
+      childName <- ""
+    }
+    child <- children[[i]]
+    n$AddChildNode(as.Node(child, nameName, childrenName, nodeName = childName, ...))
   }
   
+ 
   return (n)
   
 }
@@ -74,12 +90,13 @@ as.Node.list <- function(x, nameName = 'name', childrenName = 'children', ...) {
 #' @export
 as.list.Node <- function(x, 
                          unname = FALSE, 
-                         nameName = 'name', 
+                         nameName = ifelse(unname, "name", ""), 
                          childrenName = 'children',
                          ...) {
   self <- x
   res <- list()
-  res[nameName] <- x$name
+  if (nchar(nameName) != 0) res[nameName] <- x$name
+  if (nchar(nameName) == 0 && x$isRoot) res["name"] <- x$name
   for (fieldName in ls(self)) {
     #print(fieldName)
     field <- self[[fieldName]]
