@@ -213,6 +213,7 @@ as.Node.data.frame <- function(x,
     
     #create node and ancestors if necessary (might already have been created)
     paths <- strsplit(mypath, pathDelimiter, fixed = TRUE)[[1]]
+    paths <- paths[paths!=""]
     if (is.null(root)) root <- Node$new(paths[1])
     mynode <- root
     colsToSet <- mycols
