@@ -192,7 +192,7 @@ as.data.frame.Node <- function(x,
 #' @param ... Any other argument
 #' @param pathName The name of the column in x containing the path of the row
 #' @param pathDelimiter The delimiter used
-#' @param colLevels Nested vector of column names, determining on what node levels the values are written to.
+#' @param colLevels Nested vector of column names, determining on what node levels the attributes are written to.
 #' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
 #' 
 #' @details x should be of class x
@@ -227,7 +227,7 @@ as.Node.data.frame <- function(x,
       }
       
       if( length(colLevels) >= mynode$level ) {
-        colsToSet <- intersect(colLevels[[mynode$level]], mycols) 
+        colsToSet <- intersect(colLevels[[mynode$level + 1]], mycols) 
         
         #fill values on appropriate level
         for (mycol in colsToSet) {

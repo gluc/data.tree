@@ -16,7 +16,7 @@
 
 \item{pathDelimiter}{The delimiter used}
 
-\item{colLevels}{Nested vector of column names, determining on what node levels the values are written to.}
+\item{colLevels}{Nested vector of column names, determining on what node levels the attributes are written to.}
 
 \item{na.rm}{If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes}
 }
