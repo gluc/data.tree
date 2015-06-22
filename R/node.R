@@ -244,9 +244,9 @@ Node <- R6Class("Node",
                       },
                       
                       Aggregate = function(attribute, fun, ...) {
-                        v <- self[[attribute]]
+                        #if(is.function(attribute)) browser()
+                        v <- self$GetAttribute(attribute, ..., nullAsNa = FALSE)
                         if (!is.null(v)) {
-                          if (is.function(v)) v <- v(...)
                           return (v)
                         }
                         if (self$isLeaf) stop(paste0("Cannot find attribute ", attribute, "!"))
@@ -306,9 +306,10 @@ Node <- R6Class("Node",
                       
                       
                                           
-                      GetAttribute = function(attribute, ..., assign = NULL, format = NULL, inheritFromAncestors = FALSE) {
+                      GetAttribute = function(attribute, ..., assign = NULL, format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
                         if(is.function(attribute)) {
                           #function
+                          
                           v <- attribute(self, ...)
                         } else if(is.character(attribute) && length(attribute) == 1) {
                           #property
@@ -317,7 +318,7 @@ Node <- R6Class("Node",
                         } else {
                           stop("attribute must be a function, the name of a public property, or the name of method")
                         }
-                        #if(attribute == "start") browser()
+                        
                         if(is.null(v) && inheritFromAncestors && !self$isRoot) {
                           v <- self$parent$GetAttribute(attribute, 
                                                         ..., 
@@ -325,13 +326,16 @@ Node <- R6Class("Node",
                                                         format = format, 
                                                         inheritFromAncestors = inheritFromAncestors)
                         }
+                        
+                        if (!nullAsNa && is.null(v)) return (NULL)
                         if (is.null(v)) v <- NA
                         if (length(v) == 0) v <- NA
+                        
                         if(!is.null(assign)) self[[assign]] <- v
                         names(v) <- self$name
                         
                         if(!is.null(format)) {
-                          if (!is.function(format)) stop("form must be a function!")
+                          if (!is.function(format)) stop("format must be a function!")
                           v <- format(v)
                         }
                         return (v)
