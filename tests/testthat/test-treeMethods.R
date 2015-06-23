@@ -213,3 +213,21 @@ test_that("Clone", {
   
 })
 
+
+test_that("Aggregate", {
+  data(acme)
+  
+  g <- acme$Get(Aggregate, "p", sum)
+  expect_false(is.na(g[1]))
+  expect_equal(3.65, as.vector(g[1]))  
+})
+
+
+test_that("Aggregate function", {
+  data(acme)
+  
+  g <- acme$Get(Aggregate, function(x) x$p * x$cost, sum)
+  expect_false(is.na(g[1]))
+
+})
+

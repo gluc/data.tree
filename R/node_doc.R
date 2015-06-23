@@ -27,54 +27,6 @@ Find = function(...) {
 
 
 
-#' Traverse a Tree and Collect Values
-#' 
-#' The \code{Get} function is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
-#' and collect values along the way. Alternatively, you can call a method or a function on each \code{Node}.
-#' 
-#' 
-#'   @param attribute determines what is collected during traversal. The attribute can be
-#'       \itemize{
-#'         \item a.) the name of a field of each \code{Node} in the tree 
-#'         \item b.) the name of a Method of each \code{Node}.
-#'         \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by 
-#'         passing \code{...} to the function.
-#'        }
-#'  @param traversal determines the traversal order. It can be either "pre-order", "post-order", or "ancestor"
-#'  @param filterFun allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
-#'  Note that if filter returns \code{FALSE}, then the node and its entire subtree are ignored and neither traversed nor returned.
-#'  @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
-#'  @param format can be a function that transforms the collected values, e.g. for printing
-#'  
-#'  @return a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
-#'  to NA, such that \code{length(Node$Get) == Node$totalCount}
-#'  
-#'  @examples
-#'data(acme)
-#'acme$Get("level")
-#'acme$Get("totalCount")
-#'  
-#'calculateAggregateChildCost <- function(node, fun) {
-#'  if (node$isLeaf) return(node$cost)
-#'  fun(sapply(node$children, function(x) x$averageCost))
-#'}
-#'
-#'myFormat <- function(x) {
-#'  format(x, nsmall=2, scientific = FALSE)
-#'}
-#'
-#'acme$Get(calculateAggregateChildCost, 
-#'         mean, 
-#'         traversal = "post-order", 
-#'         assign = "averageCost", 
-#'         format = myFormat)
-#'  
-#' @seealso \code{\link{Node}}
-#'  
-#' @keywords internal
-Get = function(attribute, ..., traversal = "pre-order", filterFun = function(x) TRUE, assign = NULL, format = NULL) {
-  stop("This method can only be called on a Node!")
-}
 
 #' Traverse a Tree and Assign Values
 #' 
@@ -112,30 +64,6 @@ Set = function(..., traversal = "pre-order", returnValues = FALSE) {
 }
 
 
-#' Traverse a Tree and Perform Aggregation Operations
-#' 
-#' The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum them up along the tree.
-#' 
-#' 
-#' @param attribute the attribute that is being called on every node. The attribute can be 
-#' field, a property or a method. If the node contains #' the attribute, its value is return. 
-#' Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, 
-#' the attribute must be set on the leaf.
-#' @param fun a function to be applied
-#' @param ... any arguments to be passed on to fun
-#' 
-#' @examples
-#' data(acme)
-#' acme$Aggregate("cost", sum)
-#' acme$Get("Aggregate", "cost", sum)
-#' print(acme, totalCost = acme$Get("Aggregate", "cost", sum))
-#' 
-#' @seealso \code{\link{Node}}
-#'
-#' @keywords internal
-Aggregate = function(attribute, fun, ...) {
-  stop("This method can only be called on a Node!")
-}
 
 
 

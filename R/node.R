@@ -162,44 +162,15 @@ Node <- R6Class("Node",
                                      assign = NULL, 
                                      format = NULL,
                                      inheritFromAncestors = FALSE) {
-                        #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
-                        v <- vector()
-                        if(traversal == "pre-order") {
-                          
-                          if(is.null(filterFun) || filterFun(self)) {
-                            
-                            for(child in self$children) {
-                              v <- c(v, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
-                            }
-                            me <- self$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-                            v <- c(me, v)
-                          }
-                          
-                        } else if (traversal == "post-order") {
-                          # useful if leafs need to be calculated first
-                         
-                          if(is.null(filterFun) || filterFun(self)) {
-                            for(child in self$children) {
-                              v <- c(v, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
-                            }
-                            me <- self$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-                            v <- c(v, me)
-                          }
-                          
-                        } else if (traversal == "ancestor") {
-                          
-                          
-                          if (!self$isRoot) {
-                            v <- self$parent$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-                          }
-                          if(is.null(filterFun) || filterFun(self)) {
-                            me <- self$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-                            v <- c(me, v)
-                            
-                          }
-                        }
-                        if (is.null(assign)) return (v)
-                        invisible (v)
+                        Get(self, 
+                            attribute, 
+                            ..., 
+                            traversal = traversal, 
+                            filterFun = filterFun, 
+                            assign = assign, 
+                            format = format, 
+                            inheritFromAncestors = inheritFromAncestors)
+
                       },
                       
                       Set = function(..., traversal = "pre-order", returnValues = FALSE) {
@@ -244,15 +215,7 @@ Node <- R6Class("Node",
                       },
                       
                       Aggregate = function(attribute, fun, ...) {
-                        #if(is.function(attribute)) browser()
-                        v <- self$GetAttribute(attribute, ..., nullAsNa = FALSE)
-                        if (!is.null(v)) {
-                          return (v)
-                        }
-                        if (self$isLeaf) stop(paste0("Cannot find attribute ", attribute, "!"))
-                        values <- sapply(self$children, function(x) x$Aggregate(attribute, fun, ...))
-                        result <- fun(values)
-                        return (result)
+                        Aggregate(self, attribute, fun, ...)
                       },
                       
                       
@@ -307,38 +270,13 @@ Node <- R6Class("Node",
                       
                                           
                       GetAttribute = function(attribute, ..., assign = NULL, format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
-                        if(is.function(attribute)) {
-                          #function
-                          
-                          v <- attribute(self, ...)
-                        } else if(is.character(attribute) && length(attribute) == 1) {
-                          #property
-                          v <- self[[attribute]]
-                          if (is.function(v)) v <- v(...)
-                        } else {
-                          stop("attribute must be a function, the name of a public property, or the name of method")
-                        }
-                        
-                        if(is.null(v) && inheritFromAncestors && !self$isRoot) {
-                          v <- self$parent$GetAttribute(attribute, 
-                                                        ..., 
-                                                        assign = assign, 
-                                                        format = format, 
-                                                        inheritFromAncestors = inheritFromAncestors)
-                        }
-                        
-                        if (!nullAsNa && is.null(v)) return (NULL)
-                        if (is.null(v)) v <- NA
-                        if (length(v) == 0) v <- NA
-                        
-                        if(!is.null(assign)) self[[assign]] <- v
-                        names(v) <- self$name
-                        
-                        if(!is.null(format)) {
-                          if (!is.function(format)) stop("format must be a function!")
-                          v <- format(v)
-                        }
-                        return (v)
+                        GetAttribute(self, 
+                                     attribute, 
+                                     ..., 
+                                     assign = assign, 
+                                     format = format, 
+                                     inheritFromAncestors = inheritFromAncestors, 
+                                     nullAsNa = nullAsNa)
                       },
                       
                       Clone = function() {

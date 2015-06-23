@@ -26,3 +26,6 @@ FormatPercent <- function(x, digits = 2, format = "f", ...) {
 PrintFixedDecimal <- function(x, digits = 3) {
   ifelse(is.na(x), "", sprintf(paste0("%.",digits, "f"),x))
 }
+
+
+
