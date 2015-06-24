@@ -170,7 +170,7 @@ as.data.frame.Node <- function(x,
   for (i in 1:length(cols)) {
     col <- cols[[i]]
     if (is.character(col) && length(col) == 1) {
-      it <- x$Get(col, inheritFromAncestors = inheritFromAncestors)
+      it <- Get(x, col, inheritFromAncestors = inheritFromAncestors)
       colName <- col
     } else {
       it <- col

@@ -4,7 +4,7 @@
 \name{NODE_RESERVED_NAMES_CONST}
 \alias{NODE_RESERVED_NAMES_CONST}
 \title{Names that are reserved by the Node class.}
-\format{\preformatted{ chr [1:37] "AddChild" "AddChildNode" "AddSibling" "AddSiblingNode" ...
+\format{\preformatted{ chr [1:38] "AddChild" "AddChildNode" "AddSibling" "AddSiblingNode" ...
 }}
 \usage{
 NODE_RESERVED_NAMES_CONST

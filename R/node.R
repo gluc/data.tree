@@ -15,6 +15,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'fields',
                                 'fieldsAll',
                                 'Find',
+                                'formatters',
                                 'Get',
                                 'GetAttribute',
                                 'Height',
@@ -105,10 +106,13 @@ Node <- R6Class("Node",
                 lock = FALSE,
                     public = list(
                       children = list(),
+                      #formatters = list(),
+                      formatters = NULL,
                       parent = NULL,
                       
                       initialize=function(name, ...) {
                         if (!missing(name)) self$name <- name
+                        self$formatters = new.env(hash = FALSE, parent = self, size = 10)
                         invisible (self)
                       },
                       
@@ -280,7 +284,11 @@ Node <- R6Class("Node",
                       },
                       
                       Clone = function() {
-                        return (as.Node(self$ToList()))
+                        res <- (as.Node(as.list.Node(self)))
+                        for(name in names(self$formatters)) {
+                          res$formatters[[name]] <- self$formatters[[name]]
+                        }
+                        return (res)
                       },
                       
                       #Filter = function(){}

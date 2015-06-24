@@ -7,3 +7,6 @@
 - Added Node$Clone (returning a deep copy)
 - Added Node$Prune (pruning the tree)
 - Added Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
+- Renamed PrintFixedDecimal to FormatFixedDecimal
+- Added support for functions in Aggregate method
+- Added support for setting formatter functions on a Node

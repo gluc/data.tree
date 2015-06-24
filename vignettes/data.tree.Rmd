@@ -213,7 +213,7 @@ ExpectedCost <- function(node) {
   return (result)
 }
 
-data.frame(acme$Get(ExpectedCost))
+data.frame(ec = acme$Get(ExpectedCost))
 
 ```
 
@@ -435,7 +435,7 @@ acme$Aggregate("cost", sum)
 We can use this in the `Get` method:
 
 ```{r}
-acme$Get("Aggregate", "cost", sum)
+acme$Get(Aggregate, "cost", sum)
 ```
 
 This is the equivalent of:

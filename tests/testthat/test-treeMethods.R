@@ -213,6 +213,17 @@ test_that("Clone", {
   
 })
 
+test_that("Clone formatter", {
+  data(acme)
+  acme$formatters$count <- FormatFixedDecimal
+  n <- acme$Clone()
+  
+  expect_equal(names(n$formatters), "count")
+  expect_true(is.function(n$formatters$count))
+  
+})
+
+
 
 test_that("Aggregate", {
   data(acme)
@@ -229,5 +240,35 @@ test_that("Aggregate function", {
   g <- acme$Get(Aggregate, function(x) x$p * x$cost, sum)
   expect_false(is.na(g[1]))
 
+})
+
+
+test_that("Formatter Get", {
+  data(acme)
+  acme$formatters$p <- FormatPercent
+  p <- acme$Get("p")
+  expect_equal(p[["Go agile"]], "5.00 %")
+})
+
+test_that("Formatter Get Hierarchy", {
+  data(acme)
+  acme$formatters$p <- FormatPercent
+  acme$p <- 1
+  n <- acme$Find("IT")
+  n$formatters$p <- FormatFixedDecimal
+  p <- acme$Get("p")
+  expect_equal(p[["Acme Inc."]], "100.00 %")
+  expect_equal(p[["Outsource"]], "0.200")
+  
+  p <- acme$Get("p", format = FormatFixedDecimal)
+  expect_equal(p[["Acme Inc."]], "1.000")
+
+  p <- acme$Get("p", format = function(x) x)
+  expect_equal(p[["Acme Inc."]], 1)
+  expect_true(is.numeric(p[["Acme Inc."]]))
+  expect_equal(p[["Outsource"]], 0.2)
+  
+  
+  
 })
 

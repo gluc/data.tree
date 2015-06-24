@@ -143,9 +143,8 @@ GetAttribute = function(node, attribute, ..., assign = NULL, format = NULL, inhe
   if(length(v) == 0 && inheritFromAncestors && !node$isRoot) {
     v <- node$parent$GetAttribute(attribute, 
                                   ..., 
-                                  assign = assign, 
-                                  format = format, 
-                                  inheritFromAncestors = inheritFromAncestors)
+                                  inheritFromAncestors = TRUE,
+                                  nullAsNa = FALSE)
   }
   
   if (!nullAsNa && length(v) == 0) return (NULL)
@@ -153,11 +152,18 @@ GetAttribute = function(node, attribute, ..., assign = NULL, format = NULL, inhe
   if (length(v) == 0) v <- NA
   
   if(!is.null(assign)) node[[assign]] <- v
-  names(v) <- node$name
+  if(is.vector(v)) names(v) <- node$name
   
+  if(is.null(format) && !is.function(attribute)) {
+    format <- GetAttribute(node, function(x) x$formatters[[attribute]], inheritFromAncestors = TRUE, nullAsNa = FALSE)
+  }
+   
   if(!is.null(format)) {
     if (!is.function(format)) stop("format must be a function!")
     v <- format(v)
   }
   return (v)
 }
+
+
+
