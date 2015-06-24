@@ -23,7 +23,7 @@ FormatPercent <- function(x, digits = 2, format = "f", ...) {
 #' @param digits the number of digits to print after the decimal point
 #' @return A string corresponding to x, suitable for printing
 #' @export
-PrintFixedDecimal <- function(x, digits = 3) {
+FormatFixedDecimal <- function(x, digits = 3) {
   ifelse(is.na(x), "", sprintf(paste0("%.",digits, "f"),x))
 }
 
