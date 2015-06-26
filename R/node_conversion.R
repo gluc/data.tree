@@ -30,9 +30,11 @@ as.Node <- function(x, ...) {
 #' Converts a list to a Node
 #' 
 #' @param x The list to be converted.
+#' @param mode How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit" 
+#' assumes that children are in a nested list called \code{childrenName}
 #' @param nameName The name of the element that should be used as the name, can be NULL if the children lists are named
 #' @param childrenName The name of the element that contains the child list
-#' @param nodeName The name of x, if no nameName is available
+#' @param nodeName The name x will get (only applies if no nameName is available)
 #' @param ... Any other argument to be passed to generic sub implementations
 #' 
 #' @details x should be of class list, and contain named elements, where the nameName will be converted to the Node's public attribute
@@ -43,7 +45,8 @@ as.Node <- function(x, ...) {
 #' children.
 #' 
 #' @export
-as.Node.list <- function(x, nameName = "name", childrenName = 'children', nodeName = "", ...) {
+as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = 'children', nodeName = "", ...) {
+
   if(is.null(nameName) || is.null(x[[nameName]])) {
     if (length(nodeName)==0) myName <- tempfile(pattern = '', tmpdir = '')
     else myName <- nodeName
@@ -57,8 +60,9 @@ as.Node.list <- function(x, nameName = "name", childrenName = 'children', nodeNa
   }
   
   #children
-  children <- x[[childrenName]]
-  if (is.null(children)) return (n)
+  if(mode[1] == 'simple') children <- x[sapply(x, is.list)]
+  else if(mode[1] == 'explicit') children <- x[[childrenName]]
+  if (is.null(children) || length(children) == 0) return (n)
   for (i in 1:length(children)) {
     if (!is.null(names(children))) {
       childName <- names(children)[i]
@@ -66,19 +70,25 @@ as.Node.list <- function(x, nameName = "name", childrenName = 'children', nodeNa
       childName <- ""
     }
     child <- children[[i]]
-    n$AddChildNode(as.Node(child, nameName, childrenName, nodeName = childName, ...))
+    childNode <- as.Node(child, mode, nameName, childrenName, nodeName = childName, ...)
+    n$AddChildNode(childNode)
   }
   
- 
+  
   return (n)
   
 }
+
+
+
 
 #' Convert a Node to a list
 #' 
 #' @details Convert a Node to a list
 #' 
 #' @param x The Node to convert
+#' @param mode How the list is structured. "simple" (the default) will add children directly as nested lists.
+#' "explicit" puts children in a separate nested list called \code{childrenName}
 #' @param unname If TRUE, then the nested children list will not have named arguments. This
 #' can be useful e.g. in the context of conversion to JSON, if you prefer the children to be
 #' an array rather than named objects.
@@ -89,6 +99,7 @@ as.Node.list <- function(x, nameName = "name", childrenName = 'children', nodeNa
 #' 
 #' @export
 as.list.Node <- function(x, 
+                         mode = c("simpel", "character"),
                          unname = FALSE, 
                          nameName = ifelse(unname, "name", ""), 
                          childrenName = 'children',
@@ -108,8 +119,13 @@ as.list.Node <- function(x,
     }
   }
   if(!self$isLeaf) {
-    res[[childrenName]] <- lapply(self$children, FUN = function(x) as.list(x, unname, nameName, childrenName, ...))
-    if (unname) res[[childrenName]] <- unname(res[[childrenName]])
+    kids <- lapply(self$children, FUN = function(x) as.list(x, mode, unname, nameName, childrenName, ...))
+    if(mode[1] == "explicit") {
+      res[[childrenName]] <- kids
+      if (unname) res[[childrenName]] <- unname(res[[childrenName]])
+    } else if(mode[1] == "simple") {
+      res <- c(res, kids)
+    }
   }
   return (res)
   

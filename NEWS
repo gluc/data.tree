@@ -10,3 +10,5 @@
 - Renamed PrintFixedDecimal to FormatFixedDecimal
 - Added support for functions in Aggregate method
 - Added support for setting formatter functions on a Node
+- Node.Get: Renamed filterFun parameter to pruneFun
+- Node.Get: Added new parameter filterFun, as opposed to pruneFun

@@ -71,7 +71,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
 #'   \item{\code{\link{ToDataFrame}(..., filterFun = function(x) TRUE, inheritFromAncestors)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
 #'   \item{\code{Height(rootHeight = 100)}}{Calculates the height of a \code{Node} given the hight of the root, assuming that nodes are equally distributed. Useful for easy printing.}
-#'   \item{\code{\link{ToList}(unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
+#'   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
 #'   \item{\code{\link{ToNewick}(heightAttributeName = "Height", ...)}}{Converts the tree to Newick notation. }
 
 #'
@@ -286,7 +286,8 @@ Node <- R6Class("Node",
                       },
                       
                       Clone = function() {
-                        res <- (as.Node(as.list.Node(self)))
+                        l <- as.list.Node(self, mode = "explicit")
+                        res <- as.Node(l, mode = "explicit")
                         for(name in names(self$formatters)) {
                           res$formatters[[name]] <- self$formatters[[name]]
                         }
@@ -307,12 +308,17 @@ Node <- R6Class("Node",
                         return (df)
                       },
                       
-                      ToList = function(unname = FALSE, 
+                      ToList = function(mode = c("simple", "explicit"),
+                                        unname = FALSE,
                                         nameName = ifelse(unname, "name", ""),
                                         childrenName = 'children',
-                                        nodeName = NULL,
                                         ...) {
-                        as.list(self, unname, nameName, childrenName, ...)
+                        as.list(self, 
+                                     mode = mode,
+                                     unname = unname, 
+                                     nameName = nameName, 
+                                     childrenName = childrenName,
+                                     ...)
                       },
                       
                       Height = function(rootHeight = 100) {

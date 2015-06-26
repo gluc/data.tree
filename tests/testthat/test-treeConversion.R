@@ -2,10 +2,10 @@ context("tree conversion")
 
 data(acme)
 
-test_that("as.list.Node default", {
+test_that("as.list.Node explicit", {
+  data(acme)
   
-  
-  l <- acme$ToList()
+  l <- acme$ToList(mode = "explicit")
     
   expect_equal("list", class(l))
   expect_equal(2, length(l))
@@ -16,35 +16,89 @@ test_that("as.list.Node default", {
 })
 
 
-test_that("as.list.Node nameName=name", {
+test_that("as.list.Node explicit nameName=name", {
+  data(acme)
   
+  l <- acme$ToList(mode = "explicit", nameName = 'name')
   
-  l <- acme$ToList(nameName = 'name')
-  
-  expect_equal("list", class(l))
-  expect_equal(2, length(l))
-  expect_equal(c('name', 'children'), names(l))
-  expect_equal(c('name', 'children'), names(l$children$Research))
-  expect_equal(0.9, l$children$Research$children$`New Labs`$p)
+  expect_equal(class(l), "list")
+  expect_equal(length(l), 2)
+  expect_equal(names(l), c('name', 'children'))
+  expect_equal(names(l$children$Research), c('name', 'children'))
+  expect_equal(l$children$Research$children$`New Labs`$p, 0.9)
   
 })
 
-test_that("as.list.Node nameName=id", {
+test_that("as.list.Node explicit nameName=id", {
+  data(acme)
+  
+  l <- acme$ToList(mode = "explicit", nameName = 'id')
+  
+  expect_equal(class(l), "list")
+  expect_equal(length(l), 2)
+  expect_equal(names(l), c('id', 'children'))
+  expect_equal(names(l$children$Research), c('id', 'children'))
+  expect_equal(l$children$Research$children$`New Labs`$p, 0.9)
+  
+})
+
+
+test_that("as.list.Node simple", {
+  
+  data(acme)
+  l <- acme$ToList()
+  
+  expect_equal("list", class(l))
+  expect_equal(length(l), 4)
+  expect_equal(names(l), c("name", "Accounting", "Research", "IT"))
+  expect_equal(names(l$Research), c("New Product Line", "New Labs" ))
+  expect_equal(0.9, l$Research$`New Labs`$p)
+  
+})
+
+test_that("as.list.Node simple unname no effect", {
+  
+  data(acme)
+  l <- acme$ToList()
+  
+  expect_equal("list", class(l))
+  expect_equal(length(l), 4)
+  expect_equal(names(l), c("name", "Accounting", "Research", "IT"))
+  expect_equal(names(l$Research), c("New Product Line", "New Labs" ))
+  expect_equal(0.9, l$Research$`New Labs`$p)
+  
+})
+
+
+test_that("as.list.Node simple nameName=name", {
+  
+  data(acme)
+  l <- acme$ToList(nameName = 'name')
+  
+  expect_equal("list", class(l))
+  expect_equal(length(l), 4)
+  expect_equal(names(l), c('name', "Accounting", "Research", "IT"))
+  expect_equal(names(l$Research), c("name", "New Product Line", "New Labs" ))
+  expect_equal(0.9, l$Research$`New Labs`$p)
+  
+})
+
+test_that("as.list.Node explicit nameName=id", {
   
   
   l <- acme$ToList(nameName = 'id')
   
   expect_equal("list", class(l))
-  expect_equal(2, length(l))
-  expect_equal(c('id', 'children'), names(l))
-  expect_equal(c('id', 'children'), names(l$children$Research))
-  expect_equal(0.9, l$children$Research$children$`New Labs`$p)
+  expect_equal(length(l), 4)
+  expect_equal(names(l), c('id', "Accounting", "Research", "IT"))
+  expect_equal(names(l$Research), c("id", "New Product Line", "New Labs" ))
+  expect_equal(0.9, l$Research$`New Labs`$p)
   
 })
 
 
 test_that("as.Node.list", {
-  
+  data(acme)
   n <- as.Node(acme$ToList())
   
   expect_equal("Acme Inc.", n$name)
@@ -57,7 +111,7 @@ test_that("as.Node.list", {
 
 test_that("as.list.Node unname", {
   data(acme)
-  l <- acme$ToList(unname = TRUE, nameName = 'id', childrenName = 'sub')
+  l <- acme$ToList(mode = "explicit", unname = TRUE, nameName = 'id', childrenName = 'sub')
   
   expect_equal("list", class(l))
   expect_equal(2, length(l))

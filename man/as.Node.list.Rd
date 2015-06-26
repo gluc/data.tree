@@ -4,17 +4,20 @@
 \alias{as.Node.list}
 \title{Converts a list to a Node}
 \usage{
-\method{as.Node}{list}(x, nameName = "name", childrenName = "children",
-  nodeName = "", ...)
+\method{as.Node}{list}(x, mode = c("simple", "explicit"), nameName = "name",
+  childrenName = "children", nodeName = "", ...)
 }
 \arguments{
 \item{x}{The list to be converted.}
+
+\item{mode}{How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit"
+assumes that children are in a nested list called \code{childrenName}}
 
 \item{nameName}{The name of the element that should be used as the name, can be NULL if the children lists are named}
 
 \item{childrenName}{The name of the element that contains the child list}
 
-\item{nodeName}{The name of x, if no nameName is available}
+\item{nodeName}{The name x will get (only applies if no nameName is available)}
 
 \item{...}{Any other argument to be passed to generic sub implementations}
 }

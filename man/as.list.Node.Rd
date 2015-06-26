@@ -4,11 +4,14 @@
 \alias{as.list.Node}
 \title{Convert a Node to a list}
 \usage{
-\method{as.list}{Node}(x, unname = FALSE, nameName = ifelse(unname, "name",
-  ""), childrenName = "children", ...)
+\method{as.list}{Node}(x, mode = c("simpel", "character"), unname = FALSE,
+  nameName = ifelse(unname, "name", ""), childrenName = "children", ...)
 }
 \arguments{
 \item{x}{The Node to convert}
+
+\item{mode}{How the list is structured. "simple" (the default) will add children directly as nested lists.
+"explicit" puts children in a separate nested list called \code{childrenName}}
 
 \item{unname}{If TRUE, then the nested children list will not have named arguments. This
 can be useful e.g. in the context of conversion to JSON, if you prefer the children to be
