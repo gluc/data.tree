@@ -1,9 +1,9 @@
 context("tree methods")
 
-data(acme)
+
 
 test_that("Find NULL", {
-  
+  data(acme)
   expect_equal(acme$Find('X'), NULL)
   expect_equal(acme$Find('X', 'Y', 'Z'), NULL)
   expect_equal(acme$Find('IT', 'X'), NULL)
@@ -12,7 +12,7 @@ test_that("Find NULL", {
 
 
 test_that("Find Equivalent", {
-  
+  data(acme)
   expect_equal(acme$Find('IT', 'Go agile'), acme$Find('IT')$Find('Go agile'))
   
 })
@@ -20,11 +20,31 @@ test_that("Find Equivalent", {
 
 
 test_that("Find 3rd Level", {
+  data(acme)
   acme$Find('IT', 'Go agile')$AddChild('MyTest')$AddChild('MyTest2')
   expect_equal("MyTest2", acme$Find('IT', 'Go agile', 'MyTest', 'MyTest2')$name )
-  data(acme)
+  
 })
 
+
+
+test_that("Get prune", {
+  data(acme)
+  acme$Set(myvalue = c(1.3, 1.5, 0.9, 1, 2, 1.1, 0.8, -1, 0.7, 1.0, 1.01))
+  
+  myFilter <- function(x) {
+    return (!is.null(x$myvalue) && x$myvalue > 1)
+  }
+  
+  
+  get <- acme$Get("myvalue", pruneFun = myFilter)
+  #NOTE: 1.01 is filtered out because its parent is -1!
+  exp <- c(1.3, 1.5, 2, 1.1)
+  names(exp) <- c('Acme Inc.', 'Accounting', 'Research', 'New Product Line')
+  
+  expect_equal(get, exp)
+  
+})
 
 
 test_that("Get filter", {
@@ -37,18 +57,18 @@ test_that("Get filter", {
   
   
   get <- acme$Get("myvalue", filterFun = myFilter)
-  #NOTE: 1.01 is filtered out because its parent is -1!
-  exp <- c(1.3, 1.5, 2, 1.1)
-  names(exp) <- c('Acme Inc.', 'Accounting', 'Research', 'New Product Line')
+  
+  exp <- c(1.3, 1.5, 2, 1.1, 1.01)
+  names(exp) <- c('Acme Inc.', 'Accounting', 'Research', 'New Product Line', 'Switch to R')
   
   expect_equal(get, exp)
-  data(acme)
   
 })
   
 
 
 test_that("Get pre-order", {
+  data(acme)
   get <- acme$Get("name", traversal = "pre-order")
   
   exp <- c('Acme Inc.', 
@@ -94,6 +114,7 @@ test_that("Get post-order", {
 
 
 test_that("Get ancestor", {
+  data(acme)
   get <- acme$Find('Research', 'New Labs')$Get("name", traversal = "ancestor")
   
   exp <- c('New Labs', 
@@ -109,6 +130,8 @@ test_that("Get ancestor", {
 
 
 test_that("Get format", {
+  
+  data(acme)
   
   calculateAggregateChildCost <- function(node, fun) {
     if (node$isLeaf) return(node$cost)
@@ -130,6 +153,8 @@ test_that("Get format", {
 
 test_that("Get assign", {
   
+  data(acme)
+  
   calculateAggregateChildCost <- function(node, fun) {
     if (node$isLeaf) return(node$cost)
     fun(sapply(node$children, function(x) x$averageCost))
@@ -150,14 +175,10 @@ test_that("Get assign", {
 
 
 
-test_that("Get filter", {
-  
-})
-
 
 
 test_that("Aggregate", {
-  
+  data(acme)
   expect_equal(acme$Aggregate("cost", sum), 4950000)
   
 })

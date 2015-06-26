@@ -12,8 +12,10 @@
 #'         passing \code{...} to the function.
 #'        }
 #'  @param traversal determines the traversal order. It can be either "pre-order", "post-order", or "ancestor"
+#'  @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+#'  If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.
 #'  @param filterFun allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
-#'  Note that if filter returns \code{FALSE}, then the node and its entire subtree are ignored and neither traversed nor returned.
+#'  Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).
 #'  @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
 #'  @param format can be a function that transforms the collected values, e.g. for printing
 #'  
@@ -46,6 +48,7 @@
 Get = function(node, attribute, 
                ..., 
                traversal = "pre-order", 
+               pruneFun = NULL,
                filterFun = NULL, 
                assign = NULL, 
                format = NULL,
@@ -54,41 +57,49 @@ Get = function(node, attribute,
   v <- vector()
   if(traversal == "pre-order") {
     
-    if(is.null(filterFun) || filterFun(node)) {
+    if(is.null(pruneFun) || pruneFun(node)) {
       
       for(child in node$children) {
-        v <- c(v, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
+        v <- c(v, child$Get(attribute, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
       }
-      me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-      v <- c(me, v)
+      if(is.null(filterFun) || filterFun(node)) {
+        me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
+        v <- c(me, v)
+      }
     }
     
   } else if (traversal == "post-order") {
     # useful if leafs need to be calculated first
     
-    if(is.null(filterFun) || filterFun(node)) {
+    if(is.null(pruneFun) || pruneFun(node)) {
       for(child in node$children) {
-        v <- c(v, child$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
+        v <- c(v, child$Get(attribute, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
       }
-      me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-      v <- c(v, me)
+      if(is.null(filterFun) || filterFun(node)) {
+        me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
+        v <- c(v, me)
+      }
     }
     
   } else if (traversal == "ancestor") {
     
     
     if (!node$isRoot) {
-      v <- node$parent$Get(attribute, ..., traversal = traversal, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
+      v <- node$parent$Get(attribute, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
     }
-    if(is.null(filterFun) || filterFun(node)) {
-      me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-      v <- c(me, v)
-      
+    if(is.null(pruneFun) || pruneFun(node)) {
+      if(is.null(filterFun) || filterFun(node)) {
+        me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
+        v <- c(me, v)
+      }
     }
   }
   if (is.null(assign)) return (v)
   invisible (v)
 }
+
+
+
 
 
 #' Traverse a Tree and Perform Aggregation Operations
@@ -125,6 +136,13 @@ Aggregate = function(node, attribute, fun, ...) {
 }
 
 
+#' Checks if a node is a leaf
+#' @param node The Node to test.
+#' @return TRUE if the Node is a leaf, FALSE otherwise
+#' @export
+isLeaf = function(node) {
+  return (node$isLeaf)
+}
 
 
 GetAttribute = function(node, attribute, ..., assign = NULL, format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {

@@ -399,11 +399,51 @@ as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
   return (ape::read.tree(text = txt))
 }
 
+SetPhyloNumbers <- function(x, nodeNrName = "phyloNodeNr", edgeNrName = "phyloEdgeNr") {
+  x$Set(x$leafCount:x$totalCount)
+}
 
 
-GetPhyloLabels <- function(x, attribute, ...) {
-  labels <- x$Get(attribute, ..., filterFun = function(x) !x$isLeaf)
-  nodeNr <- x$leafCount + (1:length(labels))
-  attr(labels, "nodes") <- nodeNr
+#' Get a Phylo Labels for a single Node
+#' @param x The root Node
+#' @param labelFun The function that compiles the label
+#' @param ... any argument to be passed to the labelFun
+#' @return a string vector that can be used as a Phylo Node label
+#' @export
+GetPhyloLabels <- function(x, labelFun, ...) {
+  labels <- x$Get(labelFun, ..., filterFun = function(x) !x$isLeaf)
+  nodeNrs <- x$leafCount + (1:length(labels))
+  attr(labels, "nodes") <- nodeNrs
   return(labels)
+}
+
+#' Get a Phylo Label for a single Node
+#' @param x The Node
+#' @param labelFun The function that compiles the label
+#' @param ... any argument to be passed to the labelFun
+#' @return a string that can be used as a Phylo Node label
+#' @export
+GetPhyloLabel <- function(x, labelFun, ...) {
+  label <- labelFun(x, ...)
+  nodeNr <- GetPhyloNodeNr(x)
+  attr(label, "nodes") <- nodeNr
+  return (label)
+}
+
+#' Gets the node nr in phylo context
+#' 
+#' @param x The Node
+#' @return an integer representing the node
+#' @export
+GetPhyloNodeNr <- function(x) {
+  if (x$isLeaf) {
+    leaves <- x$root$leaves
+    for (i in 1:length(leaves)) leaves[[i]]$tmp <- i 
+  } else {
+    n <- x$root$totalCount - x$root$leafCount
+    x$root$Set(tmp = x$root$leafCount + (1:n), filterFun = function(x) !x$isLeaf)
+  }
+  res <- x$tmp
+  x$root$Set("tmp", NULL)
+  return (res)
 }

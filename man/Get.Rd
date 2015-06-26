@@ -4,8 +4,9 @@
 \alias{Get}
 \title{Traverse a Tree and Collect Values}
 \usage{
-Get(node, attribute, ..., traversal = "pre-order", filterFun = NULL,
-  assign = NULL, format = NULL, inheritFromAncestors = FALSE)
+Get(node, attribute, ..., traversal = "pre-order", pruneFun = NULL,
+  filterFun = NULL, assign = NULL, format = NULL,
+  inheritFromAncestors = FALSE)
 }
 \arguments{
 \item{node}{The node on which to perform the Get}
@@ -20,8 +21,11 @@ Get(node, attribute, ..., traversal = "pre-order", filterFun = NULL,
 
 \item{traversal}{determines the traversal order. It can be either "pre-order", "post-order", or "ancestor"}
 
+\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
+If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.}
+
 \item{filterFun}{allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
-Note that if filter returns \code{FALSE}, then the node and its entire subtree are ignored and neither traversed nor returned.}
+Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).}
 
 \item{assign}{can be the name of a variable to which we assign the collected values before \code{format} is called.}
 
