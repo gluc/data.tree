@@ -1,7 +1,72 @@
+GetNodes = function(node, 
+                    traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
+                    pruneFun = NULL,
+                    filterFun = NULL) {
+  #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
+  traversal = traversal[1]
+  nodes <- list()
+  if(traversal == "pre-order" || traversal == "post-order") {
+    
+    if(length(pruneFun) == 0 || pruneFun(node)) {
+      
+      for(child in node$children) {
+        nodes <- c(nodes, GetNodes(child, traversal = traversal, pruneFun = pruneFun, filterFun = filterFun))
+      }
+      if(length(filterFun) == 0 || filterFun(node)) {
+        if(traversal == "pre-order") nodes <- c(node, nodes)
+        else nodes <- c(nodes, node)
+      }
+    }
+    
+  } else if(traversal == "in-order") {
+    if(!node$isBinary) stop("traversal in-order valid only for binary trees")
+    if(length(pruneFun) == 0 || pruneFun(node)) {
+      if(!node$isLeaf) {
+        n1 <- GetNodes(node$children[[1]], traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
+        if(length(filterFun) == 0 || filterFun(node)) n2 <- node
+        else n2 <- list()
+        n3 <- GetNodes(node$children[[2]], traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
+        nodes <- c(n1, n2, n3)
+      } else {
+        if(length(filterFun) == 0 || filterFun(node)) n2 <- node
+        else n2 <- list()
+        nodes <- c(nodes, n2)
+      }
+    }
+    
+  } else if (traversal == "ancestor") {
+    
+    
+    if (!node$isRoot) {
+      nodes <- GetNodes(node$parent, traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
+    }
+    
+    if(length(filterFun) == 0 || filterFun(node)) {
+      nodes <- c(node, nodes)
+    }
+    
+  } else if (traversal == "level") {
+    
+    for(level in 0:node$depth) {
+      fifu <- function(x) {
+        a <- (length(filterFun) == 0 || filterFun(x))
+        b <- x$level == level
+        return (a && b)
+      }
+      nodes <- c(nodes, GetNodes(node, pruneFun = pruneFun, filterFun = fifu))
+    }
+  } else {
+    stop("traversal must be pre-order, post-order, in-order, ancestor, or level")
+  }
+  return (nodes)
+}
+
+
+
 #' Traverse a Tree and Collect Values
 #' 
-#' The \code{Get} function is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
-#' and collect values along the way. Alternatively, you can call a method or a function on each \code{Node}.
+#' The \code{Get} method is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
+#' and collect values along the way. Alternatively, you can call a method or a function on each \code{\link{Node}}.
 #' 
 #' @param node The node on which to perform the Get
 #'   @param attribute determines what is collected during traversal. The attribute can be
@@ -10,19 +75,21 @@
 #'         \item b.) the name of a Method of each \code{Node}.
 #'         \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by 
 #'         passing \code{...} to the function.
-#'        }
-#'  @param traversal determines the traversal order. It can be either "pre-order", "post-order", or "ancestor"
-#'  @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
-#'  If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.
-#'  @param filterFun allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
-#'  Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).
-#'  @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
-#'  @param format can be a function that transforms the collected values, e.g. for printing
+#'         }
+#' @param ... in case \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
+#' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'
+#' @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+#' If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.
+#' @param filterFun allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
+#' Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).
+#' @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
+#' @param format can be a function that transforms the collected values, e.g. for printing
+#' @param inheritFromAncestors if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.
 #'  
-#'  @return a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
-#'  to NA, such that \code{length(Node$Get) == Node$totalCount}
+#' @return a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
+#' to NA, such that \code{length(Node$Get) == Node$totalCount}
 #'  
-#'  @examples
+#' @examples
 #'data(acme)
 #'acme$Get("level")
 #'acme$Get("totalCount")
@@ -43,63 +110,98 @@
 #'         format = myFormat)
 #'  
 #' @seealso \code{\link{Node}}
+#' @seealso \code{\link{Set}}
 #'  
-#' @keywords internal
-Get = function(node, attribute, 
+#' @export
+Get = function(node, 
+               attribute, 
                ..., 
-               traversal = "pre-order", 
+               traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
                pruneFun = NULL,
                filterFun = NULL, 
                assign = NULL, 
                format = NULL,
                inheritFromAncestors = FALSE) {
-  #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
-  v <- vector()
-  if(traversal == "pre-order") {
-    
-    if(is.null(pruneFun) || pruneFun(node)) {
-      
-      for(child in node$children) {
-        v <- c(v, child$Get(attribute, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
-      }
-      if(is.null(filterFun) || filterFun(node)) {
-        me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-        v <- c(me, v)
-      }
-    }
-    
-  } else if (traversal == "post-order") {
-    # useful if leafs need to be calculated first
-    
-    if(is.null(pruneFun) || pruneFun(node)) {
-      for(child in node$children) {
-        v <- c(v, child$Get(attribute, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors))
-      }
-      if(is.null(filterFun) || filterFun(node)) {
-        me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-        v <- c(v, me)
-      }
-    }
-    
-  } else if (traversal == "ancestor") {
-    
-    
-    if (!node$isRoot) {
-      v <- node$parent$Get(attribute, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun, assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-    }
-    if(is.null(pruneFun) || pruneFun(node)) {
-      if(is.null(filterFun) || filterFun(node)) {
-        me <- node$GetAttribute(attribute, ..., assign = assign, format = format, inheritFromAncestors = inheritFromAncestors)
-        v <- c(me, v)
-      }
-    }
-  }
-  if (is.null(assign)) return (v)
-  invisible (v)
+  
+  nodes <- GetNodes(node, 
+                    traversal = traversal, 
+                    pruneFun = pruneFun, 
+                    filterFun = filterFun)
+  
+  res <- sapply(nodes, function(x) x$GetAttribute(attribute, 
+                                                  ...,
+                                                  assign = assign, 
+                                                  format = format, 
+                                                  inheritFromAncestors = inheritFromAncestors)
+         )
+  
+  
+  if (length(assign) == 0) return (res)
+  invisible (res)
 }
 
+#' Traverse a Tree and Assign Values
+#' 
+#' The method takes one or more vectors as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked
+#' from the vector. Also available as OO-style method on \code{\link{Node}}.
+#' 
+#' @param node The \code{Node} to traverse
+#' @param ... each argument can be a vector of values to be assigned. Recycled.
+#' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'
+#' @param pruneFun A pruning function, returning \code{TRUE} if a \code{Node} and its sub
+#' tree should be kept.
+#' @param filterFun A filter function, returning \code{TRUE} if a \code{Node} should be kept.
+#'
+#' @return invisibly returns the node (useful for chaining)  
+#'  
+#' @examples
+#' data(acme)
+#' acme$Set(departmentId = 1:acme$totalCount, openingHours = NULL, traversal = "post-order")
+#' acme$Set(head = c("Jack Brown", 
+#'                   "Mona Moneyhead", 
+#'                   "Dr. Frank N. Stein", 
+#'                   "Eric Nerdahl"
+#'                   ),
+#'          filterFun = function(x) !x$isLeaf
+#'         )
+#' print(acme, "departmentId", "head")
+#'  
+#' @seealso \code{\link{Node}}
+#' @seealso \code{\link{Get}}
+#'  
+#' @export
+Set <- function(node, 
+                ..., 
+                traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
+                pruneFun = NULL, 
+                filterFun = NULL) {
+  
+  traversal <- traversal[1]
+  args <- list(...)
+  argsnames <- sapply(substitute(list(...))[-1], deparse)
+  gargsnames <- names(args)
+  if (is.null(gargsnames)) gargsnames <- vector(mode = "character", length = length(args))
+  gargsnames[nchar(gargsnames) == 0] <- argsnames[nchar(gargsnames) == 0]
+  names(args) <- gargsnames
+  
+  nodes <- GetNodes(node, 
+                    traversal = traversal, 
+                    pruneFun = pruneFun, 
+                    filterFun = filterFun)
+  
+  appFun <- function(x, name, arg) {
+    x[[name]] <- arg
+  }
+  
+  for(nme in names(args)) {
+    arg <- args[[nme]]
+    if (length(arg) == 0) arg <- vector("list", 1)
+    mapply(appFun, nodes, nme, arg)
+  }
+  
+  invisible (node)
 
-
+}
 
 
 #' Traverse a Tree and Perform Aggregation Operations

@@ -175,6 +175,134 @@ test_that("Get assign", {
 
 
 
+test_that("post-order", {
+  
+  data(acme)
+  
+  acme$Set(myval = 1:acme$totalCount, traversal = "post-order")
+  
+  expect_equal(acme$myval, 11)
+  expect_equal(acme$Find("Research")$myval, 6)
+  
+})
+
+
+test_that("level", {
+  
+  data(acme)
+  
+  acme$Set(myval = 1:acme$totalCount, traversal = "level")
+  
+  expect_equal(acme$myval, 1)
+  expect_equal(acme$Find("Research")$myval, 3)
+  expect_equal(acme$Find("IT", "Go agile")$myval, 10)
+  
+})
+
+
+test_that("prune", {
+  
+  data(acme)
+  
+  acme$Set(myval = 1:8, pruneFun = function(x) x$name != "Research")
+  
+  expect_equal(acme$myval, 1)
+  expect_true(is.null(acme$Find("Research")$myval))
+  expect_true(is.null(acme$Find("Research", "New Labs")$myval))
+  expect_equal(acme$Find("IT", "Go agile")$myval, 7)
+  
+})
+
+
+test_that("filter", {
+  
+  data(acme)
+  
+  acme$Set(myval = 1:10, filterFun = function(x) x$name != "Research")
+  
+  expect_equal(acme$myval, 1)
+  expect_true(is.null(acme$Find("Research")$myval))
+  expect_equal(acme$Find("Research", "New Labs")$myval, 6)
+  expect_equal(acme$Find("IT", "Go agile")$myval, 9)
+  
+})
+
+
+
+
+test_that("isBinary", {
+  
+  node <- Node$new("0")
+  
+  addBinChildren <- function(node, n) {
+    for (i in 1:2) {
+      child <- node$AddChild(paste0(node$name, ".", i))
+      if (n > 0) addBinChildren(child, n-1)
+    }
+  }
+  
+  addBinChildren(node, 3)
+  
+  expect_true(node$isBinary)
+  
+})
+
+
+test_that("in-order", {
+  
+  node <- Node$new("0")
+  
+  addBinChildren <- function(node, n) {
+    for (i in 1:2) {
+      child <- node$AddChild(paste0(node$name, ".", i))
+      if (n > 0) addBinChildren(child, n-1)
+    }
+  }
+  
+  addBinChildren(node, 2)
+  
+  #make sure the tree is irregular
+  addBinChildren(node$Find("0.1", "0.1.2", "0.1.2.1"), 0)
+  
+  g <- node$Get("name", traversal = "in-order")
+  
+  expected <- c("0.1.1.1",
+                "0.1.1",
+                "0.1.1.2",
+                "0.1",
+                "0.1.2.1.1",
+                "0.1.2.1",
+                "0.1.2.1.2",
+                "0.1.2",
+                "0.1.2.2",
+                "0",
+                "0.2.1.1",
+                "0.2.1",
+                "0.2.1.2",
+                "0.2",
+                "0.2.2.1",
+                "0.2.2",
+                "0.2.2.2")
+  names(expected) <- expected
+  expect_equal(g, expected)
+  
+})
+
+
+test_that("Set recycling", {
+  
+  
+    data(acme)
+    acme$Find("Accounting", "New Accounting Standards")$AddChild("ICI 320")
+    acme$Set(myval = 1:6)
+    expect_equal(acme$myval, 1)
+    expect_equal(acme$Find("Research", "New Labs")$myval, 2)
+    expect_equal(acme$Find("IT", "Go agile")$myval, 5)
+       
+})
+
+
+
 
 
 test_that("Aggregate", {
@@ -293,3 +421,26 @@ test_that("Formatter Get Hierarchy", {
   
 })
 
+
+
+test_that("Set pre-order", {
+  data(acme)
+  acme$Set(mycnt = 1:acme$totalCount)
+  expect_equal( acme$Find("IT")$mycnt, 8)
+})
+
+
+test_that("Set post-order", {
+  data(acme)
+  acme$Set(mycnt = 1:acme$totalCount, traversal = "post-order")
+  expect_equal( acme$Find("IT")$mycnt, 10)
+  expect_equal( acme$mycnt, 11)
+})
+
+
+test_that("Set filter", {
+  data(acme)
+  acme$Set(mycnt = 1:3, filterFun = function(x) x$level == 1)
+  expect_equal( acme$Find("IT")$mycnt, 3)
+  expect_equal( acme$mycnt, NULL)
+})

@@ -20,6 +20,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'GetAttribute',
                                 'Height',
                                 'initialize',
+                                'isBinary',
                                 'isLeaf',
                                 'isRoot',
                                 'leafCount',
@@ -64,8 +65,8 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
 #'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
 #'   \item{\code{Prune(filterFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{filterFun} }
-#'   \item{\code{\link{Get}(attribute, ..., traversal = "pre-order", pruneFun = NULL, filterFun = NULL, assign = NULL, format = NULL)}}{Traverses the tree and collects values along the way.}
-#'   \item{\code{\link{Set}(..., traversal = "pre-order", returnValues = FALSE)}}{Traverses the tree and assigns attributes along the way.}
+#'   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, assign = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
+#'   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns attributes along the way.}
 #'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
 #'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
 #'   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
@@ -161,7 +162,7 @@ Node <- R6Class("Node",
                       
                       Get = function(attribute, 
                                      ..., 
-                                     traversal = "pre-order", 
+                                     traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),  
                                      pruneFun = NULL,
                                      filterFun = NULL, 
                                      assign = NULL, 
@@ -179,45 +180,11 @@ Node <- R6Class("Node",
 
                       },
                       
-                      Set = function(..., traversal = "pre-order", returnValues = FALSE) {
-                        args <- list(...)
-                        argsnames <- sapply(substitute(list(...))[-1], deparse)
-                        gargsnames <- names(args)
-                        if (is.null(gargsnames)) gargsnames <- vector(mode = "character", length = length(args))
-                        gargsnames[nchar(gargsnames) == 0] <- argsnames[nchar(gargsnames) == 0]
-                        names(args) <- gargsnames
-                        
-                        if(traversal == "pre-order") {
-                          
-                          #for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
-                          args <- Map(function(name, arg) self$SetAttribute(name, arg), names(args), args)
-                          
-                          if(!self$isLeaf) {
-                            for(child in self$children) {
-                              
-                              args <- do.call(child$Set, c(args, traversal = traversal, returnValues = TRUE))
-                            }
-                          }
-                          
-                        } else if (traversal == "post-order") {
-                          # useful if leafs need to be calculated first
-                          childValues <- vector()
-                          if(!self$isLeaf) {
-                            for(child in self$children) {
-                              args <- do.call(child$Set, c(args, traversal = traversal, returnValues = TRUE))
-                            }
-                          }
-                          for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
-                          
-                          
-                        } else if (traversal == "ancestor") {
-                          for (i in 1:length(args)) args[[i]] <- self$SetAttribute(names(args)[[i]], args[[i]])
-                          if (!self$isRoot) {
-                            args <- do.call(self$parent$Set, c(args, traversal = traversal, returnValues = TRUE))
-                          }
-                        }
-                        if (returnValues) invisible (args)
-                        else invisible (self)
+                      Set = function(..., 
+                                     traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),  
+                                     pruneFun = NULL,
+                                     filterFun = NULL) {
+                        Set(self, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
                       },
                       
                       Aggregate = function(attribute, fun, ...) {
@@ -255,24 +222,7 @@ Node <- R6Class("Node",
                         self$children <- self$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
                         if (recursive) for(child in self$children) child$Sort(attribute, ..., decreasing = decreasing, recursive = recursive)
                         invisible(self)
-                      },
-                      
-                      SetAttribute = function(attribute, values) {
-                        
-                        if (length(values) == 1) {
-                          self[[attribute]] <- values
-                          return (values)
-                        } else if (length(values) > 1) {
-                          self[[attribute]] <- values[1]
-                          return (values[-1])
-                        } else if(is.null(values)) {
-                          self[[attribute]] <- NULL
-                          return (NULL)
-                        } else {
-                          stop("length of values must be 1 or equal to the number of nodes")
-                        }
-                      },
-                      
+                      },                      
                       
                                           
                       GetAttribute = function(attribute, ..., assign = NULL, format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
@@ -426,7 +376,11 @@ Node <- R6Class("Node",
                       },
                       
                       depth = function() {
-                        max(self$Get("level")) - self$level + 1
+                        max(Get(self, "level")) - self$level + 1
+                      },
+                      
+                      isBinary = function() {
+                        all(2 == Get(self, "count", filterFun = function(x) !x$isLeaf))
                       },
                       
                       root = function() {

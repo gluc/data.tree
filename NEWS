@@ -1,6 +1,6 @@
 # All changes to data.tree are documented here.
 
-## Version 0.1.7 Chestnut
+## Version 0.2.0 Chestnut
 
 - Added conversion to and from list
 - Added conversion from data.frame
@@ -10,5 +10,12 @@
 - Renamed PrintFixedDecimal to FormatFixedDecimal
 - Added support for functions in Aggregate method
 - Added support for setting formatter functions on a Node
-- Node.Get: Renamed filterFun parameter to pruneFun
-- Node.Get: Added new parameter filterFun, as opposed to pruneFun
+- Added Node$isBinary active
+- Node.Get: 
+  - Renamed filterFun parameter to pruneFun
+  - Added new parameter filterFun, as opposed to pruneFun
+  - Added new traversal modes "in-order", "level"
+  - Added parameter inheritFromAncestors
+- Node.Set:
+  - Add filterFun and pruneFun
+  - Added support for traversal order

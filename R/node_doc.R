@@ -28,41 +28,6 @@ Find = function(...) {
 
 
 
-#' Traverse a Tree and Assign Values
-#' 
-#' The method takes a vector as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked
-#' from the vector.
-#' 
-#' 
-#' @param ... each argument can be a vector of values to be assigned.
-#' @param traversal any of 'pre-order', 'post-order', 'ancestor'
-#' @param returnValues if \code{TRUE}, then the non-processed arg passed in ... are returned. 
-#' Otherwise the \code{Node} itself is returned for chaining. Mainly for internal use.
-#'  
-#'  
-#' @examples
-#' data(acme)
-#' acme$Set(departmentId = 1:11, 
-#'          head = c("Jack Brown", 
-#'                   "Dr. Frank N. Stein", 
-#'                   "", 
-#'                   "", 
-#'                   "Mona Moneyhead", 
-#'                   "", 
-#'                   "", 
-#'                   "Eric Nerdahl", 
-#'                   "", 
-#'                   "", 
-#'                   ""))
-#' print(acme, "departmentId", "head")
-#'  
-#' @seealso \code{\link{Node}}
-#'  
-#' @keywords internal
-Set = function(..., traversal = "pre-order", returnValues = FALSE) {
-  stop("This method can only be called on a Node!")
-}
-
 
 
 

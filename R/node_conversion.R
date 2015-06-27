@@ -415,8 +415,8 @@ as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
   return (ape::read.tree(text = txt))
 }
 
-SetPhyloNumbers <- function(x, nodeNrName = "phyloNodeNr", edgeNrName = "phyloEdgeNr") {
-  x$Set(x$leafCount:x$totalCount)
+SetPhyloNumbers <- function(x) {
+  x$Set(phyloNodeNr = (x$leafCount + 1):x$totalCount, )
 }
 
 

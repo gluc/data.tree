@@ -4,22 +4,24 @@
 \alias{Get}
 \title{Traverse a Tree and Collect Values}
 \usage{
-Get(node, attribute, ..., traversal = "pre-order", pruneFun = NULL,
-  filterFun = NULL, assign = NULL, format = NULL,
-  inheritFromAncestors = FALSE)
+Get(node, attribute, ..., traversal = c("pre-order", "post-order", "in-order",
+  "level", "ancestor"), pruneFun = NULL, filterFun = NULL, assign = NULL,
+  format = NULL, inheritFromAncestors = FALSE)
 }
 \arguments{
 \item{node}{The node on which to perform the Get}
 
 \item{attribute}{determines what is collected during traversal. The attribute can be
-     \itemize{
-       \item a.) the name of a field of each \code{Node} in the tree
-       \item b.) the name of a Method of each \code{Node}.
-       \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by
-       passing \code{...} to the function.
-      }}
+\itemize{
+  \item a.) the name of a field of each \code{Node} in the tree
+  \item b.) the name of a Method of each \code{Node}.
+  \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by
+  passing \code{...} to the function.
+  }}
 
-\item{traversal}{determines the traversal order. It can be either "pre-order", "post-order", or "ancestor"}
+\item{...}{in case \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
+
+\item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'}
 
 \item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
 If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.}
@@ -30,14 +32,16 @@ Note that if filter returns \code{FALSE}, then the node will be excluded from th
 \item{assign}{can be the name of a variable to which we assign the collected values before \code{format} is called.}
 
 \item{format}{can be a function that transforms the collected values, e.g. for printing}
+
+\item{inheritFromAncestors}{if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.}
 }
 \value{
 a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
- to NA, such that \code{length(Node$Get) == Node$totalCount}
+to NA, such that \code{length(Node$Get) == Node$totalCount}
 }
 \description{
-The \code{Get} function is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
-and collect values along the way. Alternatively, you can call a method or a function on each \code{Node}.
+The \code{Get} method is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
+and collect values along the way. Alternatively, you can call a method or a function on each \code{\link{Node}}.
 }
 \examples{
 data(acme)
@@ -61,6 +65,7 @@ acme$Get(calculateAggregateChildCost,
 }
 \seealso{
 \code{\link{Node}}
+
+\code{\link{Set}}
 }
-\keyword{internal}
 

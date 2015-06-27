@@ -7,7 +7,7 @@ Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.com>
 VignetteBuilder: knitr
 Imports:
-    R6
+    R6, stringr
 Suggests:
     testthat, magrittr, knitr
 Enhances:
