@@ -2,20 +2,29 @@
 
 ## Version 0.2.0 Chestnut
 
-- Added conversion to and from list
-- Added conversion from data.frame
-- Added Node$Clone (returning a deep copy)
-- Added Node$Prune (pruning the tree)
-- Added Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
-- Renamed PrintFixedDecimal to FormatFixedDecimal
-- Added support for functions in Aggregate method
-- Added support for setting formatter functions on a Node
-- Added Node$isBinary active
-- Node.Get: 
-  - Renamed filterFun parameter to pruneFun
-  - Added new parameter filterFun, as opposed to pruneFun
-  - Added new traversal modes "in-order", "level"
-  - Added parameter inheritFromAncestors
-- Node.Set:
-  - Add filterFun and pruneFun
-  - Added support for traversal order
+- Conversions
+  - Added conversion to and from list (and thus to and from yaml, json, etc.)
+  - Added conversion from data.frame
+  - Added Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
+  - Added conversion to and from dendrogram
+  - Added conversion to phylo from the ape package
+  - Added conversion to Newick notation
+- Node methods
+  - Added Node$Clone (returning a deep copy)
+  - Added Node$Prune (pruning the tree)
+  - Added support for functions in Aggregate method
+  - Added support for setting formatter functions on a Node
+  - Added Node$isBinary active
+  - Node.Get: 
+    - CHANGE: Renamed filterFun parameter to pruneFun
+    - Added new parameter filterFun, as opposed to pruneFun
+    - Added new traversal modes "in-order", "level"
+    - Added parameter inheritFromAncestors
+  - Node.Set:
+    - Add filterFun and pruneFun
+    - Added support for traversal order
+- Utils
+  - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal
+
+
+

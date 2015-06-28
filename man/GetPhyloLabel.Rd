@@ -4,7 +4,7 @@
 \alias{GetPhyloLabel}
 \title{Get a Phylo Label for a single Node}
 \usage{
-GetPhyloLabel(x, labelFun, ...)
+GetPhyloLabel(x, labelFun, type = c("node", "edge"), ...)
 }
 \arguments{
 \item{x}{The Node}

@@ -444,3 +444,14 @@ test_that("Set filter", {
   expect_equal( acme$Find("IT")$mycnt, 3)
   expect_equal( acme$mycnt, NULL)
 })
+
+
+
+test_that("Revert", {
+  data(acme)
+  acme$Set(id = 1:acme$totalCount)
+  acme$Revert()
+  ids <- unname(acme$Get("id"))
+  expected = c(1, 8, 11, 10, 9, 5, 7, 6, 2, 4, 3)
+  expect_equal(ids, expected)
+})
