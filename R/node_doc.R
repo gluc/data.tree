@@ -58,6 +58,17 @@ Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
   stop("This method can only be called on a Node!")
 }
 
+#' Reverts the sort order of a \code{Node}'s children.
+#' 
+#' @param recursive If \code{TRUE}, then revert is called recursively on
+#' all children.
+#' 
+#'
+#' #' @seealso \code{\link{Node}}
+#' @keywords internal 
+Revert = function(recursive = TRUE) {
+  stop("This method can only be called on a Node!")
+}
 
 
 #' Convert a \code{\link{Node}} to a \code{data.frame}
