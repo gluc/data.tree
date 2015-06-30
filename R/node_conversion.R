@@ -252,8 +252,8 @@ as.Node.data.frame <- function(x,
         mynode <- child
       }
       
-      if( length(colLevels) > mynode$level ) {
-        colsToSet <- intersect(colLevels[[mynode$level + 1]], mycols) 
+      if( length(colLevels) >= mynode$level ) {
+        colsToSet <- intersect(colLevels[[mynode$level]], mycols) 
         
         #fill values on appropriate level
         for (mycol in colsToSet) {
