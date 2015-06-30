@@ -200,6 +200,22 @@ test_that("level", {
 })
 
 
+
+test_that("level subtree", {
+  
+  data(acme)
+  it <- acme$Find("IT")
+  
+  it$Set(myval = 1:it$totalCount, traversal = "level")
+  
+  expect_equal(it$myval, 1)
+  expect_equal(it$Find("Outsource")$myval, 2)
+  expect_equal(it$Find("Go agile")$myval, 3)
+  expect_equal(it$Find("Switch to R")$myval, 4)
+  
+})
+
+
 test_that("prune", {
   
   data(acme)
