@@ -475,3 +475,38 @@ test_that("fieldsAll", {
   fa <- acme$fieldsAll
   expect_equal(fa, c("cost", "p"))
 })
+
+
+test_that("depth", {
+  data(acme)
+  expect_equal(acme$depth, 3)
+  expect_equal(acme$Find("IT")$depth, 2)
+  acme$Find("IT", "Outsource")$AddChild("New")
+  
+  expect_equal(acme$depth, 4)
+})
+
+
+test_that("isRoot", {
+  data(acme)
+  expect_true(acme$isRoot)
+  expect_false(acme$Find("IT")$isRoot)
+  expect_equal(acme$Find("IT")$depth, 2)
+  isRoot <- acme$Get("isRoot")
+  expect_equal(sum(isRoot), 1)
+  
+})
+
+
+test_that("isLeaf", {
+  data(acme)
+  expect_false(acme$isLeaf)
+  expect_true(acme$Find("Research", "New Labs")$isLeaf)
+  
+  isLeaf <- acme$Get("isLeaf")
+  leaves <- names(isLeaf)[isLeaf]
+  exp <- c("New Software", "New Accounting Standards", "New Product Line", "New Labs", 
+           "Outsource", "Go agile", "Switch to R")
+  expect_equal(leaves, exp)
+  
+})

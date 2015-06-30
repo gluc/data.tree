@@ -22,9 +22,9 @@ an array rather than named objects.}
 
 \item{childrenName}{The name that should be given to the children nested list}
 
-\item{...}{Additional parameters}
+\item{rootName}{The name of the node. If provided, this overrides \code{Node$name}}
 
-\item{nodeName}{The name of the node. If given, this overrides the name of the Node}
+\item{...}{Additional parameters}
 }
 \description{
 Convert a Node to a list
