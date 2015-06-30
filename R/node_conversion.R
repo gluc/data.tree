@@ -94,7 +94,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
 #' an array rather than named objects.
 #' @param nameName The name that should be given to the name element
 #' @param childrenName The name that should be given to the children nested list
-#' @param nodeName The name of the node. If given, this overrides the name of the Node
+#' @param rootName The name of the node. If provided, this overrides \code{Node$name}
 #' @param ... Additional parameters
 #' 
 #' 
