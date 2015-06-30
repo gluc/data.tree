@@ -8,6 +8,8 @@ GetPhyloNr(x, type = c("node", "edge"))
 }
 \arguments{
 \item{x}{The Node}
+
+\item{type}{Either "node" (the default) or "edge"}
 }
 \value{
 an integer representing the node

@@ -243,7 +243,7 @@ as.Node.data.frame <- function(x,
         mynode <- child
       }
       
-      if( length(colLevels) >= mynode$level ) {
+      if( length(colLevels) > mynode$level ) {
         colsToSet <- intersect(colLevels[[mynode$level + 1]], mycols) 
         
         #fill values on appropriate level
@@ -420,6 +420,7 @@ as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
 #' Get a Phylo Label for a single Node
 #' @param x The Node
 #' @param labelFun The function that compiles the label
+#' @param type either "node" (the default) or "edge"
 #' @param ... any argument to be passed to the labelFun
 #' @return a string that can be used as a Phylo Node label
 #' @export
@@ -436,6 +437,7 @@ GetPhyloLabel <- function(x, labelFun, type = c("node", "edge"), ...) {
 #' Gets the node nr in phylo context
 #' 
 #' @param x The Node
+#' @param type Either "node" (the default) or "edge"
 #' @return an integer representing the node
 #' @export
 GetPhyloNr <- function(x, type = c("node", "edge")) {

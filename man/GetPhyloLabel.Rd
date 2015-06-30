@@ -11,6 +11,8 @@ GetPhyloLabel(x, labelFun, type = c("node", "edge"), ...)
 
 \item{labelFun}{The function that compiles the label}
 
+\item{type}{either "node" (the default) or "edge"}
+
 \item{...}{any argument to be passed to the labelFun}
 }
 \value{
