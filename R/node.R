@@ -244,15 +244,14 @@ Node <- R6Class("Node",
                       },
                       
                       Clone = function() {
-                        l <- as.list.Node(self, mode = "explicit")
+                        l <- as.list(self, mode = "explicit", rootName = self$name)
                         res <- as.Node(l, mode = "explicit")
+                        #formatters need to be set manually
                         for(name in names(self$formatters)) {
                           res$formatters[[name]] <- self$formatters[[name]]
                         }
                         return (res)
                       },
-                      
-                      #Filter = function(){}
                       
                       ToDataFrame = function(..., filterFun = NULL, inheritFromAncestors = FALSE) {
                         as.data.frame(self, row.names = NULL, optional = FALSE, ..., filterFun = filterFun, inheritFromAncestors = inheritFromAncestors)
@@ -344,7 +343,7 @@ Node <- R6Class("Node",
                       },
                       
                       fieldsAll = function() {
-                        as.vector(na.omit(unique(self$Get("fields"))))
+                        as.vector(na.omit(unique(unlist(self$Get("fields")))))
                       },
                       
                       

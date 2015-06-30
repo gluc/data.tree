@@ -4,8 +4,9 @@
 \alias{as.list.Node}
 \title{Convert a Node to a list}
 \usage{
-\method{as.list}{Node}(x, mode = c("simpel", "character"), unname = FALSE,
-  nameName = ifelse(unname, "name", ""), childrenName = "children", ...)
+\method{as.list}{Node}(x, mode = c("simple", "explicit"), unname = FALSE,
+  nameName = ifelse(unname, "name", ""), childrenName = "children",
+  rootName = "", ...)
 }
 \arguments{
 \item{x}{The Node to convert}
@@ -22,6 +23,8 @@ an array rather than named objects.}
 \item{childrenName}{The name that should be given to the children nested list}
 
 \item{...}{Additional parameters}
+
+\item{nodeName}{The name of the node. If given, this overrides the name of the Node}
 }
 \description{
 Convert a Node to a list

@@ -373,6 +373,19 @@ test_that("Clone formatter", {
 })
 
 
+test_that("Clone subtree", {
+  data(acme)
+  it <- acme$Find("IT")
+  n <- it$Clone()
+  
+  expect_equal(class(n), class(it))
+  expect_equal(n$name, it$name)
+  expect_equal(n$count, it$count)
+  expect_equal(n$totalCount, it$totalCount)
+  expect_equal(n$Find("Go agile")$p, it$Find("Go agile")$p)
+    
+})
+
 
 test_that("Aggregate", {
   data(acme)
@@ -454,4 +467,11 @@ test_that("Revert", {
   ids <- unname(acme$Get("id"))
   expected = c(1, 8, 11, 10, 9, 5, 7, 6, 2, 4, 3)
   expect_equal(ids, expected)
+})
+
+
+test_that("fieldsAll", {
+  data(acme)
+  fa <- acme$fieldsAll
+  expect_equal(fa, c("cost", "p"))
 })

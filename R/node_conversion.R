@@ -94,20 +94,31 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
 #' an array rather than named objects.
 #' @param nameName The name that should be given to the name element
 #' @param childrenName The name that should be given to the children nested list
+#' @param nodeName The name of the node. If given, this overrides the name of the Node
 #' @param ... Additional parameters
 #' 
 #' 
 #' @export
 as.list.Node <- function(x, 
-                         mode = c("simpel", "character"),
+                         mode = c("simple", "explicit"),
                          unname = FALSE, 
                          nameName = ifelse(unname, "name", ""), 
                          childrenName = 'children',
+                         rootName = '',
                          ...) {
+  mode <- mode[1]
   self <- x
   res <- list()
-  if (nchar(nameName) != 0) res[nameName] <- x$name
-  if (nchar(nameName) == 0 && x$isRoot) res["name"] <- x$name
+  
+  if (nchar(rootName) != 0) myname <- rootName
+  else myname <- x$name
+  
+  if (nchar(nameName) != 0 || nchar(rootName) != 0 || x$isRoot) {
+    l_nameName <- nameName
+    if(nchar(nameName) == 0) l_nameName <- "name"
+    res[l_nameName] <- myname
+  }
+  
   for (fieldName in ls(self)) {
     #print(fieldName)
     field <- self[[fieldName]]
@@ -120,11 +131,13 @@ as.list.Node <- function(x,
   }
   if(!self$isLeaf) {
     kids <- lapply(self$children, FUN = function(x) as.list(x, mode, unname, nameName, childrenName, ...))
-    if(mode[1] == "explicit") {
+    if(mode == "explicit") {
       res[[childrenName]] <- kids
       if (unname) res[[childrenName]] <- unname(res[[childrenName]])
-    } else if(mode[1] == "simple") {
+    } else if(mode == "simple") {
       res <- c(res, kids)
+    } else {
+      stop(paste0("Mode ", mode, " unknown"))
     }
   }
   return (res)
@@ -172,11 +185,7 @@ as.data.frame.Node <- function(x,
     x <- x$Clone()
   }
   
-  if( !is.null(filterFun)) {
-    x$Prune(filterFun)
-  }
-  
-  df <- data.frame( levelName = format(x$Get('levelName')),
+  df <- data.frame( levelName = format(x$Get('levelName', filterFun = filterFun)),
                     row.names = row.names,
                     stringsAsFactors = FALSE)
   
@@ -186,7 +195,7 @@ as.data.frame.Node <- function(x,
   for (i in 1:length(cols)) {
     col <- cols[[i]]
     if (is.character(col) && length(col) == 1) {
-      it <- Get(x, col, inheritFromAncestors = inheritFromAncestors)
+      it <- Get(x, col, filterFun = filterFun, inheritFromAncestors = inheritFromAncestors)
       colName <- col
     } else {
       it <- col
