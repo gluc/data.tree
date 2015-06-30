@@ -66,7 +66,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
 #'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
-#'   \item{\code{Prune(filterFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{filterFun} }
+#'   \item{\code{Prune(pruneFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{pruneFun} }
 #'   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, assign = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns attributes along the way.}
 #'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
@@ -195,23 +195,23 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      Prune = function(filterFun, traversal = "pre-order") {
+                      Prune = function(pruneFun, traversal = "pre-order") {
                         if ( self$isLeaf) return()
                         if ( traversal == "pre-order") {
                           for( i in length(self$children):1 ) {
-                            if ( !filterFun(self$children[[i]]) ) {
+                            if ( !pruneFun(self$children[[i]]) ) {
                               self$children <- self$children[-i]
                             }
                           }
                           for( child in self$children) {
-                            child$Prune(filterFun)
+                            child$Prune(pruneFun)
                           }
                         } else if( traversal == "post-order") {
                           for( child in self$children) {
-                            child$Prune(filterFun)
+                            child$Prune(pruneFun)
                           }
                           for( i in length(self$children):1 ) {
-                            if ( !filterFun(self$children[[i]]) ) {
+                            if ( !pruneFun(self$children[[i]]) ) {
                               self$children <- self$children[-i]
                             }
                           }
