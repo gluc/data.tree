@@ -47,7 +47,7 @@ GetNodes = function(node,
     
   } else if (traversal == "level") {
     
-    for(level in 0:node$depth) {
+    for(level in 1:node$depth) {
       fifu <- function(x) {
         a <- (length(filterFun) == 0 || filterFun(x))
         b <- x$level == level

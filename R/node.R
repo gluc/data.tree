@@ -376,7 +376,7 @@ Node <- R6Class("Node",
                       
                       level = function() {
                         if (self$isRoot) {
-                          return (0)
+                          return (1)
                         } else {
                           return (1 + self$parent$level)
                         }

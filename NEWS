@@ -10,6 +10,7 @@
   - Added conversion to phylo from the ape package
   - Added conversion to Newick notation
 - Node methods
+  - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
   - Added Node$Clone (returning a deep copy)
   - Added Node$Prune (pruning the tree)
   - Added support for functions in Aggregate method

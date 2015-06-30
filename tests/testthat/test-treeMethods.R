@@ -453,7 +453,7 @@ test_that("Set post-order", {
 
 test_that("Set filter", {
   data(acme)
-  acme$Set(mycnt = 1:3, filterFun = function(x) x$level == 1)
+  acme$Set(mycnt = 1:3, filterFun = function(x) x$level == 2)
   expect_equal( acme$Find("IT")$mycnt, 3)
   expect_equal( acme$mycnt, NULL)
 })
@@ -508,5 +508,15 @@ test_that("isLeaf", {
   exp <- c("New Software", "New Accounting Standards", "New Product Line", "New Labs", 
            "Outsource", "Go agile", "Switch to R")
   expect_equal(leaves, exp)
+  
+})
+
+
+
+test_that("level (active)", {
+  data(acme)
+  expect_equal(acme$level, 1)  
+  expect_equal(acme$Find("Research")$level, 2)
+  expect_equal(acme$Find("Research", "New Labs")$level, 3)
   
 })
