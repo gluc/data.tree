@@ -176,13 +176,6 @@ as.data.frame.Node <- function(x,
                                filterFun = NULL,
                                inheritFromAncestors = FALSE
 ) {
-  if(is.null(row.names)) {
-    if(optional) {
-      row.names <- rep("", x$totalCount)
-    } else {
-      row.name <- 1:x$totalCount
-    }
-  }
   
   if( !is.null(filterFun) || !x$isRoot) {
     x <- x$Clone()

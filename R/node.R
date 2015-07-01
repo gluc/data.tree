@@ -264,7 +264,6 @@ Node <- R6Class("Node",
                         }
                         df <- as.data.frame(self, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun, filterFun = ifilterFun, inheritFromAncestors = TRUE)
                         df <- df[,-1]
-                        #row.names(df) <- 1:nrow(df)
                         return (df)
                       },
                       
