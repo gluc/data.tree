@@ -46,23 +46,23 @@ as.Node <- function(x, ...) {
 #' 
 #' @export
 as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = 'children', nodeName = "", ...) {
-
+  mode <- mode[1]
   if(is.null(nameName) || is.null(x[[nameName]])) {
     if (length(nodeName)==0) myName <- tempfile(pattern = '', tmpdir = '')
     else myName <- nodeName
   } else {
     myName <- x[[nameName]]
   }
-  n <- Node$new(myName)
+  n <- Node$new(as.character(myName))
   
   for (name in names(x)[!(names(x) %in% NODE_RESERVED_NAMES_CONST)]) {
     if (is.null(nameName) || name != nameName) n[[name]] <- x[[name]]
   }
   
   #children
-  if(mode[1] == 'simple') children <- x[sapply(x, is.list)]
-  else if(mode[1] == 'explicit') children <- x[[childrenName]]
-  if (is.null(children) || length(children) == 0) return (n)
+  if(mode == 'simple') children <- x[sapply(x, is.list)]
+  else if(mode == 'explicit') children <- x[[childrenName]]
+  if (length(children) == 0) return (n)
   for (i in 1:length(children)) {
     if (!is.null(names(children))) {
       childName <- names(children)[i]
@@ -72,6 +72,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
     child <- children[[i]]
     childNode <- as.Node(child, mode, nameName, childrenName, nodeName = childName, ...)
     n$AddChildNode(childNode)
+    
   }
   
   
