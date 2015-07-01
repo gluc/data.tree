@@ -147,3 +147,30 @@ test_that("as.Node.data.frame", {
   
 })
 
+
+test_that("as.data.frame.Node", {
+  data(acme)
+  acmedf <- as.data.frame(acme, 
+                          row.names = NULL, 
+                          optional = FALSE, 
+                          myp = 'p', 
+                          'cost', 
+                          pstr = function(x) x$pathString,
+                          sg = acme$Get( function(x) x$p)
+                          )
+  expect_equal(names(acmedf), c("levelName", "myp", "cost", "pstr", "sg"))
+  expect_equal(acmedf[2, 4], "Acme Inc./Accounting")
+  expect_equal(acmedf$sg, acmedf$sg)
+})
+
+
+test_that("as.data.frame.Node", {
+  data(acme)
+  acme$myfield <- "yes"
+  acmedf <- acme$ToDataFrameTable(myp = "p", "cost", "myfield", pstr = function(x) x$pathString)
+  expect_equal(names(acmedf), c("myp", "cost", "myfield", "pstr"))
+  expect_equal(acmedf[2, 4], "Acme Inc./Accounting/New Accounting Standards")
+  expect_equal(nrow(acmedf), acme$leafCount)
+  expect_true(all(acmedf$myfield == "yes"))
+})
+

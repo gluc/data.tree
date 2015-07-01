@@ -160,6 +160,7 @@ as.list.Node <- function(x,
 #'  \item the result of the \code{Node$Get} method
 #' }
 #' If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.
+#' @param pruneFun a function which, if TRUE is returned, causes the subtree of a Node to be pruned.
 #' @param filterFun a function which filters the Nodes added to the \code{data.frame}. The function must
 #' take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the
 #' @param inheritFromAncestors if TRUE, then any attribute specified in \code{...} is fetched from a Node, or from any
@@ -171,6 +172,7 @@ as.data.frame.Node <- function(x,
                                row.names = NULL, 
                                optional = FALSE, 
                                ..., 
+                               pruneFun = NULL,
                                filterFun = NULL,
                                inheritFromAncestors = FALSE
 ) {
@@ -195,15 +197,14 @@ as.data.frame.Node <- function(x,
   if(length(cols) == 0) return (df)
   for (i in 1:length(cols)) {
     col <- cols[[i]]
-    if (is.character(col) && length(col) == 1) {
-      it <- Get(x, col, filterFun = filterFun, inheritFromAncestors = inheritFromAncestors)
-      colName <- col
-    } else {
+    if (length(names(cols)) > 0 && nchar(names(cols)[i]) > 0) colName <- names(cols)[i]
+    else if (is.character(col)) colName <- col
+    else stop(paste0("Cannot infer column name for ... arg nr ", i))
+    if (length(col) > 1) {
       it <- col
-      colName <- names(cols)[i]
+    } else {
+      it <- Get(x, col, pruneFun = pruneFun, filterFun = filterFun, inheritFromAncestors = inheritFromAncestors)
     }
-    
-    
     df[colName] <- it
     
   }

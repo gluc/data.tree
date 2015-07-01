@@ -5,7 +5,7 @@
 \title{Convert a \code{\link{Node}} to a \code{data.frame}}
 \usage{
 \method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
-  filterFun = NULL, inheritFromAncestors = FALSE)
+  pruneFun = NULL, filterFun = NULL, inheritFromAncestors = FALSE)
 }
 \arguments{
 \item{x}{The root node to convert to a data.frame}
@@ -23,6 +23,8 @@ options:
  \item the result of the \code{Node$Get} method
 }
 If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.}
+
+\item{pruneFun}{a function which, if TRUE is returned, causes the subtree of a Node to be pruned.}
 
 \item{filterFun}{a function which filters the Nodes added to the \code{data.frame}. The function must
 take a \code{Node} as an input, and it must return \code{TRUE} or \code{FALSE}, depending on whether the}

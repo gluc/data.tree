@@ -259,9 +259,12 @@ Node <- R6Class("Node",
                       
                       
                       ToDataFrameTable = function(..., pruneFun = NULL, filterFun = NULL) {
-                        df <- as.data.frame(self, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun, filterFun = filterFun, inheritFromAncestors = TRUE)
-                        df <- df[self$Get("isLeaf"),-1]
-                        row.names(df) <- 1:nrow(df)
+                        ifilterFun <- function(x) {
+                          x$isLeaf && (length(filterFun) == 0 || filterFun(x))  
+                        }
+                        df <- as.data.frame(self, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun, filterFun = ifilterFun, inheritFromAncestors = TRUE)
+                        df <- df[,-1]
+                        #row.names(df) <- 1:nrow(df)
                         return (df)
                       },
                       
