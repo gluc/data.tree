@@ -536,3 +536,16 @@ test_that("level (active)", {
   expect_equal(acme$Find("Research", "New Labs")$level, 3)
   
 })
+
+
+test_that("set name", {
+  data(acme)
+  rs <- acme$Find("Research")
+  rs$name <- "Research2"
+  
+  rs2 <- acme$Find("Research")
+  expect_true(is.null(rs2))
+  rs2 <- acme$Find("Research2")
+  expect_true(rs2$name == "Research2")
+  expect_equal(names(rs$parent$children), c("Accounting", "Research2", "IT"))
+})
