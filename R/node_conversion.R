@@ -177,11 +177,12 @@ as.data.frame.Node <- function(x,
                                inheritFromAncestors = FALSE
 ) {
   
-  if( !is.null(filterFun) || !x$isRoot) {
+  if(!x$isRoot) {
+    #clone s.t. x is root (for pretty level names)
     x <- x$Clone()
   }
   
-  df <- data.frame( levelName = format(x$Get('levelName', filterFun = filterFun)),
+  df <- data.frame( levelName = format(x$Get('levelName', pruneFun = pruneFun, filterFun = filterFun)),
                     row.names = row.names,
                     stringsAsFactors = FALSE)
   
