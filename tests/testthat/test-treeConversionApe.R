@@ -20,31 +20,33 @@ test_that("as.Node.phylo height", {
   expect_equal(n$totalCount, 6)
   expect_equal(as.vector(n$Get("name")), c("", "A", "B", "E", "C", "D"))
   expect_equal(as.vector(n$Get("level")), c(1, 2, 2, 2, 3, 3))
-  expect_equal(as.vector(n$Get("edgeLength")), c(NA, 5, 5, 5, 10, 10))
+  expect_equal(as.vector(n$Get("height")), c(15, 10, 10, 10, 0, 0))
 })
+
+test_that("as.Node.phylo no height", {
+  t <- "(A,B,(C,D)E)F;"
+  
+  p <- ape::read.tree(text = t)
+  n <- as.Node(p)
+  expect_equal(n$totalCount, 6)
+  expect_equal(as.vector(n$Get("name")), c("F", "A", "B", "E", "C", "D"))
+  expect_equal(as.vector(n$Get("level")), c(1, 2, 2, 2, 3, 3))
+  expect_true(all(is.na(n$Get("edgeLength"))))
+})
+
 
 
 test_that("as.Node.phylo height non standard", {
   t <- "(A:5,B:5,(C:10,D:10):5):0;"
   
   p <- ape::read.tree(text = t)
-  n <- as.Node(p, edgeLengthName = "edge")
+  n <- as.Node(p, heightName = "edge")
   expect_equal(n$totalCount, 6)
   expect_equal(as.vector(n$Get("name")), c("5", "A", "B", "6", "C", "D"))
   expect_equal(as.vector(n$Get("level")), c(1, 2, 2, 2, 3, 3))
-  expect_equal(as.vector(n$Get("edge")), c(NA, 5, 5, 5, 10, 10))
+  expect_equal(as.vector(n$Get("edge")), c(15, 10, 10, 10, 0, 0))
 })
 
-test_that("as.Node.phylo height non standard", {
-  t <- "(A:5,B:5,(C:10,D:10)E:5):0;"
-  
-  p <- ape::read.tree(text = t)
-  n <- as.Node(p, edgeLengthName = "edge")
-  expect_equal(n$totalCount, 6)
-  expect_equal(as.vector(n$Get("name")), c("", "A", "B", "E", "C", "D"))
-  expect_equal(as.vector(n$Get("level")), c(1, 2, 2, 2, 3, 3))
-  expect_equal(as.vector(n$Get("edge")), c(NA, 5, 5, 5, 10, 10))
-})
 
 
 test_that("as.phylo.Node heightAttributeName", {

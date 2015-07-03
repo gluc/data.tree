@@ -1,6 +1,6 @@
 Package: data.tree
 Type: Package
-Title: Hierarchical Data Structures
+Title: General Purpose Hierarchical Data Structure
 Version: 0.1.7
 Date: 2015-06-20
 Author: Christoph Glur

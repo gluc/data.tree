@@ -490,6 +490,8 @@ test_that("fieldsAll", {
   data(acme)
   fa <- acme$fieldsAll
   expect_equal(fa, c("cost", "p"))
+  acme$Set(tta = 1:acme$totalCount)
+  expect_equal(acme$fieldsAll, c("tta", "cost", "p"))
 })
 
 

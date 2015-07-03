@@ -29,3 +29,18 @@ FormatFixedDecimal <- function(x, digits = 3) {
 
 
 
+
+#' Print a Node
+#' 
+#' Print a Node in a human-readable fashion.
+#' 
+#' @param x The Node
+#' @param ... Additional parameters
+#' 
+#' @details Print the Node in a human-readable fashion.
+#'
+#' @export
+print.Node <- function(x, ...) {
+  print(as.data.frame(x, row.names = NULL, optional = FALSE, ...), na.print = "")
+}
+
