@@ -9,7 +9,7 @@ VignetteBuilder: knitr
 Imports:
     R6, stringr
 Suggests:
-    testthat, magrittr, knitr
+    testthat, magrittr, knitr, ape
 Enhances:
     ape, stats, networkD3
 Description: Create tree structures from hierarchical data, and use the utility 

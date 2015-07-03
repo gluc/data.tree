@@ -16,38 +16,39 @@ as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
 
 #' Converts a phylo from the ape package to a Node
 #' 
-#' @param p The phylo object
+#' @param x The phylo object
 #' @param heightName If the phylo contains edge lengths, then they will be stored in 
 #' an attribute according to this parameter (the default is "edgeLength")
 #' @param replaceUnderscores if TRUE (the default), then underscores in names are replaced with spaces
+#' @param ... any other parameter to be passed to sub-implementations
 #' 
 #' @export
-as.Node.phylo <- function(p, heightName = "height", replaceUnderscores = TRUE) {
+as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, ...) {
   
   #find root node
-  rootNr <- unique(p$edge[,1][!p$edge[,1] %in% p$edge[,2]])
+  rootNr <- unique(x$edge[,1][!x$edge[,1] %in% x$edge[,2]])
   
   #names
-  nodeNrs <- c(rootNr, unique(p$edge[,2]))
-  leafNrs <- 1:length(p$tip.label)
-  nms <- p$tip.label
+  nodeNrs <- c(rootNr, unique(x$edge[,2]))
+  leafNrs <- 1:length(x$tip.label)
+  nms <- x$tip.label
   names(nms) <- leafNrs
-  if("node.label" %in% names(p)) {
-    nms2 <- p$node.label
+  if("node.label" %in% names(x)) {
+    nms2 <- x$node.label
   } else {
     nms2 <- (max(leafNrs) + 1):max(nodeNrs)
   }
   names(nms2) <- (max(leafNrs) + 1):max(nodeNrs)
   nms <- c(nms2, nms)
   root <- Node$new(rootNr)
-  for (i in 1:nrow(p$edge)) {
-    e <- p$edge[i,]
+  for (i in 1:nrow(x$edge)) {
+    e <- x$edge[i,]
     fifu <- function(x) x$name == as.character(e[1])
     parent <- GetNodes(root, filterFun = fifu)[[1]]
     child <- parent$AddChild(as.character(e[2]))
   }
-  if (length(p$edge.length) > 0) {
-    root$Set(edgeLength = p$edge.length, filterFun = function(x) !x$isRoot)
+  if (length(x$edge.length) > 0) {
+    root$Set(edgeLength = x$edge.length, filterFun = function(x) !x$isRoot)
     #try converting edge length to height
     root[[heightName]] <- 0
     ehf <- function(x) x$parent[[heightName]] - x$edgeLength 

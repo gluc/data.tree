@@ -4,15 +4,18 @@
 \alias{as.Node.phylo}
 \title{Converts a phylo from the ape package to a Node}
 \usage{
-\method{as.Node}{phylo}(p, heightName = "height", replaceUnderscores = TRUE)
+\method{as.Node}{phylo}(x, heightName = "height", replaceUnderscores = TRUE,
+  ...)
 }
 \arguments{
-\item{p}{The phylo object}
+\item{x}{The phylo object}
 
 \item{heightName}{If the phylo contains edge lengths, then they will be stored in
 an attribute according to this parameter (the default is "edgeLength")}
 
 \item{replaceUnderscores}{if TRUE (the default), then underscores in names are replaced with spaces}
+
+\item{...}{any other parameter to be passed to sub-implementations}
 }
 \description{
 Converts a phylo from the ape package to a Node
