@@ -408,7 +408,10 @@ ToNewick <- function(node, heightAttributeName = "Height", ...) {
   
 }
 
+
+
 #' Convert a node to a phylo object from the ape package.
+#' This requires the ape package.
 #' 
 #' @param x The \code{Node} to convert
 #' @param heightAttributeName To use custom heights
@@ -416,10 +419,59 @@ ToNewick <- function(node, heightAttributeName = "Height", ...) {
 #' 
 #' @export
 as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
-  txt <- x$ToNewick(heightAttributeName)
+  txt <- ToNewick(x, heightAttributeName)
   return (ape::read.tree(text = txt))
 }
 
+
+#' Converts a phylo from the ape package to a Node
+#' 
+#' @param p The phylo object
+#' @param edgeLengthName If the phylo contains edge lengths, then they will be stored in 
+#' an attribute according to this parameter (the default is "edgeLength")
+#' @param replaceUnderscores if TRUE (the default), then underscores in names are replaced with spaces
+#' 
+#' @export
+as.Node.phylo <- function(p, edgeHeightName = "edgeHeight", replaceUnderscores = TRUE) {
+    
+  #find root node
+  rootNr <- unique(p$edge[,1][!p$edge[,1] %in% p$edge[,2]])
+  
+  #names
+  nodeNrs <- c(rootNr, unique(p$edge[,2]))
+  leafNrs <- 1:length(p$tip.label)
+  nms <- p$tip.label
+  names(nms) <- leafNrs
+  if("node.label" %in% names(p)) {
+    nms2 <- p$node.label
+  } else {
+    nms2 <- (max(leafNrs) + 1):max(nodeNrs)
+  }
+  names(nms2) <- (max(leafNrs) + 1):max(nodeNrs)
+  nms <- c(nms2, nms)
+  root <- Node$new(rootNr)
+  for (i in 1:nrow(p$edge)) {
+    e <- p$edge[i,]
+    fifu <- function(x) x$name == as.character(e[1])
+    parent <- GetNodes(root, filterFun = fifu)[[1]]
+    child <- parent$AddChild(as.character(e[2]))
+  }
+  if (length(p$edge.length) > 0) root$Set(edgeLength = p$edge.length, filterFun = function(x) !x$isRoot)
+  #try converting edge length to height
+  root[edgeHeightName] <- 0
+  root$Get(x$parent[edgeHeightName] - x$edgeLength, filterFun = function(x) !x$isRoot, assign = edgeHeightName)
+  corr <- max(root$Get(edgeHeightName))
+  root$Get(function(x) x[edgeHeightName] + corr, assign = edgeHeightName)
+  root$Set(edgeLength = NULL)
+  getName <- function(x) {
+    if(replaceUnderscores) str_replace_all( nms[[x$name]], "_", " ")
+    else nms[[x$name]]
+  }
+  root$Get(getName, assign = "name")
+  
+  return (root)
+  
+}
 
 
 #' Get a Phylo Label for a single Node

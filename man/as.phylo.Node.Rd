@@ -2,7 +2,8 @@
 % Please edit documentation in R/node_conversion.R
 \name{as.phylo.Node}
 \alias{as.phylo.Node}
-\title{Convert a node to a phylo object from the ape package.}
+\title{Convert a node to a phylo object from the ape package.
+This requires the ape package.}
 \usage{
 as.phylo.Node(x, heightAttributeName = "Height", ...)
 }
@@ -15,5 +16,6 @@ as.phylo.Node(x, heightAttributeName = "Height", ...)
 }
 \description{
 Convert a node to a phylo object from the ape package.
+This requires the ape package.
 }
 

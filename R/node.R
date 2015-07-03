@@ -77,7 +77,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{ToDataFrameTable}(..., pruneFun = NULL, filterFun = NULL)}{Converts the tree below this \code{Node} to standard tabular format, i.e. a \code{data.frame}, inheriting from ancestors and only putting one line per leaf.}
 #'   \item{\code{Height(rootHeight = 100)}}{Calculates the height of a \code{Node} given the hight of the root, assuming that nodes are equally distributed. Useful for easy printing.}
 #'   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
-#'   \item{\code{\link{ToNewick}(heightAttributeName = "Height", ...)}}{Converts the tree to Newick notation. }
+#'   \item{\code{\link{ToNewick}(heightAttributeName = "height", ...)}}{Converts the tree to Newick notation. }
 #'
 #' }
 #' 
@@ -115,7 +115,7 @@ Node <- R6Class("Node",
                       parent = NULL,
                       
                       initialize=function(name, ...) {
-                        if (!missing(name)) self$name <- name
+                        if (!missing(name)) self$name <- as.character(name)
                         self$formatters = new.env(hash = FALSE, parent = self, size = 10)
                         invisible (self)
                       },

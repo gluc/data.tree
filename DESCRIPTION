@@ -11,7 +11,7 @@ Imports:
 Suggests:
     testthat, magrittr, knitr
 Enhances:
-    ape, networkD3
+    ape, stats, networkD3
 Description: Create tree structures from hierarchical data, and use the utility 
     methods to traverse the tree in various orders. Aggregate, print, convert to and from data.frame, 
     and apply functions to your tree data. Useful for decision trees, machine learning, finance, and

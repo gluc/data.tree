@@ -3,6 +3,7 @@
 S3method(as.Node,data.frame)
 S3method(as.Node,dendrogram)
 S3method(as.Node,list)
+S3method(as.Node,phylo)
 S3method(as.data.frame,Node)
 S3method(as.dendrogram,Node)
 S3method(as.list,Node)

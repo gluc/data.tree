@@ -2,18 +2,10 @@
 
 ## Version 0.2.0 Chestnut
 
-- Conversions
-  - Added conversion to and from list (and thus to and from yaml, json, etc.)
-  - Added conversion from data.frame
-  - Added Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
-  - Added conversion to and from dendrogram
-  - Added conversion to phylo from the ape package
-  - Added conversion to Newick notation
 - Node methods
   - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
   - Added Node$Clone (returning a deep copy)
   - Added Node$Prune (pruning the tree)
-  - Added support for functions in Aggregate method
   - Added support for setting formatter functions on a Node
   - Added Node$isBinary active
   - Node.Get: 
@@ -24,8 +16,13 @@
   - Node.Set:
     - Add filterFun and pruneFun
     - Added support for traversal order
+- Conversions
+  - Added conversion to and from list of lists (and thus to and from yaml, json, etc.)
+  - Added conversion from data.frame
+  - Added Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
+  - Added conversion to and from dendrogram
+  - Added conversion to and from phylo from the ape package
+  - Added conversion to Newick notation
 - Utils
+  - Aggregate function: Added support for functions
   - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal
-
-
-
