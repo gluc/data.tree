@@ -7,6 +7,11 @@ warnings_are_errors: true
 r_build_args: 
 r_check_args: --as-cran
 
+r_github_packages:
+  - jimhester/covr
+
+after_success:
+  - Rscript -e 'library(covr);codecov()'
 
 notifications:
   email:

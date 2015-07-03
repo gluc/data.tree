@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree)
+[![Coverage Status](https://coveralls.io/repos/gluc/data.tree/badge.svg)](https://coveralls.io/r/gluc/data.tree) [![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](http://cran.rstudio.com/web/packages/data.tree)
+
 
 # data.tree
 An R package to manage hierarchical data and tree structures
