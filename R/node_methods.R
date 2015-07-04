@@ -1,5 +1,6 @@
 #' Traverse a tree or a sub-tree
 #' 
+#' @param node the root of a tree or a sub-tree that should be traversed
 #' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'
 #' @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 #' If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.
