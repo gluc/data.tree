@@ -8,6 +8,8 @@ Traverse(node, traversal = c("pre-order", "post-order", "in-order", "level",
   "ancestor"), pruneFun = NULL, filterFun = NULL)
 }
 \arguments{
+\item{node}{the root of a tree or a sub-tree that should be traversed}
+
 \item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'}
 
 \item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
