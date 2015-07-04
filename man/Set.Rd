@@ -4,23 +4,15 @@
 \alias{Set}
 \title{Traverse a Tree and Assign Values}
 \usage{
-Set(node, ..., traversal = c("pre-order", "post-order", "in-order", "level",
-  "ancestor"), pruneFun = NULL, filterFun = NULL)
+Set(nodes, ...)
 }
 \arguments{
-\item{node}{The \code{Node} to traverse}
+\item{nodes}{The \code{Node}s to traverse}
 
 \item{...}{each argument can be a vector of values to be assigned. Recycled.}
-
-\item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'}
-
-\item{pruneFun}{A pruning function, returning \code{TRUE} if a \code{Node} and its sub
-tree should be kept.}
-
-\item{filterFun}{A filter function, returning \code{TRUE} if a \code{Node} should be kept.}
 }
 \value{
-invisibly returns the node (useful for chaining)
+invisibly returns the nodes (useful for chaining)
 }
 \description{
 The method takes one or more vectors as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked

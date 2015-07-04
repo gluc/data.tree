@@ -4,12 +4,11 @@
 \alias{Get}
 \title{Traverse a Tree and Collect Values}
 \usage{
-Get(node, attribute, ..., traversal = c("pre-order", "post-order", "in-order",
-  "level", "ancestor"), pruneFun = NULL, filterFun = NULL, assign = NULL,
-  format = NULL, inheritFromAncestors = FALSE)
+Get(nodes, attribute, ..., assign = NULL, format = NULL,
+  inheritFromAncestors = FALSE)
 }
 \arguments{
-\item{node}{The node on which to perform the Get}
+\item{nodes}{The nodes on which to perform the Get (e.g. obtained via \code{\link{Traverse}}}
 
 \item{attribute}{determines what is collected during traversal. The attribute can be
 \itemize{
@@ -20,14 +19,6 @@ Get(node, attribute, ..., traversal = c("pre-order", "post-order", "in-order",
   }}
 
 \item{...}{in case \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
-
-\item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'}
-
-\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
-If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.}
-
-\item{filterFun}{allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
-Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).}
 
 \item{assign}{can be the name of a variable to which we assign the collected values before \code{format} is called.}
 

@@ -169,7 +169,9 @@ as.data.frame.Node <- function(x,
     x <- x$Clone()
   }
   
-  df <- data.frame( levelName = format(x$Get('levelName', pruneFun = pruneFun, filterFun = filterFun)),
+  t <- Traverse(x, pruneFun = pruneFun, filterFun = filterFun)
+  
+  df <- data.frame( levelName = format(Get(t, 'levelName')),
                     row.names = row.names,
                     stringsAsFactors = FALSE)
   
@@ -184,7 +186,7 @@ as.data.frame.Node <- function(x,
     if (length(col) > 1) {
       it <- col
     } else {
-      it <- Get(x, col, pruneFun = pruneFun, filterFun = filterFun, inheritFromAncestors = inheritFromAncestors)
+      it <- Get(t, col, inheritFromAncestors = inheritFromAncestors)
     }
     df[colName] <- it
     
