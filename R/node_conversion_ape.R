@@ -44,7 +44,7 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
   for (i in 1:nrow(x$edge)) {
     e <- x$edge[i,]
     fifu <- function(x) x$name == as.character(e[1])
-    parent <- GetNodes(root, filterFun = fifu)[[1]]
+    parent <- Traverse(root, filterFun = fifu)[[1]]
     child <- parent$AddChild(as.character(e[2]))
   }
   if (length(x$edge.length) > 0) {

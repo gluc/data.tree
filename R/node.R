@@ -171,12 +171,13 @@ Node <- R6Class("Node",
                                      assign = NULL, 
                                      format = NULL,
                                      inheritFromAncestors = FALSE) {
-                        Get(self, 
+                        t <- Traverse(self, 
+                                      traversal = traversal, 
+                                      pruneFun = pruneFun,
+                                      filterFun = filterFun)
+                        Get(t, 
                             attribute, 
-                            ..., 
-                            traversal = traversal, 
-                            pruneFun = pruneFun,
-                            filterFun = filterFun, 
+                            ...,  
                             assign = assign, 
                             format = format, 
                             inheritFromAncestors = inheritFromAncestors)
@@ -187,7 +188,11 @@ Node <- R6Class("Node",
                                      traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),  
                                      pruneFun = NULL,
                                      filterFun = NULL) {
-                        Set(self, ..., traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
+                        t <- Traverse(self, 
+                                      traversal = traversal, 
+                                      pruneFun = pruneFun,
+                                      filterFun = filterFun)
+                        Set(t, ...)
                       },
                       
                       Aggregate = function(attribute, fun, ...) {
