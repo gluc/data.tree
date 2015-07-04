@@ -404,7 +404,7 @@ print(acme, "avgExpectedCost", "expectedCost")
 
 This is equivalent to:
 ```{r}
-acme$Set(avgExpectedCost =NULL, expectedCost = NA)
+acme$Set(avgExpectedCost = NULL, expectedCost = NA)
 ```
 
 
@@ -438,7 +438,7 @@ We can use this in the `Get` method:
 acme$Get(Aggregate, "cost", sum)
 ```
 
-This is the equivalent of:
+This is the equivalent to:
 
 ```{r}
 

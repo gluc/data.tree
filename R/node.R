@@ -193,6 +193,7 @@ Node <- R6Class("Node",
                                       pruneFun = pruneFun,
                                       filterFun = filterFun)
                         Set(t, ...)
+                        invisible (self)
                       },
                       
                       Aggregate = function(attribute, fun, ...) {
@@ -319,11 +320,11 @@ Node <- R6Class("Node",
                       },
                       
                       isLeaf = function() {
-                        return (length(self$children) == 0) 
+                        isLeaf(self) 
                       },
                       
                       isRoot = function() {
-                        return (is.null(self$parent))
+                        isRoot(self)
                       },
                       
                       count = function() {
@@ -400,11 +401,11 @@ Node <- R6Class("Node",
                       },
                       
                       depth = function() {
-                        max(Get(self, "level")) - self$level + 1
+                        max(self$Get("level")) - self$level + 1
                       },
                       
                       isBinary = function() {
-                        all(2 == Get(self, "count", filterFun = function(x) !x$isLeaf))
+                        all(2 == self$Get("count", filterFun = function(x) !x$isLeaf))
                       },
                       
                       root = function() {

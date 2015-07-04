@@ -2,27 +2,28 @@
 
 ## Version 0.2.0 Chestnut
 
-- Node methods
+- Node
   - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
-  - Added Node$Clone (returning a deep copy)
-  - Added Node$Prune (pruning the tree)
-  - Added support for setting formatter functions on a Node
-  - Added Node$isBinary active
+  - ADD: Node$Clone (returning a deep copy)
+  - ADD: Node$Prune (pruning the tree)
+  - ADD: support for setting formatter functions on a Node
+  - ADD: Node$isBinary active
+  - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering
   - Node.Get: 
     - CHANGE: Renamed filterFun parameter to pruneFun
-    - Added new parameter filterFun, as opposed to pruneFun
-    - Added new traversal modes "in-order", "level"
-    - Added parameter inheritFromAncestors
+    - ADD: new parameter filterFun, as opposed to pruneFun
+    - ADD: new traversal modes "in-order", "level"
+    - ADD: parameter inheritFromAncestors
   - Node.Set:
-    - Add filterFun and pruneFun
-    - Added support for traversal order
+    - ADD: filterFun and pruneFun
+    - ADD: support for traversal order
 - Conversions
-  - Added conversion to and from list of lists (and thus to and from yaml, json, etc.)
-  - Added conversion from data.frame
-  - Added Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
-  - Added conversion to and from dendrogram
-  - Added conversion to and from phylo from the ape package
-  - Added conversion to Newick notation
+  - ADD: conversion to and from list of lists (and thus to and from yaml, json, etc.)
+  - ADD: conversion from data.frame
+  - ADD: Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
+  - ADD: conversion to and from dendrogram
+  - ADD: conversion to and from phylo from the ape package
+  - ADD: conversion to Newick notation
 - Utils
-  - Aggregate function: Added support for functions
+  - ADD: Aggregate function: support for functions
   - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal
