@@ -274,13 +274,13 @@ as.Node.data.frame <- function(x,
 #' 
 #' @import stringr
 #' @export 
-ToNewick <- function(node, heightAttributeName = "Height", ...) {
+ToNewick <- function(node, heightAttribute = Height, ...) {
 
   deparse <- function(x) {
     name <- str_replace_all(x$name, " ", "_")
     name <- str_replace_all(name, ",", "")
     if(!x$isRoot) {
-      edge <- x$parent$GetAttribute(heightAttributeName) - x$GetAttribute(heightAttributeName, ...) 
+      edge <- x$parent$GetAttribute(heightAttribute) - x$GetAttribute(heightAttribute) 
       me <- paste0(name, ":", edge)
     } else {
       me <- name

@@ -8,8 +8,8 @@
 #' @param ... any other argument
 #' 
 #' @export
-as.phylo.Node <- function(x, heightAttributeName = "Height", ...) {
-  txt <- ToNewick(x, heightAttributeName)
+as.phylo.Node <- function(x, heightAttribute = Height, ...) {
+  txt <- ToNewick(x, heightAttribute)
   return (ape::read.tree(text = txt))
 }
 

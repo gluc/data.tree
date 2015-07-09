@@ -18,7 +18,6 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'formatters',
                                 'Get',
                                 'GetAttribute',
-                                'Height',
                                 'initialize',
                                 'isBinary',
                                 'isLeaf',
@@ -75,7 +74,6 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
 #'   \item{\code{\link{ToDataFrame}(..., pruneFun = NULL, filterFun = NULL, inheritFromAncestors)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
 #'   \item{\code{ToDataFrameTable}(..., pruneFun = NULL, filterFun = NULL)}{Converts the tree below this \code{Node} to standard tabular format, i.e. a \code{data.frame}, inheriting from ancestors and only putting one line per leaf.}
-#'   \item{\code{Height(rootHeight = 100)}}{Calculates the height of a \code{Node} given the hight of the root, assuming that nodes are equally distributed. Useful for easy printing.}
 #'   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
 #'   \item{\code{\link{ToNewick}(heightAttributeName = "height", ...)}}{Converts the tree to Newick notation. }
 #'
@@ -286,16 +284,9 @@ Node <- R6Class("Node",
                                      ...)
                       },
                       
-                      Height = function(rootHeight = 100) {
-                        if (self$isRoot) return ( rootHeight )
-                        if (self$isLeaf) return ( 0 )
-                        
-                        h <- self$parent$Height(rootHeight) * (1 - 1 / self$depth)
-                        return (h)
-                      }, 
                       
-                      ToNewick = function(heightAttributeName = "Height", ...) {
-                        ToNewick(self, heightAttributeName, ...)
+                      ToNewick = function(heightAttribute = Height, ...) {
+                        ToNewick(self, heightAttribute, ...)
                       }
                       
                                             

@@ -44,3 +44,17 @@ print.Node <- function(x, ...) {
   print(as.data.frame(x, row.names = NULL, optional = FALSE, ...), na.print = "")
 }
 
+
+
+#'   Calculates the height of a \code{Node} given the hight of the root, 
+#'   assuming that nodes are equally distributed. Useful for easy printing
+#'   as dendrogram.
+#'   
+#'   @param node The node
+#'   @param rootHeight The height of the root
+Height <- function(node, rootHeight = 100) {
+  if (node$isRoot) return ( rootHeight )
+  if (node$isLeaf) return ( 0 )
+  h <- Height(node$parent, rootHeight) * (1 - 1 / node$depth)
+  return (h)
+}

@@ -63,8 +63,8 @@ as.dendrogram.Node <- function(object, ...) {
   # unclass(dend2)
   
   height <- self$height
-  if(is.null(height)) {
-    height <- self$Height(100)
+  if(length(height) == 0) {
+    height <- Height(self, 100)
   }
   
   if (self$isLeaf) {
