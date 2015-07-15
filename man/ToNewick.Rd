@@ -4,14 +4,14 @@
 \alias{ToNewick}
 \title{Write a data.tree to Newick notation}
 \usage{
-ToNewick(node, heightAttributeName = "Height", ...)
+ToNewick(node, heightAttribute = Height, ...)
 }
 \arguments{
 \item{node}{The node to convert}
 
-\item{heightAttributeName}{The name of the attribute or function storing the height}
-
 \item{...}{parameters that will be passed on the the heightAttributeName, in case it is a function}
+
+\item{heightAttributeName}{The name of the attribute or function storing the height}
 }
 \description{
 Write a data.tree to Newick notation

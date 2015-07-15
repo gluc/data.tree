@@ -5,14 +5,14 @@
 \title{Convert a node to a phylo object from the ape package.
 This requires the ape package.}
 \usage{
-as.phylo.Node(x, heightAttributeName = "Height", ...)
+as.phylo.Node(x, heightAttribute = Height, ...)
 }
 \arguments{
 \item{x}{The \code{Node} to convert}
 
-\item{heightAttributeName}{To use custom heights}
-
 \item{...}{any other argument}
+
+\item{heightAttributeName}{To use custom heights}
 }
 \description{
 Convert a node to a phylo object from the ape package.

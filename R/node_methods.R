@@ -139,6 +139,34 @@ Get = function(nodes,
   invisible (res)
 }
 
+#' Executes a function an a set of nodes
+#' @param nodes a set of nodes, usually obtained via \code{\link{Traverse}}
+#' @param fun the function to execute. The function is expected to be either a Method, or to take a 
+#' Node as its first argument
+#' @param ... any additional parameters to be passed on to fun
+#' 
+#' @export
+Do <- function(nodes,
+               fun, 
+               ...) {
+  
+  f <- function(x) x$GetAttribute(attribute = fun, 
+                                  ...)
+  
+  mapply(fun, nodes, MoreArgs = list(...))
+  invisible (nodes)
+}
+  
+  
+Format <- function(nodes,
+                   values,
+                   formatFun,
+                   ...) {
+
+  
+  
+}
+
 #' Traverse a Tree and Assign Values
 #' 
 #' The method takes one or more vectors as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked
