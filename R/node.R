@@ -12,6 +12,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'Clone',
                                 'count',
                                 'depth',
+                                'Do',
                                 'fields',
                                 'fieldsAll',
                                 'Find',
@@ -169,6 +170,7 @@ Node <- R6Class("Node",
                                      assign = NULL, 
                                      format = NULL,
                                      inheritFromAncestors = FALSE) {
+                        
                         t <- Traverse(self, 
                                       traversal = traversal, 
                                       pruneFun = pruneFun,
@@ -180,6 +182,22 @@ Node <- R6Class("Node",
                             format = format, 
                             inheritFromAncestors = inheritFromAncestors)
 
+                      },
+                      
+                      
+                      Do = function( fun, 
+                                     ..., 
+                                     traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),  
+                                     pruneFun = NULL,
+                                     filterFun = NULL 
+                                     ) {
+                        
+                        t <- Traverse(self, 
+                                      traversal = traversal, 
+                                      pruneFun = pruneFun,
+                                      filterFun = filterFun)
+                        Do( t, fun, ...)
+                        
                       },
                       
                       Set = function(..., 

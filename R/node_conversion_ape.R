@@ -53,14 +53,16 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
     root[[heightName]] <- 0
     ehf <- function(x) x$parent[[heightName]] - x$edgeLength 
     corr <- min(root$Get(ehf, filterFun = function(x) !x$isRoot, assign = heightName))
-    root$Get(function(x) x[[heightName]] - corr, assign = heightName)
-    root$Get(function(x) rm("edgeLength", envir = x), filterFun = function(x) !x$isRoot)
+    root$Do(function(x) x[[heightName]] <- x[[heightName]] - corr)
+    root$Do(function(x) rm("edgeLength", envir = x), filterFun = function(x) !x$isRoot)
   }
-  getName <- function(x) {
-    if(replaceUnderscores) str_replace_all( nms[[x$name]], "_", " ")
-    else nms[[x$name]]
+  
+  setName <- function(x) {
+    if(replaceUnderscores) nm <- str_replace_all( nms[[x$name]], "_", " ")
+    else nm <- nms[[x$name]]
+    x$name <- nm
   }
-  root$Get(getName, assign = "name")
+  root$Do(setName)
   
   return (root)
   

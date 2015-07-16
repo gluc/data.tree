@@ -158,14 +158,7 @@ Do <- function(nodes,
 }
   
   
-Format <- function(nodes,
-                   values,
-                   formatFun,
-                   ...) {
 
-  
-  
-}
 
 #' Traverse a Tree and Assign Values
 #' 
