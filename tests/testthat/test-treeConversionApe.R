@@ -73,12 +73,15 @@ test_that("as.phylo.Node heightAttributeName", {
   
   expect_equal(n$Get("name"), acme$Get("name"))
   gh <- function(x) {
-    if (x$isRoot) return (0)
+    if (x$isRoot) {
+      x$edgeHeight <- 0
+      return()
+    }
     if (x$parent$isRoot) ph <- 0
     else ph <- x$parent$edgeLength
-    x$edgeLength - ph
+    x$edgeHeight <- x$edgeLength - ph
   }
-  n$Get(gh, assign = "edgeHeight")
+  n$Do(gh)
   expect_equal(n$Get("edgeLength"), acme$Get("edgeLength"))
   
 })

@@ -151,7 +151,7 @@ test_that("Get format", {
 
 
 
-test_that("Get assign", {
+test_that("Do", {
   
   data(acme)
   
@@ -164,7 +164,7 @@ test_that("Get assign", {
     format(x, nsmall=2, scientific = FALSE)
   }
   
-  acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)
+  acme$Do(function(x) x$averageCost <- calculateAggregateChildCost(x, mean), traversal = "post-order")
   get <- acme$Get('averageCost', traversal = "post-order")["New Product Line"]
   
   
@@ -330,7 +330,7 @@ test_that("Aggregate", {
 
 test_that("Sort", {
   
-  acme$Get("Aggregate", "cost", sum, assign = "totalCost")
+  acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum))
   acme$Sort("totalCost", decreasing = FALSE)
   get <- acme$Get('totalCost')
   exp <- c(4950000, 700000, 50000, 250000, 400000, 1500000, 500000, 1000000, 2750000, 750000, 2000000)
