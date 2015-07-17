@@ -4,8 +4,7 @@
 \alias{Get}
 \title{Traverse a Tree and Collect Values}
 \usage{
-Get(nodes, attribute, ..., assign = NULL, format = NULL,
-  inheritFromAncestors = FALSE)
+Get(nodes, attribute, ..., format = NULL, inheritFromAncestors = FALSE)
 }
 \arguments{
 \item{nodes}{The nodes on which to perform the Get (e.g. obtained via \code{\link{Traverse}}}
@@ -19,8 +18,6 @@ Get(nodes, attribute, ..., assign = NULL, format = NULL,
   }}
 
 \item{...}{in case \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
-
-\item{assign}{can be the name of a variable to which we assign the collected values before \code{format} is called.}
 
 \item{format}{can be a function that transforms the collected values, e.g. for printing}
 
@@ -51,7 +48,6 @@ myFormat <- function(x) {
 acme$Get(calculateAggregateChildCost,
         mean,
         traversal = "post-order",
-        assign = "averageCost",
         format = myFormat)
 }
 \seealso{

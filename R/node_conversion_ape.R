@@ -48,13 +48,15 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
     child <- parent$AddChild(as.character(e[2]))
   }
   if (length(x$edge.length) > 0) {
-    root$Set(edgeLength = x$edge.length, filterFun = function(x) !x$isRoot)
+    t <- Traverse(root, filterFun = NotIsRoot)
+    Set(t, edgeLength = x$edge.length)
     #try converting edge length to height
     root[[heightName]] <- 0
-    ehf <- function(x) x$parent[[heightName]] - x$edgeLength 
-    corr <- min(root$Get(ehf, filterFun = function(x) !x$isRoot, assign = heightName))
+    ehf <- function(x) x[[heightName]] <- x$parent[[heightName]] - x$edgeLength 
+    Do(t, ehf)
+    corr <- min(Get(t, heightName))
     root$Do(function(x) x[[heightName]] <- x[[heightName]] - corr)
-    root$Do(function(x) rm("edgeLength", envir = x), filterFun = function(x) !x$isRoot)
+    Do(t, function(x) rm("edgeLength", envir = x))
   }
   
   setName <- function(x) {

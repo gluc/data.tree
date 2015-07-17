@@ -142,7 +142,7 @@ test_that("Get format", {
     format(x, nsmall=2, scientific = FALSE)
   }
   
-  get <- acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", assign = "averageCost", format = myFormat)["New Product Line"]
+  get <- acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", format = myFormat)["New Product Line"]
   
   expect_equal(as.character(get), "2000000.00")
   

@@ -8,15 +8,18 @@
   - ADD: Node$Prune (pruning the tree)
   - ADD: support for setting formatter functions on a Node
   - ADD: Node$isBinary active
-  - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering
-  - Node.Get: 
+  - ADD: standalone versions of IsLeaf, NotIsLeaf, IsRoot, NotIsRoot for concise filtering
+  - Node$Get: 
     - CHANGE: Renamed filterFun parameter to pruneFun
     - ADD: new parameter filterFun, as opposed to pruneFun
+    - CHANGE: removed the assign parameter (use Do instead)
     - ADD: new traversal modes "in-order", "level"
     - ADD: parameter inheritFromAncestors
-  - Node.Set:
+  - Node$Set:
     - ADD: filterFun and pruneFun
     - ADD: support for traversal order
+  - Node$Do:
+    - ADD: new function Do, which applies a function
 - Conversions
   - ADD: conversion to and from list of lists (and thus to and from yaml, json, etc.)
   - ADD: conversion from data.frame

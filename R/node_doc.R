@@ -48,7 +48,7 @@ Find = function(...) {
 #' 
 #' @examples
 #' data(acme)
-#' acme$Get("Aggregate", "cost", sum, assign = "totalCost")
+#' acme$Do(function(x) x$totalCost <- Aggregate("cost", sum)
 #' acme$Sort("totalCost", decreasing = TRUE)
 #' print(acme, "totalCost")
 #' 

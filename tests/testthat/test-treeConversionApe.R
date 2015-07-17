@@ -64,8 +64,8 @@ test_that("as.phylo.Node heightAttributeName", {
 test_that("as.phylo.Node heightAttributeName", {
 
   data(acme)
-  height <- function(x) Height(x) + 1
-  acme$Get(height, assign = "edgeHeight")
+  height <- function(x) x$edgeHeight <- Height(x) + 1
+  acme$Do(height)
   #needs explicit generics as library ape is not loaded
   
   p <- as.phylo.Node(acme, heightAttributeName = "edgeHeight")

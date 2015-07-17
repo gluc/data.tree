@@ -74,6 +74,9 @@ Traverse = function(node,
 
 
 
+
+
+
 #' Traverse a Tree and Collect Values
 #' 
 #' The \code{Get} method is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
@@ -88,7 +91,6 @@ Traverse = function(node,
 #'         passing \code{...} to the function.
 #'         }
 #' @param ... in case \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
-#' @param assign can be the name of a variable to which we assign the collected values before \code{format} is called.
 #' @param format can be a function that transforms the collected values, e.g. for printing
 #' @param inheritFromAncestors if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.
 #'  
@@ -112,7 +114,6 @@ Traverse = function(node,
 #'acme$Get(calculateAggregateChildCost, 
 #'         mean, 
 #'         traversal = "post-order", 
-#'         assign = "averageCost", 
 #'         format = myFormat)
 #'  
 #' @seealso \code{\link{Node}}
@@ -122,21 +123,18 @@ Traverse = function(node,
 Get = function(nodes, 
                attribute, 
                ..., 
-               assign = NULL, 
                format = NULL,
                inheritFromAncestors = FALSE) {
 
   
   res <- sapply(nodes, function(x) x$GetAttribute(attribute, 
                                                   ...,
-                                                  assign = assign, 
                                                   format = format, 
                                                   inheritFromAncestors = inheritFromAncestors)
          )
   
   
-  if (length(assign) == 0) return (res)
-  invisible (res)
+  return (res)
 }
 
 #' Executes a function an a set of nodes
@@ -162,7 +160,7 @@ Do <- function(nodes,
 
 #' Traverse a Tree and Assign Values
 #' 
-#' The method takes one or more vectors as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked
+#' The method takes one or more vectors as an argument. It traverses the tree, whereby the values are picked
 #' from the vector. Also available as OO-style method on \code{\link{Node}}.
 #' 
 #' @param nodes The \code{Node}s to traverse
@@ -248,7 +246,7 @@ Aggregate = function(node, attribute, fun, ...) {
 
 
 
-GetAttribute = function(node, attribute, ..., assign = NULL, format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
+GetAttribute = function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
   if(is.function(attribute)) {
     #function
     
@@ -272,7 +270,6 @@ GetAttribute = function(node, attribute, ..., assign = NULL, format = NULL, inhe
   if (length(v) == 0) v <- NA
   if (length(v) == 0) v <- NA
   
-  if(!is.null(assign)) node[[assign]] <- v
   if(is.vector(v)) names(v) <- node$name
   
   if(is.null(format) && !is.function(attribute)) {
@@ -286,5 +283,35 @@ GetAttribute = function(node, attribute, ..., assign = NULL, format = NULL, inhe
   return (v)
 }
 
+#' Test if a node is not the root
+#' 
+#' @param node
+#' @export
+NotIsRoot <- function(node) {
+  return (!node$isRoot) 
+}
+
+#' Test if a node is the root
+#'
+#' @param node
+#' @export
+IsRoot <- function(node) {
+  return (node$isRoot) 
+}
 
 
+#' Test if a node is not the leaf
+#'
+#' @param node
+#' @export
+NotIsLeaf <- function(node) {
+  return (!node$isLeaf) 
+}
+
+#' Test if a node is the leaf
+#'
+#' @param node
+#' @export
+IsLeaf <- function(node) {
+  return (node$isLeaf) 
+}

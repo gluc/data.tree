@@ -15,7 +15,7 @@ Set(nodes, ...)
 invisibly returns the nodes (useful for chaining)
 }
 \description{
-The method takes one or more vectors as an argument. It traverses the tree, and assigns values to variables, whereby the values are picked
+The method takes one or more vectors as an argument. It traverses the tree, whereby the values are picked
 from the vector. Also available as OO-style method on \code{\link{Node}}.
 }
 \examples{
