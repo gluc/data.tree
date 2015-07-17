@@ -37,7 +37,7 @@ We will not go into more details about ID3. You will find lots of documentation 
 
 Also, be assured that this example is by no means meant to be used in the real world. It is overly simplistic, and far too little data is used for training. Nor do we claim that this is a complete discussion of the ID3 algorithm, let alone classification models. 
 
-On the contrary, the only reason why we chose this example is to provide a simple to grasp application of the `data.tree` package, in order to demonstrate how easy it is to build hierarchical models with it.
+On the contrary, the only reason why we chose this example is to provide a simple application of the `data.tree` package, in order to demonstrate how easy it is to build hierarchical models with it.
 
 # Feature Selection
 

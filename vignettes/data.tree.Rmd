@@ -266,13 +266,13 @@ data.frame(ec = acme$Get(ExpectedCost, fun = mean))
 ```
 
 
-### Assigning values using `Get`
+### Assigning values using `Do`
 
-We can tell the `Get` method to assign the value to a specific attribute for each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. For instance, we can store the calculated expected cost for later use and printing:
+We can tell the `Do` method to assign the value to a specific attribute for each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. For instance, we can store the calculated expected cost for later use and printing:
 
 ```{r}
 
-acme$Get(function(x) x$p * x$cost, assign = "expectedCost")
+acme$Do(function(x) x$expectedCost <- x$p * x$cost)
 print(acme, "p", "cost", "expectedCost")
 
 ```
@@ -289,23 +289,18 @@ In the following example, we calculate the average expected cost, just as above.
 
 ```{r}
 
-ExpectedCost <- function(node, variableName = "avgExpectedCost", fun = sum) {
+SetExpectedCost <- function(node, variableName = "avgExpectedCost", aggfun = sum) {
   #if the "cache" is filled, I return it. This stops the recursion
-  if(!is.null(node[[variableName]])) return (node[[variableName]])
+  if(length(node[[variableName]]) > 0) return (node[[variableName]])
   
   #otherwise, I calculate from my own properties
-  result <- node$cost * node$p
+  node[[variableName]] <- node$cost * node$p
   
   #if the properties are not set, I calculate the mean from my children
-  if(length(result) == 0) {
-    if (node$isLeaf) result <- NA
-    else {
-      node$children %>%
-      sapply(function(x) ExpectedCost(x, variableName = variableName, fun = fun)) %>%
-      fun -> result
-    }
+  if(length(node[[variableName]]) == 0) {
+    if (node$isLeaf) stop("All leaves must have cost and p set")
+    node[[variableName]] <- aggfun(sapply(node$children, function(x) x[[variableName]]))    
   }
-  return (result)
 }
 
 ```
@@ -314,9 +309,8 @@ We can use our method like this:
 
 ```{r}
 
-invisible(
-  acme$Get(ExpectedCost, fun = mean, traversal = "post-order", assign = "avgExpectedCost")
-)
+acme$Do(SetExpectedCost, aggfun = mean, traversal = "post-order")
+
 print(acme, "cost", "p", "avgExpectedCost")
 
 ```
@@ -393,6 +387,22 @@ Note that unassigned values also have `NULL`:
 acme$newAttribute
 ```
 
+As a consequence, the value is not truely deleted:
+
+```{r}
+acme$fieldsAll
+```
+
+If we need to make sure that a variable is deleted for good, we do this:
+
+```{r}
+
+acme$Do(function(x) rm(avgExpectedCost, envir = x))
+acme$fieldsAll
+
+```
+
+
 ### Chaining
 
 As `Node` is an R6 reference object, we can **chain** the arguments:
@@ -463,7 +473,7 @@ acme$Get(GetCost)
 You can sort an entire tree by using the `Sort` method on the root. The method will sort recursively and, for each `Node`, sort children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub-class of `Node`, see below).
 
 ```{r}
-acme$Get(ExpectedCost, assign = "expectedCost")
+acme$Do(SetExpectedCost, variableName = "expectedCost", traversal = "post-order")
 acme$Sort("expectedCost", decreasing = TRUE)
 print(acme, "expectedCost")
 ```
@@ -477,7 +487,9 @@ You can create a deep copy of a tree by using the `Clone` method on the root.
 ```{r}
 data(acme)
 acme2 <- acme$Clone()
+#change the name on the clone:
 acme2$name <- 'Acme2 Inc.'
+#only the clone is changed, but not the original:
 acme2$name != acme$name
 
 ```
@@ -489,33 +501,35 @@ You can convert a tree to a nested list by using the `ToList` method on the root
 ```{r}
 data(acme)
 acmeList <- acme$ToList()
+acmeList$IT$Outsource$cost
 ```
 
-You can call the `name` field and the `children` field differently, if you want:
+You can use `as.Node.List` to convert a nested list back into a tree:
+```{r}
+as.Node(acmeList)
+```
+
+
+### Explicit mode
+
+You can use the explicit mode to save children in a nested list. You can call the `name` field and the `children` field differently, if you want:
 
 ```{r}
-acmeList2 <- acme$ToList(nameName = 'id', childrenName = 'subNodes')
+acmeList2 <- acme$ToList(mode = "explicit", nameName = 'id', childrenName = 'subNodes')
 acmeList2$subNodes$IT$subNodes$Outsource$cost
 ```
 
 You can also chose whether or not to have the nested lists named. This can be especially useful for conversion to JSON:
 
 ```{r}
-acmeList3 <- acme$ToList(unname = TRUE)
+acmeList3 <- acme$ToList(mode = "explicit", unname = TRUE)
 acmeList3$children[[3]]$children[[1]]$cost
 ```
-
-Finally, you can use `as.Node.List` to convert a nested list into a tree:
-```{r}
-as.Node(acmeList)
-```
-
-
 
 
 ## Subclassing `Node`
 
-We can create a subclass of `Node`, and add custom methods to our subclass. This comes naturally to users with experience in OO languages such as Java, Python or C#:
+We can create a subclass of `Node`, and add custom methods to our subclass. This comes naturally to users with experience in OO languages such as Java, Python or C#. See the R6 documentation for more details.
 
 
 ```{r}
