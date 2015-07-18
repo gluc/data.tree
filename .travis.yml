@@ -1,6 +1,6 @@
 language: r
 
-sudo: required
+sudo: false
 
 warnings_are_errors: true
 
