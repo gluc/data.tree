@@ -71,43 +71,36 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
 }
 
 
-#' Get a Phylo Label for a single Node
-#' @param x The Node
-#' @param labelFun The function that compiles the label
-#' @param type either "node" (the default) or "edge"
-#' @param ... any argument to be passed to the labelFun
-#' @return a string that can be used as a Phylo Node label
-#' @export
-GetPhyloLabel <- function(x, labelFun, type = c("node", "edge"), ...) {
-  
-  label <- labelFun(x, ...)
-  nodeNr <- GetPhyloNr(x, type)
-  
-  attr(label, "nodes") <- nodeNr
-  
-  return (label)
-}
+
 
 #' Gets the node nr in phylo context
+#' 
+#' Use this function when plotting a Node as a phylo, to set custom
+#' labels to plot.
 #' 
 #' @param x The Node
 #' @param type Either "node" (the default) or "edge"
 #' @return an integer representing the node
+#' 
+#' @examples
+#' library(ape)
+#' library(data.tree)
+#' data(acme)
+#' ap <- as.phylo(acme)
+#' plot(ap)
+#' nodelabels("IT Dep.", GetPhyloNr(acme$Find("IT")))
+#' edgelabels("Good!", GetPhyloNr(acme$Find("IT", "Switch to R"), "edge"))
+#' 
 #' @export
 GetPhyloNr <- function(x, type = c("node", "edge")) {
   type <- type[1]
   if (type == "node") {
-    if (x$isLeaf) {
-      leaves <- x$root$leaves
-      for (i in 1:length(leaves)) leaves[[i]]$tmp <- i 
-    } else {
-      n <- x$root$totalCount - x$root$leafCount
-      x$root$Set(tmp = x$root$leafCount + (1:n), filterFun = isLeaf)
-    }
+    t <- c(Traverse(x$root, filterFun = isLeaf), Traverse(x$root, filterFun = isNotLeaf))    
+  } else if (type == "edge") {
+    t <- Traverse(x$root, filterFun = isNotRoot)
   } else {
-    x$root$Set(tmp = (1:x$root$totalCount) - 1)
+    stop("Only node or edge allowed as type")
   }
-  res <- x$tmp
-  x$root$Set("tmp", NULL)
+  res <- which(sapply(t, function(z) identical(z, x)))
   return (res)
 }

@@ -15,6 +15,16 @@ GetPhyloNr(x, type = c("node", "edge"))
 an integer representing the node
 }
 \description{
-Gets the node nr in phylo context
+Use this function when plotting a Node as a phylo, to set custom
+labels to plot.
+}
+\examples{
+library(ape)
+library(data.tree)
+data(acme)
+ap <- as.phylo(acme)
+plot(ap)
+nodelabels("IT Dep.", GetPhyloNr(acme$Find("IT")))
+edgelabels("Good!", GetPhyloNr(acme$Find("IT", "Switch to R"), "edge"))
 }
 

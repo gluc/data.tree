@@ -86,3 +86,16 @@ test_that("as.phylo.Node heightAttributeName", {
   
 })
 
+
+test_that("GetPhyloNumber node", {
+  data(acme)
+  acme$Do(function(x) x$phyloNr <- GetPhyloNr(x, "node"))
+  expect_equal(as.vector(acme$Get("phyloNr")), c(8,9,1,2,10,3,4,11,5,6,7))
+})
+
+test_that("GetPhyloNumber edge", {
+  data(acme)
+  acme$Do(function(x) x$phyloNr <- GetPhyloNr(x, "edge"))
+  expect_equal(as.vector(acme$Get("phyloNr")), c(NA, 1:10))
+})
+
