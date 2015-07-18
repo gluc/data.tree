@@ -21,6 +21,10 @@ A string corresponding to x, suitable for printing
 \description{
 This utility method can be used as a format function when converting trees to a \code{data.frame}
 }
+\examples{
+data(acme)
+print(acme, prob = acme$Get("p", format = FormatPercent))
+}
 \seealso{
 formatC
 }

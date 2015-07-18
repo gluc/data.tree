@@ -7,6 +7,12 @@
 #' @param heightAttribute The attribute (field name or function) storing the height
 #' @param ... any other argument
 #' 
+#' @examples
+#' library(ape)
+#' data(acme)
+#' acmephylo <- as.phylo(acme)
+#' plot(acmephylo)
+#' 
 #' @export
 as.phylo.Node <- function(x, heightAttribute = Height, ...) {
   txt <- ToNewick(x, heightAttribute)

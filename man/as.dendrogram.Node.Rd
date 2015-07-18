@@ -4,10 +4,12 @@
 \alias{as.dendrogram.Node}
 \title{Convert a Node to a dendrogram}
 \usage{
-\method{as.dendrogram}{Node}(object, ...)
+\method{as.dendrogram}{Node}(object, heightAttribute = Height, ...)
 }
 \arguments{
 \item{object}{The Node to convert}
+
+\item{heightAttribute}{The attribute (field name or function) storing the height}
 
 \item{...}{Additional parameters}
 }

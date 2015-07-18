@@ -9,12 +9,16 @@
 \arguments{
 \item{x}{The Node}
 
-\item{...}{Additional parameters}
+\item{...}{Additional parameters to be printed as columns, as a string.}
 }
 \description{
 Print a Node in a human-readable fashion.
 }
 \details{
 Print the Node in a human-readable fashion.
+}
+\examples{
+data(acme)
+print(acme, "cost", "p")
 }
 

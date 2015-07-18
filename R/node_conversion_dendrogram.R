@@ -44,11 +44,12 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
 #' @details Convert a Node to a dendrogram
 #' 
 #' @param object The Node to convert
+#' @param heightAttribute The attribute (field name or function) storing the height
 #' @param ... Additional parameters
 #' 
 #' @import stats
 #' @export
-as.dendrogram.Node <- function(object, ...) {
+as.dendrogram.Node <- function(object, heightAttribute = Height, ...) {
   node <- object
   
   #strange: the original dendrogram will
@@ -62,11 +63,8 @@ as.dendrogram.Node <- function(object, ...) {
   # unclass(dend1)
   # unclass(dend2)
   
-  height <- node$height
-  if(length(height) == 0) {
-    height <- Height(node, 100)
-  }
-  
+  height <- node$GetAttribute(heightAttribute)
+
   if (node$isLeaf) {
     res <- node$value
     res <- structure(res, 
@@ -79,7 +77,7 @@ as.dendrogram.Node <- function(object, ...) {
   } else {
     #res <- list()
     #class(res) <- "dendrogram"
-    res <- unname(lapply(node$children, FUN = function(x) as.dendrogram(x, ...)))
+    res <- unname(lapply(node$children, FUN = function(x) as.dendrogram(x, heightAttribute, ...)))
     res <- structure(res, 
                      members = node$leafCount,
                      midpoint = node$midpoint,

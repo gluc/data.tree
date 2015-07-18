@@ -269,10 +269,15 @@ as.Node.data.frame <- function(x,
 #' Write a data.tree to Newick notation
 #' 
 #' @param node The node to convert
-#' @param heightAttribute The attribute (field name or function) storing the height
+#' @param heightAttribute The attribute (field name or function) storing or calculating the height
 #' @param ... parameters that will be passed on the the heightAttributeName, in case it is a function
 #' 
 #' @import stringr
+#' 
+#' @examples
+#' data(acme)
+#' acme$ToNewick()
+#' 
 #' @export 
 ToNewick <- function(node, heightAttribute = Height, ...) {
 

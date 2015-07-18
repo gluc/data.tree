@@ -18,4 +18,10 @@ as.phylo.Node(x, heightAttribute = Height, ...)
 Convert a node to a phylo object from the ape package.
 This requires the ape package.
 }
+\examples{
+library(ape)
+data(acme)
+acmephylo <- as.phylo(acme)
+plot(acmephylo)
+}
 

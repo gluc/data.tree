@@ -17,4 +17,8 @@ A string corresponding to x, suitable for printing
 \description{
 Simple function that can be used as a format function when converting trees to a \code{data.frame}
 }
+\examples{
+data(acme)
+print(acme, prob = acme$Get("p", format = function(x) FormatFixedDecimal(x, 4)))
+}
 
