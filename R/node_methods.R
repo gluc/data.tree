@@ -283,35 +283,3 @@ GetAttribute = function(node, attribute, ..., format = NULL, inheritFromAncestor
   return (v)
 }
 
-#' Test if a node is not the root
-#' 
-#' @param node
-#' @export
-NotIsRoot <- function(node) {
-  return (!node$isRoot) 
-}
-
-#' Test if a node is the root
-#'
-#' @param node
-#' @export
-IsRoot <- function(node) {
-  return (node$isRoot) 
-}
-
-
-#' Test if a node is not the leaf
-#'
-#' @param node
-#' @export
-NotIsLeaf <- function(node) {
-  return (!node$isLeaf) 
-}
-
-#' Test if a node is the leaf
-#'
-#' @param node
-#' @export
-IsLeaf <- function(node) {
-  return (node$isLeaf) 
-}

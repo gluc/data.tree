@@ -134,15 +134,16 @@ test_that("Get format", {
   data(acme)
   
   calculateAggregateChildCost <- function(node, fun) {
-    if (node$isLeaf) return(node$cost)
-    fun(sapply(node$children, function(x) x$averageCost))
+    if (node$isLeaf) node$averageCost <- node$cost
+    else node$averageCost <- fun(sapply(node$children, function(x) x$averageCost))
   }
   
   myFormat <- function(x) {
     format(x, nsmall=2, scientific = FALSE)
   }
   
-  get <- acme$Get(calculateAggregateChildCost, mean, traversal = "post-order", format = myFormat)["New Product Line"]
+  acme$Do(calculateAggregateChildCost, mean, traversal = "post-order")
+  get <- acme$Get("averageCost", format = myFormat)["New Product Line"]
   
   expect_equal(as.character(get), "2000000.00")
   

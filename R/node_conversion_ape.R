@@ -4,7 +4,7 @@
 #' This requires the ape package.
 #' 
 #' @param x The \code{Node} to convert
-#' @param heightAttributeName To use custom heights
+#' @param heightAttribute The attribute (field name or function) storing the height
 #' @param ... any other argument
 #' 
 #' @export
@@ -17,8 +17,8 @@ as.phylo.Node <- function(x, heightAttribute = Height, ...) {
 #' Converts a phylo from the ape package to a Node
 #' 
 #' @param x The phylo object
-#' @param heightName If the phylo contains edge lengths, then they will be stored in 
-#' an attribute according to this parameter (the default is "edgeLength")
+#' @param heightName If the phylo contains edge lengths, then they will be converted
+#' to a height and stored in a field named according to this parameter (the default is "height")
 #' @param replaceUnderscores if TRUE (the default), then underscores in names are replaced with spaces
 #' @param ... any other parameter to be passed to sub-implementations
 #' 
@@ -48,7 +48,7 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
     child <- parent$AddChild(as.character(e[2]))
   }
   if (length(x$edge.length) > 0) {
-    t <- Traverse(root, filterFun = NotIsRoot)
+    t <- Traverse(root, filterFun = isNotRoot)
     Set(t, edgeLength = x$edge.length)
     #try converting edge length to height
     root[[heightName]] <- 0
@@ -102,7 +102,7 @@ GetPhyloNr <- function(x, type = c("node", "edge")) {
       for (i in 1:length(leaves)) leaves[[i]]$tmp <- i 
     } else {
       n <- x$root$totalCount - x$root$leafCount
-      x$root$Set(tmp = x$root$leafCount + (1:n), filterFun = function(x) !x$isLeaf)
+      x$root$Set(tmp = x$root$leafCount + (1:n), filterFun = isLeaf)
     }
   } else {
     x$root$Set(tmp = (1:x$root$totalCount) - 1)

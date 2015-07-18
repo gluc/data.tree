@@ -10,8 +10,8 @@
 \arguments{
 \item{x}{The phylo object}
 
-\item{heightName}{If the phylo contains edge lengths, then they will be stored in
-an attribute according to this parameter (the default is "edgeLength")}
+\item{heightName}{If the phylo contains edge lengths, then they will be converted
+to a height and stored in a field named according to this parameter (the default is "height")}
 
 \item{replaceUnderscores}{if TRUE (the default), then underscores in names are replaced with spaces}
 

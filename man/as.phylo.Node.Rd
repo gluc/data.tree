@@ -10,9 +10,9 @@ as.phylo.Node(x, heightAttribute = Height, ...)
 \arguments{
 \item{x}{The \code{Node} to convert}
 
-\item{...}{any other argument}
+\item{heightAttribute}{The attribute (field name or function) storing the height}
 
-\item{heightAttributeName}{To use custom heights}
+\item{...}{any other argument}
 }
 \description{
 Convert a node to a phylo object from the ape package.

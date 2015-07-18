@@ -49,7 +49,7 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
 #' @import stats
 #' @export
 as.dendrogram.Node <- function(object, ...) {
-  self <- object
+  node <- object
   
   #strange: the original dendrogram will
   # unclass the nested dendrograms as well,
@@ -62,27 +62,27 @@ as.dendrogram.Node <- function(object, ...) {
   # unclass(dend1)
   # unclass(dend2)
   
-  height <- self$height
+  height <- node$height
   if(length(height) == 0) {
-    height <- Height(self, 100)
+    height <- Height(node, 100)
   }
   
-  if (self$isLeaf) {
-    res <- self$value
+  if (node$isLeaf) {
+    res <- node$value
     res <- structure(res, 
-                     label = self$name, 
+                     label = node$name, 
                      members = 1,
                      height = height,
-                     leaf = self$isLeaf,
+                     leaf = node$isLeaf,
                      class = "dendrogram")
     
   } else {
     #res <- list()
     #class(res) <- "dendrogram"
-    res <- unname(lapply(self$children, FUN = function(x) as.dendrogram(x, ...)))
+    res <- unname(lapply(node$children, FUN = function(x) as.dendrogram(x, ...)))
     res <- structure(res, 
-                     members = self$leafCount,
-                     midpoint = self$midpoint,
+                     members = node$leafCount,
+                     midpoint = node$midpoint,
                      height = height,
                      class = "dendrogram")
     

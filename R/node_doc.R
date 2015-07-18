@@ -48,8 +48,8 @@ Find = function(...) {
 #' 
 #' @examples
 #' data(acme)
-#' acme$Do(function(x) x$totalCost <- Aggregate("cost", sum)
-#' acme$Sort("totalCost", decreasing = TRUE)
+#' acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
+#' acme$Sort("totalCost", decreasing = FALSE)
 #' print(acme, "totalCost")
 #' 
 #' @seealso \code{\link{Node}}

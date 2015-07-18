@@ -269,7 +269,7 @@ as.Node.data.frame <- function(x,
 #' Write a data.tree to Newick notation
 #' 
 #' @param node The node to convert
-#' @param heightAttributeName The name of the attribute or function storing the height
+#' @param heightAttribute The attribute (field name or function) storing the height
 #' @param ... parameters that will be passed on the the heightAttributeName, in case it is a function
 #' 
 #' @import stringr

@@ -8,7 +8,7 @@
   - ADD: Node$Prune (pruning the tree)
   - ADD: support for setting formatter functions on a Node
   - ADD: Node$isBinary active
-  - ADD: standalone versions of IsLeaf, NotIsLeaf, IsRoot, NotIsRoot for concise filtering
+  - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering
   - Node$Get: 
     - CHANGE: Renamed filterFun parameter to pruneFun
     - ADD: new parameter filterFun, as opposed to pruneFun
