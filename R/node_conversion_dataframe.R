@@ -48,7 +48,7 @@ ToDataFrameTaxonomy <- function(node,
   level <- Get(t, "level")
   df <- data.frame(children = children, parents = parents, level = level, stringsAsFactors = FALSE)
 
-  df2 <- ToDataFrameTree(acme, ..., pruneFun = pruneFun, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
+  df2 <- ToDataFrameTree(node, ..., pruneFun = pruneFun, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
   
   df <- cbind(df, df2)
   
