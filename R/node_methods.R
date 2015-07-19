@@ -220,7 +220,7 @@ Set <- function(nodes,
 #' field, a property or a method. If the node contains #' the attribute, its value is return. 
 #' Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, 
 #' the attribute must be set on the leaf.
-#' @param fun a function to be applied
+#' @param aggFun a function to be applied
 #' @param ... any arguments to be passed on to fun
 #' 
 #' @examples
