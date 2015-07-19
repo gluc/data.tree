@@ -14,9 +14,9 @@ field, a property or a method. If the node contains #' the attribute, its value 
 Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method,
 the attribute must be set on the leaf.}
 
-\item{...}{any arguments to be passed on to fun}
+\item{aggFun}{a function to be applied}
 
-\item{fun}{a function to be applied}
+\item{...}{any arguments to be passed on to fun}
 }
 \description{
 The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum them up along the tree.
