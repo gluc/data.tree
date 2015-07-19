@@ -48,7 +48,7 @@ Find = function(...) {
 #' 
 #' @examples
 #' data(acme)
-#' acme$Do(function(x) x$totalCost <- Aggregate("cost", sum)
+#' acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum))
 #' acme$Sort("totalCost", decreasing = TRUE)
 #' print(acme, "totalCost")
 #' 
@@ -67,27 +67,6 @@ Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
 #' #' @seealso \code{\link{Node}}
 #' @keywords internal 
 Revert = function(recursive = TRUE) {
-  stop("This method can only be called on a Node!")
-}
-
-
-#' Convert a \code{\link{Node}} to a \code{data.frame}
-#' 
-#' @param row.names \code{NULL} or a character vector giving the row names for the data frame. 
-#' Missing values are not allowed.
-#' @param optional logical. If \code{TRUE}, setting row names and converting column names 
-#' (to syntactic names: see make.names) is optional.
-#' @param ... the attributes to be added as columns of the data.frame. There are various
-#' options:
-#' \itemize{
-#'  \item a string corresponding to the name of a node attribute
-#'  \item the result of the \code{Node$Get} method
-#' }
-#' If a specific Node does not contain the attribute, the data.frame will contain NA.
-#'
-#' @seealso \code{\link{Node}}, \code{\link{as.data.frame.Node}} 
-#' @keywords internal
-ToDataFrame <- function(row.names = NULL, optional = FALSE, ..., filterFun = NULL) {
   stop("This method can only be called on a Node!")
 }
 
@@ -129,15 +108,3 @@ Prune <- function(traversal = "pre-order", filterFun) {
   stop("This method can only be called on a Node!")
 }
 
-#' Converts the tree to tabular form, keeping only the leafs.
-#' 
-#' This method is especially useful when you need to apply a specific function that is only available 
-#' for \code{\link{data.frame}}. 
-#' 
-#' @param ... character strings representing the attributes to be returned. Note that these may not be 
-#' available on a leaf, in which case the algorithm inherits the values from its ancestors.
-#' 
-#' @keywords internal
-ToDataFrameTable <- function(...) {
-  stop("This method can only be called on a Node!")
-}

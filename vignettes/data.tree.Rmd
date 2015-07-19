@@ -121,7 +121,7 @@ acmedf$cost <- acme$Get("cost")
 
 We could have achieved the same result in one go, using the OO-style `ToDataFrame` method:
 ```{r}
-acme$ToDataFrame("level", "cost")
+ToDataFrameTree(acme, "level", "cost")
 ```
 
 Internally, the same is called when printing a tree:
@@ -137,10 +137,10 @@ Above, we saw how we can add the name of an attribute to the ellipsis argument o
 
 ```{r}
 
-acme$ToDataFrame("level",
-                  probability = acme$Get("p", format = FormatPercent)
+ToDataFrameTree(acme, "level",
+                probability = acme$Get("p", format = FormatPercent)
                 )
-                        
+
 
 ```
 
@@ -169,10 +169,10 @@ The default traversal mode is **pre-order**.
 
 ![pre-order](assets/preorder.png)
 
-This is what is used e.g. in `as.data.frame` and its OO-style counterpart `Node$ToDataFrame`:
+This is what is used e.g. in `print`:
 
 ```{r}
-acme$ToDataFrame("level")
+print(acme, "level")
 ```
 
 #### Post-Order

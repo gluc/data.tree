@@ -232,15 +232,15 @@ Set <- function(nodes,
 #' @seealso \code{\link{Node}}
 #'
 #' @export
-Aggregate = function(node, attribute, fun, ...) {
+Aggregate = function(node, attribute, aggFun, ...) {
   #if(is.function(attribute)) browser()
   v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
   if (!length(v) == 0) {
     return (v)
   }
   if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
-  values <- sapply(node$children, function(x) x$Aggregate(attribute, fun, ...))
-  result <- fun(values)
+  values <- sapply(node$children, function(x) x$Aggregate(attribute, aggFun, ...))
+  result <- aggFun(values)
   return (result)
 }
 

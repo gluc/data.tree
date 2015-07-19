@@ -39,8 +39,6 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'SetAttribute',
                                 'Sort',
                                 'tmp',
-                                'ToDataFrame',
-                                'ToDataFrameTable',
                                 'ToList',
                                 'ToNewick',
                                 'totalCount')
@@ -74,8 +72,6 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
 #'   \item{\code{\link{Revert}(recursive = TRUE)}}{Reverts the order of the children of a node}
 #'   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
-#'   \item{\code{\link{ToDataFrame}(..., pruneFun = NULL, filterFun = NULL, inheritFromAncestors)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
-#'   \item{\code{ToDataFrameTable}(..., pruneFun = NULL, filterFun = NULL)}{Converts the tree below this \code{Node} to standard tabular format, i.e. a \code{data.frame}, inheriting from ancestors and only putting one line per leaf.}
 #'   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
 #'   \item{\code{\link{ToNewick}(heightAttributeName = "height", ...)}}{Converts the tree to Newick notation. }
 #'
@@ -273,19 +269,6 @@ Node <- R6Class("Node",
                         return (res)
                       },
                       
-                      ToDataFrame = function(..., pruneFun = NULL, filterFun = NULL, inheritFromAncestors = FALSE) {
-                        as.data.frame(self, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun, filterFun = filterFun, inheritFromAncestors = inheritFromAncestors)
-                      }, 
-                      
-                      
-                      ToDataFrameTable = function(..., pruneFun = NULL, filterFun = NULL) {
-                        ifilterFun <- function(x) {
-                          x$isLeaf && (length(filterFun) == 0 || filterFun(x))  
-                        }
-                        df <- as.data.frame(self, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun, filterFun = ifilterFun, inheritFromAncestors = TRUE)
-                        df <- df[,-1]
-                        return (df)
-                      },
                       
                       ToList = function(mode = c("simple", "explicit"),
                                         unname = FALSE,

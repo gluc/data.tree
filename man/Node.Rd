@@ -28,13 +28,12 @@ by tying toghether \code{Node} objects.
   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
   \item{\code{Prune(pruneFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{pruneFun} }
   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
+  \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}
   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
   \item{\code{\link{Revert}(recursive = TRUE)}}{Reverts the order of the children of a node}
   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
-  \item{\code{\link{ToDataFrame}(..., pruneFun = NULL, filterFun = NULL, inheritFromAncestors)}}{Converts the tree below this \code{Node} to a \code{data.frame}}
-  \item{\code{ToDataFrameTable}(..., pruneFun = NULL, filterFun = NULL)}{Converts the tree below this \code{Node} to standard tabular format, i.e. a \code{data.frame}, inheriting from ancestors and only putting one line per leaf.}
   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
   \item{\code{\link{ToNewick}(heightAttributeName = "height", ...)}}{Converts the tree to Newick notation. }
 
