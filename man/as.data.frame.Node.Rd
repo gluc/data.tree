@@ -25,6 +25,8 @@ options:
 }
 If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.}
 
+\item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'}
+
 \item{pruneFun}{a function which, if TRUE is returned, causes the subtree of a Node to be pruned.}
 
 \item{filterFun}{a function which filters the Nodes added to the \code{data.frame}. The function must
