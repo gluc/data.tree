@@ -8,7 +8,7 @@
   - ADD: Node$Prune (pruning the tree)
   - ADD: support for setting formatter functions on a Node
   - ADD: Node$isBinary active
-  - ADD: standalone versions of IsLeaf, NotIsLeaf, IsRoot, NotIsRoot for concise filtering
+  - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering
   - Node$Get: 
     - CHANGE: Renamed filterFun parameter to pruneFun
     - ADD: new parameter filterFun, as opposed to pruneFun
@@ -23,10 +23,12 @@
 - Conversions
   - ADD: conversion to and from list of lists (and thus to and from yaml, json, etc.)
   - ADD: conversion from data.frame
-  - ADD: Node$ToDataFrameTable (returning leafs only, with attributes inherited form ancestors)
   - ADD: conversion to and from dendrogram
   - ADD: conversion to and from phylo from the ape package
   - ADD: conversion to Newick notation
+  - ADD: conversion ToDataFrameTable (returning leafs only)
+  - ADD: conversion ToDataFrameTree
+  - ADD: conversion ToDataFrameTaxonomy
 - Utils
   - ADD: Aggregate function: support for functions
   - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal

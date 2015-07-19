@@ -26,8 +26,8 @@ You can sort with respect to any argument of the tree.
 }
 \examples{
 data(acme)
-acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum))
-acme$Sort("totalCost", decreasing = TRUE)
+acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
+acme$Sort("totalCost", decreasing = FALSE)
 print(acme, "totalCost")
 }
 \seealso{

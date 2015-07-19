@@ -2,9 +2,7 @@
 % Please edit documentation in R/util.R
 \name{Height}
 \alias{Height}
-\title{Calculates the height of a \code{Node} given the hight of the root,
-  assuming that nodes are equally distributed. Useful for easy printing
-  as dendrogram.}
+\title{Calculates the height of a \code{Node} given the hight of the root.}
 \usage{
 Height(node, rootHeight = 100)
 }
@@ -14,8 +12,14 @@ Height(node, rootHeight = 100)
 \item{rootHeight}{The height of the root}
 }
 \description{
-Calculates the height of a \code{Node} given the hight of the root,
-  assuming that nodes are equally distributed. Useful for easy printing
-  as dendrogram.
+This function puts leafs at the bottom (not hanging), and makes edges equally long.
+  Useful for easy plotting with third-party packages, e.g. if you have no specific height
+  attribute, e.g. with #'   \code{\link{as.dendrogram.Node}}, \code{\link{ToNewick}},
+  and \code{\link{as.phylo.Node}}
+}
+\examples{
+data(acme)
+  dacme <- as.dendrogram(acme, heightAttribute = function(x) Height(x, 200))
+  plot(dacme, center = TRUE)
 }
 

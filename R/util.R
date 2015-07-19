@@ -9,6 +9,11 @@
 #' @param format The format to use
 #' @param ... Any other argument passed to formatC
 #' @return A string corresponding to x, suitable for printing
+#' 
+#' @examples
+#' data(acme)
+#' print(acme, prob = acme$Get("p", format = FormatPercent))
+#' 
 #' @seealso formatC
 #' @export
 FormatPercent <- function(x, digits = 2, format = "f", ...) {
@@ -22,6 +27,11 @@ FormatPercent <- function(x, digits = 2, format = "f", ...) {
 #' @param x a numeric scalar or vector
 #' @param digits the number of digits to print after the decimal point
 #' @return A string corresponding to x, suitable for printing
+#' 
+#' @examples
+#' data(acme)
+#' print(acme, prob = acme$Get("p", format = function(x) FormatFixedDecimal(x, 4)))
+#' 
 #' @export
 FormatFixedDecimal <- function(x, digits = 3) {
   ifelse(is.na(x), "", sprintf(paste0("%.",digits, "f"),x))
@@ -35,9 +45,13 @@ FormatFixedDecimal <- function(x, digits = 3) {
 #' Print a Node in a human-readable fashion.
 #' 
 #' @param x The Node
-#' @param ... Additional parameters
+#' @param ... Additional parameters to be printed as columns, as a string.
 #' 
 #' @details Print the Node in a human-readable fashion.
+#'
+#' @examples
+#' data(acme)
+#' print(acme, "cost", "p")
 #'
 #' @export
 print.Node <- function(x, ...) {
@@ -46,12 +60,22 @@ print.Node <- function(x, ...) {
 
 
 
-#'   Calculates the height of a \code{Node} given the hight of the root, 
-#'   assuming that nodes are equally distributed. Useful for easy printing
-#'   as dendrogram.
+#'   Calculates the height of a \code{Node} given the hight of the root.
+#'   
+#'   This function puts leafs at the bottom (not hanging), and makes edges equally long.
+#'   Useful for easy plotting with third-party packages, e.g. if you have no specific height 
+#'   attribute, e.g. with #'   \code{\link{as.dendrogram.Node}}, \code{\link{ToNewick}}, 
+#'   and \code{\link{as.phylo.Node}}
 #'   
 #'   @param node The node
 #'   @param rootHeight The height of the root
+#'   
+#'   @examples
+#'   data(acme)
+#'   dacme <- as.dendrogram(acme, heightAttribute = function(x) Height(x, 200))
+#'   plot(dacme, center = TRUE)
+#'   
+#'   @export
 Height <- function(node, rootHeight = 100) {
   if (node$isRoot) return ( rootHeight )
   if (node$isLeaf) return ( 0 )

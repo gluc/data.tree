@@ -9,9 +9,8 @@ VignetteBuilder: knitr
 Imports:
     R6, stringr
 Suggests:
-    testthat, magrittr, knitr, ape
+    testthat, magrittr, knitr, ape, networkD3
 Enhances:
-    ape, stats, networkD3
 Description: Create tree structures from hierarchical data, and use the utility 
     methods to traverse the tree in various orders. Aggregate, print, convert to and from data.frame, 
     and apply functions to your tree data. Useful for decision trees, machine learning, finance, and
