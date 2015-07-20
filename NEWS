@@ -4,8 +4,8 @@
 
 - Node
   - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
-  - ADD: Node$Clone (returning a deep copy)
-  - ADD: Node$Prune (pruning the tree)
+  - ADD: Clone (returning a deep copy)
+  - ADD: Prune (pruning the tree)
   - ADD: support for setting formatter functions on a Node
   - ADD: Node$isBinary active
   - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering

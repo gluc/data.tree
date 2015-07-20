@@ -217,15 +217,15 @@ Set <- function(nodes,
 #' 
 #' @param node the \code{Node} on which to aggregate
 #' @param attribute the attribute that is being called on every node. The attribute can be 
-#' field, a property or a method. If the node contains #' the attribute, its value is return. 
-#' Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method, 
+#' field, a property or a method. If the node contains the attribute, its value is return. 
+#' Otherwise, \code{aggFun(Aggregate(children, ...))} is called. To use the Attribute method, 
 #' the attribute must be set on the leaf.
 #' @param aggFun a function to be applied
 #' @param ... any arguments to be passed on to fun
 #' 
 #' @examples
 #' data(acme)
-#' acme$Aggregate("cost", sum)
+#' Aggregate(acme, "cost", sum)
 #' acme$Get("Aggregate", "cost", sum)
 #' print(acme, totalCost = acme$Get("Aggregate", "cost", sum))
 #' 
@@ -239,14 +239,28 @@ Aggregate = function(node, attribute, aggFun, ...) {
     return (v)
   }
   if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
-  values <- sapply(node$children, function(x) x$Aggregate(attribute, aggFun, ...))
+  values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, ...))
   result <- aggFun(values)
   return (result)
 }
 
+#' Clones a tree (creates a deep copy)
+#' 
+#' @param node the root node of the tree or sub-tree to clone
+#' @return the clone of the tree
+#' @export
+Clone <- function(node) {
+  l <- as.list(node, mode = "explicit", rootName = node$name)
+  res <- as.Node(l, mode = "explicit")
+  #formatters need to be set manually
+  for(name in names(node$formatters)) {
+    res$formatters[[name]] <- node$formatters[[name]]
+  }
+  return (res)
+}
 
 
-GetAttribute = function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
+GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
   if(is.function(attribute)) {
     #function
     
@@ -283,3 +297,84 @@ GetAttribute = function(node, attribute, ..., format = NULL, inheritFromAncestor
   return (v)
 }
 
+
+
+
+#' Sort Children of a Node or an Entire Tree
+#' 
+#' You can sort with respect to any argument of the tree.
+#' @param node The node whose children are to be sorted 
+#' @param attribute a field, method or function. The result of the attribute determines the 
+#' sorting. If it is a function, #' the attribute must take a \code{Node} as a first argument.
+#' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
+#' function)
+#' @param decreasing sort order
+#' @param recursive if \code{TRUE}, Sort will be called recursively on the \code{Node}'s children. 
+#' This allows sorting an entire tree.
+#' 
+#' @return Returns the node on which Sort is called, invisibly. This can be useful to chain Node methods.
+#' 
+#' @examples
+#' data(acme)
+#' acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
+#' Sort(acme, "totalCost", decreasing = FALSE)
+#' print(acme, "totalCost")
+#' 
+#' @seealso \code{\link{Node}}
+#' @export
+Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
+  if (node$isLeaf) return()
+  ChildL <- sapply(node$children, function(x) x$GetAttribute(attribute, ...))
+  names(ChildL) <- names(node$children)
+  node$children <- node$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
+  if (recursive) for(child in node$children) Sort(child, attribute, ..., decreasing = decreasing, recursive = recursive)
+  invisible (node)
+}
+
+
+#' Reverts the sort order of a \code{Node}'s children.
+#' 
+#' @param node the Node whose children's sort order is to be reverted
+#' @param recursive If \code{TRUE}, then revert is called recursively on
+#' all children.
+#' 
+#' @return returns the Nodel invisibly (for chaining)
+#'
+#' @seealso \code{\link{Node}}
+#' @export
+Revert <- function(node, recursive = TRUE) {
+  
+  pf <- function(x) {
+    if (recursive) return (TRUE)
+    else return (x$level <= (node$level + 1))
+  }
+  
+  t <- Traverse(node, pruneFun = pf)
+  
+  Set(t, tmp = 1:node$totalCount)
+  Sort(node, "tmp", decreasing = TRUE, recursive = recursive)
+  Do(t, function(x) rm("tmp", envir = x))
+  invisible (node)
+}
+
+
+#' Prunes a tree
+#' 
+#' @param The node whose children should be pruned
+#' @param pruneFun a function taking a \link{\code{Node}} as an argument, and returning TRUE if the Node
+#' and its descendants should be kept, FALSE otherwise.
+#' @return A Node
+#' @export
+Prune <- function(node, pruneFun) { 
+  
+  if ( self$isLeaf) return()
+  for( i in length(self$children):1 ) {
+    if ( !pruneFun(self$children[[i]]) ) {
+      self$children <- self$children[-i]
+    }
+  }
+  for( child in self$children) {
+    Prune(child, pruneFun)
+  }
+
+}

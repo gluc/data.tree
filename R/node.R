@@ -7,9 +7,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddChildNode',
                                 'AddSibling',
                                 'AddSiblingNode',
-                                'Aggregate',
                                 'children',
-                                'Clone',
                                 'count',
                                 'depth',
                                 'Do',
@@ -32,15 +30,11 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'path',
                                 'pathString',
                                 'position', 
-                                'Prune',
-                                'Revert',
                                 'root',
                                 'Set',
                                 'SetAttribute',
-                                'Sort',
                                 'tmp',
                                 'ToList',
-                                'ToNewick',
                                 'totalCount')
 
 
@@ -64,16 +58,10 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
 #'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
-#'   \item{\code{Prune(pruneFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{pruneFun} }
 #'   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
 #'   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}
-#'   \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
-#'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
-#'   \item{\code{\link{Revert}(recursive = TRUE)}}{Reverts the order of the children of a node}
-#'   \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
 #'   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
-#'   \item{\code{\link{ToNewick}(heightAttributeName = "height", ...)}}{Converts the tree to Newick notation. }
 #'
 #' }
 #' 
@@ -95,7 +83,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'  \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
 #'  \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
 #'  \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
-#'  \item{\code{depth}}{Returns 1 plus the maximum number of edges between a \code{Node} and any of its descendants}
+#'  \item{\code{depth}}{Returns 1 + max(nr of edges between a \code{Node} and any of its descendants)}
 #'  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
 #'  
 #' }
@@ -206,49 +194,7 @@ Node <- R6Class("Node",
                         Set(t, ...)
                         invisible (self)
                       },
-                      
-                      Aggregate = function(attribute, fun, ...) {
-                        Aggregate(self, attribute, fun, ...)
-                      },
-                      
-                      
-                      Prune = function(pruneFun, traversal = "pre-order") {
-                        if ( self$isLeaf) return()
-                        if ( traversal == "pre-order") {
-                          for( i in length(self$children):1 ) {
-                            if ( !pruneFun(self$children[[i]]) ) {
-                              self$children <- self$children[-i]
-                            }
-                          }
-                          for( child in self$children) {
-                            child$Prune(pruneFun)
-                          }
-                        } else if( traversal == "post-order") {
-                          for( child in self$children) {
-                            child$Prune(pruneFun)
-                          }
-                          for( i in length(self$children):1 ) {
-                            if ( !pruneFun(self$children[[i]]) ) {
-                              self$children <- self$children[-i]
-                            }
-                          }
-                        }
-                      },
-                                            
-                      Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
-                        if (self$isLeaf) return()
-                        ChildL <- sapply(self$children, function(x) x$GetAttribute(attribute, ...))
-                        names(ChildL) <- names(self$children)
-                        self$children <- self$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
-                        if (recursive) for(child in self$children) child$Sort(attribute, ..., decreasing = decreasing, recursive = recursive)
-                        invisible(self)
-                      },          
-                      
-                      Revert = function(recursive = TRUE) {
-                        self$Set(tmp = 1:self$totalCount)
-                        self$Sort("tmp", decreasing = TRUE, recursive = recursive)
-                      },
-                      
+                                
                                           
                       GetAttribute = function(attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
                         GetAttribute(self, 
@@ -259,16 +205,7 @@ Node <- R6Class("Node",
                                      nullAsNa = nullAsNa)
                       },
                       
-                      Clone = function() {
-                        l <- as.list(self, mode = "explicit", rootName = self$name)
-                        res <- as.Node(l, mode = "explicit")
-                        #formatters need to be set manually
-                        for(name in names(self$formatters)) {
-                          res$formatters[[name]] <- self$formatters[[name]]
-                        }
-                        return (res)
-                      },
-                      
+                    
                       
                       ToList = function(mode = c("simple", "explicit"),
                                         unname = FALSE,
@@ -281,11 +218,6 @@ Node <- R6Class("Node",
                                      nameName = nameName, 
                                      childrenName = childrenName,
                                      ...)
-                      },
-                      
-                      
-                      ToNewick = function(heightAttribute = Height, ...) {
-                        ToNewick(self, heightAttribute, ...)
                       }
                       
                                             

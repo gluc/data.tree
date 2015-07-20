@@ -324,7 +324,7 @@ test_that("Set recycling", {
 
 test_that("Aggregate", {
   data(acme)
-  expect_equal(acme$Aggregate("cost", sum), 4950000)
+  expect_equal(Aggregate(acme, "cost", sum), 4950000)
   
 })
 
@@ -332,7 +332,7 @@ test_that("Aggregate", {
 test_that("Sort", {
   
   acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum))
-  acme$Sort("totalCost", decreasing = FALSE)
+  Sort(acme, "totalCost", decreasing = FALSE)
   get <- acme$Get('totalCost')
   exp <- c(4950000, 700000, 50000, 250000, 400000, 1500000, 500000, 1000000, 2750000, 750000, 2000000)
   names(exp) <- c('Acme Inc.',
@@ -350,7 +350,7 @@ test_that("Sort", {
   
   expect_equal(get, exp)
   
-  acme$Sort("totalCost", decreasing = TRUE)
+  Sort(acme, "totalCost", decreasing = TRUE)
   get <- acme$Get('totalCost')
   
   expect_false(identical(all.equal(get, exp), TRUE))
@@ -361,7 +361,7 @@ test_that("Sort", {
 
 test_that("Clone", {
   data(acme)
-  n <- acme$Clone()
+  n <- Clone(acme)
   
   expect_equal(class(n), class(acme))
   expect_equal(n$name, acme$name)
@@ -382,7 +382,7 @@ test_that("Clone", {
 test_that("Clone formatter", {
   data(acme)
   acme$formatters$count <- FormatFixedDecimal
-  n <- acme$Clone()
+  n <- Clone(acme)
   
   expect_equal(names(n$formatters), "count")
   expect_true(is.function(n$formatters$count))
@@ -393,7 +393,7 @@ test_that("Clone formatter", {
 test_that("Clone subtree", {
   data(acme)
   it <- acme$Find("IT")
-  n <- it$Clone()
+  n <- Clone(it)
   
   expect_equal(class(n), class(it))
   expect_equal(n$name, it$name)
@@ -480,7 +480,7 @@ test_that("Set filter", {
 test_that("Revert", {
   data(acme)
   acme$Set(id = 1:acme$totalCount)
-  acme$Revert()
+  Revert(acme)
   ids <- unname(acme$Get("id"))
   expected = c(1, 8, 11, 10, 9, 5, 7, 6, 2, 4, 3)
   expect_equal(ids, expected)

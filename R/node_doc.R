@@ -31,46 +31,6 @@ Find = function(...) {
 
 
 
-
-#' Sort Children of a Node or an Entire Tree
-#' 
-#' You can sort with respect to any argument of the tree.
-#' 
-#' @param attribute a field, method or function. The result of the attribute determines the 
-#' sorting. If it is a function, #' the attribute must take a \code{Node} as a first argument.
-#' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
-#' function)
-#' @param decreasing sort order
-#' @param recursive if \code{TRUE}, Sort will be called recursively on the \code{Node}'s children. 
-#' This allows sorting an entire tree.
-#' 
-#' @return Returns the node on which Sort is called, invisibly. This can be useful to chain Node methods.
-#' 
-#' @examples
-#' data(acme)
-#' acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
-#' acme$Sort("totalCost", decreasing = FALSE)
-#' print(acme, "totalCost")
-#' 
-#' @seealso \code{\link{Node}}
-#' @keywords internal
-Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
-  stop("This method can only be called on a Node!")
-}
-
-#' Reverts the sort order of a \code{Node}'s children.
-#' 
-#' @param recursive If \code{TRUE}, then revert is called recursively on
-#' all children.
-#' 
-#'
-#' #' @seealso \code{\link{Node}}
-#' @keywords internal 
-Revert = function(recursive = TRUE) {
-  stop("This method can only be called on a Node!")
-}
-
-
 #' Convert a \code{\link{Node}} object to a nested \code{list}
 #' 
 #' @param x The Node to convert

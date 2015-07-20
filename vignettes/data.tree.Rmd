@@ -438,7 +438,7 @@ For simple cases, you don't have to write your own function to be passed along t
 
 ```{r}
 
-acme$Aggregate("cost", sum)
+Aggregate(acme, "cost", sum)
 
 ```
 
@@ -474,7 +474,7 @@ You can sort an entire tree by using the `Sort` method on the root. The method w
 
 ```{r}
 acme$Do(SetExpectedCost, variableName = "expectedCost", traversal = "post-order")
-acme$Sort("expectedCost", decreasing = TRUE)
+Sort(acme, "expectedCost", decreasing = TRUE)
 print(acme, "expectedCost")
 ```
 
@@ -486,7 +486,7 @@ You can create a deep copy of a tree by using the `Clone` method on the root.
 
 ```{r}
 data(acme)
-acme2 <- acme$Clone()
+acme2 <- Clone(acme)
 #change the name on the clone:
 acme2$name <- 'Acme2 Inc.'
 #only the clone is changed, but not the original:

@@ -26,16 +26,10 @@ by tying toghether \code{Node} objects.
   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
-  \item{\code{Prune(pruneFun, traversal = "pre-order")}}{ Remove \code{Node}s in the tree based on the return value of \code{pruneFun} }
   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
   \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}
-  \item{\code{\link{Aggregate}(attribute, fun, ...)}}{Traverses the tree and calls \code{fun(children$Aggregate(...))} on each node. }
-  \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE)}}{Sorts the children of a node according to \code{attribute}}
-  \item{\code{\link{Revert}(recursive = TRUE)}}{Reverts the order of the children of a node}
-  \item{\code{Clone()}}{Creates a deep copy of a \code{Node} and all its sub-nodes}
   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
-  \item{\code{\link{ToNewick}(heightAttributeName = "height", ...)}}{Converts the tree to Newick notation. }
 
 }
 }
@@ -59,7 +53,7 @@ by tying toghether \code{Node} objects.
  \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
  \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
  \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
- \item{\code{depth}}{Returns 1 plus the maximum number of edges between a \code{Node} and any of its descendants}
+ \item{\code{depth}}{Returns 1 + max(nr of edges between a \code{Node} and any of its descendants)}
  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
 
 }

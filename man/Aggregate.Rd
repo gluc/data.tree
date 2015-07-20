@@ -10,8 +10,8 @@ Aggregate(node, attribute, aggFun, ...)
 \item{node}{the \code{Node} on which to aggregate}
 
 \item{attribute}{the attribute that is being called on every node. The attribute can be
-field, a property or a method. If the node contains #' the attribute, its value is return.
-Otherwise, \code{fun(children$Aggregate(...))} is called. To use the Attribute method,
+field, a property or a method. If the node contains the attribute, its value is return.
+Otherwise, \code{aggFun(Aggregate(children, ...))} is called. To use the Attribute method,
 the attribute must be set on the leaf.}
 
 \item{aggFun}{a function to be applied}
@@ -23,7 +23,7 @@ The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum
 }
 \examples{
 data(acme)
-acme$Aggregate("cost", sum)
+Aggregate(acme, "cost", sum)
 acme$Get("Aggregate", "cost", sum)
 print(acme, totalCost = acme$Get("Aggregate", "cost", sum))
 }
