@@ -56,42 +56,6 @@ Clone <- function(node) {
 }
 
 
-GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
-  if(is.function(attribute)) {
-    #function
-    
-    v <- attribute(node, ...)
-  } else if(is.character(attribute) && length(attribute) == 1) {
-    #property
-    v <- node[[attribute]]
-    if (is.function(v)) v <- v(...)
-  } else {
-    stop("attribute must be a function, the name of a public property, or the name of method")
-  }
-  
-  if(length(v) == 0 && inheritFromAncestors && !node$isRoot) {
-    v <- GetAttribute(node$parent, attribute, 
-                      ..., 
-                      inheritFromAncestors = TRUE,
-                      nullAsNa = FALSE)
-  }
-  
-  if (!nullAsNa && length(v) == 0) return (NULL)
-  if (length(v) == 0) v <- NA
-  if (length(v) == 0) v <- NA
-  
-  if(is.vector(v)) names(v) <- node$name
-  
-  if(is.null(format) && !is.function(attribute)) {
-    format <- GetAttribute(node, function(x) x$formatters[[attribute]], inheritFromAncestors = TRUE, nullAsNa = FALSE)
-  }
-   
-  if(!is.null(format)) {
-    if (!is.function(format)) stop("format must be a function!")
-    v <- format(v)
-  }
-  return (v)
-}
 
 
 #' Find a \code{Node} by its path
@@ -128,3 +92,45 @@ Find <- function(node, ...) {
   }
   
 }
+
+
+###############################
+## Private Methods
+
+GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
+  if(is.function(attribute)) {
+    #function
+    
+    v <- attribute(node, ...)
+  } else if(is.character(attribute) && length(attribute) == 1) {
+    #property
+    v <- node[[attribute]]
+    if (is.function(v)) v <- v(...)
+  } else {
+    stop("attribute must be a function, the name of a public property, or the name of method")
+  }
+  
+  if(length(v) == 0 && inheritFromAncestors && !node$isRoot) {
+    v <- GetAttribute(node$parent, attribute, 
+                      ..., 
+                      inheritFromAncestors = TRUE,
+                      nullAsNa = FALSE)
+  }
+  
+  if (!nullAsNa && length(v) == 0) return (NULL)
+  if (length(v) == 0) v <- NA
+  if (length(v) == 0) v <- NA
+  
+  if(is.vector(v)) names(v) <- node$name
+  
+  if(is.null(format) && !is.function(attribute)) {
+    format <- GetAttribute(node, function(x) x$formatters[[attribute]], inheritFromAncestors = TRUE, nullAsNa = FALSE)
+  }
+  
+  if(!is.null(format)) {
+    if (!is.function(format)) stop("format must be a function!")
+    v <- format(v)
+  }
+  return (v)
+}
+

@@ -37,6 +37,18 @@ ToDataFrameTable <- function(node, ..., pruneFun = NULL, filterFun = NULL) {
   df[,-1]
 }
 
+
+
+#' Convert a \code{Node} to a data.frame of the type taxonomy. 
+#' 
+#' This is useful e.g. when converting to igraph.
+#' 
+#' @param node the root Node of the tree or sub-tree to convert
+#' @param ... the attributes to add as columns to the data frame
+#' @param pruneFun a function allowing to prevent some sub-trees to be converted
+#' @param inheritFromAncestors if TRUE, then attributes are inherited from the closest ancestor if not available in a node itself
+#' 
+#' @export
 ToDataFrameTaxonomy <- function(node, 
                                 ..., 
                                 pruneFun = NULL, 
@@ -156,7 +168,7 @@ as.Node.data.frame <- function(x,
     colsToSet <- mycols
     colsToSetForLeaf <- mycols
     for (path in paths[-1]) {
-      child <- mynode$Find(path)
+      child <- Find(mynode, path)
       
       if( is.null(child)) {
         mynode <- mynode$AddChild(path)
