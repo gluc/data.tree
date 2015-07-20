@@ -3,7 +3,7 @@
 \docType{data}
 \name{mushroom}
 \alias{mushroom}
-\title{Data Used by the ID3 Vignette}
+\title{Sample Data: Data Used by the ID3 Vignette}
 \format{data.frame}
 \usage{
 data(mushroom)

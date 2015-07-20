@@ -330,12 +330,6 @@ print(acme, cost = acme$Get("cost", format = PrintMoney))
 
 ```
 
-Note that the format is not used for assignment with the `assign` parameter, but only for the values returned by `Get`:
-
-```{r}
-acme$Get("cost", format = PrintMoney, assign = "cost2")
-print(acme, cost = acme$Get("cost2"))
-```
 The `format` function is useful not only for formatting numbers, but also for displaying a printable representation of a `Node` field that is not a numeric (but e.g. a `matrix`).
 
 
@@ -373,7 +367,6 @@ acme$Set(expectedCost = ec)
 print(acme, "p", "cost", "expectedCost")
 
 ```
-This is equivalent to using `Get` with the `assign` parameter.
 
 ### Deleting attributes
 
@@ -396,10 +389,8 @@ acme$fieldsAll
 If we need to make sure that a variable is deleted for good, we do this:
 
 ```{r}
-
 acme$Do(function(x) rm(avgExpectedCost, envir = x))
 acme$fieldsAll
-
 ```
 
 
@@ -451,7 +442,6 @@ acme$Get(Aggregate, "cost", sum)
 This is the equivalent to:
 
 ```{r}
-
 GetCost <- function(node) {
   result <- node$cost
   if(length(result) == 0) {
@@ -473,9 +463,10 @@ acme$Get(GetCost)
 You can sort an entire tree by using the `Sort` method on the root. The method will sort recursively and, for each `Node`, sort children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub-class of `Node`, see below).
 
 ```{r}
-acme$Do(SetExpectedCost, variableName = "expectedCost", traversal = "post-order")
-Sort(acme, "expectedCost", decreasing = TRUE)
-print(acme, "expectedCost")
+acme$Sort("name")
+acme
+acme$Sort(Aggregate, "cost", sum, decreasing = TRUE)
+acme
 ```
 
 Naturally, you can also sort a sub-tree by calling Sort on the sub-tree's parent node.

@@ -3,7 +3,7 @@
 \docType{data}
 \name{ball}
 \alias{ball}
-\title{Is Jack playing ball today?}
+\title{Sample Data: Is Jack playing ball today?}
 \format{data.frame}
 \usage{
 data(ball)

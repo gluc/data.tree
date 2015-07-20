@@ -123,18 +123,6 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      AddSibling = function(name) {
-                        sibling <- Node$new(name)
-                        invisible (self$AddSiblingNode(sibling))
-                      },
-                      
-                      AddSiblingNode = function(sibling) {
-                        if (self$isRoot) stop("Cannot add sibling to root!")
-                        self$parent$AddChildNode(sibling)
-                        invisible (sibling)
-                      },
-                      
-                      
                       # End Tree Creation
                       ########################
                       
@@ -199,7 +187,7 @@ Node <- R6Class("Node",
                                       traversal = traversal, 
                                       pruneFun = pruneFun,
                                       filterFun = filterFun)
-                        Do( t, fun, ...)
+                        Do(t, fun, ...)
                         
                       },
                       
