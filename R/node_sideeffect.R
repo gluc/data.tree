@@ -61,7 +61,7 @@ ToList <- function(unname = FALSE,
 #' @keywords internal
 Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
   if (node$isLeaf) return()
-  ChildL <- sapply(node$children, function(x) x$GetAttribute(attribute, ...))
+  ChildL <- sapply(node$children, function(x) GetAttribute(x, attribute, ...))
   names(ChildL) <- names(node$children)
   node$children <- node$children[names(sort(ChildL, decreasing = decreasing, na.last = TRUE))]
   if (recursive) for(child in node$children) Sort(child, attribute, ..., decreasing = decreasing, recursive = recursive)

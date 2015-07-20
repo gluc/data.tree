@@ -127,10 +127,10 @@ Get = function(nodes,
                inheritFromAncestors = FALSE) {
   
   
-  res <- sapply(nodes, function(x) x$GetAttribute(attribute, 
-                                                  ...,
-                                                  format = format, 
-                                                  inheritFromAncestors = inheritFromAncestors)
+  res <- sapply(nodes, function(x) GetAttribute(x, attribute, 
+                                                ...,
+                                                format = format, 
+                                                inheritFromAncestors = inheritFromAncestors)
   )
   
   
@@ -148,8 +148,8 @@ Do <- function(nodes,
                fun, 
                ...) {
   
-  f <- function(x) x$GetAttribute(attribute = fun, 
-                                  ...)
+  f <- function(x) GetAttribute(x, attribute = fun, 
+                                ...)
   
   mapply(fun, nodes, MoreArgs = list(...))
   invisible (nodes)

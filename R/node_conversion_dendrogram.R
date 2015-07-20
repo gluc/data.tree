@@ -63,7 +63,7 @@ as.dendrogram.Node <- function(object, heightAttribute = Height, ...) {
   # unclass(dend1)
   # unclass(dend2)
   
-  height <- node$GetAttribute(heightAttribute)
+  height <- GetAttribute(node, heightAttribute)
 
   if (node$isLeaf) {
     res <- node$value

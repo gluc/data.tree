@@ -70,10 +70,10 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   }
   
   if(length(v) == 0 && inheritFromAncestors && !node$isRoot) {
-    v <- node$parent$GetAttribute(attribute, 
-                                  ..., 
-                                  inheritFromAncestors = TRUE,
-                                  nullAsNa = FALSE)
+    v <- GetAttribute(node$parent, attribute, 
+                      ..., 
+                      inheritFromAncestors = TRUE,
+                      nullAsNa = FALSE)
   }
   
   if (!nullAsNa && length(v) == 0) return (NULL)

@@ -155,7 +155,7 @@ ToNewick <- function(node, heightAttribute = Height, ...) {
     name <- str_replace_all(x$name, " ", "_")
     name <- str_replace_all(name, ",", "")
     if(!x$isRoot) {
-      edge <- x$parent$GetAttribute(heightAttribute) - x$GetAttribute(heightAttribute) 
+      edge <- GetAttribute(x$parent, heightAttribute) - GetAttribute(x, heightAttribute) 
       me <- paste0(name, ":", edge)
     } else {
       me <- name

@@ -108,6 +108,8 @@ Node <- R6Class("Node",
                         invisible (self)
                       },
                       
+                      ####################
+                      # Tree creation
                       
                       AddChild = function(name) {
                         child <- Node$new(as.character(name))
@@ -132,6 +134,9 @@ Node <- R6Class("Node",
                         invisible (sibling)
                       },
                       
+                      
+                      # End Tree Creation
+                      ########################
                       
                       ########################
                       ## Side Effects
@@ -208,19 +213,11 @@ Node <- R6Class("Node",
                                       filterFun = filterFun)
                         Set(t, ...)
                         invisible (self)
-                      },
+                      }
                                 
                       # End Traversal
                       #######################
                                           
-                      GetAttribute = function(attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
-                        GetAttribute(self, 
-                                     attribute, 
-                                     ..., 
-                                     format = format, 
-                                     inheritFromAncestors = inheritFromAncestors, 
-                                     nullAsNa = nullAsNa)
-                      }
                       
                     ),
                 
