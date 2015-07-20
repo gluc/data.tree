@@ -29,12 +29,14 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'parent',
                                 'path',
                                 'pathString',
-                                'position', 
+                                'position',
+                                'Prune',
+                                'Revert',
                                 'root',
                                 'Set',
                                 'SetAttribute',
+                                'Sort',
                                 'tmp',
-                                'ToList',
                                 'totalCount')
 
 
@@ -61,7 +63,9 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
 #'   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}
-#'   \item{\code{\link{ToList}(mode = c("simple", "explicit"), unname = FALSE, nameName = ifelse(unname, 'name', ''), childrenName = 'children', nodeName = NULL, ...)}}{Converts the tree below this \code{Node} to a \code{list}}
+#'   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE}}{Sort children of a node with respect to an attribute (field, method, active, function)}
+#'   \item{\code{\link{Revert}(recursive = TRUE)}}{Revert the sort order of a node}
+#'   \item{\code{\link{Prune}(pruneFun)}}{Prune a tree. The pruneFun takes a node as its first argument, and returns TRUE if the node should be kept, FALSE otherwise}
 #'
 #' }
 #' 
@@ -129,23 +133,34 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      Find = function(...) {
-                        path <- as.character(list(...))
-                        if (length(path) == 0) {
-                          return (self)
-                        } else {
-                          child <- self$children[[path[1]]]
-                          if (is.null(child)) {
-                            return (NULL)
-                          } else if (length(path) == 1) {
-                            return (child)
-                          } else {
-                            return (do.call(child$Find, list(...)[-1]))
-                            #return (child$Find( path[ length(path) - ( ( length(path) - 2 ) : 0 ) ] ) )
-                          }
-                        }
+                      ########################
+                      ## Side Effects
+                      
+                      Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
+                        Sort(self, attribute, ..., decreasing = decreasing, recursive = recursive)  
                       },
                       
+                      Revert = function(recursive = TRUE) {
+                        Revert(self, recursive)
+                      },
+                      
+                      Prune = function(pruneFun) {
+                        Prune(self, pruneFun = pruneFun)
+                      },
+                      
+                      
+                      # End Side Effects
+                      ###########################
+                      
+                      
+                      
+                      Find = function(...) {
+                        Find(self, ...)
+                      },
+                      
+                      
+                      ##########################
+                      # Traversal
                       
                       Get = function(attribute, 
                                      ..., 
@@ -195,6 +210,8 @@ Node <- R6Class("Node",
                         invisible (self)
                       },
                                 
+                      # End Traversal
+                      #######################
                                           
                       GetAttribute = function(attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
                         GetAttribute(self, 
@@ -203,24 +220,8 @@ Node <- R6Class("Node",
                                      format = format, 
                                      inheritFromAncestors = inheritFromAncestors, 
                                      nullAsNa = nullAsNa)
-                      },
-                      
-                    
-                      
-                      ToList = function(mode = c("simple", "explicit"),
-                                        unname = FALSE,
-                                        nameName = ifelse(unname, "name", ""),
-                                        childrenName = 'children',
-                                        ...) {
-                        as.list(self, 
-                                     mode = mode,
-                                     unname = unname, 
-                                     nameName = nameName, 
-                                     childrenName = childrenName,
-                                     ...)
                       }
                       
-                                            
                     ),
                 
                 

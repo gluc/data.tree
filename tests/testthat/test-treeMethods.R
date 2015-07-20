@@ -369,7 +369,7 @@ test_that("Clone", {
   expect_equal(n$totalCount, acme$totalCount)
   expect_equal(n$Find("IT", "Go agile")$p, acme$Find("IT", "Go agile")$p)
   
-  expect_equal(n$ToList(), acme$ToList())
+  expect_equal(as.list(n), as.list(acme))
   acme2 <- acme
   expect_identical(acme, acme2)
   

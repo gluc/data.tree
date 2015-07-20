@@ -500,7 +500,7 @@ You can convert a tree to a nested list by using the `ToList` method on the root
 
 ```{r}
 data(acme)
-acmeList <- acme$ToList()
+acmeList <- as.list(acme)
 acmeList$IT$Outsource$cost
 ```
 
@@ -515,14 +515,14 @@ as.Node(acmeList)
 You can use the explicit mode to save children in a nested list. You can call the `name` field and the `children` field differently, if you want:
 
 ```{r}
-acmeList2 <- acme$ToList(mode = "explicit", nameName = 'id', childrenName = 'subNodes')
+acmeList2 <- as.list(acme, mode = "explicit", nameName = 'id', childrenName = 'subNodes')
 acmeList2$subNodes$IT$subNodes$Outsource$cost
 ```
 
 You can also chose whether or not to have the nested lists named. This can be especially useful for conversion to JSON:
 
 ```{r}
-acmeList3 <- acme$ToList(mode = "explicit", unname = TRUE)
+acmeList3 <- as.list(acme, mode = "explicit", unname = TRUE)
 acmeList3$children[[3]]$children[[1]]$cost
 ```
 

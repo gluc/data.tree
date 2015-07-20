@@ -4,6 +4,7 @@ context("tree construction")
 data(acme)
 
 test_that("isRoot", {
+  data(acme)
   
   expect_equal(acme$isRoot, TRUE)
   

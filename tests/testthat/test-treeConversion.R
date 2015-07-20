@@ -5,7 +5,7 @@ data(acme)
 test_that("as.list.Node explicit", {
   data(acme)
   
-  l <- acme$ToList(mode = "explicit")
+  l <- as.list(acme, mode = "explicit")
     
   expect_equal("list", class(l))
   expect_equal(2, length(l))
@@ -19,7 +19,7 @@ test_that("as.list.Node explicit", {
 test_that("as.list.Node explicit nameName=name", {
   data(acme)
   
-  l <- acme$ToList(mode = "explicit", nameName = 'name')
+  l <- as.list(acme, mode = "explicit", nameName = 'name')
   
   expect_equal(class(l), "list")
   expect_equal(length(l), 2)
@@ -32,7 +32,7 @@ test_that("as.list.Node explicit nameName=name", {
 test_that("as.list.Node explicit nameName=id", {
   data(acme)
   
-  l <- acme$ToList(mode = "explicit", nameName = 'id')
+  l <- as.list(acme, mode = "explicit", nameName = 'id')
   
   expect_equal(class(l), "list")
   expect_equal(length(l), 2)
@@ -46,7 +46,7 @@ test_that("as.list.Node explicit nameName=id", {
 test_that("as.list.Node simple", {
   
   data(acme)
-  l <- acme$ToList()
+  l <- as.list(acme)
   
   expect_equal("list", class(l))
   expect_equal(length(l), 4)
@@ -59,7 +59,7 @@ test_that("as.list.Node simple", {
 test_that("as.list.Node simple unname no effect", {
   
   data(acme)
-  l <- acme$ToList()
+  l <- as.list(acme)
   
   expect_equal("list", class(l))
   expect_equal(length(l), 4)
@@ -73,7 +73,7 @@ test_that("as.list.Node simple unname no effect", {
 test_that("as.list.Node simple nameName=name", {
   
   data(acme)
-  l <- acme$ToList(nameName = 'name')
+  l <- as.list(acme, nameName = 'name')
   
   expect_equal("list", class(l))
   expect_equal(length(l), 4)
@@ -86,7 +86,7 @@ test_that("as.list.Node simple nameName=name", {
 test_that("as.list.Node explicit nameName=id", {
   
   
-  l <- acme$ToList(nameName = 'id')
+  l <- as.list(acme, nameName = 'id')
   
   expect_equal("list", class(l))
   expect_equal(length(l), 4)
@@ -99,7 +99,7 @@ test_that("as.list.Node explicit nameName=id", {
 
 test_that("as.Node.list", {
   data(acme)
-  n <- as.Node(acme$ToList())
+  n <- as.Node(as.list(acme))
   
   expect_equal("Acme Inc.", n$name)
   expect_equal(3, n$count)
@@ -111,7 +111,7 @@ test_that("as.Node.list", {
 
 test_that("as.list.Node unname", {
   data(acme)
-  l <- acme$ToList(mode = "explicit", unname = TRUE, nameName = 'id', childrenName = 'sub')
+  l <- as.list(acme, mode = "explicit", unname = TRUE, nameName = 'id', childrenName = 'sub')
   
   expect_equal("list", class(l))
   expect_equal(2, length(l))
@@ -123,7 +123,7 @@ test_that("as.list.Node unname", {
 
 test_that("as.Node.list unname", {
   
-  l <- acme$ToList(unname = TRUE, nameName = 'id', childrenName = 'sub')
+  l <- as.list(acme, unname = TRUE, nameName = 'id', childrenName = 'sub')
   n <- as.Node(l, nameName = 'id', childrenName = 'sub')
   
   expect_equal("Acme Inc.", n$name)
