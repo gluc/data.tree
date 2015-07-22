@@ -15,24 +15,6 @@
 
 
 
-#' Convert a \code{\link{Node}} object to a nested \code{list}
-#' 
-#' @param x The Node to convert
-#' @param unname If TRUE, then the nested children list will not have named arguments. This
-#' can be useful e.g. in the context of conversion to JSON, if you prefer the children to be
-#' an array rather than named objects.
-#' @param nameName The name that should be given to the name element
-#' @param childrenName The name that should be given to the children nested list
-#' @param ... Additional parameters
-#' 
-#' @seealso \code{\link{Node}}, \code{\link{as.list.Node}} 
-#' @keywords internal
-#' 
-ToList <- function(unname = FALSE, 
-                   nameName = 'name', 
-                   childrenName = 'children', ...) {
-  stop("This method can only be called on a Node!")
-}
 
 
 
@@ -98,7 +80,7 @@ Revert <- function(node, recursive = TRUE) {
 #' Prunes a tree
 #' 
 #' @param The node whose children should be pruned
-#' @param pruneFun a function taking a \link{\code{Node}} as an argument, and returning TRUE if the Node
+#' @param pruneFun a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
 #' and its descendants should be kept, FALSE otherwise.
 #' @return A Node
 #' @keywords internal

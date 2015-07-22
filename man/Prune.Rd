@@ -7,7 +7,7 @@
 Prune(node, pruneFun)
 }
 \arguments{
-\item{pruneFun}{a function taking a \link{\code{Node}} as an argument, and returning TRUE if the Node
+\item{pruneFun}{a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
 and its descendants should be kept, FALSE otherwise.}
 
 \item{The}{node whose children should be pruned}

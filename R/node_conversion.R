@@ -133,6 +133,18 @@ as.list.Node <- function(x,
 }
 
 
+#' This is an alias for \code{\link{as.list.Node}}.
+ToList <- function(x, 
+                   mode = c("simple", "explicit"),
+                   unname = FALSE, 
+                   nameName = ifelse(unname, "name", ""), 
+                   childrenName = 'children',
+                   rootName = '',
+                   ...) {
+  as.list.Node(node, mode = mode, unname = unname, nameName = nameName, childrenName = childrenName, ...)
+}
+
+
 
 
 
