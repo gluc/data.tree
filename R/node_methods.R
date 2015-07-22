@@ -44,6 +44,10 @@ Aggregate = function(node, attribute, aggFun, ...) {
 #' 
 #' @param node the root node of the tree or sub-tree to clone
 #' @return the clone of the tree
+#' 
+#' @examples
+#' data(acme)
+#' 
 #' @export
 Clone <- function(node) {
   l <- as.list(node, mode = "explicit", rootName = node$name)
@@ -64,13 +68,14 @@ Clone <- function(node) {
 #' Find returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
 #' element in the path, specified by the \code{Node}'s name.
 #' 
-#' 
+#' @param node The root node
 #' @param ... the names of the nodes in the path
 #' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 #' 
 #' @examples
 #' data(acme)
 #' acme$Find('IT', 'Outsource')$name
+#' acme$Find('IT')$Find('Outsource')$name
 #'
 #' @seealso \code{\link{Node}}
 #'

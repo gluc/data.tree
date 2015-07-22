@@ -15,4 +15,7 @@ the clone of the tree
 \description{
 Clones a tree (creates a deep copy)
 }
+\examples{
+data(acme)
+}
 

@@ -7,6 +7,8 @@
 Find(node, ...)
 }
 \arguments{
+\item{node}{The root node}
+
 \item{...}{the names of the nodes in the path}
 }
 \value{
@@ -19,6 +21,7 @@ element in the path, specified by the \code{Node}'s name.
 \examples{
 data(acme)
 acme$Find('IT', 'Outsource')$name
+acme$Find('IT')$Find('Outsource')$name
 }
 \seealso{
 \code{\link{Node}}
