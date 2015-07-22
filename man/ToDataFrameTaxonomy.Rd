@@ -19,4 +19,8 @@ ToDataFrameTaxonomy(node, ..., pruneFun = NULL,
 \description{
 This is useful e.g. when converting to igraph.
 }
+\examples{
+data(acme)
+ToDataFrameTaxonomy(acme, "cost", "p")
+}
 

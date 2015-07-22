@@ -146,7 +146,10 @@ as.list.Node <- function(x,
 #' 
 #' @examples
 #' data(acme)
-#' acme$ToNewick()
+#' ToNewick(acme)
+#' ToNewick(acme, heightAttribute = NULL)
+#' ToNewick(acme, heightAttribute = function(x) Height(x, 200))
+#' ToNewick(acme, rootHeight = 200)
 #' 
 #' @export 
 ToNewick <- function(node, heightAttribute = Height, ...) {
@@ -154,8 +157,8 @@ ToNewick <- function(node, heightAttribute = Height, ...) {
   deparse <- function(x) {
     name <- str_replace_all(x$name, " ", "_")
     name <- str_replace_all(name, ",", "")
-    if(!x$isRoot) {
-      edge <- GetAttribute(x$parent, heightAttribute) - GetAttribute(x, heightAttribute) 
+    if(!x$isRoot && length(heightAttribute) > 0) {
+      edge <- GetAttribute(x$parent, heightAttribute, ...) - GetAttribute(x, heightAttribute, ...) 
       me <- paste0(name, ":", edge)
     } else {
       me <- name

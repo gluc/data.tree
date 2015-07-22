@@ -18,6 +18,9 @@ Write a data.tree to Newick notation
 }
 \examples{
 data(acme)
-acme$ToNewick()
+ToNewick(acme)
+ToNewick(acme, heightAttribute = NULL)
+ToNewick(acme, heightAttribute = function(x) Height(x, 200))
+ToNewick(acme, rootHeight = 200)
 }
 

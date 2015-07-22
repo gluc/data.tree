@@ -75,15 +75,13 @@ ToDataFrameTaxonomy <- function(node,
 #' Convert a taxonomy into a Node.
 #' 
 #' To be a taxonomy, a data.frame must fulfil the following requirements:
-#' \list{
-#'  \item{It must contain as many rows as there are nodes, excluding the root}
-#'  \item{Its first column must be called *children*, and contain the name of each node, whereby each name must be unique within a node's level}
-#'  \item{Its second column must be called *parents*, and contain the name of the parent of each node}
-#'  \item{Its third column must be called *level*, and contain the level of the node}
-#'  \item{The rows must be ordered by level}
-#' }
+#' 1. It must contain as many rows as there are nodes, excluding the root
+#' 2. Its first column must be called *children*, and contain the name of each node, whereby each name must be unique within a node's level
+#' 3. Its second column must be called *parents*, and contain the name of the parent of each node
+#' 4. Its third column must be called *level*, and contain the level of the node
+#' 5. The rows must be ordered by level
 #' 
-#' @param x The taxonomy data frame to convert.
+#' @param x The taxonomy data.frame to convert.
 #' 
 #' @examples
 #' data(acme)
