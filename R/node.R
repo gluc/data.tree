@@ -34,7 +34,6 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'Revert',
                                 'root',
                                 'Set',
-                                'SetAttribute',
                                 'Sort',
                                 'tmp',
                                 'totalCount')

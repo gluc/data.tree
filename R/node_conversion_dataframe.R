@@ -48,6 +48,10 @@ ToDataFrameTable <- function(node, ..., pruneFun = NULL, filterFun = NULL) {
 #' @param pruneFun a function allowing to prevent some sub-trees to be converted
 #' @param inheritFromAncestors if TRUE, then attributes are inherited from the closest ancestor if not available in a node itself
 #' 
+#' @examples
+#' data(acme)
+#' ToDataFrameTaxonomy(acme, "cost", "p")
+#' 
 #' @export
 ToDataFrameTaxonomy <- function(node, 
                                 ..., 
@@ -60,11 +64,56 @@ ToDataFrameTaxonomy <- function(node,
   level <- Get(t, "level")
   df <- data.frame(children = children, parents = parents, level = level, stringsAsFactors = FALSE)
 
-  df2 <- ToDataFrameTree(node, ..., pruneFun = pruneFun, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
+  df2 <- ToDataFrameTree(node, ..., traversal = "level", pruneFun = pruneFun, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
   
   df <- cbind(df, df2)
-  
-  df[-1,]
+  df <- df[-1,]
+  rownames(df) <- 1:dim(df)[1]
+  return (df)
+}
+
+#' Convert a taxonomy into a Node.
+#' 
+#' To be a taxonomy, a data.frame must fulfil the following requirements:
+#' \list{
+#'  \item{It must contain as many rows as there are nodes, excluding the root}
+#'  \item{Its first column must be called *children*, and contain the name of each node, whereby each name must be unique within a node's level}
+#'  \item{Its second column must be called *parents*, and contain the name of the parent of each node}
+#'  \item{Its third column must be called *level*, and contain the level of the node}
+#'  \item{The rows must be ordered by level}
+#' }
+#' 
+#' @param x The taxonomy data frame to convert.
+#' 
+#' @examples
+#' data(acme)
+#' x <- ToDataFrameTaxonomy(acme, "p", "cost")
+#' xN <- FromDataFrameTaxonomy(x)
+#' print(xN, "p", "cost")
+#' 
+#' 
+#' @export
+FromDataFrameTaxonomy <- function(x) {
+  if (any(names(x)[1:3] != c("children", "parents", "level"))) stop("x is not a taxonomy. First three columns must be children, parents, and level, respectively.")
+  rootName <- unique(x$parents[!(x$parents %in% x$children)])
+  if (length(rootName) != 1) stop("Cannot find root name. x is not a taxonomy.")
+  root <- Node$new(rootName)
+  GetNodeByName <- function(name, level) {
+    t <- Traverse(root, filterFun = function(x) x$name == name && x$level == level)
+    if (length(t) == 0) stop(paste0("Cannot find node ", name, ". x is not a taxonomy."))
+    if (length(t) > 1) stop(paste0("More than one node named ", name, ". x is not a taxonomy."))
+    t[[1]]
+  }
+  for (i in 1:dim(x)[1]) {
+    parent <- GetNodeByName(x[i, "parents"], x[i, "level"] - 1)
+    child <- parent$AddChild(x[i, "children"])
+    if (dim(x)[2] > 3) {
+      for (j in 4:dim(x)[2]) {
+        child[[names(x)[j]]] <- x[i, j]
+      }
+    }
+  }
+  return (root)
 }
 
 
