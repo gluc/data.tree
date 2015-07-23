@@ -52,6 +52,7 @@ FormatFixedDecimal <- function(x, digits = 3) {
 #' @examples
 #' data(acme)
 #' print(acme, "cost", "p")
+#' do.call(print, c(acme, acme$fieldsAll))
 #'
 #' @export
 print.Node <- function(x, ...) {

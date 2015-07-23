@@ -7,6 +7,18 @@
 #' @param ... Additional parameters
 #' 
 #' @return The root \code{Node} of a \code{data.tree}
+#' 
+#' @examples
+#' hc <- hclust(dist(USArrests), "ave")
+#' dend1 <- as.dendrogram(hc)
+#' tree1 <- as.Node(dend1)
+#' tree1$fieldsAll
+#' tree1$totalCount
+#' tree1$leafCount
+#' tree1$depth
+#'   
+#' @family Conversions to Node
+#' 
 #' @export
 as.Node.dendrogram <- function(x, name = "root", ...) {
   #str(unclass(dend1))
@@ -47,6 +59,24 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
 #' @param heightAttribute The attribute (field name or function) storing the height
 #' @param ... Additional parameters
 #' 
+#' @return An object of class dendrogram
+#' 
+#' @examples
+#' data(acme)
+#' acmed <- as.dendrogram(acme)
+#' plot(acmed, center = TRUE)
+#' 
+#' #you can take an attribute for the height:
+#' acme$Do( function(x) x$height <- (10 - x$level))
+#' acmed <- as.dendrogram(acme, heightAttribute = "height")
+#' plot(acmed, center = TRUE)
+#' 
+#' #or directly a function
+#' acmed <- as.dendrogram(acme, heightAttribute = function(x) 10 - x$level)
+#' plot(acmed)
+#' 
+#' @family Conversions from Node
+#'
 #' @import stats
 #' @export
 as.dendrogram.Node <- function(object, heightAttribute = Height, ...) {

@@ -26,4 +26,15 @@ Convert a data.frame to a data.tree
 \details{
 x should be of class x
 }
+\seealso{
+Other Conversions to Node: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{as.Node.dendrogram}};
+  \code{\link{as.Node.list}}
+
+Other data.frame Conversions: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{as.data.frame.Node}}
+}
 

@@ -4,7 +4,7 @@
 \alias{ToDataFrameTree}
 \title{Convert a \code{\link{Node}} to a \code{data.frame}}
 \usage{
-ToDataFrameTree(node, ..., pruneFun = NULL, inheritFromAncestors = FALSE)
+ToDataFrameTree(node, ..., pruneFun = NULL)
 }
 \arguments{
 \item{node}{The node to convert}
@@ -18,13 +18,30 @@ options:
 If a specific Node does not contain the attribute, the data.frame will contain NA.}
 
 \item{pruneFun}{a function pruning the nodes to be converted}
-
-\item{inheritFromAncestors}{If TRUE, then field-attributes from ancestors are inherited}
 }
 \description{
 Convert a \code{\link{Node}} to a \code{data.frame}
 }
+\examples{
+data(acme)
+ToDataFrameTree(acme, "cost", "p")
+
+#use the pruneFun:
+acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
+ToDataFrameTree(acme, "totalCost", pruneFun = function(x) x$totalCost > 300000)
+}
 \seealso{
-\code{\link{Node}}, \code{\link{as.data.frame.Node}}
+Other Conversions from Node: \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToListExplicit}}; \code{\link{ToListSimple}};
+  \code{\link{ToNewick}}; \code{\link{as.data.frame.Node}};
+  \code{\link{as.dendrogram.Node}};
+  \code{\link{as.list.Node}}
+
+Other data.frame Conversions: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{as.Node.data.frame}};
+  \code{\link{as.data.frame.Node}}
 }
 

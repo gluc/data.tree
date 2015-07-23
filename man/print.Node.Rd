@@ -20,5 +20,6 @@ Print the Node in a human-readable fashion.
 \examples{
 data(acme)
 print(acme, "cost", "p")
+do.call(print, c(acme, acme$fieldsAll))
 }
 

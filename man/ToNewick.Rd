@@ -23,4 +23,13 @@ ToNewick(acme, heightAttribute = NULL)
 ToNewick(acme, heightAttribute = function(x) Height(x, 200))
 ToNewick(acme, rootHeight = 200)
 }
+\seealso{
+Other Conversions from Node: \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{ToListExplicit}}; \code{\link{ToListSimple}};
+  \code{\link{as.data.frame.Node}};
+  \code{\link{as.dendrogram.Node}};
+  \code{\link{as.list.Node}}
+}
 

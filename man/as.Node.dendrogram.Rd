@@ -19,4 +19,18 @@ The root \code{Node} of a \code{data.tree}
 \description{
 Convert a \code{\link{dendrogram}} to a data.tree \code{Node}
 }
+\examples{
+hc <- hclust(dist(USArrests), "ave")
+dend1 <- as.dendrogram(hc)
+tree1 <- as.Node(dend1)
+tree1$fieldsAll
+tree1$totalCount
+tree1$leafCount
+tree1$depth
+}
+\seealso{
+Other Conversions to Node: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{as.Node.data.frame}};
+  \code{\link{as.Node.list}}
+}
 

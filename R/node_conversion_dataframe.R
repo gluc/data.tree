@@ -9,12 +9,22 @@
 #' }
 #' If a specific Node does not contain the attribute, the data.frame will contain NA.
 #' @param pruneFun a function pruning the nodes to be converted
-#' @param inheritFromAncestors If TRUE, then field-attributes from ancestors are inherited
 #'
-#' @seealso \code{\link{Node}}, \code{\link{as.data.frame.Node}} 
+#'
+#' @examples
+#' data(acme)
+#' ToDataFrameTree(acme, "cost", "p")
+#' 
+#' #use the pruneFun:
+#' acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
+#' ToDataFrameTree(acme, "totalCost", pruneFun = function(x) x$totalCost > 300000)
+#'
+#' @family Conversions from Node
+#' @family data.frame Conversions
+#' 
 #' @export
-ToDataFrameTree <- function(node, ..., pruneFun = NULL, inheritFromAncestors = FALSE) {
-  as.data.frame(node, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun, inheritFromAncestors = inheritFromAncestors)
+ToDataFrameTree <- function(node, ..., pruneFun = NULL) {
+  as.data.frame(node, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun)
 }
 
 #' Converts the tree to tabular form, keeping only the leafs.
@@ -27,6 +37,23 @@ ToDataFrameTree <- function(node, ..., pruneFun = NULL, inheritFromAncestors = F
 #' available on a leaf, in which case the algorithm inherits the values from its ancestors.
 #' @param pruneFun a function pruning the tree to be converted
 #' @param filterFun a function filtering nodes to be converted
+#'
+#'
+#' @return a data.frame with one row per leaf
+#' 
+#' @examples
+#' data(acme)
+#' acc <- acme$Find("Accounting")
+#' acc$Head <- "Mrs. Numright"
+#' rs <- acme$Find("Research")
+#' rs$Head <- "Mr. Stein"
+#' it <- acme$Find("IT")
+#' it$Head <- "Mr. Squarehead"
+#' ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "cost")
+#' 
+#'
+#' @family Conversions from Node
+#' @family data.frame Conversions
 #' 
 #' @export
 ToDataFrameTable <- function(node, ..., pruneFun = NULL, filterFun = NULL) {
@@ -51,6 +78,9 @@ ToDataFrameTable <- function(node, ..., pruneFun = NULL, filterFun = NULL) {
 #' @examples
 #' data(acme)
 #' ToDataFrameTaxonomy(acme, "cost", "p")
+#' 
+#' @family Conversions from Node
+#' @family data.frame Conversions
 #' 
 #' @export
 ToDataFrameTaxonomy <- function(node, 
@@ -89,6 +119,8 @@ ToDataFrameTaxonomy <- function(node,
 #' xN <- FromDataFrameTaxonomy(x)
 #' print(xN, "p", "cost")
 #' 
+#' @family data.frame Conversions
+#' @family Conversions to Node
 #' 
 #' @export
 FromDataFrameTaxonomy <- function(x) {
@@ -137,6 +169,17 @@ FromDataFrameTaxonomy <- function(x) {
 #' of its ancestors
 #' \code{Node} and its subtree should be displayed.
 #' 
+#' @examples
+#' data(acme)
+#' acme$fieldsAll
+#' as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p") 
+#' 
+#' # For more examples, see the more specialised data.frame converters.
+#' 
+#' @family Conversions from Node
+#' @family data.frame Conversions
+#' 
+#' 
 #' @export
 as.data.frame.Node <- function(x, 
                                row.names = NULL, 
@@ -147,7 +190,7 @@ as.data.frame.Node <- function(x,
                                filterFun = NULL,
                                inheritFromAncestors = FALSE
 ) {
-
+  
   traversal <- traversal[1]
   
   if(!x$isRoot) {
@@ -192,6 +235,9 @@ as.data.frame.Node <- function(x,
 #' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
 #' 
 #' @details x should be of class x
+#' 
+#' @family data.frame Conversions
+#' @family Conversions to Node
 #' 
 #' @export
 as.Node.data.frame <- function(x, 

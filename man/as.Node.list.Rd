@@ -32,4 +32,12 @@ x has to contain an element called nameName, which must be convertible to a char
 x can contain an element called childrenName, which should be of class list. This will be converted to the Node's
 children.
 }
+\seealso{
+Other Conversions to Node: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{as.Node.data.frame}};
+  \code{\link{as.Node.dendrogram}}
+
+Other List Conversions: \code{\link{ToListExplicit}};
+  \code{\link{ToListSimple}}; \code{\link{as.list.Node}}
+}
 

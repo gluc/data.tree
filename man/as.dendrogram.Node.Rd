@@ -13,10 +13,35 @@
 
 \item{...}{Additional parameters}
 }
+\value{
+An object of class dendrogram
+}
 \description{
 Convert a Node to a dendrogram
 }
 \details{
 Convert a Node to a dendrogram
+}
+\examples{
+data(acme)
+acmed <- as.dendrogram(acme)
+plot(acmed, center = TRUE)
+
+#you can take an attribute for the height:
+acme$Do( function(x) x$height <- (10 - x$level))
+acmed <- as.dendrogram(acme, heightAttribute = "height")
+plot(acmed, center = TRUE)
+
+#or directly a function
+acmed <- as.dendrogram(acme, heightAttribute = function(x) 10 - x$level)
+plot(acmed)
+}
+\seealso{
+Other Conversions from Node: \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{ToListExplicit}}; \code{\link{ToListSimple}};
+  \code{\link{ToNewick}}; \code{\link{as.data.frame.Node}};
+  \code{\link{as.list.Node}}
 }
 

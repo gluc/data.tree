@@ -31,6 +31,9 @@ as.Node <- function(x, ...) {
 #' x can contain an element called childrenName, which should be of class list. This will be converted to the Node's
 #' children.
 #' 
+#' @family Conversions to Node
+#' @family List Conversions
+#' 
 #' @export
 as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = 'children', nodeName = "", ...) {
   mode <- mode[1]
@@ -85,6 +88,8 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
 #' @param rootName The name of the node. If provided, this overrides \code{Node$name}
 #' @param ... Additional parameters
 #' 
+#' @family Conversions from Node
+#' @family List Conversions
 #' 
 #' @export
 as.list.Node <- function(x, 
@@ -133,19 +138,50 @@ as.list.Node <- function(x,
 }
 
 
-#' This is an alias for \code{\link{as.list.Node}}.
-ToList <- function(x, 
-                   mode = c("simple", "explicit"),
-                   unname = FALSE, 
-                   nameName = ifelse(unname, "name", ""), 
-                   childrenName = 'children',
-                   rootName = '',
-                   ...) {
-  as.list.Node(node, mode = mode, unname = unname, nameName = nameName, childrenName = childrenName, ...)
+#' Exports a tree to a list of lists in simple format, meaning that children are put directly into a nested list.
+#' 
+#' @param node The root node to export
+#' @param ... the fields to export, as character strings
+#' @param nameName the name of the name attribute
+#' 
+#' @examples
+#' data(acme)
+#' alol <- ToListSimple(acme, "p", "cost")
+#' str(alol)
+#' 
+#' @family Conversions from Node
+#' @family List Conversions
+#'  
+#' @export
+ToListSimple <- function(node, ..., nameName = "name") {
+  as.list.Node(node, mode = "simple", nameName = nameName, ...)
 }
 
 
-
+#' Export a Node to a list of lists where children are explicit, meaning there is a nested list called 'children', containing
+#' lists of child nodes.
+#' 
+#' @param node The root node to export
+#' @param ... The attributes to export
+#' @param unname If TRUE, then children are not named in the explicit children list
+#' @param nameName The name of the name attribute
+#' @param childrenName the name of the children list
+#' 
+#' @examples 
+#' data(acme)
+#' str(ToListExplicit(acme, "cost"))
+#' str(ToListExplicit(acme, "cost", unname = TRUE))
+#' str(ToListExplicit(acme, "cost", unname = TRUE, nameName = "id", childrenName = "descendants"))
+#' 
+#'
+#' @family Conversions from Node
+#' @family List Conversions
+#'
+#' @export 
+ToListExplicit <- function(node, ..., unname = FALSE, nameName = ifelse(unname, "name", ""), childrenName = 'children') {
+  as.list.Node(node, mode = "explicit", unname = unname, nameName = nameName, childrenName = childrenName) 
+}
+  
 
 
 #' Write a data.tree to Newick notation
@@ -162,6 +198,8 @@ ToList <- function(x,
 #' ToNewick(acme, heightAttribute = NULL)
 #' ToNewick(acme, heightAttribute = function(x) Height(x, 200))
 #' ToNewick(acme, rootHeight = 200)
+#' 
+#' @family Conversions from Node
 #' 
 #' @export 
 ToNewick <- function(node, heightAttribute = Height, ...) {

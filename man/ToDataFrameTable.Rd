@@ -16,8 +16,35 @@ available on a leaf, in which case the algorithm inherits the values from its an
 
 \item{filterFun}{a function filtering nodes to be converted}
 }
+\value{
+a data.frame with one row per leaf
+}
 \description{
 This method is especially useful when you need to apply a specific function that is only available
 for \code{\link{data.frame}}.
+}
+\examples{
+data(acme)
+acc <- acme$Find("Accounting")
+acc$Head <- "Mrs. Numright"
+rs <- acme$Find("Research")
+rs$Head <- "Mr. Stein"
+it <- acme$Find("IT")
+it$Head <- "Mr. Squarehead"
+ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "cost")
+}
+\seealso{
+Other Conversions from Node: \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{ToListExplicit}}; \code{\link{ToListSimple}};
+  \code{\link{ToNewick}}; \code{\link{as.data.frame.Node}};
+  \code{\link{as.dendrogram.Node}};
+  \code{\link{as.list.Node}}
+
+Other data.frame Conversions: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{as.Node.data.frame}};
+  \code{\link{as.data.frame.Node}}
 }
 

@@ -39,4 +39,25 @@ of its ancestors
 \description{
 Convert a \code{\link{Node}} to a \code{data.frame}
 }
+\examples{
+data(acme)
+acme$fieldsAll
+as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p")
+
+# For more examples, see the more specialised data.frame converters.
+}
+\seealso{
+Other Conversions from Node: \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{ToListExplicit}}; \code{\link{ToListSimple}};
+  \code{\link{ToNewick}}; \code{\link{as.dendrogram.Node}};
+  \code{\link{as.list.Node}}
+
+Other data.frame Conversions: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{as.Node.data.frame}}
+}
 

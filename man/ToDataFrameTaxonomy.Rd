@@ -23,4 +23,18 @@ This is useful e.g. when converting to igraph.
 data(acme)
 ToDataFrameTaxonomy(acme, "cost", "p")
 }
+\seealso{
+Other Conversions from Node: \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{ToListExplicit}}; \code{\link{ToListSimple}};
+  \code{\link{ToNewick}}; \code{\link{as.data.frame.Node}};
+  \code{\link{as.dendrogram.Node}};
+  \code{\link{as.list.Node}}
+
+Other data.frame Conversions: \code{\link{FromDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{as.Node.data.frame}};
+  \code{\link{as.data.frame.Node}}
+}
 

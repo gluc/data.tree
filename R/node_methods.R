@@ -22,8 +22,9 @@
 #' @examples
 #' data(acme)
 #' Aggregate(acme, "cost", sum)
-#' acme$Get("Aggregate", "cost", sum)
-#' print(acme, totalCost = acme$Get("Aggregate", "cost", sum))
+#' 
+#' #use Aggregate in traversal:
+#' acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
 #' 
 #' @seealso \code{\link{Node}}
 #'

@@ -23,4 +23,15 @@ x <- ToDataFrameTaxonomy(acme, "p", "cost")
 xN <- FromDataFrameTaxonomy(x)
 print(xN, "p", "cost")
 }
+\seealso{
+Other Conversions to Node: \code{\link{as.Node.data.frame}};
+  \code{\link{as.Node.dendrogram}};
+  \code{\link{as.Node.list}}
+
+Other data.frame Conversions: \code{\link{ToDataFrameTable}};
+  \code{\link{ToDataFrameTaxonomy}};
+  \code{\link{ToDataFrameTree}};
+  \code{\link{as.Node.data.frame}};
+  \code{\link{as.data.frame.Node}}
+}
 
