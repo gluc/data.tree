@@ -94,8 +94,8 @@ as.data.frame.Node <- function(x,
 #' spanned by \code{x}, possibly pruned according to \code{pruneFun}.
 #' 
 #' @export
-ToDataFrameTree <- function(X, ..., pruneFun = NULL) {
-  as.data.frame(X, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun)
+ToDataFrameTree <- function(x, ..., pruneFun = NULL) {
+  as.data.frame(x, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun)
 }
 
 #' @rdname as.data.frame.Node
@@ -106,8 +106,8 @@ ToDataFrameTree <- function(X, ..., pruneFun = NULL) {
 #' 
 #' 
 #' @export
-ToDataFrameTable <- function(X, ..., pruneFun = NULL) {
-  df <- as.data.frame(X, row.names = NULL, optional = FALSE, ..., filterFun = isLeaf, pruneFun = pruneFun, inheritFromAncestors = TRUE)
+ToDataFrameTable <- function(x, ..., pruneFun = NULL) {
+  df <- as.data.frame(x, row.names = NULL, optional = FALSE, ..., filterFun = isLeaf, pruneFun = pruneFun, inheritFromAncestors = TRUE)
   df[,-1]
 }
 
@@ -147,10 +147,11 @@ ToDataFrameTaxonomy <- function(x,
 #' Convert a data.frame to a data.tree
 #' 
 #' @param x The data.frame in the required format.
-#' @param ... Any other argument
+#' @param ... Any other argument implementations of this might need
+#' @param mode Either "table" (if x is a data.frame in tree or table format) or "taxonomy"
 #' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
 #'
-#' @return The root \code{Node} of the \code{data.tree}
+#' @return The root \code{Node} of the \code{data.tree} structure
 #'  
 #' @examples
 #' data(acme)

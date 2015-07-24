@@ -76,7 +76,7 @@ Clone <- function(node) {
 #' @examples
 #' data(acme)
 #' acme$Climb('IT', 'Outsource')$name
-#' acme$CLimb('IT')$Climb('Outsource')$name
+#' acme$Climb('IT')$Climb('Outsource')$name
 #'
 #' @seealso \code{\link{Node}}
 #'

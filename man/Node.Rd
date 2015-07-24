@@ -3,10 +3,10 @@
 \docType{class}
 \name{Node}
 \alias{Node}
-\title{Create Trees With \code{Node}s}
+\title{Create a \code{data.tree} Structure With \code{Nodes}}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
-Node
+Node$new("my node")
 }
 \description{
 \code{Node} is at the very heart of the \code{data.tree} package. All trees are constructed
@@ -15,7 +15,7 @@ by tying toghether \code{Node} objects.
 \section{Fields}{
 
 \describe{
-\item{\code{children}}{A list of children \code{Node}s}
+\item{\code{children}}{A list of child \code{Nodes}}
 
 \item{\code{parent}}{The node's parent \code{Node}}
 }}
@@ -23,8 +23,8 @@ by tying toghether \code{Node} objects.
 
 
 \describe{
-  \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
-  \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
+  \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root when creating trees programmatically.}
+  \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node} as a child.}
   \item{\code{\link{Climb}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
   \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
@@ -40,8 +40,6 @@ by tying toghether \code{Node} objects.
 
 
 \describe{
- \item{\code{children}}{Returns a list containing all the children of this \code{Node}}
- \item{\code{parent}}{Returns the parent \code{Node} of this \code{Node}}
  \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
  \item{\code{fields}}{Gets the names of the set properties of a \code{Node}}
  \item{\code{fieldsAll}}{Gets the names of the set properties of a \code{Node} or any of its sub-Nodes}
@@ -67,7 +65,7 @@ accounting <- acme$AddChild("Accounting")
 print(acme)
 }
 \seealso{
-For more details see the \code{data.tree} vignette: \code{vignette("data.tree")}
+For more details see the \code{\link{data.tree}} documentations, or the \code{data.tree} vignette: \code{vignette("data.tree")}
 }
 \keyword{datasets}
 

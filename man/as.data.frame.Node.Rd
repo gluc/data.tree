@@ -11,9 +11,9 @@
   traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
   pruneFun = NULL, filterFun = NULL, inheritFromAncestors = FALSE)
 
-ToDataFrameTree(X, ..., pruneFun = NULL)
+ToDataFrameTree(x, ..., pruneFun = NULL)
 
-ToDataFrameTable(X, ..., pruneFun = NULL)
+ToDataFrameTable(x, ..., pruneFun = NULL)
 
 ToDataFrameTaxonomy(x, ..., pruneFun = NULL, inheritFromAncestors = FALSE)
 }

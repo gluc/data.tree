@@ -1,3 +1,4 @@
+
 #' Checks if a node is the root
 #' @param node The Node to test.
 #' @return TRUE if the Node is the root, FALSE otherwise

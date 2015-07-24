@@ -21,7 +21,7 @@ element in the path, specified by the \code{Node}'s name.
 \examples{
 data(acme)
 acme$Climb('IT', 'Outsource')$name
-acme$CLimb('IT')$Climb('Outsource')$name
+acme$Climb('IT')$Climb('Outsource')$name
 }
 \seealso{
 \code{\link{Node}}

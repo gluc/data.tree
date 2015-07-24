@@ -18,7 +18,9 @@ FromDataFrameTaxonomy(taxonomy)
 \arguments{
 \item{x}{The data.frame in the required format.}
 
-\item{...}{Any other argument}
+\item{...}{Any other argument implementations of this might need}
+
+\item{mode}{Either "table" (if x is a data.frame in tree or table format) or "taxonomy"}
 
 \item{pathName}{The name of the column in x containing the path of the row}
 
@@ -43,7 +45,7 @@ it must adhere to the following requirements:
 }}
 }
 \value{
-The root \code{Node} of the \code{data.tree}
+The root \code{Node} of the \code{data.tree} structure
 }
 \description{
 Convert a data.frame to a data.tree
