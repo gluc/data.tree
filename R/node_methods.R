@@ -7,7 +7,7 @@
 
 
 
-#' Traverse a Tree and Perform Aggregation Operations
+#' Aggregate child values of a \code{Node}, standalone or in traversal.
 #' 
 #' The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum them up along the tree.
 #' 

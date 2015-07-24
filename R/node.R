@@ -3,6 +3,7 @@
 #' These are reserved by the Node class, you cannot use these as 
 #' Attribute names.
 #' 
+#' @export
 NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddChildNode',
                                 'AddSibling',

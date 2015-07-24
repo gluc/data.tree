@@ -22,12 +22,8 @@ alol <- ToListSimple(acme, "p", "cost")
 str(alol)
 }
 \seealso{
-Other Conversions from Node: \code{\link{ToDataFrameTable}};
-  \code{\link{ToDataFrameTaxonomy}};
-  \code{\link{ToDataFrameTree}};
-  \code{\link{ToListExplicit}}; \code{\link{ToNewick}};
-  \code{\link{as.data.frame.Node}};
-  \code{\link{as.dendrogram.Node}};
+Other Conversions from Node: \code{\link{ToListExplicit}};
+  \code{\link{ToNewick}}; \code{\link{as.dendrogram.Node}};
   \code{\link{as.list.Node}}
 
 Other List Conversions: \code{\link{ToListExplicit}};

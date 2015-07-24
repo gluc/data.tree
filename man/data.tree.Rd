@@ -4,9 +4,9 @@
 \name{data.tree}
 \alias{data.tree}
 \alias{data.tree-package}
-\title{Manage Hierarchical Data in R}
+\title{Work with Hierarchical Data in R}
 \description{
-\code{data.tree} is to hierarchical data what `data.frame` is to tabular data: An extensible, general purpose structure to store, manipulate,
+\code{data.tree} is to hierarchical data what \code{data.frame} is to tabular data: An extensible, general purpose structure to store, manipulate,
 and display hierarchical data.
 }
 \details{
@@ -15,30 +15,66 @@ Where tabular data has \code{data.frame}, hierarchical data is often modeled in 
 structures are often dificult to manage.
 This is where the \code{data.tree} package steps in. It lets you build trees of hierarchical
 data for various uses: to print, to rapid prototype search algorithms, to test out new classification algorithms, and much more.
-\code{data.tree} allows traversing the trees in various orders (pre-order, in-order, etc.), and it lets you run operations on \code{\link{Node}s}. Conversely, you can collect data.
-The package also contains utility functions to sort, to print, and to construct a tree from a \code{data.frame} and vice versa.
-The entry point to the package is \code{\link{Node}}.
+\code{data.tree} allows \bold{traversing} trees in various orders (pre-order, post-order, etc.), and it lets you run operations on \code{\link{Node}s}.
+Conversely, you can collect data while traversing a tree
+.
+The package also contains utility functions to \code{\link{Sort}}, to \code{\link{Prune}}, and to \code{\link{print}} in custom formats.
 
-One of most important things to note about `data.tree` is that it exhibits \bold{reference semantics}. In a nutshell, this means that you can modify
+You can construct a tree from a \code{data.frame}, from a list of lists and vice versa. There are also conversion methods to and
+from \code{\link{dendrogram}}, \code{\link{igraph}}, \code{\link{phylo}} from the ape package, JSON, YAML, and more.
+
+The entry point to the package is \code{\link{Node}}. Each tree is composed of a number of \code{Node}s, referencing each other.
+
+One of most important things to note about \code{data.tree} is that it exhibits \bold{reference semantics}. In a nutshell, this means that you can modify
 your tree along the way, without having to reassing it to a variable after each modification. By and large, this is a rather exceptional behaviour
-in R, where value-semantics rules most of the time.
+in R, where value-semantics is king most of the time.
 
-\code{data.frame} is not optimised for computation speed, but for implementation speed. However, it can easily handle trees with
+\code{data.tree} is not optimised for computational speed, but for implementation speed. However, it can easily handle trees with
 several thousand nodes. It is always useful when
-- you want to develop and test a new algorithm
-- you want to import and convert tree structures (it imports and exports to list-of-list, data.frame, yaml, json, igraph, dendrogram, phylo and more)
-- you want to play around with data, display it and get an understanding
-- you want to test another package, to compare it with your own results
-- you need to do homework
+\itemize{
+ \item{you want to develop and test a new algorithm}
+ \item{you want to import and convert tree structures (it imports and exports to list-of-list, data.frame, yaml, json, igraph, dendrogram, phylo and more)}
+ \item{you want to play around with data, display it and get an understanding}
+ \item{you want to test another package, to compare it with your own results}
+ \item{you need to do homework}
+}
 
 For a quick overview of the features, read the \code{\link{data.tree}} vignette by running \code{vignette("data.tree")}. For an example
 in the area of classification trees, you might also be interested in \code{vignette("ID3")}
 
-A good entry point for the documentation is \code{\link{Node}}
+A good entry point for the documentation is also \code{\link{Node}}
+}
+\examples{
+data(acme)
+print(acme)
+acme$fieldsAll
+acme$count
+acme$totalCount
+acme$isRoot
+acme$depth
+print(acme, "p", "cost")
+
+outsource <- acme$Find("IT", "Outsource")
+class(outsource)
+outsource$fields
+outsource$isLeaf
+outsource$level
+outsource$path
+outsource$p
+outsource$expCost <- outsource$p * outsource$cost
+print(acme, "expCost")
+
+acme$Get("p")
+acme$Do(function(x) x$expCost <- x$p * x$cost)
+acme$Get("expCost", filterFun = isLeaf)
+
+ToDataFrameTable(acme, "name", "p", "cost", "level", "pathString")
+ToDataFrameTree(acme, "name", "p", "cost", "level")
+ToDataFrameTaxonomy(acme, "p", "cost")
 }
 \seealso{
 \code{\link{Node}}
 
-For more details see the \code{data.tree} vignette by running: \code{vignette("data.tree")}
+For more details, see the \code{data.tree} vignette by running: \code{vignette("data.tree")}
 }
 

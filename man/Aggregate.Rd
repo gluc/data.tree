@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_methods.R
 \name{Aggregate}
 \alias{Aggregate}
-\title{Traverse a Tree and Perform Aggregation Operations}
+\title{Aggregate child values of a \code{Node}, standalone or in traversal.}
 \usage{
 Aggregate(node, attribute, aggFun, ...)
 }

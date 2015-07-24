@@ -2,24 +2,24 @@
 % Please edit documentation in R/util.R
 \name{print.Node}
 \alias{print.Node}
-\title{Print a Node}
+\title{Print a \code{Node} in a human-readable fashion.}
 \usage{
 \method{print}{Node}(x, ...)
 }
 \arguments{
 \item{x}{The Node}
 
-\item{...}{Additional parameters to be printed as columns, as a string.}
+\item{...}{Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
+a Node method, or a function taking a Node as a single argument.}
 }
 \description{
-Print a Node in a human-readable fashion.
-}
-\details{
-Print the Node in a human-readable fashion.
+Print a \code{Node} in a human-readable fashion.
 }
 \examples{
 data(acme)
 print(acme, "cost", "p")
+print(acme, "cost", probability = "p")
+print(acme, expectedCost = function(x) x$cost * x$p)
 do.call(print, c(acme, acme$fieldsAll))
 }
 

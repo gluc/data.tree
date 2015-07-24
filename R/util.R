@@ -40,18 +40,17 @@ FormatFixedDecimal <- function(x, digits = 3) {
 
 
 
-#' Print a Node
-#' 
-#' Print a Node in a human-readable fashion.
-#' 
+#' Print a \code{Node} in a human-readable fashion.
+#'  
 #' @param x The Node
-#' @param ... Additional parameters to be printed as columns, as a string.
+#' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
+#' a Node method, or a function taking a Node as a single argument.
 #' 
-#' @details Print the Node in a human-readable fashion.
-#'
 #' @examples
 #' data(acme)
 #' print(acme, "cost", "p")
+#' print(acme, "cost", probability = "p")
+#' print(acme, expectedCost = function(x) x$cost * x$p)
 #' do.call(print, c(acme, acme$fieldsAll))
 #'
 #' @export
