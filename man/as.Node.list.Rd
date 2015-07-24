@@ -33,8 +33,7 @@ x can contain an element called childrenName, which should be of class list. Thi
 children.
 }
 \seealso{
-Other Conversions to Node: \code{\link{as.Node.data.frame}};
-  \code{\link{as.Node.dendrogram}}
+Other Conversions to Node: \code{\link{as.Node.dendrogram}}
 
 Other List Conversions: \code{\link{ToListExplicit}};
   \code{\link{ToListSimple}}; \code{\link{as.list.Node}}

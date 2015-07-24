@@ -13,7 +13,6 @@
 #' @param optional logical. If \code{TRUE}, setting row names and converting column names 
 #' (to syntactic names: see make.names) is optional.
 #'
-#' @return a \code{data.frame}
 #'   
 #' @examples
 #' data(acme)
@@ -108,10 +107,7 @@ ToDataFrameTree <- function(X, ..., pruneFun = NULL) {
 #' 
 #' @export
 ToDataFrameTable <- function(X, ..., pruneFun = NULL) {
-  ifilterFun <- function(x) {
-    x$isLeaf && (length(filterFun) == 0 || filterFun(x))  
-  }
-  df <- as.data.frame(X, row.names = NULL, optional = FALSE, ..., pruneFun = pruneFun, inheritFromAncestors = TRUE)
+  df <- as.data.frame(X, row.names = NULL, optional = FALSE, ..., filterFun = isLeaf, pruneFun = pruneFun, inheritFromAncestors = TRUE)
   df[,-1]
 }
 
@@ -146,74 +142,82 @@ ToDataFrameTaxonomy <- function(x,
 
 
 
-#' Convert a taxonomy into a Node.
-#' 
-#' To be a taxonomy, a data.frame must fulfil the following requirements:
-#' 1. It must contain as many rows as there are nodes, excluding the root
-#' 2. Its first column must be called *children*, and contain the name of each node, whereby each name must be unique within a node's level
-#' 3. Its second column must be called *parents*, and contain the name of the parent of each node
-#' 4. Its third column must be called *level*, and contain the level of the node
-#' 5. The rows must be ordered by level
-#' 
-#' @param x The taxonomy data.frame to convert.
-#' 
-#' @examples
-#' data(acme)
-#' x <- ToDataFrameTaxonomy(acme, "p", "cost")
-#' xN <- FromDataFrameTaxonomy(x)
-#' print(xN, "p", "cost")
-#' 
-#' 
-#' @export
-FromDataFrameTaxonomy <- function(x) {
-  if (any(names(x)[1:3] != c("children", "parents", "level"))) stop("x is not a taxonomy. First three columns must be children, parents, and level, respectively.")
-  rootName <- unique(x$parents[!(x$parents %in% x$children)])
-  if (length(rootName) != 1) stop("Cannot find root name. x is not a taxonomy.")
-  root <- Node$new(rootName)
-  GetNodeByName <- function(name, level) {
-    t <- Traverse(root, filterFun = function(x) x$name == name && x$level == level)
-    if (length(t) == 0) stop(paste0("Cannot find node ", name, ". x is not a taxonomy."))
-    if (length(t) > 1) stop(paste0("More than one node named ", name, ". x is not a taxonomy."))
-    t[[1]]
-  }
-  for (i in 1:dim(x)[1]) {
-    parent <- GetNodeByName(x[i, "parents"], x[i, "level"] - 1)
-    child <- parent$AddChild(x[i, "children"])
-    if (dim(x)[2] > 3) {
-      for (j in 4:dim(x)[2]) {
-        child[[names(x)[j]]] <- x[i, j]
-      }
-    }
-  }
-  return (root)
-}
 
 
 #' Convert a data.frame to a data.tree
 #' 
-#' @param x The data.frame
+#' @param x The data.frame in the required format.
 #' @param ... Any other argument
-#' @param pathName The name of the column in x containing the path of the row
-#' @param pathDelimiter The delimiter used
-#' @param colLevels Nested vector of column names, determining on what node levels the attributes are written to.
 #' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
+#'
+#' @return The root \code{Node} of the \code{data.tree}
+#'  
+#' @examples
+#' data(acme)
 #' 
-#' @details x should be of class x
+#' #Tree
+#' x <- ToDataFrameTree(acme, "pathString", "p", "cost")
+#' x
+#' xN <- as.Node(x)
+#' print(xN, "p", "cost")
 #' 
-#' @family data.frame Conversions
-#' @family Conversions to Node
+#' #Table
+#' x <- ToDataFrameTable(acme, "pathString", "p", "cost")
+#' x
+#' xN <- FromDataFrameTable(x)
+#' print(xN, "p", "cost")
+#' 
+#' #More complex Table structure, using colLevels
+#' acme$Set(floor = c(1, 2, 3),  filterFun = function(x) x$level == 2)
+#' x <- ToDataFrameTable(acme, "pathString", "floor", "p", "cost") 
+#' x
+#' xN <- FromDataFrameTable(x, colLevels = list(NULL, "floor", c("p", "cost")), na.rm = TRUE)
+#' print(xN, "floor", "p", "cost")
+#'  
+#' #Taxonomy
+#' x <- ToDataFrameTaxonomy(acme, "p", "cost")
+#' x
+#' xN <- FromDataFrameTaxonomy(x)
+#' print(xN, "p", "cost")
+#' 
+#' @seealso \code{\link{as.data.frame.Node}}
 #' 
 #' @export
 as.Node.data.frame <- function(x, 
                                ..., 
+                               mode = c("table", "taxonomy"),
                                pathName = 'pathString', 
                                pathDelimiter = '/', 
                                colLevels = NULL,
-                               na.rm = FALSE) {
+                               na.rm = TRUE) {
+  
+  mode <- mode[1]
+  if (mode == 'table') return (FromDataFrameTable(x, pathName, pathDelimiter, colLevels, na.rm))
+  else if (mode == 'taxonomy') return (FromDataFrameTaxonomy(x))
+  else stop(paste0("Mode ", mode, " unknown."))
+  
+}
+
+
+#' @rdname as.Node.data.frame
+#' 
+#' @param table a \code{data.frame} in *table* or *tree* format, i.e. having a row for each leaf (and optionally
+#' for additional nodes). There should be a column called \code{pathName}, separated by \code{pathDelimiter}, 
+#' describing the path of each row. 
+#' @param pathName The name of the column in x containing the path of the row
+#' @param pathDelimiter The delimiter used
+#' @param colLevels Nested list of column names, determining on what node levels the attributes are written to.
+#' 
+#' @export
+FromDataFrameTable <- function(table, 
+                               pathName = 'pathString', 
+                               pathDelimiter = '/', 
+                               colLevels = NULL,
+                               na.rm = TRUE) {
   root <- NULL
-  mycols <- names(x)[ !(names(x) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
-  for (i in 1:nrow(x)) {
-    myrow <- x[ i, ]
+  mycols <- names(table)[ !(names(table) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
+  for (i in 1:nrow(table)) {
+    myrow <- table[ i, ]
     mypath <- myrow[[pathName]]
     myvalues <- myrow[!colnames(myrow) == pathName]
     
@@ -258,6 +262,42 @@ as.Node.data.frame <- function(x,
     
   }
   return (root)
+  
 }
 
+#' @rdname as.Node.data.frame
+#' 
+#' @param taxonomy A \code{data.frame} in taxonomy format, i.e.
+#' it must adhere to the following requirements:
+#' \itemize{
+#'  \item{It must contain as many rows as there are nodes, excluding the root}
+#'  \item{Its first column must be called *children*, and contain the name of each node, whereby each name must be unique within a node's level}
+#'  \item{Its second column must be called *parents*, and contain the name of the parent of each node}
+#'  \item{Its third column must be called *level*, and contain the level of the node}
+#'  \item{The rows must be ordered by level, increasing}
+#' }
+#' 
+#' @export
+FromDataFrameTaxonomy <- function(taxonomy) {
+  if (any(names(taxonomy)[1:3] != c("children", "parents", "level"))) stop("taxonomy is not a taxonomy. First three columns must be children, parents, and level, respectively.")
+  rootName <- unique(taxonomy$parents[!(taxonomy$parents %in% taxonomy$children)])
+  if (length(rootName) != 1) stop("Cannot find root name. taxonomy is not a taxonomy.")
+  root <- Node$new(rootName)
+  GetNodeByName <- function(name, level) {
+    t <- Traverse(root, filterFun = function(x) x$name == name && x$level == level)
+    if (length(t) == 0) stop(paste0("Cannot find node ", name, ". taxonomy is not a taxonomy."))
+    if (length(t) > 1) stop(paste0("More than one node named ", name, ". taxonomy is not a taxonomy."))
+    t[[1]]
+  }
+  for (i in 1:dim(taxonomy)[1]) {
+    parent <- GetNodeByName(taxonomy[i, "parents"], taxonomy[i, "level"] - 1)
+    child <- parent$AddChild(taxonomy[i, "children"])
+    if (dim(taxonomy)[2] > 3) {
+      for (j in 4:dim(taxonomy)[2]) {
+        child[[names(taxonomy)[j]]] <- taxonomy[i, j]
+      }
+    }
+  }
+  return (root)
+}
 

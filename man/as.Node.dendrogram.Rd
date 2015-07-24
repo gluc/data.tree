@@ -29,7 +29,6 @@ tree1$leafCount
 tree1$depth
 }
 \seealso{
-Other Conversions to Node: \code{\link{as.Node.data.frame}};
-  \code{\link{as.Node.list}}
+Other Conversions to Node: \code{\link{as.Node.list}}
 }
 

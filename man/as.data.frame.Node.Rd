@@ -39,8 +39,6 @@ If a specific Node does not contain the attribute, \code{NA} is added to the dat
 searched for the field/method. If TRUE, and if the \code{Node} does not contain the attribute, then ancestors are also searched.}
 }
 \value{
-a \code{data.frame}
-
 ToDataFrameTree: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree
 spanned by \code{x}, possibly pruned according to \code{pruneFun}.
 
