@@ -47,7 +47,7 @@
 #' acme$depth
 #' print(acme, "p", "cost")
 #' 
-#' outsource <- acme$Find("IT", "Outsource")
+#' outsource <- acme$Climb("IT", "Outsource")
 #' class(outsource)
 #' outsource$fields
 #' outsource$isLeaf

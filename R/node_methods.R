@@ -66,7 +66,7 @@ Clone <- function(node) {
 #' Find a \code{Node} by its path
 #' 
 #' 
-#' Find returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
+#' \code{Climb} returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
 #' element in the path, specified by the \code{Node}'s name.
 #' 
 #' @param node The root node
@@ -75,13 +75,13 @@ Clone <- function(node) {
 #' 
 #' @examples
 #' data(acme)
-#' acme$Find('IT', 'Outsource')$name
-#' acme$Find('IT')$Find('Outsource')$name
+#' acme$Climb('IT', 'Outsource')$name
+#' acme$CLimb('IT')$Climb('Outsource')$name
 #'
 #' @seealso \code{\link{Node}}
 #'
 #' @export
-Find <- function(node, ...) {
+Climb <- function(node, ...) {
   
   path <- as.character(list(...))
   if (length(path) == 0) {
@@ -93,7 +93,7 @@ Find <- function(node, ...) {
     } else if (length(path) == 1) {
       return (child)
     } else {
-      return (do.call(Find, c(node = child, list(...)[-1])))
+      return (do.call(Climb, c(node = child, list(...)[-1])))
     }
   }
   

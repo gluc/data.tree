@@ -9,12 +9,12 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddSibling',
                                 'AddSiblingNode',
                                 'children',
+                                'Climb',
                                 'count',
                                 'depth',
                                 'Do',
                                 'fields',
                                 'fieldsAll',
-                                'Find',
                                 'formatters',
                                 'Get',
                                 'GetAttribute',
@@ -59,7 +59,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #' \describe{
 #'   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root.}
 #'   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node}.}
-#'   \item{\code{\link{Find}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
+#'   \item{\code{\link{Climb}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s }
 #'   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
 #'   \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
 #'   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}
@@ -147,8 +147,8 @@ Node <- R6Class("Node",
                       
                       
                       
-                      Find = function(...) {
-                        Find(self, ...)
+                      Climb = function(...) {
+                        Climb(self, ...)
                       },
                       
                       

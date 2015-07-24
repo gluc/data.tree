@@ -33,11 +33,11 @@
 #' as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAncestors = TRUE)  
 #' 
 #' #using a function as an attribute:
-#' acc <- acme$Find("Accounting")
+#' acc <- acme$Climb("Accounting")
 #' acc$Head <- "Mrs. Numright"
-#' rs <- acme$Find("Research")
+#' rs <- acme$Climb("Research")
 #' rs$Head <- "Mr. Stein"
-#' it <- acme$Find("IT")
+#' it <- acme$Climb("IT")
 #' it$Head <- "Mr. Squarehead"
 #' ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "cost")
 #'   
@@ -229,7 +229,7 @@ FromDataFrameTable <- function(table,
     colsToSet <- mycols
     colsToSetForLeaf <- mycols
     for (path in paths[-1]) {
-      child <- Find(mynode, path)
+      child <- Climb(mynode, path)
       
       if( is.null(child)) {
         mynode <- mynode$AddChild(path)

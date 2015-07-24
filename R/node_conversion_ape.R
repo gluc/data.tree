@@ -94,8 +94,8 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
 #' data(acme)
 #' ap <- as.phylo(acme)
 #' plot(ap)
-#' nodelabels("IT Dep.", GetPhyloNr(acme$Find("IT")))
-#' edgelabels("Good!", GetPhyloNr(acme$Find("IT", "Switch to R"), "edge"))
+#' nodelabels("IT Dep.", GetPhyloNr(acme$Climb("IT")))
+#' edgelabels("Good!", GetPhyloNr(acme$Climb("IT", "Switch to R"), "edge"))
 #' 
 #' @export
 GetPhyloNr <- function(x, type = c("node", "edge")) {

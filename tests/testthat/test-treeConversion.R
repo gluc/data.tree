@@ -104,7 +104,7 @@ test_that("as.Node.list", {
   expect_equal("Acme Inc.", n$name)
   expect_equal(3, n$count)
   expect_equal(11, n$totalCount)
-  expect_equal(0.05, n$Find("IT", "Go agile")$p)
+  expect_equal(0.05, n$Climb("IT", "Go agile")$p)
   
 })
 
@@ -129,7 +129,7 @@ test_that("as.Node.list unname", {
   expect_equal("Acme Inc.", n$name)
   expect_equal(3, n$count)
   expect_equal(11, n$totalCount)
-  expect_equal(0.05, n$Find("IT", "Go agile")$p)
+  expect_equal(0.05, n$Climb("IT", "Go agile")$p)
   
 })
 
