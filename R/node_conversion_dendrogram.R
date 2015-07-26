@@ -17,7 +17,7 @@
 #' tree1$leafCount
 #' tree1$depth
 #'   
-#' @family Conversions to Node
+#' @family as.Node
 #' 
 #' @export
 as.Node.dendrogram <- function(x, name = "root", ...) {

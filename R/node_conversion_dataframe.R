@@ -182,6 +182,7 @@ ToDataFrameTaxonomy <- function(x,
 #' print(xN, "p", "cost")
 #' 
 #' @seealso \code{\link{as.data.frame.Node}}
+#' @family as.Node
 #' 
 #' @export
 as.Node.data.frame <- function(x, 

@@ -37,8 +37,6 @@ acmed <- as.dendrogram(acme, heightAttribute = function(x) 10 - x$level)
 plot(acmed)
 }
 \seealso{
-Other Conversions from Node: \code{\link{ToListExplicit}};
-  \code{\link{ToListSimple}}; \code{\link{ToNewick}};
-  \code{\link{as.list.Node}}
+Other Conversions from Node: \code{\link{ToNewick}}
 }
 

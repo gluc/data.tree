@@ -20,4 +20,24 @@ to a height and stored in a field named according to this parameter (the default
 \description{
 Converts a phylo from the ape package to a Node
 }
+\examples{
+#which bird familes have the max depth?
+library(ape)
+data(bird.families)
+bf <- as.Node(bird.families)
+depth <- bf$depth
+t <- Traverse(bf, filterFun = function(x) x$level == 25)
+Get(t, "name")
+}
+\seealso{
+Other ape phylo conversions: \code{\link{GetPhyloNr}};
+  \code{\link{as.phylo.Node}}
+
+Other as.Node: \code{\link{FromDataFrameTable}},
+  \code{\link{FromDataFrameTaxonomy}},
+  \code{\link{as.Node.data.frame}};
+  \code{\link{FromListExplicit}},
+  \code{\link{FromListSimple}}, \code{\link{as.Node.list}};
+  \code{\link{as.Node.dendrogram}}; \code{\link{as.Node}}
+}
 

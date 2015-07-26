@@ -19,7 +19,7 @@
 
 
 
-#' Sort Children of a Node or an Entire Tree
+#' Sort children of a \code{Node} or an entire \code{data.tree} structure
 #' 
 #' You can sort with respect to any argument of the tree.
 #' @param node The node whose children are to be sorted 
@@ -86,13 +86,13 @@ Revert <- function(node, recursive = TRUE) {
 #' @keywords internal
 Prune <- function(node, pruneFun) { 
   
-  if ( self$isLeaf) return()
-  for( i in length(self$children):1 ) {
-    if ( !pruneFun(self$children[[i]]) ) {
-      self$children <- self$children[-i]
+  if ( node$isLeaf) return()
+  for( i in length(node$children):1 ) {
+    if ( !pruneFun(node$children[[i]]) ) {
+      node$children <- node$children[-i]
     }
   }
-  for( child in self$children) {
+  for( child in node$children) {
     Prune(child, pruneFun)
   }
   

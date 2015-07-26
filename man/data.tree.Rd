@@ -4,7 +4,7 @@
 \name{data.tree}
 \alias{data.tree}
 \alias{data.tree-package}
-\title{Hierarchical Data Structures}
+\title{data.tree: Hierarchical Data Structures}
 \description{
 \code{data.tree} is to hierarchical data what \code{data.frame} is to tabular data: An extensible, general purpose structure to store, manipulate,
 and display hierarchical data.
@@ -12,7 +12,7 @@ and display hierarchical data.
 \section{Introduction}{
 
 
-Hierarchical data is ubiquitous (XML, search trees, family trees, classification, file system, etc.). However, no general-use \bold{tree data structure} is available in R.
+Hierarchical data is ubiquitous in statistics and programming (XML, search trees, family trees, classification, file system, etc.). However, no general-use \bold{tree data structure} is available in R.
 Where tabular data has \code{data.frame}, hierarchical data is often modeled in lists of lists or similar makeshifts. These
 structures are often dificult to manage.
 This is where the \code{data.tree} package steps in. It lets you build trees of hierarchical
@@ -57,8 +57,10 @@ in R, where value-semantics is king most of the time.
 \section{Applications}{
 
 
-\code{data.tree} is not optimised for computational speed, but for implementation speed. However, it can easily handle trees with
-several thousand nodes. It is always useful when
+\code{data.tree} is not optimised for computational speed, but for implementation speed. Namely, its memory
+footprint is relatively large compared to traditional R data structures. However, it can easily handle trees with
+several thousand nodes, and once a tree is constructed, operations on it are relatively fast.
+data.tree is always useful when
 \itemize{
  \item{you want to develop and test a new algorithm}
  \item{you want to import and convert tree structures (it imports and exports to list-of-list, data.frame, yaml, json, igraph, dendrogram, phylo and more)}

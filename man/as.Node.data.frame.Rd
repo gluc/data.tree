@@ -80,5 +80,10 @@ print(xN, "p", "cost")
 }
 \seealso{
 \code{\link{as.data.frame.Node}}
+
+Other as.Node: \code{\link{FromListExplicit}},
+  \code{\link{FromListSimple}}, \code{\link{as.Node.list}};
+  \code{\link{as.Node.dendrogram}};
+  \code{\link{as.Node.phylo}}; \code{\link{as.Node}}
 }
 

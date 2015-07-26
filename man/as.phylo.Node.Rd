@@ -24,4 +24,8 @@ data(acme)
 acmephylo <- as.phylo(acme)
 plot(acmephylo)
 }
+\seealso{
+Other ape phylo conversions: \code{\link{GetPhyloNr}};
+  \code{\link{as.Node.phylo}}
+}
 

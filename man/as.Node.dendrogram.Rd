@@ -29,6 +29,11 @@ tree1$leafCount
 tree1$depth
 }
 \seealso{
-Other Conversions to Node: \code{\link{as.Node.list}}
+Other as.Node: \code{\link{FromDataFrameTable}},
+  \code{\link{FromDataFrameTaxonomy}},
+  \code{\link{as.Node.data.frame}};
+  \code{\link{FromListExplicit}},
+  \code{\link{FromListSimple}}, \code{\link{as.Node.list}};
+  \code{\link{as.Node.phylo}}; \code{\link{as.Node}}
 }
 

@@ -14,7 +14,13 @@ as.Node(x, ...)
 \description{
 Convert an object to a Node
 }
-\details{
-Convert an object to a Node
+\seealso{
+Other as.Node: \code{\link{FromDataFrameTable}},
+  \code{\link{FromDataFrameTaxonomy}},
+  \code{\link{as.Node.data.frame}};
+  \code{\link{FromListExplicit}},
+  \code{\link{FromListSimple}}, \code{\link{as.Node.list}};
+  \code{\link{as.Node.dendrogram}};
+  \code{\link{as.Node.phylo}}
 }
 

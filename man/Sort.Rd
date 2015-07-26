@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_methods_sideeffect.R
 \name{Sort}
 \alias{Sort}
-\title{Sort Children of a Node or an Entire Tree}
+\title{Sort children of a \code{Node} or an entire \code{data.tree} structure}
 \usage{
 Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
 }

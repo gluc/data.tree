@@ -6,7 +6,7 @@
 \title{Create a \code{data.tree} Structure With \code{Nodes}}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
-Node$new("my node")
+Node
 }
 \description{
 \code{Node} is at the very heart of the \code{data.tree} package. All trees are constructed

@@ -82,3 +82,20 @@ Height <- function(node, rootHeight = 100) {
   h <- Height(node$parent, rootHeight) * (1 - 1 / node$depth)
   return (h)
 }
+
+
+#' Create a tree for demo and testing
+#'
+#' @param levels the number of levels
+#' @param children the number of children per node
+#' @param parent the parent node (for recursion)
+#'
+#' @export
+CreateDummyTree <- function(levels = 5, children = 3, parent = Node$new("1")) {
+  if (levels == 0) return()
+  for (i in 1:children) {
+    child <- parent$AddChild(as.character(i))
+    CreateDummyTree(levels - 1, children, child)
+  }
+  return (parent)
+}

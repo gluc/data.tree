@@ -13,6 +13,9 @@
 #' acmephylo <- as.phylo(acme)
 #' plot(acmephylo)
 #' 
+#' 
+#' @family ape phylo conversions
+#' 
 #' @export
 as.phylo.Node <- function(x, heightAttribute = Height, ...) {
   txt <- ToNewick(x, heightAttribute)
@@ -27,6 +30,18 @@ as.phylo.Node <- function(x, heightAttribute = Height, ...) {
 #' to a height and stored in a field named according to this parameter (the default is "height")
 #' @param replaceUnderscores if TRUE (the default), then underscores in names are replaced with spaces
 #' @param ... any other parameter to be passed to sub-implementations
+#' 
+#' @examples
+#' #which bird familes have the max depth?
+#' library(ape)
+#' data(bird.families)
+#' bf <- as.Node(bird.families)
+#' depth <- bf$depth
+#' t <- Traverse(bf, filterFun = function(x) x$level == 25)
+#' Get(t, "name")
+#' 
+#' @family ape phylo conversions
+#' @family as.Node
 #' 
 #' @export
 as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, ...) {
@@ -96,6 +111,8 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
 #' plot(ap)
 #' nodelabels("IT Dep.", GetPhyloNr(acme$Climb("IT")))
 #' edgelabels("Good!", GetPhyloNr(acme$Climb("IT", "Switch to R"), "edge"))
+#' 
+#' @family ape phylo conversions
 #' 
 #' @export
 GetPhyloNr <- function(x, type = c("node", "edge")) {
