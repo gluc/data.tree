@@ -9,8 +9,12 @@ Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
 \arguments{
 \item{node}{The node whose children are to be sorted}
 
-\item{attribute}{a field, method or function. The result of the attribute determines the
-sorting. If it is a function, #' the attribute must take a \code{Node} as a first argument.}
+\item{attribute}{determines what is collected. The \code{attribute} can be
+\itemize{
+  \item a.) the name of a \bold{field} of each \code{Node} in the tree
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree
+  \item c.) a \bold{function}, whose first argument must be a \code{Node}
+ }}
 
 \item{...}{any parameters to be passed on the the attribute (in case it's a method or a
 function)}

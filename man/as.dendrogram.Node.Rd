@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_conversion_dendrogram.R
 \name{as.dendrogram.Node}
 \alias{as.dendrogram.Node}
-\title{Convert a Node to a dendrogram}
+\title{Convert a \code{Node} to a \code{dendrogram}}
 \usage{
 \method{as.dendrogram}{Node}(object, heightAttribute = Height, ...)
 }
@@ -17,10 +17,7 @@
 An object of class dendrogram
 }
 \description{
-Convert a Node to a dendrogram
-}
-\details{
-Convert a Node to a dendrogram
+Convert a \code{data.tree} structure to a \code{\link{dendrogram}}
 }
 \examples{
 data(acme)

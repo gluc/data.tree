@@ -4,7 +4,7 @@
 \alias{FromListExplicit}
 \alias{FromListSimple}
 \alias{as.Node.list}
-\title{Convert a list to a Node}
+\title{Convert a nested \code{list} structure to a \code{data.tree} structure}
 \usage{
 \method{as.Node}{list}(x, mode = c("simple", "explicit"), nameName = "name",
   childrenName = "children", nodeName = NULL, ...)
@@ -15,7 +15,7 @@ FromListExplicit(explicitList, nameName = "name", childrenName = "children",
 FromListSimple(simpleList, nameName = "name", nodeName = NULL)
 }
 \arguments{
-\item{x}{The list to be converted.}
+\item{x}{The \code{list} to be converted.}
 
 \item{mode}{How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit"
 assumes that children are in a nested list called \code{childrenName}}
@@ -35,7 +35,7 @@ name is not given explicitly)}
 interpreted as a child \code{Node}}
 }
 \description{
-Convert a list to a Node
+Convert a nested \code{list} structure to a \code{data.tree} structure
 }
 \examples{
 kingJosephs <- list(name = "Joseph I",

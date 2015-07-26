@@ -4,7 +4,7 @@
 
 - Node
   - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
-  - CHANGE: Node$Find is now called Node$Climb
+  - CHANGE: Node$Find is now called Node$Climb to avoid confusion with base::Find
   - ADD: Clone (returning a deep copy)
   - ADD: Prune (pruning the tree)
   - ADD: support for setting formatter functions on a Node
@@ -32,4 +32,4 @@
   - ADD: conversion ToDataFrameTaxonomy
 - Utils
   - ADD: Aggregate function now supports functions
-  - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal
+  - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal to achieve better consistency

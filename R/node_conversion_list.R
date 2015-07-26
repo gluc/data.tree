@@ -1,6 +1,6 @@
-#' Convert a list to a Node
+#' Convert a nested \code{list} structure to a \code{data.tree} structure
 #' 
-#' @param x The list to be converted.
+#' @param x The \code{list} to be converted.
 #' @param mode How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit" 
 #' assumes that children are in a nested list called \code{childrenName}
 #' @param nameName The name of the element in the list that should be used as the name, can be NULL if the children lists are named
@@ -119,9 +119,7 @@ FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL) {
 
 
 
-#' Convert a Node to a list
-#' 
-#' @details Convert a Node to a list
+#' Convert a \code{data.tree} structure to a list-of-list structure
 #' 
 #' @param x The Node to convert
 #' @param mode How the list is structured. "simple" (the default) will add children directly as nested lists.

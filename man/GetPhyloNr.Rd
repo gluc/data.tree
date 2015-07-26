@@ -2,20 +2,20 @@
 % Please edit documentation in R/node_conversion_ape.R
 \name{GetPhyloNr}
 \alias{GetPhyloNr}
-\title{Gets the node nr in phylo context}
+\title{Determine the number a \code{Node} has after conversion to a phylo object}
 \usage{
 GetPhyloNr(x, type = c("node", "edge"))
 }
 \arguments{
 \item{x}{The Node}
 
-\item{type}{Either "node" (the default) or "edge"}
+\item{type}{Either "node" (the default) or "edge" (to get the number of the edge from \code{x} to its parent)}
 }
 \value{
 an integer representing the node
 }
 \description{
-Use this function when plotting a Node as a phylo, to set custom
+Use this function when plotting a Node as a phylo, e.g. to set custom
 labels to plot.
 }
 \examples{

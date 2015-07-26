@@ -2,19 +2,19 @@
 % Please edit documentation in R/node_conversion.R
 \name{ToNewick}
 \alias{ToNewick}
-\title{Write a data.tree to Newick notation}
+\title{Write a \code{data.tree} structure to Newick notation}
 \usage{
 ToNewick(node, heightAttribute = Height, ...)
 }
 \arguments{
-\item{node}{The node to convert}
+\item{node}{The root \code{Node} of a tree or sub-tree to be converted}
 
-\item{heightAttribute}{The attribute (field name or function) storing or calculating the height}
+\item{heightAttribute}{The attribute (field name, method, or function) storing or calculating the height for each \code{Node}}
 
 \item{...}{parameters that will be passed on the the heightAttributeName, in case it is a function}
 }
 \description{
-Write a data.tree to Newick notation
+Write a \code{data.tree} structure to Newick notation
 }
 \examples{
 data(acme)

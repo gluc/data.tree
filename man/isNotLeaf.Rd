@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_actives.R
 \name{isNotLeaf}
 \alias{isNotLeaf}
-\title{Checks if a node is not a leaf}
+\title{Check if a \code{Node} is not a leaf}
 \usage{
 isNotLeaf(node)
 }
@@ -13,6 +13,6 @@ isNotLeaf(node)
 FALSE if the Node is a leaf, TRUE otherwise
 }
 \description{
-Checks if a node is not a leaf
+Check if a \code{Node} is not a leaf
 }
 

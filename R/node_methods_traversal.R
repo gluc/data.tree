@@ -83,14 +83,13 @@ Traverse = function(node,
 #' and collect values along the way. Alternatively, you can call a method or a function on each \code{\link{Node}}.
 #' 
 #' @param nodes The nodes on which to perform the Get (e.g. obtained via \code{\link{Traverse}}
-#'   @param attribute determines what is collected during traversal. The attribute can be
+#' @param attribute determines what is collected. The \code{attribute} can be
 #'       \itemize{
-#'         \item a.) the name of a field of each \code{Node} in the tree 
-#'         \item b.) the name of a Method of each \code{Node}.
-#'         \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by 
-#'         passing \code{...} to the function.
-#'         }
-#' @param ... in case \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
+#'         \item a.) the name of a \bold{field} of each \code{Node} in the tree 
+#'         \item b.) the name of a \bold{method} of each \code{Node} in the tree
+#'         \item c.) a \bold{function}, whose first argument must be a \code{Node}
+#'        }
+#' @param ... in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
 #' @param format can be a function that transforms the collected values, e.g. for printing
 #' @param inheritFromAncestors if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.
 #'  

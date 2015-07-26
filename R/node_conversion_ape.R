@@ -1,9 +1,10 @@
 
 
-#' Convert a node to a phylo object from the ape package.
-#' This requires the ape package.
+#' Convert a \code{Node} to a phylo object from the ape package.
 #' 
-#' @param x The \code{Node} to convert
+#' This method requires the ape package to be installed and loaded.
+#' 
+#' @param x The root \code{Node} of the tree or sub-tree to be converted
 #' @param heightAttribute The attribute (field name or function) storing the height
 #' @param ... any other argument
 #' 
@@ -23,9 +24,9 @@ as.phylo.Node <- function(x, heightAttribute = Height, ...) {
 }
 
 
-#' Converts a phylo from the ape package to a Node
+#' Convert a \code{phylo} object from the ape package to a \code{Node}
 #' 
-#' @param x The phylo object
+#' @param x The phylo object to be converted
 #' @param heightName If the phylo contains edge lengths, then they will be converted
 #' to a height and stored in a field named according to this parameter (the default is "height")
 #' @param replaceUnderscores if TRUE (the default), then underscores in names are replaced with spaces
@@ -94,13 +95,13 @@ as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, .
 
 
 
-#' Gets the node nr in phylo context
+#' Determine the number a \code{Node} has after conversion to a phylo object
 #' 
-#' Use this function when plotting a Node as a phylo, to set custom
+#' Use this function when plotting a Node as a phylo, e.g. to set custom
 #' labels to plot.
 #' 
 #' @param x The Node
-#' @param type Either "node" (the default) or "edge"
+#' @param type Either "node" (the default) or "edge" (to get the number of the edge from \code{x} to its parent)
 #' @return an integer representing the node
 #' 
 #' @examples

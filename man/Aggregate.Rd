@@ -9,21 +9,36 @@ Aggregate(node, attribute, aggFun, ...)
 \arguments{
 \item{node}{the \code{Node} on which to aggregate}
 
-\item{attribute}{the attribute that is being called on every node. The attribute can be
-field, a property or a method. If the node contains the attribute, its value is return.
-Otherwise, \code{aggFun(Aggregate(children, ...))} is called. To use the Attribute method,
-the attribute must be set on the leaf.}
+\item{attribute}{determines what is collected. The \code{attribute} can be
+\itemize{
+  \item a.) the name of a \bold{field} of each \code{Node} in the tree
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree
+  \item c.) a \bold{function}, whose first argument must be a \code{Node}
+ }}
 
-\item{aggFun}{a function to be applied}
+\item{aggFun}{the aggregation function to be applied to the children's \code{attributes}}
 
-\item{...}{any arguments to be passed on to fun}
+\item{...}{any arguments to be passed on to aggFun}
 }
 \description{
-The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum them up along the tree.
+The \code{Aggregate} method lets you fetch an attribute from a \code{Node}'s children, and then aggregate it.
+For example, you can aggregate cost by summing costs of child \code{Nodes}. This is especially useful in the
+context of tree traversal, when using post-order traversal mode.
+}
+\details{
+As with \code{\link{Get}}, the attribute can be a field, a method or a function. If it is a field, and if
+the node contains the attribute, its value is returned.
+Otherwise, \code{aggFun(Aggregate(children, ...))} is called. In that case,
+the attribute must be set on the leaf.
 }
 \examples{
 data(acme)
+
+#Aggregate on a field
 Aggregate(acme, "cost", sum)
+
+#Aggregate on a function
+print(acme, "cost", minCost = acme$Get(Aggregate, "cost", min))
 
 #use Aggregate in traversal:
 acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")

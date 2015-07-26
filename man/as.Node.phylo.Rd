@@ -2,13 +2,13 @@
 % Please edit documentation in R/node_conversion_ape.R
 \name{as.Node.phylo}
 \alias{as.Node.phylo}
-\title{Converts a phylo from the ape package to a Node}
+\title{Convert a \code{phylo} object from the ape package to a \code{Node}}
 \usage{
 \method{as.Node}{phylo}(x, heightName = "height", replaceUnderscores = TRUE,
   ...)
 }
 \arguments{
-\item{x}{The phylo object}
+\item{x}{The phylo object to be converted}
 
 \item{heightName}{If the phylo contains edge lengths, then they will be converted
 to a height and stored in a field named according to this parameter (the default is "height")}
@@ -18,7 +18,7 @@ to a height and stored in a field named according to this parameter (the default
 \item{...}{any other parameter to be passed to sub-implementations}
 }
 \description{
-Converts a phylo from the ape package to a Node
+Convert a \code{phylo} object from the ape package to a \code{Node}
 }
 \examples{
 #which bird familes have the max depth?

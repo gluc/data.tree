@@ -51,9 +51,9 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
 }
 
 
-#' Convert a Node to a dendrogram
+#' Convert a \code{Node} to a \code{dendrogram}
 #' 
-#' @details Convert a Node to a dendrogram
+#' Convert a \code{data.tree} structure to a \code{\link{dendrogram}}
 #' 
 #' @param object The Node to convert
 #' @param heightAttribute The attribute (field name or function) storing the height

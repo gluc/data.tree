@@ -9,22 +9,33 @@
 
 #' Aggregate child values of a \code{Node}, standalone or in traversal.
 #' 
-#' The \code{Aggregate} method lets you set e.g. a value on the leafs, and then sum them up along the tree.
+#' The \code{Aggregate} method lets you fetch an attribute from a \code{Node}'s children, and then aggregate it.
+#' For example, you can aggregate cost by summing costs of child \code{Nodes}. This is especially useful in the 
+#' context of tree traversal, when using post-order traversal mode.
+#' 
+#' As with \code{\link{Get}}, the attribute can be a field, a method or a function. If it is a field, and if
+#' the node contains the attribute, its value is returned. 
+#' Otherwise, \code{aggFun(Aggregate(children, ...))} is called. In that case, 
+#' the attribute must be set on the leaf.
 #' 
 #' @param node the \code{Node} on which to aggregate
-#' @param attribute the attribute that is being called on every node. The attribute can be 
-#' field, a property or a method. If the node contains the attribute, its value is return. 
-#' Otherwise, \code{aggFun(Aggregate(children, ...))} is called. To use the Attribute method, 
-#' the attribute must be set on the leaf.
-#' @param aggFun a function to be applied
-#' @param ... any arguments to be passed on to fun
-#' 
+#' @param aggFun the aggregation function to be applied to the children's \code{attributes}
+#' @param ... any arguments to be passed on to aggFun
+#'
+#' @inheritParams Get
+#'   
 #' @examples
 #' data(acme)
+#' 
+#' #Aggregate on a field
 #' Aggregate(acme, "cost", sum)
+#' 
+#' #Aggregate on a function
+#' print(acme, "cost", minCost = acme$Get(Aggregate, "cost", min))
 #' 
 #' #use Aggregate in traversal:
 #' acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
+#' 
 #' 
 #' @seealso \code{\link{Node}}
 #'

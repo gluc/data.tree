@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_actives.R
 \name{isRoot}
 \alias{isRoot}
-\title{Checks if a node is the root}
+\title{Check if a \code{Node} is the root}
 \usage{
 isRoot(node)
 }
@@ -13,6 +13,6 @@ isRoot(node)
 TRUE if the Node is the root, FALSE otherwise
 }
 \description{
-Checks if a node is the root
+Check if a \code{Node} is the root
 }
 

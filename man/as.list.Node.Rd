@@ -4,7 +4,7 @@
 \alias{ToListExplicit}
 \alias{ToListSimple}
 \alias{as.list.Node}
-\title{Convert a Node to a list}
+\title{Convert a \code{data.tree} structure to a list-of-list structure}
 \usage{
 \method{as.list}{Node}(x, mode = c("simple", "explicit"), unname = FALSE,
   nameName = ifelse(unname, "name", ""), childrenName = "children",
@@ -34,10 +34,7 @@ an array rather than named objects.}
 \item{...}{Additional parameters}
 }
 \description{
-Convert a Node to a list
-}
-\details{
-Convert a Node to a list
+Convert a \code{data.tree} structure to a list-of-list structure
 }
 \examples{
 data(acme)

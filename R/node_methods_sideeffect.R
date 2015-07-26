@@ -23,13 +23,13 @@
 #' 
 #' You can sort with respect to any argument of the tree.
 #' @param node The node whose children are to be sorted 
-#' @param attribute a field, method or function. The result of the attribute determines the 
-#' sorting. If it is a function, #' the attribute must take a \code{Node} as a first argument.
 #' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
 #' function)
 #' @param decreasing sort order
 #' @param recursive if \code{TRUE}, Sort will be called recursively on the \code{Node}'s children. 
 #' This allows sorting an entire tree.
+#' 
+#' @inheritParams Get
 #' 
 #' @return Returns the node on which Sort is called, invisibly. This can be useful to chain Node methods.
 #' 

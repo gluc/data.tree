@@ -4,7 +4,7 @@
 \alias{FromDataFrameTable}
 \alias{FromDataFrameTaxonomy}
 \alias{as.Node.data.frame}
-\title{Convert a data.frame to a data.tree}
+\title{Convert a \code{data.frame} to a \code{data.tree} structure}
 \usage{
 \method{as.Node}{data.frame}(x, ..., mode = c("table", "taxonomy"),
   pathName = "pathString", pathDelimiter = "/", colLevels = NULL,
@@ -48,7 +48,7 @@ it must adhere to the following requirements:
 The root \code{Node} of the \code{data.tree} structure
 }
 \description{
-Convert a data.frame to a data.tree
+Convert a \code{data.frame} to a \code{data.tree} structure
 }
 \examples{
 data(acme)

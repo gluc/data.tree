@@ -9,15 +9,14 @@ Get(nodes, attribute, ..., format = NULL, inheritFromAncestors = FALSE)
 \arguments{
 \item{nodes}{The nodes on which to perform the Get (e.g. obtained via \code{\link{Traverse}}}
 
-\item{attribute}{determines what is collected during traversal. The attribute can be
+\item{attribute}{determines what is collected. The \code{attribute} can be
 \itemize{
-  \item a.) the name of a field of each \code{Node} in the tree
-  \item b.) the name of a Method of each \code{Node}.
-  \item c.) a function, whose first argument must be a node. In that case, the \code{Get} method calls the function by
-  passing \code{...} to the function.
-  }}
+  \item a.) the name of a \bold{field} of each \code{Node} in the tree
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree
+  \item c.) a \bold{function}, whose first argument must be a \code{Node}
+ }}
 
-\item{...}{in case \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
+\item{...}{in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
 
 \item{format}{can be a function that transforms the collected values, e.g. for printing}
 

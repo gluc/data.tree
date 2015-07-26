@@ -5,7 +5,7 @@
 \alias{ToDataFrameTaxonomy}
 \alias{ToDataFrameTree}
 \alias{as.data.frame.Node}
-\title{Convert a \code{Node} to a \code{data.frame}}
+\title{Convert a \code{data.tree} structure to a \code{data.frame}}
 \usage{
 \method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
   traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
@@ -18,7 +18,7 @@ ToDataFrameTable(x, ..., pruneFun = NULL)
 ToDataFrameTaxonomy(x, ..., pruneFun = NULL, inheritFromAncestors = FALSE)
 }
 \arguments{
-\item{x}{The root node of a tree or sub-tree to convert to a data.frame}
+\item{x}{The root \code{Node} of the tree or sub-tree to be convert to a data.frame}
 
 \item{row.names}{\code{NULL} or a character vector giving the row names for the data frame.
 Missing values are not allowed.}
@@ -50,7 +50,7 @@ spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first col
 second is called 'parents', describing the parent to child edge. The third column is caled 'level'. x itself is not returned.
 }
 \description{
-Convert a \code{Node} to a \code{data.frame}
+Convert a \code{data.tree} structure to a \code{data.frame}
 }
 \examples{
 data(acme)

@@ -2,21 +2,19 @@
 % Please edit documentation in R/node_conversion_ape.R
 \name{as.phylo.Node}
 \alias{as.phylo.Node}
-\title{Convert a node to a phylo object from the ape package.
-This requires the ape package.}
+\title{Convert a \code{Node} to a phylo object from the ape package.}
 \usage{
 as.phylo.Node(x, heightAttribute = Height, ...)
 }
 \arguments{
-\item{x}{The \code{Node} to convert}
+\item{x}{The root \code{Node} of the tree or sub-tree to be converted}
 
 \item{heightAttribute}{The attribute (field name or function) storing the height}
 
 \item{...}{any other argument}
 }
 \description{
-Convert a node to a phylo object from the ape package.
-This requires the ape package.
+This method requires the ape package to be installed and loaded.
 }
 \examples{
 library(ape)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_conversion.R
 \name{as.Node}
 \alias{as.Node}
-\title{Convert an object to a Node}
+\title{Convert an object to a \code{data.tree} data structure}
 \usage{
 as.Node(x, ...)
 }
@@ -12,7 +12,7 @@ as.Node(x, ...)
 \item{...}{Additional arguments}
 }
 \description{
-Convert an object to a Node
+Convert an object to a \code{data.tree} data structure
 }
 \seealso{
 Other as.Node: \code{\link{FromDataFrameTable}},

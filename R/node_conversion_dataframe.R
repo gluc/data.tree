@@ -1,6 +1,6 @@
-#' Convert a \code{Node} to a \code{data.frame}
+#' Convert a \code{data.tree} structure to a \code{data.frame}
 #' 
-#' @param x The root node of a tree or sub-tree to convert to a data.frame
+#' @param x The root \code{Node} of the tree or sub-tree to be convert to a data.frame
 #' @param ... the attributes to be added as columns of the data.frame. See \code{\link{Get}} for details.
 #' If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.
 #' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'. See \code{\link{Traverse}} for details.
@@ -144,7 +144,7 @@ ToDataFrameTaxonomy <- function(x,
 
 
 
-#' Convert a data.frame to a data.tree
+#' Convert a \code{data.frame} to a \code{data.tree} structure
 #' 
 #' @param x The data.frame in the required format.
 #' @param ... Any other argument implementations of this might need

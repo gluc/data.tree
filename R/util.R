@@ -44,7 +44,8 @@ FormatFixedDecimal <- function(x, digits = 3) {
 #'  
 #' @param x The Node
 #' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
-#' a Node method, or a function taking a Node as a single argument.
+#' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
+#' the meaning of \code{attribute}.
 #' 
 #' @examples
 #' data(acme)
