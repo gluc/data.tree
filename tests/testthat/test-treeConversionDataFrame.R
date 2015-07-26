@@ -54,3 +54,24 @@ test_that("ToDataFrameTaxonomy", {
   expect_equal(acmedf$parents, c("Acme Inc.", "Acme Inc.", "Acme Inc.", "Accounting", "Accounting", "Research", "Research", "IT", "IT", "IT"))
 })
 
+
+test_that("ToDataFrame sub-tree", {
+  data(acme)
+  it <- acme$Climb("IT")
+  df <- ToDataFrameTree(it)
+  expect_equal(dim(df), c(4, 1))
+  expect_equal(str_sub(df[1, 1], 1, 2), 'IT')  
+})
+
+
+test_that("FromDataFrameTable col-levels", {
+  data(acme)
+  acme$Set(floor = c(1, 2, 3),  filterFun = function(x) x$level == 2)
+  x <- ToDataFrameTable(acme, "pathString", "floor", "p", "cost") 
+  xN <- FromDataFrameTable(x, colLevels = list(NULL, "floor", c("p", "cost")), na.rm = TRUE)
+  expect_equal(xN$Climb("Accounting")$floor, 1)
+  expect_true(is.null(xN$Climb("Accounting", "New Accounting Standards")$floor))
+  expect_true(is.null(xN$floor))
+  expect_equal(xN$Climb("Accounting", "New Accounting Standards")$p, 0.75)
+  
+})
