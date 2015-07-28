@@ -1,0 +1,425 @@
+name: useR
+children:
+  Session 1:
+    end: 01.07.2015 12:00
+    sessionName: Interfacing
+    start: 01.07.2015 10:30
+    children:
+      Aalborghallen:
+        seats: 790
+        children:
+          Federico Marini:
+            presentation: 'flowcatchR: A user-friendly workflow solution for the analysis
+              of time-lapse cell flow imaging data'
+          Jonathan Clayden:
+            presentation: Image processing and alignment with RNiftyReg and mmand
+          Carel F. W. Peeters:
+            presentation: 'rags2ridges: Ridge estimation and graphical modeling for
+              high-dimensional precision matrices'
+          Henrik Tobias Madsen:
+            presentation: 'dgRaph: Discrete factor graphs in R'
+      Gæstesalen:
+        seats: 149
+        children:
+          Costas Varsos:
+            presentation: Optimized R functions for analysis of ecological community
+              data using the R virtual laboratory (Rvlab)
+          David L Miller:
+            presentation: Building ecological models bit-by-bit
+          Andrew Dolman:
+            presentation: 'Simulating ecological microcosms with systems of differential
+              equations: tools for the scientific, technical and communication challenges'
+          Marcel Austenfeld:
+            presentation: A Graphical User Interface for R in an Integrated Development
+              Environment for Ecological Modeling, Scientific Image Analysis and Statistical
+              Analysis
+      Musiksalen:
+        seats: 160
+        children:
+          Gergely Daroczi:
+            presentation: 'fbRads: Analyzing and managing Facebook ads from R'
+          Peter Meißner:
+            presentation: Web scraping with R - A fast track overview.
+          Antonio Rivero Ostoic:
+            presentation: 'multiplex: Analysis of Multiple Social Networks with Algebra'
+          Gabor Csardi:
+            presentation: What's new in igraph and networks
+      Det lille Teater:
+        seats: 224
+        children:
+          Karthik Ram:
+            presentation: 'rOpenSci: A suite of reproducible research tools in R'
+          Michael Lawrence:
+            presentation: Enhancing reproducibility and collaboration via management
+              of R package cohorts
+          Joshua R. Polanin & Emily A. Hennessy:
+            presentation: A Review of Meta-Analysis Packages in R
+          David Smith:
+            presentation: Simple reproducibility with the checkpoint package
+      Radiosalen:
+        seats: 216
+        children:
+          Kasper D. Hansen:
+            presentation: Some lessons relevant to including external libraries in
+              your R package
+          Karl Millar:
+            presentation: 'CXXR: Modernizing the R Interpreter'
+          Matt P. Dziubinski:
+            presentation: Naturally Sweet Rcpp with Modern C++ and Boost
+          Dan Putler:
+            presentation: Linking R to the Spark MLlib Machine Learning Library
+  Session 2:
+    end: 01.07.2015 15:00
+    sessionName: Computational Performance
+    start: 01.07.2015 13:30
+    children:
+      Aalborghallen:
+        seats: 790
+        children:
+          Przemyslaw Biecek:
+            presentation: 'archivist: Tools for Storing, Restoring and Searching for
+              R Objects'
+          Joseph B. Rickert:
+            presentation: R User Groups
+          Richard M. Heiberger:
+            presentation: 'Computational Precision and Floating-Point Arithmetic:
+              A Teacher''s Guide to Answering FAQ 7.31'
+          Rasmus Bååth:
+            presentation: Tiny Data, Approximate Bayesian Computation and the Socks
+              of Karl Broman
+      Gæstesalen:
+        seats: 149
+        children:
+          Johannes Breidenbach:
+            presentation: Using R for small area estimation in the Norwegian National
+              Forest Inventory
+          Ivan Kasanický:
+            presentation: Using R for natural gas market balancing in the Czech republic
+          Jakob W. Messner:
+            presentation: Heteroscedastic censored and truncated regression for weather
+              forecasting
+          Helle Sørensen:
+            presentation: Multinomial functional regression with application to lameness
+              detection for horses
+      Musiksalen:
+        seats: 160
+        children:
+          Anders Ellern Bilgrau:
+            presentation: Unsupervised Clustering and Meta-Analysis using Gaussian
+              Mixture Copula Models
+          Claudia Beleites:
+            presentation: 'Hierarchical Cluster Analysis of hyperspectral Raman images:
+              a new point of view leads to 10000fold speedup'
+          Silvia Liverani:
+            presentation: Dirichlet process Bayesian clustering with the R package
+              PReMiuM
+          Thomas Jagger:
+            presentation: Examining the Environmental Characteristics of Tornado Outbreaks
+              in the United States using Spatial Clustering
+      Det lille Teater:
+        seats: 224
+        children:
+          Filip Schouwenaars:
+            presentation: 'Taking testing to another level: testwhat'
+          Tony Fischetti:
+            presentation: 'Failing fast and early: assertive/defensive programming
+              for R data analysis pipelines'
+          Hadley Wickham:
+            presentation: Getting your data into R
+          Christoph Glur:
+            presentation: A better way to manage hierarchical data
+          Indrajit Roy, Michael Lawrence:
+            presentation: A proposal for distributed data-structures in R
+      Radiosalen:
+        seats: 216
+        children:
+          E. James Harner:
+            presentation: Running R+Hadoop using Docker Containers
+          Matt P. Dziubinski:
+            presentation: 'Algorithmic Differentiation for Extremum Estimation: An
+              Introduction Using RcppEigen'
+          Kirill Müller:
+            presentation: Improving computational performance with algorithm engineering
+          Helena Kotthaus:
+            presentation: 'Performance Analysis for Parallel R Programs: Towards Efficient
+              Ressource Utilization'
+          David Scott:
+            presentation: Refactoring the xtable Package
+  Session 3:
+    end: 01.07.2015 17:30
+    sessionName: Databases
+    start: 01.07.2015 16:00
+    children:
+      Aalborghallen:
+        seats: 790
+        children:
+          Friedrich Schuster:
+            presentation: Coding for the enterprise server - what does it mean for
+              you?
+          Lukas Stadler:
+            presentation: R as a citizen in a polyglot world - the promise of the
+              Truffle framework
+          Tobias Verbeke:
+            presentation: Architect. An IDE for Data Science and R
+          Balasubramanian Narasimhan:
+            presentation: Distributed computing with R
+      Gæstesalen:
+        seats: 149
+        children:
+          Peter Baker:
+            presentation: 'Statistical consulting using R: a DRY approach from the
+              Australian outback'
+          Stefan Milton Bache:
+            presentation: Using R in Production
+          Giuseppe Bruno:
+            presentation: Hedging and Risk Management of CDOs portfolio with R
+          Jim Porzak:
+            presentation: Data Driven Customer Segmentation with R
+      Musiksalen:
+        seats: 160
+        children:
+          Ian Cook:
+            presentation: Bringing Geospatial Tasks into the Mainstream of Business
+              Analytics
+          Jin Li:
+            presentation: Novel hybrid spatial predictive methods of machine learning
+              and geostatistics with applications to terrestrial and marine environments
+              in Australia
+          Matthias Eckardt:
+            presentation: Graphical Modelling of Multivariate Spatial Point Patterns
+          Virgilio Gomez-Rubio:
+            presentation: Spatial Econometrics Models with R-INLA
+      Det lille Teater:
+        seats: 224
+        children:
+          Sebastian Meyer:
+            presentation: Spatio-Temporal Analysis of Epidemic Phenomena Using the
+              R Package surveillance
+          Willem Ligtenberg:
+            presentation: Rango - Databases made easy
+          Hannes Mühleisen:
+            presentation: Ad-Hoc User-Defined Functions for MonetDB with R
+          Mateusz Zoltak:
+            presentation: 'R database connectivity: what did we leave behind?'
+      Radiosalen:
+        seats: 216
+        children:
+          Jeroen Ooms:
+            presentation: jsonlite and mongolite
+          Michael Wurst:
+            presentation: Using R Efficiently with Large Databases
+  Session 4:
+    end: 02.07.2015 11:00
+    sessionName: Interactive graphics
+    start: 02.07.2015 10:30
+    children:
+      Radiosalen:
+        seats: 216
+        children:
+          A. Jonathan R. Godfrey:
+            presentation: While my base R gently weeps
+          Amitai Golub:
+            presentation: Rapid Deployment of Automatic Scoring Models to Hadoop Production
+              Systems
+          Monika Huhn:
+            presentation: D3 and R Shiny - Making your graphs come to life
+          Michael Sachs:
+            presentation: Interactive Graphics with ggplot2 and gridSVG
+          Joe Cheng:
+            presentation: Interactive visualization using htmlwidgets and Shiny
+          Adrian Waddell:
+            presentation: Interactive Data Visualization using the Loon package
+          Wayne Oldford:
+            presentation: New interactive visualization tools for exploring high dimensional
+              data in R
+      Aalborghallen:
+        seats: 790
+        children:
+          Matt Dowle:
+            presentation: Fast, stable and scalable true radix sorting
+          Arunkumar Srinivasan:
+            presentation: Fast, flexible and memory efficient data manipulation using
+              data.table
+      Gæstesalen:
+        seats: 149
+        children:
+          Marvin Steijaert:
+            presentation: 'Phenotypic deconvolution: the next frontier in pharma'
+          Lara Lusa:
+            presentation: 'medplot: A Web Application for Dynamic Summary and Analysis
+              of Longitudinal Medical Data Based on R and shiny'
+          Paul Metcalfe:
+            presentation: Using R and free software to improve the delivery of life
+              changing medicine to patients
+          Heidi Seibold:
+            presentation: Stratified medicine using the partykit package
+      Musiksalen:
+        seats: 160
+        children:
+          Han Lin Shang:
+            presentation: The ilc package
+          Andrew Bray:
+            presentation: Approximately Exact Calculations for Linear Mixed Models
+          Alexandra Kuznetsova:
+            presentation: 'Shiny application for analyzing consumer preference and
+              sensory data in a mixed effects model framework: introducing SensMixed
+              package'
+          Chenjerai Kathy Mutambanengwe:
+            presentation: Spatial regression of quantiles based on parametric distributions
+      Det lille Teater:
+        seats: 224
+        children:
+          Helen Ogden:
+            presentation: 'glmmsr: fitting GLMMs with sequential reduction'
+          Michael Sannella:
+            presentation: 'Supporting the Rapi C-language API in an R-compatible engine '
+          Woo J. Jung:
+            presentation: 'Enabling R for Big Data with PL/R and PivotalR: Real World
+              Examples on Hadoop & MPP Databases'
+          Ron Pearson:
+            presentation: The DataRobot R Package
+          Lou Bajuk-Yorgan:
+            presentation: Applying the R Language in Streaming Applications and Business
+              Intelligence
+  Session 5:
+    end: 02.07.2015 14:30
+    sessionName: Visualisation 1
+    start: 02.07.2015 13:00
+    children:
+      Aalborghallen:
+        seats: 790
+        children:
+          Aimee Gott:
+            presentation: Formalising R Development - ValidR Enterprise
+          Christoph Best:
+            presentation: Integrating R with the Go programming language using interprocess
+              communication
+          Jennifer Bryan:
+            presentation: Fun times with R and Google Sheets
+          Jonathan Digby-North:
+            presentation: A Comparative Study of Complex Estimation Software
+          Oliver Keyes:
+            presentation: 'Software Standards in the R Community: An Analysis'
+      Gæstesalen:
+        seats: 149
+        children:
+          Miranda Y Mortlock:
+            presentation: SWOT analysis on using R for online training
+          Eric Hare:
+            presentation: Manipulation of Discrete Random Variables in R with discreteRV
+          Matthias Gehrke:
+            presentation: 'Teaching R in heterogeneous settings: Lessons learned'
+          Chris Wild:
+            presentation: Interactive applications written in R to accelerate statistical
+              learning
+          James Curran:
+            presentation: Classroom experiments
+      Musiksalen:
+        seats: 160
+        children:
+          Thomas Kiefer:
+            presentation: 'TAM: An R Package for Item Response Modelling'
+          Genaro Sucarrat:
+            presentation: 'gets: General-to-Specific (GETS) Modelling'
+          Thouvenot Vincent:
+            presentation: 'R Package CASA: Component Automatic Selection in Additive
+              models'
+          Christian Ritz:
+            presentation: Dose-response analysis using R revisited
+          Kaylea Haynes:
+            presentation: Changepoints over a Range of Penalties using the changepoint
+              package
+      Det lille Teater:
+        seats: 224
+        children:
+          Neda Daneshgar, Majid Sarmad:
+            presentation: Word Alignment tools in R
+          Markus Loecher:
+            presentation: Rapid detection of spatiotemporal clusters
+          Arash Fard, Vishrut Gupta:
+            presentation: Scalable distributed random-forest in R
+          Marie Chavent:
+            presentation: 'Multivariate analysis of mixed data: The PCAmixdata R package'
+          Natalia da Silva:
+            presentation: PPforest
+      Radiosalen:
+        seats: 216
+        children:
+          Katrin Grimm:
+            presentation: Reordering and selecting continuous variables for scatterplot
+              matrices
+          Kirsten Van Hoorde:
+            presentation: R-package to assess and visualize the calibration of multiclass
+              risk predictions
+          Martijn Tennekes:
+            presentation: 'tmap: creating thematic maps in a flexible way'
+          Tal Galili:
+            presentation: The dendextend R package for manipulation of dendograms,visualization
+              and comparison
+  Session 6:
+    end: 02.07.2015 17:30
+    sessionName: Visualisation 2
+    start: 02.07.2015 16:00
+    children:
+      Aalborghallen:
+        seats: 790
+        children:
+          Gabor Csardi:
+            presentation: The METACRAN experiment
+          Pedro J. Aphalo:
+            presentation: Using R in photobiology
+          Sven Jesper Knudsen:
+            presentation: Industrial Big Data Analytics for Wind Turbines
+          Andrie de Vries:
+            presentation: The Network Structure of R Packages
+      Gæstesalen:
+        seats: 149
+        children:
+          Gail Potter:
+            presentation: Web Application Teaching Tools for Statistics Using Shiny
+              and R
+          an online:
+            presentation: Teaching R in
+          Jonathan Cornelissen:
+            presentation: class
+          Colin Rundel:
+            presentation: Teaching R using the github ecosystem
+      Musiksalen:
+        seats: 160
+        children:
+          Mine Cetinkaya-Rundel:
+            presentation: Using R, RStudio, and Docker for introductory statistics
+              teaching
+          Christoph Sax:
+            presentation: 'seasonal: An X-13 interface for seasonal adjustment'
+          Sören Möller:
+            presentation: Estimating the Linfoot correlation in R
+          Alexander Kowarik:
+            presentation: Seasonal Adjustment with the R packages x12 and x12GUI
+      Det lille Teater:
+        seats: 224
+        children:
+          Il Do Ha:
+            presentation: 'frailtyHL: R package for variable selection in general
+              frailty models for various survival data'
+          Jan Wijffels:
+            presentation: Massive Online Data Stream Mining using R and MOA
+          Søren Havelund Welling:
+            presentation: 'forestFloor: a package to visualize and comprehend the
+              full curvature of random forests'
+          Douglas Mason:
+            presentation: Machine Learning for Internal Product Measurement
+          Erin LeDell:
+            presentation: h2oEnsemble for Scalable Ensemble Learning in R
+      Radiosalen:
+        seats: 216
+        children:
+          Thomas Levine:
+            presentation: Plotting data as music videos in R
+          Eric Bonnet:
+            presentation: NaviCell Web Service for Network-based Data Visualization
+          Laure Cougnaud:
+            presentation: Easy visualizations of high-dimensional genomic data
+          Paul Murrell:
+            presentation: The gridGraphics Package
+

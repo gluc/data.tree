@@ -42,11 +42,13 @@
 #' @export
 Aggregate = function(node, attribute, aggFun, ...) {
   #if(is.function(attribute)) browser()
-  v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
-  if (!length(v) == 0) {
-    return (v)
-  }
-  if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
+  #if (!is.function(attribute)) {
+    v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
+    if (!length(v) == 0) {
+      return (v)
+    }
+    if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
+  #}
   values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, ...))
   result <- aggFun(values)
   return (result)
@@ -77,8 +79,9 @@ Clone <- function(node) {
 #' Find a \code{Node} by its path
 #' 
 #' 
+#' This method lets you climb the tree, from crutch to crutch. More precisely,
 #' \code{Climb} returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
-#' element in the path, specified by the \code{Node}'s name.
+#' element in the path, specified by the \code{Node}'s name. 
 #' 
 #' @param node The root node
 #' @param ... the names of the nodes in the path

@@ -1,0 +1,2 @@
+decisiontree     Calculate and plot the Jenny Lynd decision tree (requires the ape and yaml packages)
+portfolio        Do a portfolio breakdown
