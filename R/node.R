@@ -10,6 +10,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddSiblingNode',
                                 'children',
                                 'Climb',
+                                'clone',
                                 'count',
                                 'depth',
                                 'Do',
@@ -96,7 +97,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #' @export
 #' @format An \code{\link{R6Class}} generator object
 Node <- R6Class("Node",
-                lock = FALSE,
+                lock_objects = FALSE,
                     public = list(
                       children = list(),
                       #formatters = list(),
