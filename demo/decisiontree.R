@@ -1,8 +1,6 @@
 ### This demo calculates and plots a simple decision tree
 ### It requires the yaml and the ape packages to be installed
 
-pause <- function() invisible(readline())
-
 library(data.tree)
 library(yaml)
 
