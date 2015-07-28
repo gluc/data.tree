@@ -15,6 +15,7 @@ Climb(node, ...)
 the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 }
 \description{
+This method lets you climb the tree, from crutch to crutch. More precisely,
 \code{Climb} returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an
 element in the path, specified by the \code{Node}'s name.
 }

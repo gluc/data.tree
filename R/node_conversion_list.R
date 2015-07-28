@@ -70,7 +70,9 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   if (length(nameName) > 0) fields <- fields[fields != nameName]
   fields <- fields[nchar(fields) > 0]
   for (field in fields) {
-    n[[field]] <- x[[field]]
+    v <- x[[field]]
+    if(mode == 'simple' && class(v) == "list") {
+    } else n[[field]] <- v
   }
   
   #children
