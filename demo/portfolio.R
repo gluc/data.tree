@@ -1,5 +1,7 @@
 library(data.tree)
 
+
+
 #read from file
 pfodf <- read.csv('inst/extdata/portfolio.csv', stringsAsFactors = FALSE)
 
