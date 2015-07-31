@@ -65,6 +65,7 @@ Aggregate = function(node,
     if (!length(v) == 0) return (v)
   } 
   
+  
   v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
   if (!length(v) == 0) result <- v
   else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
@@ -267,4 +268,25 @@ GetObjectAttribute <- function(node, name) {
 SetFormat <- function(node, name, formatFun) {
   if (length(attr(node, "formatters")) == 0) attr(node, "formatters") <- list()
   attr(node, "formatters")[[name]] <- formatFun
+}
+
+
+#' Test whether all node names are unique.
+#' 
+#' This can be useful for some conversions.
+#' @param node The root \code{Node} of the \code{data.tree} structure to test
+#' 
+#' @return \code{TRUE} if all \code{Node$name == TRUE} for all nodes in the tree
+#' 
+#' @examples
+#' data(acme)
+#' AreNamesUnique(acme)
+#' acme$name <- "IT"
+#' AreNamesUnique(acme)
+#' 
+#' @seealso as.igraph.Node
+#' @export
+AreNamesUnique <- function(node) {
+  mynames <- node$Get("name")
+  all(duplicated(mynames) == FALSE)
 }

@@ -2,14 +2,23 @@
 
 ## Version 0.2.0 Chestnut
 
+- General
+  - ADD: demo portfolio
+  - ADD: demo decisiontree
+  - ADD: demo population / treemap
 - Node
   - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
   - CHANGE: Node$Find is now called Node$Climb to avoid confusion with base::Find
   - ADD: Clone (returning a deep copy)
   - ADD: Prune (pruning the tree)
   - ADD: SetFromat (support for setting formatter functions on a Node)
+  - ADD: Traverse, standalone traverse method that can be used for piping and whenever you need to apply multiple Get/Set/Do on the same traversal
   - ADD: Node$isBinary active
   - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering
+  - ADD: AreNamesUnique
+  - FIX: node$position now returns 1 for root
+  - ADD: Aggregate function now supports functions
+  - CHANGE: Aggregate function does not cache anymore by default. See cacheAttribute for details.
   - Node$Get: 
     - CHANGE: Renamed filterFun parameter to pruneFun
     - ADD: new parameter filterFun, as opposed to pruneFun
@@ -30,6 +39,7 @@
   - ADD: conversion ToDataFrameTable (returning leafs only)
   - ADD: conversion ToDataFrameTree
   - ADD: conversion ToDataFrameTaxonomy
+  - ADD: conversion to igraph
 - Utils
-  - ADD: Aggregate function now supports functions
   - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal to achieve better consistency
+  - ADD: CreateDummyTree to test large trees

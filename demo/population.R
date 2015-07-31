@@ -8,7 +8,7 @@ library(treemap)
 data(GNI2010)
 GNI2010$pathString <- paste("world", GNI2010$continent, GNI2010$country, sep = "/")
 n <- as.Node(GNI2010[,])
-n$Do(function(x) Aggregate(x, "population", sum))
+n$Do(function(x) Aggregate(x, "population", sum, "population"), traversal = "post-order")
 n$Sort(attribute = "population", decreasing = TRUE, recursive = TRUE)
 n$Do(function(x) Cumulate(x, "population", sum, "cumPop"))
 
@@ -24,7 +24,7 @@ n2$Prune(pruneFun = myPruneFun)
 
 #sum countries that we pruned away into a new "Other" node
 n2$Do(function(x) {
-  missing <- x$population - Aggregate(x, "population", sum, cacheAttribute = NULL)
+  missing <- x$population - sum(sapply(x$children, function(x) x$population))
   other <- x$AddChild("Other")
   other$iso3 <- "OTH"
   other$country <- "Other"

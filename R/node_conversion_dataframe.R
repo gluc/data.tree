@@ -297,7 +297,8 @@ FromDataFrameTaxonomy <- function(taxonomy) {
     child <- parent$AddChild(taxonomy[i, "children"])
     if (dim(taxonomy)[2] > 3) {
       for (j in 4:dim(taxonomy)[2]) {
-        child[[names(taxonomy)[j]]] <- taxonomy[i, j]
+        nm <- names(taxonomy)[j]
+        if (!nm %in% NODE_RESERVED_NAMES_CONST) child[[nm]] <- taxonomy[i, j]
       }
     }
   }

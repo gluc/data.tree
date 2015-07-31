@@ -11,7 +11,7 @@ structures are often dificult to manage.
 This is where the data.tree package steps in. It lets you build trees of hierarchical
 data for various uses: to print, to rapid prototype search algorithms, to test out new classification algorithms, and much more.
 
-The package provides functionality to convert from various formats such as data.frames, list of lists, dendrograms, ape phylo, igraph, JSON, YAML, and more.
+The package provides functionality to convert from and to various formats such as data.frames, list of lists, dendrograms, ape phylo, igraph, JSON, YAML, and more.
 
 
 # NOTE:
