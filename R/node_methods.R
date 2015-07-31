@@ -54,23 +54,36 @@ Aggregate = function(node, attribute, aggFun, ...) {
   return (result)
 }
 
-#' Clones a tree (creates a deep copy)
+#' Clone a tree (creates a deep copy)
+#' 
+#' The method also clones object attributes (such as the formatters). If the tree
+#' does not contain formatters, you might want to use the R6 method node$clone() instead,
+#' as it is a bit faster. However, node$clone() will not copy object attributes.
 #' 
 #' @param node the root node of the tree or sub-tree to clone
 #' @return the clone of the tree
 #' 
 #' @examples
 #' data(acme)
+#' acmeClone <- Clone(acme)
+#' acmeClone$name <- "New Acme"
+#' # acmeClone does not point to the same reference object anymore:
+#' acme$name
+#' 
+#' @seealso SetFormat
 #' 
 #' @export
 Clone <- function(node) {
-  l <- as.list(node, mode = "explicit", rootName = node$name)
-  res <- as.Node(l, mode = "explicit")
-  #formatters need to be set manually
-  for(name in names(node$formatters)) {
-    res$formatters[[name]] <- node$formatters[[name]]
+  clone <- node$clone()
+  filterFun <- function(x) {
+    length(attributes(x)) > 1
   }
-  return (res)
+  t <- Traverse(node, filterFun = filterFun)
+  as <- lapply(t, function(x) attributes(x))
+  names(as) <- Get(t, "pathString")
+  tc <- Traverse(clone, filterFun = function(x) x$pathString %in% names(as))
+  Do(tc, function(x) attributes(x) <- as[[x$pathString]])
+  return (clone)
 }
 
 
@@ -144,7 +157,7 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   if(is.vector(v)) names(v) <- node$name
   
   if(is.null(format) && !is.function(attribute)) {
-    format <- GetAttribute(node, function(x) x$formatters[[attribute]], inheritFromAncestors = TRUE, nullAsNa = FALSE)
+    format <- GetObjectAttribute(node, "formatters")[[attribute]]
   }
   
   if(!is.null(format)) {
@@ -154,3 +167,38 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   return (v)
 }
 
+GetObjectAttribute <- function(node, name) {
+  a <- attr(node, name)
+  if (length(a) > 0 || node$isRoot) return (a)
+  return ( GetObjectAttribute(node$parent, name))
+}
+
+#' Set a formatter function on a specific node
+#' 
+#' Formatter functions set on a Node act as a default formatter when printing and using
+#' the \code{\link{Get}} method. The formatter is inherited, meaning that whenever
+#' \code{Get} fetches an attribute from a \code{Node}, it checks on the \code{Node} or
+#' on any of its ancestors whether a formatter is set.
+#' 
+#' @param node The node on which to set the formatter
+#' @param name The attribute name for which to set the formatter
+#' @param formatFun The formatter, i.e. a function taking a value as an input, and formatting
+#' returning the formatted value
+#' 
+#' @examples
+#' data(acme)
+#' acme$Set(id = 1:(acme$totalCount))
+#' SetFormat(acme, "id", function(x) FormatPercent(x, digits = 0))
+#' SetFormat(acme$Climb("IT"), "id", FormatFixedDecimal)
+#' print(acme, "id")
+#' # Calling Get with an explicit formatter will overwrite the default set on the node:
+#' print(acme, id = acme$Get("id", format = function(x) paste0("id:", x)))
+#' 
+#' @seealso Get
+#' @seealso print.Node
+#' 
+#' @export
+SetFormat <- function(node, name, formatFun) {
+  if (length(attr(node, "formatters")) == 0) attr(node, "formatters") <- list()
+  attr(node, "formatters")[[name]] <- formatFun
+}

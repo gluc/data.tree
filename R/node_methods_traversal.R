@@ -92,9 +92,11 @@ Traverse = function(node,
 #' @param ... in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
 #' @param format can be a function that transforms the collected values, e.g. for printing
 #' @param inheritFromAncestors if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.
-#'  
+#'    
 #' @return a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
 #' to NA, such that \code{length(Node$Get) == Node$totalCount}
+#'  
+#' @inheritParams base::sapply
 #'  
 #' @examples
 #'data(acme)
@@ -123,15 +125,17 @@ Get = function(nodes,
                attribute, 
                ..., 
                format = NULL,
-               inheritFromAncestors = FALSE) {
+               inheritFromAncestors = FALSE, 
+               simplify = TRUE) {
   
   
-  res <- sapply(nodes, function(x) GetAttribute(x, attribute, 
+  res <- sapply(nodes, 
+                function(x) GetAttribute(x, attribute, 
                                                 ...,
                                                 format = format, 
-                                                inheritFromAncestors = inheritFromAncestors)
+                                                inheritFromAncestors = inheritFromAncestors),
+                simplify = simplify
   )
-  
   
   return (res)
 }

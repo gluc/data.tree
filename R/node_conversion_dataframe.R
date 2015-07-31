@@ -57,7 +57,8 @@ as.data.frame.Node <- function(x,
   
   if(!x$isRoot) {
     #clone s.t. x is root (for pretty level names)
-    x <- Clone(x)
+    x <- x$clone()
+    x$parent <- NULL
   }
   
   t <- Traverse(x, traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
