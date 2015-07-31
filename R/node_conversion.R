@@ -19,6 +19,9 @@ as.Node <- function(x, ...) {
 
 #' Write a \code{data.tree} structure to Newick notation
 #' 
+#' To read from Newick, you can use the \code{ape} package, and convert the resulting \code{phylo}
+#' object to a \code{data.tree} structure.
+#' 
 #' @param node The root \code{Node} of a tree or sub-tree to be converted
 #' @param heightAttribute The attribute (field name, method, or function) storing or calculating the height for each \code{Node}
 #' @param ... parameters that will be passed on the the heightAttributeName, in case it is a function
@@ -33,6 +36,8 @@ as.Node <- function(x, ...) {
 #' ToNewick(acme, rootHeight = 200)
 #' 
 #' @family Conversions from Node
+#' 
+#' @keywords Newick
 #' 
 #' @export 
 ToNewick <- function(node, heightAttribute = Height, ...) {

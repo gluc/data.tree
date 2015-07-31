@@ -15,6 +15,23 @@ SetFormat(node, name, formatFun)
 returning the formatted value}
 }
 \description{
-Set a formatter function on a specific node
+Formatter functions set on a Node act as a default formatter when printing and using
+the \code{\link{Get}} method. The formatter is inherited, meaning that whenever
+\code{Get} fetches an attribute from a \code{Node}, it checks on the \code{Node} or
+on any of its ancestors whether a formatter is set.
+}
+\examples{
+data(acme)
+acme$Set(id = 1:(acme$totalCount))
+SetFormat(acme, "id", function(x) FormatPercent(x, digits = 0))
+SetFormat(acme$Climb("IT"), "id", FormatFixedDecimal)
+print(acme, "id")
+# Calling Get with an explicit formatter will overwrite the default set on the node:
+print(acme, id = acme$Get("id", format = function(x) paste0("id:", x)))
+}
+\seealso{
+Get
+
+print.Node
 }
 

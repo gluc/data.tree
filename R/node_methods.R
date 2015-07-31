@@ -191,8 +191,12 @@ GetObjectAttribute <- function(node, name) {
 #' SetFormat(acme, "id", function(x) FormatPercent(x, digits = 0))
 #' SetFormat(acme$Climb("IT"), "id", FormatFixedDecimal)
 #' print(acme, "id")
-#' # Calling Get with an explicit formatter will overwrite the default set on the node:
+#' # Calling Get with an explicit formatter will overwrite the default set on the Node:
 #' print(acme, id = acme$Get("id", format = function(x) paste0("id:", x)))
+#' 
+#' # Or, to avoid formatters, even though you set them on a Node:
+#' print(acme, id = acme$Get("id", format = identity))
+#' 
 #' 
 #' @seealso Get
 #' @seealso print.Node

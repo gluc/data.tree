@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_methods.R
 \name{Clone}
 \alias{Clone}
-\title{Clones a tree (creates a deep copy)}
+\title{Clone a tree (creates a deep copy)}
 \usage{
 Clone(node)
 }
@@ -13,9 +13,18 @@ Clone(node)
 the clone of the tree
 }
 \description{
-Clones a tree (creates a deep copy)
+The method also clones object attributes (such as the formatters). If the tree
+does not contain formatters, you might want to use the R6 method node$clone() instead,
+as it is a bit faster. However, node$clone() will not copy object attributes.
 }
 \examples{
 data(acme)
+acmeClone <- Clone(acme)
+acmeClone$name <- "New Acme"
+# acmeClone does not point to the same reference object anymore:
+acme$name
+}
+\seealso{
+SetFormat
 }
 

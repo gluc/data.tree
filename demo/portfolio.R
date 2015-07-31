@@ -12,7 +12,7 @@ pfo <- as.Node(pfodf)
 #Calculate breakdown
 t <- Traverse(pfo, traversal = "post-order")
 Do(t, function(x) x$Weight <- Aggregate(x, "Weight", sum))
-Do(t, function(x) x$WoP <- x$Weight / x$parent$Weight)
+Do(t, function(x) x$WeightOfParent <- x$Weight / x$parent$Weight)
 
 
 GetDuration <- function(x) {
@@ -29,18 +29,19 @@ GetDuration <- function(x) {
 Do(t, function(x) x$Duration <- GetDuration(x))
 
 #Formatters
-pfo$formatters$WoP <- function(x) FormatPercent(x, digits = 1)
-pfo$formatters$Weight <- FormatPercent
-pfo$formatters$Duration <- function(x) {
+SetFormat(pfo, "WeightOfParent", function(x) FormatPercent(x, digits = 1))
+SetFormat(pfo, "Weight", FormatPercent)
+FormatDuration <- function(x) {
   if (x != 0) res <- FormatFixedDecimal(x, digits = 1)
   else res <- ""
   return (res)
 }
+SetFormat(pfo, "Duration", FormatDuration)
 
 #Print
 print(pfo, 
       "Weight", 
-      "WoP",
+      "WeightOfParent",
       "Duration",
       filterFun = function(x) !x$isLeaf)
 
