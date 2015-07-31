@@ -4,7 +4,7 @@
 \alias{Aggregate}
 \title{Aggregate child values of a \code{Node}, standalone or in traversal.}
 \usage{
-Aggregate(node, attribute, aggFun, ...)
+Aggregate(node, attribute, aggFun, cacheAttribute = NULL, ...)
 }
 \arguments{
 \item{node}{the \code{Node} on which to aggregate}
@@ -18,7 +18,13 @@ Aggregate(node, attribute, aggFun, ...)
 
 \item{aggFun}{the aggregation function to be applied to the children's \code{attributes}}
 
-\item{...}{any arguments to be passed on to aggFun}
+\item{cacheAttribute}{the name to which results should be stored, if any (NULL otherwise). If not
+NULL, then the function checks whether this attribute is set, and only evaluates
+attribute if it is not.
+If used wisely in connection with post-order traversal, this parameter allows to speed up calculation by breaking
+recursion.}
+
+\item{...}{any arguments to be passed on to attribute (in case it's a function)}
 }
 \description{
 The \code{Aggregate} method lets you fetch an attribute from a \code{Node}'s children, and then aggregate it.
@@ -37,11 +43,19 @@ data(acme)
 #Aggregate on a field
 Aggregate(acme, "cost", sum)
 
-#Aggregate on a function
+#Aggregate using Get
 print(acme, "cost", minCost = acme$Get(Aggregate, "cost", min))
 
-#use Aggregate in traversal:
-acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
+#use Aggregate with caching:
+acme$cost
+acme$Do(function(x) Aggregate(x, "cost", sum, cacheAttribute = "cost"), traversal = "post-order")
+acme$cost
+
+#use Aggregate with a function:
+acme$Do(function(x) x$expectedCost <- Aggregate(x,
+                                                function(x) x$cost * x$p,
+                                                sum)
+       , traversal = "post-order")
 }
 \seealso{
 \code{\link{Node}}

@@ -20,7 +20,12 @@
 #' 
 #' @param node the \code{Node} on which to aggregate
 #' @param aggFun the aggregation function to be applied to the children's \code{attributes}
-#' @param ... any arguments to be passed on to aggFun
+#' @param ... any arguments to be passed on to attribute (in case it's a function)
+#' @param cacheAttribute the name to which results should be stored, if any (NULL otherwise). If not
+#' NULL, then the function checks whether this attribute is set, and only evaluates
+#' attribute if it is not.
+#' If used wisely in connection with post-order traversal, this parameter allows to speed up calculation by breaking
+#' recursion.
 #'
 #' @inheritParams Get
 #'   
@@ -30,28 +35,85 @@
 #' #Aggregate on a field
 #' Aggregate(acme, "cost", sum)
 #' 
-#' #Aggregate on a function
+#' #Aggregate using Get
 #' print(acme, "cost", minCost = acme$Get(Aggregate, "cost", min))
 #' 
-#' #use Aggregate in traversal:
-#' acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
-#' 
-#' 
+#' #use Aggregate with caching:
+#' acme$cost
+#' acme$Do(function(x) Aggregate(x, "cost", sum, cacheAttribute = "cost"), traversal = "post-order")
+#' acme$cost
+#'
+#' #use Aggregate with a function:
+#' acme$Do(function(x) x$expectedCost <- Aggregate(x, 
+#'                                                 function(x) x$cost * x$p, 
+#'                                                 sum)
+#'        , traversal = "post-order")
+#'   
 #' @seealso \code{\link{Node}}
 #'
 #' @export
-Aggregate = function(node, attribute, aggFun, ...) {
+Aggregate = function(node, 
+                     attribute, 
+                     aggFun, 
+                     cacheAttribute = NULL,
+                     ...) {
+  
   #if(is.function(attribute)) browser()
   #if (!is.function(attribute)) {
-    v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
-    if (!length(v) == 0) {
-      return (v)
-    }
-    if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
-  #}
-  values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, ...))
-  result <- aggFun(values)
+  if (length(cacheAttribute) > 0) {
+    v <- GetAttribute(node, cacheAttribute, ..., nullAsNa = FALSE)
+    if (!length(v) == 0) return (v)
+  } 
+  
+  v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
+  if (!length(v) == 0) result <- v
+  else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
+  
+  if (!exists("result", envir = environment()) || length(result) == 0) {
+    values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, cacheAttribute, ...))
+    result <- as.vector(aggFun(values))
+  }
+  if (length(cacheAttribute) > 0) {
+    node[[cacheAttribute]] <- result
+  }
   return (result)
+}
+
+#' Cumulate values among siblings
+#' 
+#' For example, you can sum up values of siblings before
+#' this \code{Node}.
+#' 
+#' @param node The node on which we want to cumulate
+#' @param cacheAttribute A field into which the results should
+#' be cached. Speeds up calculation.
+#' 
+#' @inheritParams Aggregate
+#' @inheritParams Get
+#' 
+#' @examples
+#' data(acme)
+#' acme$Do(function(x) Aggregate(x, "cost", sum, "cost"), traversal = "post-order")
+#' acme$Do(function(x) Cumulate(x, "cost", sum, "cumCost"))
+#' print(acme, "cost", "cumCost")
+#' 
+#' @export
+Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
+  pos <- node$position
+  if(length(cacheAttribute) > 0 || node$isRoot) {
+    res <- as.vector(GetAttribute(node, attribute, ..., nullAsNa = FALSE))
+    if (pos > 1) {
+      res <- aggFun(node$parent$children[[pos - 1]][[cacheAttribute]], res)
+    }
+    node[[cacheAttribute]] <- res
+  } else {
+    nodes <- Traverse(node$parent, 
+                      pruneFun = function(x) x$level <= (node$level + 1),
+                      filterFun = function(x) x$position <= pos)
+                    
+    res <- aggFun(Get(nodes, attribute))
+  }
+  return (res)
 }
 
 #' Clone a tree (creates a deep copy)

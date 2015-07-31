@@ -11,22 +11,14 @@ pfo <- as.Node(pfodf)
 
 #Calculate breakdown
 t <- Traverse(pfo, traversal = "post-order")
-Do(t, function(x) x$Weight <- Aggregate(x, "Weight", sum))
+Do(t, function(x) Aggregate(x, "Weight", sum, "Weight"))
 Do(t, function(x) x$WeightOfParent <- x$Weight / x$parent$Weight)
 
+pfo$Do(function(x) x$Duration <- ifelse(is.null(x$Duration), 0, x$Duration), filterFun = isLeaf)
 
-GetDuration <- function(x) {
-  if (is.numeric(x$Duration)) return(x$Duration) #use cache
-  else if( x$isLeaf) return (NA) #if leaf has no duration, return NA
-  else Aggregate(node = x, 
-                 attribute = function(x) x$Weight * x$Duration / x$parent$Weight, 
-                 aggFun = function(x) sum(x, na.rm = TRUE))
-}
+Do(t, function(x) x$Duration <- Aggregate(x, function(x) x$WeightOfParent * x$Duration, sum))
 
 
-
-
-Do(t, function(x) x$Duration <- GetDuration(x))
 
 #Formatters
 SetFormat(pfo, "WeightOfParent", function(x) FormatPercent(x, digits = 1))

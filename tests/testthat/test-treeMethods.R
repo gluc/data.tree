@@ -396,7 +396,33 @@ test_that("Aggregate function", {
   
   g <- acme$Get(Aggregate, function(x) x$p * x$cost, sum)
   expect_false(is.na(g[1]))
+  
+  expect_equal(g[[1]], sum(acme$Get(function(x) x$cost * x$p, filterFun = isLeaf)))
 
+})
+
+
+test_that("Aggregate cache", {
+  data(acme)
+  
+  s1 <- Aggregate(acme, "cost", sum)
+  expect_true(is.null(acme$cost))
+  
+  s2 <- Aggregate(acme, "cost", sum, "cost")
+  expect_equal(s2, s1)
+  expect_equal(acme$cost, s2)
+  
+})
+
+
+test_that("Aggregate cache diff", {
+  data(acme)
+
+  s2 <- Aggregate(acme, "cost", sum, "cost2")
+  expect_true(is.null(acme$cost))
+  expect_equal(acme$cost2, s2)
+  expect_equal(s2, sum(acme$Get(function(x) x$cost, filterFun = isLeaf)))
+  
 })
 
 

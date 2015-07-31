@@ -1,2 +1,3 @@
 decisiontree     Calculate and plot the Jenny Lynd decision tree (requires the ape and yaml packages)
-portfolio        Do a portfolio breakdown
+portfolio        Do a portfolio breakdown (and use the Aggregate method)
+population       Plot a treemap (and use the Cumulate method, requires the treemap package)

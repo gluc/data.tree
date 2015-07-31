@@ -254,7 +254,7 @@ Node <- R6Class("Node",
                       },
                       
                       position = function() {
-                        if (self$isRoot) return (0)
+                        if (self$isRoot) return (1)
                         
                         result <- which(unname(sapply(self$parent$children, function(x) identical(self, x))))
                         # match(self$name, names(self$parent$children))

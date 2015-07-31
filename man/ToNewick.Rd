@@ -14,7 +14,8 @@ ToNewick(node, heightAttribute = Height, ...)
 \item{...}{parameters that will be passed on the the heightAttributeName, in case it is a function}
 }
 \description{
-Write a \code{data.tree} structure to Newick notation
+To read from Newick, you can use the \code{ape} package, and convert the resulting \code{phylo}
+object to a \code{data.tree} structure.
 }
 \examples{
 data(acme)
@@ -26,4 +27,5 @@ ToNewick(acme, rootHeight = 200)
 \seealso{
 Other Conversions from Node: \code{\link{as.dendrogram.Node}}
 }
+\keyword{Newick}
 
