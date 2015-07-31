@@ -64,13 +64,16 @@ Aggregate = function(node, attribute, aggFun, ...) {
 #' 
 #' @export
 Clone <- function(node) {
-  l <- as.list(node, mode = "explicit", rootName = node$name)
-  res <- as.Node(l, mode = "explicit")
-  #formatters need to be set manually
-  for(name in names(node$formatters)) {
-    res$formatters[[name]] <- node$formatters[[name]]
+  clone <- node$clone()
+  filterFun <- function(x) {
+    length(attributes(x)) > 1
   }
-  return (res)
+  t <- Traverse(node, filterFun = filterFun)
+  as <- lapply(t, function(x) attributes(x))
+  names(as) <- Get(t, "pathString")
+  tc <- Traverse(clone, filterFun = function(x) x$pathString %in% names(as))
+  Do(tc, function(x) attributes(x) <- as[[x$pathString]])
+  return (clone)
 }
 
 
@@ -144,7 +147,7 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   if(is.vector(v)) names(v) <- node$name
   
   if(is.null(format) && !is.function(attribute)) {
-    format <- GetAttribute(node, function(x) x$formatters[[attribute]], inheritFromAncestors = TRUE, nullAsNa = FALSE)
+    format <- GetObjectAttribute(node, "formatters")[[attribute]]
   }
   
   if(!is.null(format)) {
@@ -154,3 +157,21 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   return (v)
 }
 
+GetObjectAttribute <- function(node, name) {
+  a <- attr(node, name)
+  if (length(a) > 0 || node$isRoot) return (a)
+  return ( GetObjectAttribute(node$parent, name))
+}
+
+#' Set a formatter function on a specific node
+#' 
+#' @param node The node on which to set the formatter
+#' @param name The attribute name for which to set the formatter
+#' @param formatFun The formatter, i.e. a function taking a value as an input, and formatting
+#' returning the formatted value
+#' 
+#' @export
+SetFormat <- function(node, name, formatFun) {
+  if (length(attr(node, "formatters")) == 0) attr(node, "formatters") <- list()
+  attr(node, "formatters")[[name]] <- formatFun
+}

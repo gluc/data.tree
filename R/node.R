@@ -16,7 +16,6 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'Do',
                                 'fields',
                                 'fieldsAll',
-                                'formatters',
                                 'Get',
                                 'GetAttribute',
                                 'initialize',
@@ -99,16 +98,16 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 Node <- R6Class("Node",
                 lock_objects = FALSE,
                     public = list(
-                      children = list(),
-                      #formatters = list(),
-                      formatters = NULL,
+                      children = NULL,
                       parent = NULL,
                       
                       initialize=function(name, ...) {
                         if (!missing(name)) self$name <- as.character(name)
-                        self$formatters = new.env(hash = FALSE, parent = self, size = 10)
+                        children <- new.env(parent = self)
                         invisible (self)
                       },
+                      
+                      
                       
                       ####################
                       # Tree creation

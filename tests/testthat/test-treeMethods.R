@@ -353,11 +353,17 @@ test_that("Clone", {
 
 test_that("Clone formatter", {
   data(acme)
-  acme$formatters$count <- FormatFixedDecimal
+  SetFormat(acme, "count", FormatFixedDecimal)
+  SetFormat(acme$Climb("IT", "Outsource"), "p", FormatPercent)
+  
   n <- Clone(acme)
   
-  expect_equal(names(n$formatters), "count")
-  expect_true(is.function(n$formatters$count))
+  fo <- attr(n, "formatters")[["count"]]
+  expect_equal(fo, FormatFixedDecimal)
+
+  fo2 <- attr(n$Climb("IT", "Outsource"), "formatters")[["p"]]
+  expect_equal(fo2, FormatPercent)
+  
   
 })
 
@@ -396,17 +402,17 @@ test_that("Aggregate function", {
 
 test_that("Formatter Get", {
   data(acme)
-  acme$formatters$p <- FormatPercent
+  SetFormat(acme, "p", FormatPercent)
   p <- acme$Get("p")
   expect_equal(p[["Go agile"]], "5.00 %")
 })
 
 test_that("Formatter Get Hierarchy", {
   data(acme)
-  acme$formatters$p <- FormatPercent
+  SetFormat(acme, "p", FormatPercent)
   acme$p <- 1
   n <- acme$Climb("IT")
-  n$formatters$p <- FormatFixedDecimal
+  SetFormat(n, "p", FormatFixedDecimal)
   p <- acme$Get("p")
   expect_equal(p[["Acme Inc."]], "100.00 %")
   expect_equal(p[["Outsource"]], "0.200")

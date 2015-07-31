@@ -7,7 +7,7 @@
   - CHANGE: Node$Find is now called Node$Climb to avoid confusion with base::Find
   - ADD: Clone (returning a deep copy)
   - ADD: Prune (pruning the tree)
-  - ADD: support for setting formatter functions on a Node
+  - ADD: SetFromat (support for setting formatter functions on a Node)
   - ADD: Node$isBinary active
   - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering
   - Node$Get: 
@@ -20,7 +20,7 @@
     - ADD: filterFun and pruneFun
     - ADD: support for traversal order
   - Node$Do:
-    - ADD: new function Do, which applies a function
+    - ADD: new function Do, which applies a function to Nodes
 - Conversions
   - ADD: conversion to and from list of lists (and thus to and from yaml, json, etc.)
   - ADD: conversion from data.frame
