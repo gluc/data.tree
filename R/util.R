@@ -46,6 +46,8 @@ FormatFixedDecimal <- function(x, digits = 3) {
 #' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
 #' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
 #' the meaning of \code{attribute}.
+#' @param limit The maximum number of nodes to print. Can be \code{NULL} if the 
+#' entire tree should be printed
 #' 
 #' @examples
 #' data(acme)
@@ -55,8 +57,13 @@ FormatFixedDecimal <- function(x, digits = 3) {
 #' do.call(print, c(acme, acme$fieldsAll))
 #'
 #' @export
-print.Node <- function(x, ...) {
-  print(as.data.frame(x, row.names = NULL, optional = FALSE, ...), na.print = "")
+print.Node <- function(x, ..., limit = 100) {
+  df <- as.data.frame(x, row.names = NULL, optional = FALSE, ...)
+  if (length(limit) > 0 && dim(df)[1] > limit) {
+    limit_u <- as.integer(limit / 2)
+    df <- rbind(head(df, limit_u), '...', tail(df, limit_u))
+  }
+  print(df, na.print = "")
 }
 
 

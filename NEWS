@@ -9,13 +9,14 @@
 - Node
   - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
   - CHANGE: Node$Find is now called Node$Climb to avoid confusion with base::Find
+  - ADD: print.Node contains a limit parameter, allowing to limit the max number of Nodes to be printed
   - ADD: Clone (returning a deep copy)
   - ADD: Prune (pruning the tree)
   - ADD: SetFromat (support for setting formatter functions on a Node)
   - ADD: Traverse, standalone traverse method that can be used for piping and whenever you need to apply multiple Get/Set/Do on the same traversal
   - ADD: Node$isBinary active
   - ADD: standalone versions of isLeaf, isNotLeaf, isRoot, isNotRoot for concise filtering
-  - ADD: AreNamesUnique
+  - ADD: AreNamesUnique to test if names of the node's are unique throughout the tree (and not only among siblings)
   - FIX: node$position now returns 1 for root
   - ADD: Aggregate function now supports functions
   - CHANGE: Aggregate function does not cache anymore by default. See cacheAttribute for details.
