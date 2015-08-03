@@ -119,9 +119,7 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 
 #' Clone a tree (creates a deep copy)
 #' 
-#' The method also clones object attributes (such as the formatters). If the tree
-#' does not contain formatters, you might want to use the R6 method node$clone() instead,
-#' as it is a bit faster. However, node$clone() will not copy object attributes.
+#' The method also clones object attributes (such as the formatters). 
 #' 
 #' @param node the root node of the tree or sub-tree to clone
 #' @return the clone of the tree
@@ -137,7 +135,10 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 #' 
 #' @export
 Clone <- function(node) {
-  clone <- node$clone()
+  l <- as.list(node, mode = "explicit", rootName = node$name)
+  clone <- as.Node(l, mode = "explicit")
+
+  #attributes
   filterFun <- function(x) {
     length(attributes(x)) > 1
   }

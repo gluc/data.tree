@@ -19,7 +19,7 @@ myPruneFun <- function(x, cutoff = 0.9, maxCountries = 7) {
   return (x$cumPop < (x$parent$population * cutoff))
 }
 
-n2 <- n$clone()
+n2 <- Clone(n)
 n2$Prune(pruneFun = myPruneFun)
 
 #sum countries that we pruned away into a new "Other" node

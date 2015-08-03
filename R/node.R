@@ -98,12 +98,11 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 Node <- R6Class("Node",
                 lock_objects = FALSE,
                     public = list(
-                      children = NULL,
                       parent = NULL,
+                      children = NULL,
                       
                       initialize=function(name, ...) {
                         if (!missing(name)) self$name <- as.character(name)
-                        children <- new.env(parent = self)
                         invisible (self)
                       },
                       
@@ -334,7 +333,6 @@ Node <- R6Class("Node",
                     private = list(
                       
                       p_name = ""
-                      
                       
                     )
                   )

@@ -13,9 +13,7 @@ Clone(node)
 the clone of the tree
 }
 \description{
-The method also clones object attributes (such as the formatters). If the tree
-does not contain formatters, you might want to use the R6 method node$clone() instead,
-as it is a bit faster. However, node$clone() will not copy object attributes.
+The method also clones object attributes (such as the formatters).
 }
 \examples{
 data(acme)
