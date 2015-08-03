@@ -17,7 +17,8 @@ Suggests:
     yaml, 
     jsonlite, 
     DiagrammeR, 
-    igraph
+    igraph,
+    treemap
 Enhances:
 Description: Create tree structures from hierarchical data, and use the utility 
     methods to traverse the tree in various orders. Aggregate, print, convert to and from data.frame, 
