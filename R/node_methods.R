@@ -6,6 +6,78 @@
 
 
 
+#' Print a \code{Node} in a human-readable fashion.
+#'  
+#' @param x The Node
+#' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
+#' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
+#' the meaning of \code{attribute}.
+#' @param limit The maximum number of nodes to print. Can be \code{NULL} if the 
+#' entire tree should be printed
+#' 
+#' @examples
+#' data(acme)
+#' print(acme, "cost", "p")
+#' print(acme, "cost", probability = "p")
+#' print(acme, expectedCost = function(x) x$cost * x$p)
+#' do.call(print, c(acme, acme$fieldsAll))
+#'
+#' @export
+print.Node <- function(x, ..., limit = 100) {
+  toBeCropped <- x$totalCount - limit
+  if (toBeCropped > 0) {
+    #level: lower has more value
+    #position: lower has more value (very low effect)
+    #totalCount: pruning more has higher value
+    #leafCount: if fewer leaves per totalCount, information is higher (
+    #           (structure is more rich)
+    
+    x <- x$clone()
+    t <- Traverse(x)
+    Set(t, id = 1:x$totalCount)
+    depth <- x$depth
+    maxCount <- max(Get(t, "count"))
+    Value <- function(x) {
+      if (x$isRoot) return (1)
+      lv <- (depth - x$level + 1)/depth
+      pv <- 0.5 + (maxCount - x$position + 1)/(2 * maxCount) #(0-1, linear)
+      cv <- 1 / ((x$totalCount - toBeCropped)^2 + 1) #(0-1)
+      rv <- 0.5 + (x$parent$totalCount - x$parent$leafCount - 1) / (2 * x$parent$totalCount - 2) 
+      lv * pv * cv * rv
+    }
+    df <- data.frame(value = Get(t, function(x) x$value <- Value(x)),
+                     count = 1, #Get(t, "totalCount"),
+                     id = Get(t, "id"))
+    df <- df[ do.call(order, df), ]
+    df$cumCount <- cumsum(x = df$count)
+    df$keep <- df$cumCount > toBeCropped
+    print(x, "value")
+    
+    df <- df[with(df, order(id)), ]
+    Set(t, df$keep)
+    
+    
+    #replace Nodes with catchall
+    Do(t, function(x) {
+      remove <- sum(sapply(x$children, function(x) !x$keep))
+      TODO: continue
+      
+    }
+    totalCount <- Get(t, "totalCount")
+    position <- Get(t, "position")
+    (totalCount - toBeCropped)^2 + depth - level^2 / depth^2 
+  
+  }
+  
+  
+  df <- as.data.frame(x, row.names = NULL, optional = FALSE, ...)
+  if (length(limit) > 0 && dim(df)[1] > limit) {
+    limit_u <- as.integer(limit / 2)
+    df <- rbind(head(df, limit_u), '...', tail(df, limit_u))
+  }
+  print(df, na.print = "")
+}
+
 
 #' Aggregate child values of a \code{Node}, standalone or in traversal.
 #' 

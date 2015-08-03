@@ -40,33 +40,6 @@ FormatFixedDecimal <- function(x, digits = 3) {
 
 
 
-#' Print a \code{Node} in a human-readable fashion.
-#'  
-#' @param x The Node
-#' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
-#' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
-#' the meaning of \code{attribute}.
-#' @param limit The maximum number of nodes to print. Can be \code{NULL} if the 
-#' entire tree should be printed
-#' 
-#' @examples
-#' data(acme)
-#' print(acme, "cost", "p")
-#' print(acme, "cost", probability = "p")
-#' print(acme, expectedCost = function(x) x$cost * x$p)
-#' do.call(print, c(acme, acme$fieldsAll))
-#'
-#' @export
-print.Node <- function(x, ..., limit = 100) {
-  df <- as.data.frame(x, row.names = NULL, optional = FALSE, ...)
-  if (length(limit) > 0 && dim(df)[1] > limit) {
-    limit_u <- as.integer(limit / 2)
-    df <- rbind(head(df, limit_u), '...', tail(df, limit_u))
-  }
-  print(df, na.print = "")
-}
-
-
 
 #'   Calculates the height of a \code{Node} given the hight of the root.
 #'   
