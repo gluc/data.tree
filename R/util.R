@@ -80,3 +80,5 @@ CreateDummyTree <- function(levels = 5, children = 3, parent = Node$new("1")) {
   }
   return (parent)
 }
+
+

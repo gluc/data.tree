@@ -24,49 +24,35 @@
 #'
 #' @export
 print.Node <- function(x, ..., limit = 100) {
+  # algo
+  # 1. find number of nodes to remove, n
+  # 2. get leaves where position > 2
+  # 3. order by 
+  #    a.) parent$count, descending, 
+  #    b.) then by level, descending
+  #    c.) then by parent$id, descending
+  # 4.   
   toBeCropped <- x$totalCount - limit
   if (toBeCropped > 0) {
-    #level: lower has more value
-    #position: lower has more value (very low effect)
-    #totalCount: pruning more has higher value
-    #leafCount: if fewer leaves per totalCount, information is higher (
-    #           (structure is more rich)
-    
-    x <- x$clone()
-    t <- Traverse(x)
-    Set(t, id = 1:x$totalCount)
-    depth <- x$depth
-    maxCount <- max(Get(t, "count"))
-    Value <- function(x) {
-      if (x$isRoot) return (1)
-      lv <- (depth - x$level + 1)/depth
-      pv <- 0.5 + (maxCount - x$position + 1)/(2 * maxCount) #(0-1, linear)
-      cv <- 1 / ((x$totalCount - toBeCropped)^2 + 1) #(0-1)
-      rv <- 0.5 + (x$parent$totalCount - x$parent$leafCount - 1) / (2 * x$parent$totalCount - 2) 
-      lv * pv * cv * rv
-    }
-    df <- data.frame(value = Get(t, function(x) x$value <- Value(x)),
-                     count = 1, #Get(t, "totalCount"),
-                     id = Get(t, "id"))
-    df <- df[ do.call(order, df), ]
-    df$cumCount <- cumsum(x = df$count)
-    df$keep <- df$cumCount > toBeCropped
-    print(x, "value")
-    
-    df <- df[with(df, order(id)), ]
-    Set(t, df$keep)
-    
-    
-    #replace Nodes with catchall
-    Do(t, function(x) {
-      remove <- sum(sapply(x$children, function(x) !x$keep))
-      TODO: continue
+    xc <- Clone(x)
+    depth <- 1
+    while(xc$totalCount > limit && depth < xc$depth) { 
+      xc$Set(co = NULL)
+      xc$Set(id = 1:xc$totalCount)
+      t <- Traverse(xc, filterFun = function(x) x$depth == 1 && x$position > 2)
+      df <- data.frame(id = Get(t, "id"),
+                       parentCount = Get(t, function(x) x$parent$count), 
+                       level = Get(t, "level"),
+                       parentId = Get(t, function(x) x$parent$id)
+      )
       
+      df <- df[order(df$parentCount, df$level, df$parentId, decreasing = TRUE),]
+      df$co <- 1:dim(df)[1]
+      df <- df[order(df$id),]
+      Set(t, co = df$co)
+      xc$Prune(function(x) length(x$co) == 0 || x$co > toBeCropped)
+      depth <- depth + 1
     }
-    totalCount <- Get(t, "totalCount")
-    position <- Get(t, "position")
-    (totalCount - toBeCropped)^2 + depth - level^2 / depth^2 
-  
   }
   
   
@@ -130,6 +116,10 @@ Aggregate = function(node,
                      cacheAttribute = NULL,
                      ...) {
   
+  
+  
+  
+  #####
   #if(is.function(attribute)) browser()
   #if (!is.function(attribute)) {
   if (length(cacheAttribute) > 0) {
