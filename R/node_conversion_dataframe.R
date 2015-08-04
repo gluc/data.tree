@@ -57,7 +57,7 @@ as.data.frame.Node <- function(x,
   
   if(!x$isRoot) {
     #clone s.t. x is root (for pretty level names)
-    x <- x$clone()
+    x <- Clone(x)
     x$parent <- NULL
   }
   
