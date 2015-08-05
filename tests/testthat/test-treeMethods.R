@@ -356,7 +356,7 @@ test_that("Clone formatter", {
   SetFormat(acme, "count", FormatFixedDecimal)
   SetFormat(acme$Climb("IT", "Outsource"), "p", FormatPercent)
   
-  n <- Clone(acme)
+  n <- Clone(acme, attributes = TRUE)
   
   fo <- attr(n, "formatters")[["count"]]
   expect_equal(fo, FormatFixedDecimal)

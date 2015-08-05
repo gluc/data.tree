@@ -1,7 +1,8 @@
 #' Names that are reserved by the Node class.
 #'
 #' These are reserved by the Node class, you cannot use these as 
-#' Attribute names.
+#' attribute names.
+#' Note also that all fields starting with a . are reserved.
 #' 
 #' @export
 NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
@@ -36,8 +37,8 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'root',
                                 'Set',
                                 'Sort',
-                                'tmp',
-                                'totalCount')
+                                'totalCount',
+                                '.*')
 
 
 #' Create a \code{data.tree} Structure With \code{Nodes}
@@ -255,7 +256,7 @@ Node <- R6Class("Node",
                       position = function() {
                         if (self$isRoot) return (1)
                         
-                        result <- which(unname(sapply(self$parent$children, function(x) identical(self, x))))
+                        result <- which(names(self$parent$children) == self$name)
                         # match(self$name, names(self$parent$children))
                         return (result)
                       },

@@ -4,10 +4,12 @@
 \alias{Clone}
 \title{Clone a tree (creates a deep copy)}
 \usage{
-Clone(node)
+Clone(node, attributes = FALSE)
 }
 \arguments{
 \item{node}{the root node of the tree or sub-tree to clone}
+
+\item{attributes}{if FALSE, then attributes are not cloned. This makes the method much faster.}
 }
 \value{
 the clone of the tree

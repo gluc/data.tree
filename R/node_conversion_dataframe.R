@@ -55,13 +55,14 @@ as.data.frame.Node <- function(x,
   
   traversal <- traversal[1]
   
-  if(!x$isRoot) {
+  if(!x$isRoot || length(pruneFun) > 0) {
     #clone s.t. x is root (for pretty level names)
     x <- Clone(x)
+    if (length(pruneFun) > 0) x$Prune(pruneFun)
     x$parent <- NULL
   }
   
-  t <- Traverse(x, traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
+  t <- Traverse(x, traversal = traversal, filterFun = filterFun)
   
   df <- data.frame( levelName = format(Get(t, 'levelName')),
                     row.names = row.names,

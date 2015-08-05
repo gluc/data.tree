@@ -158,6 +158,7 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 #' The method also clones object attributes (such as the formatters). 
 #' 
 #' @param node the root node of the tree or sub-tree to clone
+#' @param attributes if FALSE, then attributes are not cloned. This makes the method much faster.
 #' @return the clone of the tree
 #' 
 #' @examples
@@ -170,19 +171,21 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 #' @seealso SetFormat
 #' 
 #' @export
-Clone <- function(node) {
+Clone <- function(node, attributes = FALSE) {
   l <- as.list(node, mode = "explicit", rootName = node$name)
   clone <- as.Node(l, mode = "explicit")
 
-  #attributes
-  filterFun <- function(x) {
-    length(attributes(x)) > 1
+  if (attributes) {
+    #attributes
+    filterFun <- function(x) {
+      length(attributes(x)) > 1
+    }
+    t <- Traverse(node, filterFun = filterFun)
+    as <- lapply(t, function(x) attributes(x))
+    names(as) <- Get(t, "pathString")
+    tc <- Traverse(clone, filterFun = function(x) x$pathString %in% names(as))
+    Do(tc, function(x) attributes(x) <- as[[x$pathString]])
   }
-  t <- Traverse(node, filterFun = filterFun)
-  as <- lapply(t, function(x) attributes(x))
-  names(as) <- Get(t, "pathString")
-  tc <- Traverse(clone, filterFun = function(x) x$pathString %in% names(as))
-  Do(tc, function(x) attributes(x) <- as[[x$pathString]])
   return (clone)
 }
 

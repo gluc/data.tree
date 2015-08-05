@@ -11,7 +11,8 @@ NODE_RESERVED_NAMES_CONST
 }
 \description{
 These are reserved by the Node class, you cannot use these as
-Attribute names.
+attribute names.
+Note also that all fields starting with a . are reserved.
 }
 \keyword{datasets}
 

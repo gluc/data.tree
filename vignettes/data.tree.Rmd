@@ -86,7 +86,7 @@ Creating a tree programmatically is useful especially in the context of algorith
 
 and refer to the See Also section.
 
-One of the most common conversions is the one from a data.frame in table format. The following code illustrats this:
+One of the most common conversions is the one from a data.frame in table format. The following code illustrates this:
 
 ```{r}
 library(treemap)
@@ -117,7 +117,50 @@ Often, trees are created from one of many file formats. Typical import patterns 
 * yaml -> list of lists (`?yaml::yaml.load`) -> data.tree (`?as.Node.list`, `demo('decisiontree', package='data.tree')`
 * json -> list of lists (e.g. `?jsonlite::fromJSON`) -> data.tree (`?as.Node.list`)
 
-If you have a choice, we recommend you consider yaml format, as it is concise, human-readable, and very easy to convert to a data.tree.
+If you have a choice, we recommend you consider yaml format, as it is concise, human-readable, and very easy to convert to a data.tree. An example is provided here for illustration:
+
+```{r}
+library(yaml)
+yaml <- "
+name: Operating Systems
+OS X:
+  Yosemite:
+    users: 16
+  Leopard:
+    users: 43
+Linux:
+  Debian:
+    users: 27
+  Ubuntu:
+    users: 36
+Windows:
+  W7:
+    users: 31
+  W8:
+    users: 32
+  W10:
+    users: 4
+"
+
+osList <- yaml.load(yaml)
+osNode <- as.Node(osList)
+print(osNode, "users")
+```
+
+Once converted to a `data.tree` structure, we can use all its features to work with the hierarchical data. We will explain these functions later, but provide here a quick sample for illustration:
+
+```{r}
+#hierarchically sum up the users per OS
+osNode$Do(function(x) Aggregate(x, "users", sum, "users"))
+
+#sort by users
+osNode$Sort("users", decreasing = TRUE)
+
+#print the tree, showing only OS having more than 20 users
+print(osNode, "users", pruneFun = function(x) x$users > 20)
+
+```
+
 
 
 ## Node methods
@@ -128,7 +171,7 @@ There are different types of methods:
 
 * OO-style actives (sometimes called properties) on `Node`s, such as e.g. `Node$isRoot`
 * OO-style methods on `Node`s, such as e.g. `Node$Prune(pruneFun)`
-* Classical R methods, such as e.g. `Clone(node)`. The main reason for these are not design considerations, but performance. As OO-style methods maintain their own "copy" of the function in each `Node` instance, OO-style methods are inflating memory usage of the `Node`s. For this reason, their use is kept to a minimum
+* Classical R methods, such as e.g. `Clone(node)`. The main reason for these are not design considerations, but performance. As OO-style methods maintain their own "copy" of the function in each `Node` instance, they are inflating memory usage of the `Node`s. For this reason, their use is kept to a minimum, and often only a classical R method exists instead.
 
 ### Actives Examples
 
@@ -145,7 +188,15 @@ population$fields
 population$totalFields
 ```
 
+The naming convention of the package is that fields and actives are lower case, whereas methods are upper / Camelcase.
+RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available attributes. Also, there is a list of reserved names:
 
+```{r}
+NODE_RESERVED_NAMES_CONST
+```
+
+
+### 
 
 ## Custom attributes
 

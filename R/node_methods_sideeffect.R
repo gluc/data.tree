@@ -70,9 +70,9 @@ Revert <- function(node, recursive = TRUE) {
   
   t <- Traverse(node, pruneFun = pf)
   
-  Set(t, tmp = 1:node$totalCount)
-  Sort(node, "tmp", decreasing = TRUE, recursive = recursive)
-  Do(t, function(x) rm("tmp", envir = x))
+  Set(t, .tmp = 1:node$totalCount)
+  Sort(node, ".tmp", decreasing = TRUE, recursive = recursive)
+  Do(t, function(x) rm(".tmp", envir = x))
   invisible (node)
 }
 
