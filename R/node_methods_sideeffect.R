@@ -82,7 +82,7 @@ Revert <- function(node, recursive = TRUE) {
 #' @param The node whose children should be pruned
 #' @param pruneFun a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
 #' and its descendants should be kept, FALSE otherwise.
-#' @return A Node
+#' @return The node (invisibly)
 #' @keywords internal
 Prune <- function(node, pruneFun) { 
   
@@ -95,5 +95,5 @@ Prune <- function(node, pruneFun) {
   for( child in node$children) {
     Prune(child, pruneFun)
   }
-  
+  invisible (node)
 }

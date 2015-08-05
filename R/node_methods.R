@@ -33,34 +33,8 @@ print.Node <- function(x, ..., limit = 100) {
   #    c.) then by parent$id, descending
   # 4.   
   toBeCropped <- x$totalCount - limit
-  if (toBeCropped > 0) {
-    xc <- Clone(x)
-    depth <- 1
-    while(xc$totalCount > limit && depth < xc$depth) { 
-      xc$Set(co = NULL)
-      xc$Set(id = 1:xc$totalCount)
-      t <- Traverse(xc, filterFun = function(x) x$depth == 1 && x$position > 2)
-      df <- data.frame(id = Get(t, "id"),
-                       parentCount = Get(t, function(x) x$parent$count), 
-                       level = Get(t, "level"),
-                       parentId = Get(t, function(x) x$parent$id)
-      )
-      
-      df <- df[order(df$parentCount, df$level, df$parentId, decreasing = TRUE),]
-      df$co <- 1:dim(df)[1]
-      df <- df[order(df$id),]
-      Set(t, co = df$co)
-      xc$Prune(function(x) length(x$co) == 0 || x$co > toBeCropped)
-      depth <- depth + 1
-    }
-  }
-  
-  
-  df <- as.data.frame(x, row.names = NULL, optional = FALSE, ...)
-  if (length(limit) > 0 && dim(df)[1] > limit) {
-    limit_u <- as.integer(limit / 2)
-    df <- rbind(head(df, limit_u), '...', tail(df, limit_u))
-  }
+  if (toBeCropped > 0) x <- PruneNaive(x, limit = limit)
+  df <- ToDataFrameTree(x, ...)
   print(df, na.print = "")
 }
 

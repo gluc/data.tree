@@ -103,7 +103,7 @@ GNI2010$pathString <- paste("world",
 
 #conversion to Node is then very easy:
 population <- as.Node(GNI2010)
-print(population, "continent", "country", limit = 25)
+print(population, "continent", "country", limit = 20)
 ```
 
 

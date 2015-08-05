@@ -82,3 +82,75 @@ CreateDummyTree <- function(levels = 5, children = 3, parent = Node$new("1")) {
 }
 
 
+
+PruneNaive <- function(x, limit) {
+  xc <- Clone(x)
+  k <- 2
+  tc <- xc$totalCount
+  xc$Set(id = 1:tc)
+  toBeCropped <- tc - limit
+  
+  while(xc$totalCount > limit && xc$depth > 1) { 
+    
+    #prune leaves
+    xc$Set(co = NULL)
+    t <- Traverse(xc, filterFun = function(x) x$isLeaf && x$position > k)
+    df <- data.frame(id = Get(t, "id"),
+                     parentCount = Get(t, function(x) x$parent$count), 
+                     level = Get(t, "level"),
+                     parentId = Get(t, function(x) x$parent$id)
+    )
+    
+    df <- df[order(df$parentCount, 
+                   df$level, 
+                   df$parentId,
+                   decreasing = TRUE),]
+    df$co <- 1:dim(df)[1]
+    df <- df[order(df$id),]
+    Set(t, co = df$co)
+    cnt <- xc$totalCount
+    xc$Prune(function(x) length(x$co) == 0 || x$co > toBeCropped)
+    toBeCropped <- toBeCropped - (cnt - xc$totalCount)
+    
+    xc$Set(co = NULL)
+    t <- Traverse(xc, filterFun = function(x) x$depth == 2 && x$count == k)
+    df <- data.frame(id = Get(t, "id"),
+                     level = Get(t, "level")
+                     )
+    
+    df <- df[order(df$level,
+                   df$id,
+                   decreasing = TRUE),]
+    df$co <- (1 + k) * (1:dim(df)[1])
+    df <- df[order(df$id),]
+    Set(t, co = df$co)
+    cnt <- xc$totalCount
+    xc$Prune(function(x) length(x$co) == 0 || x$co > (toBeCropped + k))
+    toBeCropped <- toBeCropped - (cnt - xc$totalCount)
+    
+  }
+  t <- Traverse(x)
+  df <- data.frame(id = 1:x$totalCount,
+                   count = Get(t, "count"),
+                   totalCount = Get(t, "totalCount"))
+  
+  t <- Traverse(xc)
+  ids <- Get(t, "id")
+  df <- df[df$id %in% ids, ]
+  Set(t, 
+      originalTotalCount = df$totalCount,
+      originalCount = df$count)
+  
+  Do(t, function(x) {
+    if(x$count < x$originalCount) {
+      nds <- x$originalCount - x$count
+      sub <- x$originalTotalCount - x$totalCount - nds
+      x$AddChild(paste0("... ", nds, " nodes w/ ", sub, " sub"))
+    }
+  })
+  
+  
+  x <- xc
+  
+}
+
