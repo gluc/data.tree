@@ -8,11 +8,9 @@ test_that("isRoot", {
   
   expect_equal(acme$isRoot, TRUE)
   
-  it <- acme$Climb("IT")
-  expect_equal(it$isRoot, FALSE)
+  expect_equal(acme$IT$isRoot, FALSE)
   
-  agile <- it$Climb("Go agile")
-  expect_equal(agile$isRoot, FALSE)
+  expect_equal(acme$IT$`Go agile`$isRoot, FALSE)
 })
 
 

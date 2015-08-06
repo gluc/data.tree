@@ -33,12 +33,9 @@
 #' as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAncestors = TRUE)  
 #' 
 #' #using a function as an attribute:
-#' acc <- acme$Climb("Accounting")
-#' acc$Head <- "Mrs. Numright"
-#' rs <- acme$Climb("Research")
-#' rs$Head <- "Mr. Stein"
-#' it <- acme$Climb("IT")
-#' it$Head <- "Mr. Squarehead"
+#' acme$Accounting$Head <- "Mrs. Numright"
+#' acme$Research$Head <- "Mr. Stein"
+#' acme$IT$Head <- "Mr. Squarehead"
 #' ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "cost")
 #'   
 #'       
@@ -57,7 +54,7 @@ as.data.frame.Node <- function(x,
   
   if(!x$isRoot || length(pruneFun) > 0) {
     #clone s.t. x is root (for pretty level names)
-    x <- Clone(x)
+    x <- Clone(x, attributes = TRUE)
     if (length(pruneFun) > 0) x$Prune(pruneFun)
     x$parent <- NULL
   }

@@ -71,12 +71,9 @@ as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAnce
 as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAncestors = TRUE)
 
 #using a function as an attribute:
-acc <- acme$Climb("Accounting")
-acc$Head <- "Mrs. Numright"
-rs <- acme$Climb("Research")
-rs$Head <- "Mr. Stein"
-it <- acme$Climb("IT")
-it$Head <- "Mr. Squarehead"
+acme$Accounting$Head <- "Mrs. Numright"
+acme$Research$Head <- "Mr. Stein"
+acme$IT$Head <- "Mr. Squarehead"
 ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "cost")
 }
 

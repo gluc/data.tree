@@ -82,7 +82,7 @@ acme$isRoot
 acme$depth
 print(acme, "p", "cost")
 
-outsource <- acme$Climb("IT", "Outsource")
+outsource <- acme$IT$Outsource
 class(outsource)
 print(outsource)
 outsource$fields

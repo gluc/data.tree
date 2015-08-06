@@ -119,6 +119,7 @@ Node <- R6Class("Node",
                       
                       AddChildNode = function(child) {
                         self$children[[child$name]] <- child
+                        self[[child$name]] <- child
                         child$parent <- self
                         invisible (child)
                       },
@@ -242,7 +243,7 @@ Node <- R6Class("Node",
                       },
                       
                       totalCount = function() {
-                        return (1 + sum(as.numeric(sapply(self$children, function(x) x$totalCount))))
+                        return (1 + sum(as.numeric(sapply(self$children, function(x) x$totalCount, simplify = TRUE, USE.NAMES = FALSE))))
                       }, 
                       
                       path = function() {
@@ -267,7 +268,10 @@ Node <- R6Class("Node",
                       
                       
                       fields = function() {
-                        ls(self)[!(ls(self) %in% NODE_RESERVED_NAMES_CONST)]
+                        nms <- ls(self)
+                        nms <- nms[!(nms %in% NODE_RESERVED_NAMES_CONST)]
+                        nms <- nms[!(nms %in% names(self$children))]
+                        return (nms)
                       },
                       
                       fieldsAll = function() {

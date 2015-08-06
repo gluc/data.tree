@@ -172,21 +172,12 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 #' 
 #' @export
 Clone <- function(node, attributes = FALSE) {
-  l <- as.list(node, mode = "explicit", rootName = node$name)
-  clone <- as.Node(l, mode = "explicit")
 
-  if (attributes) {
-    #attributes
-    filterFun <- function(x) {
-      length(attributes(x)) > 1
-    }
-    t <- Traverse(node, filterFun = filterFun)
-    as <- lapply(t, function(x) attributes(x))
-    names(as) <- Get(t, "pathString")
-    tc <- Traverse(clone, filterFun = function(x) x$pathString %in% names(as))
-    Do(tc, function(x) attributes(x) <- as[[x$pathString]])
-  }
-  return (clone)
+  myclone <- node$clone()
+  if (attributes) attributes(myclone) <- attributes(node)
+  myclone$children <- lapply(node$children, function(x) Clone(x, attributes))
+  sapply(myclone$children, function(x) myclone[[x$name]] <- x)
+  return (myclone)
 }
 
 
