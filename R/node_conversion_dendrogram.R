@@ -36,7 +36,7 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
   
   if (!is.leaf(x)) {
     for (i in 1:length(x)) {
-      childNode <- as.Node(x[[i]], name = NULL, ...)
+      childNode <- as.Node.dendrogram(x[[i]], name = NULL, ...)
       n$AddChildNode(childNode)
       if(!is.leaf(x[[i]])) {
         name <- as.character(childNode$position)

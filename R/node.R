@@ -103,7 +103,7 @@ Node <- R6Class("Node",
                       children = NULL,
                       
                       initialize=function(name, ...) {
-                        if (!missing(name)) self$name <- as.character(name)
+                        if (!missing(name)) private$p_name <- as.character(name)
                         invisible (self)
                       },
                       
@@ -216,18 +216,7 @@ Node <- R6Class("Node",
                       
                       name = function(value) {
                         if (missing(value)) return (private$p_name)
-                        else {
-                          private$p_name <- value
-                          #if name is changed, parent$children index must also be adjusted
-                          if(!self$isRoot) {
-                            chldrn <- self$parent$children
-                            nms <- names(chldrn)
-                            i <- which(sapply(chldrn, function(x) identical(x, self)))
-                            nms[i] <- value
-                            names(chldrn) <- nms
-                            self$parent$children <- chldrn                    
-                          }
-                        }
+                        else private$p_name <- changeName(self, private$p_name, value)
                       },
                       
                       isLeaf = function() {
@@ -271,6 +260,7 @@ Node <- R6Class("Node",
                         nms <- ls(self)
                         nms <- nms[!(nms %in% NODE_RESERVED_NAMES_CONST)]
                         nms <- nms[!(nms %in% names(self$children))]
+                        nms <- nms[!(str_sub(nms, 1, 1) == '.')]
                         return (nms)
                       },
                       

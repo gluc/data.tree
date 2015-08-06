@@ -44,3 +44,4 @@
 - Utils
   - CHANGE: Renamed PrintFixedDecimal to FormatFixedDecimal to achieve better consistency
   - ADD: CreateDummyTree to test large trees
+  - ADD: CreateRandomTree to test trees

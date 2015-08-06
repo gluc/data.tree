@@ -83,6 +83,28 @@ CreateDummyTree <- function(levels = 5, children = 3, parent = Node$new("1")) {
 
 
 
+
+
+#' Create a tree for demo and testing
+#'
+#' @param nodes The number of nodes to create
+#' @param previous the previous node (for recursion)
+#' @param id The id (for recursion)
+#'
+#' @export
+CreateRandomTree <- function(nodes = 100, root = Node$new("1"), id = 1) {
+  if (nodes == 0) return()
+  dpth <- root$depth
+  lvl <- sample(1:dpth, 1, rep(1/dpth))
+  t <- Traverse(root, filterFun = function(x) x$level == lvl)
+  parent <- sample(t, 1)[[1]]
+  parent$AddChild(as.character(id + 1))
+  CreateRandomTree(nodes - 1, root = root, id = id + 1)
+  return (root)
+}
+
+
+
 PruneNaive <- function(x, limit) {
   xc <- Clone(x)
   k <- 2

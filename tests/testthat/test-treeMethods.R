@@ -545,7 +545,7 @@ test_that("level (active)", {
 })
 
 
-test_that("set name", {
+test_that("set name Climb", {
   data(acme)
   rs <- acme$Climb("Research")
   rs$name <- "Research2"
@@ -555,4 +555,17 @@ test_that("set name", {
   rs2 <- acme$Climb("Research2")
   expect_true(rs2$name == "Research2")
   expect_equal(names(rs$parent$children), c("Accounting", "Research2", "IT"))
+})
+
+
+test_that("change name", {
+  data(acme)
+#  acme$Research$name <- "Research2"
+  
+#  expect_true(is.null(acme$Research))
+
+  rs <- acme$Research
+  rs$name <- "Research2"
+  expect_true(is.null(acme$Research))
+  expect_true(acme$Research2$name == "Research2")
 })
