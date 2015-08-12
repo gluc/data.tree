@@ -4,7 +4,7 @@
 \alias{print.Node}
 \title{Print a \code{Node} in a human-readable fashion.}
 \usage{
-\method{print}{Node}(x, ..., limit = 100)
+\method{print}{Node}(x, ..., pruneFun = NULL, limit = 100)
 }
 \arguments{
 \item{x}{The Node}
@@ -12,6 +12,9 @@
 \item{...}{Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
 a Node method, or a function taking a Node as a single argument. See \code{Get} for details on
 the meaning of \code{attribute}.}
+
+\item{pruneFun}{a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
+and its descendants should be kept, FALSE otherwise.}
 
 \item{limit}{The maximum number of nodes to print. Can be \code{NULL} if the
 entire tree should be printed}

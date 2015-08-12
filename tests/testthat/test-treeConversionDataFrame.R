@@ -84,7 +84,7 @@ test_that("FromDataFrameTaxonomy", {
   expect_equal(xN$totalCount, acme$totalCount)
   expect_equal(xN$Get("name"), acme$Get("name"))
   expect_equal(xN$Get("p"), acme$Get("p"))
-  expect_equal(xN$depth, acme$depth)
+  expect_equal(xN$height, acme$height)
   expect_equal(xN$Get("level"), acme$Get("level"))
   expect_equal(xN$Get(function(x) x$parent$name), acme$Get(function(x) x$parent$name))
   expect_equal(xN$Get("isLeaf"), acme$Get("isLeaf"))

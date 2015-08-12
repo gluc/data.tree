@@ -20,7 +20,7 @@ test_that("as.Node.phylo height", {
   expect_equal(n$totalCount, 6)
   expect_equal(as.vector(n$Get("name")), c("", "A", "B", "E", "C", "D"))
   expect_equal(as.vector(n$Get("level")), c(1, 2, 2, 2, 3, 3))
-  expect_equal(as.vector(n$Get("height")), c(15, 10, 10, 10, 0, 0))
+  expect_equal(as.vector(n$Get("plotHeight")), c(15, 10, 10, 10, 0, 0))
 })
 
 test_that("as.Node.phylo no height", {
@@ -64,7 +64,7 @@ test_that("as.phylo.Node heightAttributeName", {
 test_that("as.phylo.Node heightAttributeName", {
 
   data(acme)
-  height <- function(x) x$edgeHeight <- Height(x) + 1
+  height <- function(x) x$edgeHeight <- DefaultPlotHeight(x) + 1
   acme$Do(height)
   #needs explicit generics as library ape is not loaded
   

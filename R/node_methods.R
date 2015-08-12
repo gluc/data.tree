@@ -15,6 +15,8 @@
 #' @param limit The maximum number of nodes to print. Can be \code{NULL} if the 
 #' entire tree should be printed
 #' 
+#' @inheritParams Prune
+#' 
 #' @examples
 #' data(acme)
 #' print(acme, "cost", "p")
@@ -23,17 +25,15 @@
 #' do.call(print, c(acme, acme$fieldsAll))
 #'
 #' @export
-print.Node <- function(x, ..., limit = 100) {
-  # algo
-  # 1. find number of nodes to remove, n
-  # 2. get leaves where position > 2
-  # 3. order by 
-  #    a.) parent$count, descending, 
-  #    b.) then by level, descending
-  #    c.) then by parent$id, descending
-  # 4.   
-  toBeCropped <- x$totalCount - limit
-  if (toBeCropped > 0) x <- PruneNaive(x, limit = limit)
+print.Node <- function(x, ..., pruneFun = NULL, limit = 100) {
+  
+  if(!x$isRoot || length(pruneFun) > 0) {
+    #clone s.t. x is root (for pretty level names)
+    x <- Clone(x, pruneFun = pruneFun, attributes = TRUE)
+    x$parent <- NULL
+  }
+  
+  x <- PruneNaive(x, limit = limit)
   df <- ToDataFrameTree(x, ...)
   print(df, na.print = "")
 }
@@ -168,15 +168,25 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 #' # acmeClone does not point to the same reference object anymore:
 #' acme$name
 #' 
+#' @inheritParams Prune
+#' 
 #' @seealso SetFormat
 #' 
 #' @export
-Clone <- function(node, attributes = FALSE) {
+Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 
   myclone <- node$clone()
   if (attributes) attributes(myclone) <- attributes(node)
-  myclone$children <- lapply(node$children, function(x) Clone(x, attributes))
-  sapply(myclone$children, function(x) myclone[[x$name]] <- x)
+  if (!is.null(pruneFun)) {
+    keep <- sapply(node$children, pruneFun)
+    children <- node$children[keep]
+    rm(list = names(node$children)[!keep], envir = myclone)
+  } else children <- node$children
+  myclone$children <- lapply(children, function(x) Clone(x, pruneFun, attributes))
+  for(child in myclone$children) {
+    myclone[[child$name]] <- child
+    child$parent <- myclone
+  }
   return (myclone)
 }
 

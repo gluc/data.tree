@@ -4,6 +4,7 @@
 #' 
 #' @param x The dendrogram
 #' @param name The name of the root Node
+#' @param heightName The name under which the dendrogram's height is stored
 #' @param ... Additional parameters
 #' 
 #' @return The root \code{Node} of a \code{data.tree}
@@ -15,12 +16,12 @@
 #' tree1$fieldsAll
 #' tree1$totalCount
 #' tree1$leafCount
-#' tree1$depth
+#' tree1$height
 #'   
 #' @family as.Node
 #' 
 #' @export
-as.Node.dendrogram <- function(x, name = "root", ...) {
+as.Node.dendrogram <- function(x, name = "root", heightName = "plotHeight", ...) {
   #str(unclass(dend1))
   if (is.leaf(x)) {
     name <- attr(x, 'label')
@@ -29,10 +30,12 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
   }
   
   n <- Node$new(name)
-  reserved <- c('label', 'class', 'comment', 'dim', 'dimnames', 'names', 'row.names', 'tsp')
-  for (a in names(attributes(x))[!(attributes(x) %in% NODE_RESERVED_NAMES_CONST) && !(attributes(x) %in% reserved)]) {
+  reserved <- c('label', 'class', 'comment', 'dim', 'dimnames', 'names', 'row.names', 'tsp', NODE_RESERVED_NAMES_CONST)
+  ats <- names(attributes(x))
+  for (a in ats[!(ats %in% reserved)]) {
     n[[a]] <- attr(x, a)
   }
+  n[[heightName]] <- attr(x, "height")
   
   if (!is.leaf(x)) {
     for (i in 1:length(x)) {
@@ -67,8 +70,8 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
 #' plot(acmed, center = TRUE)
 #' 
 #' #you can take an attribute for the height:
-#' acme$Do( function(x) x$height <- (10 - x$level))
-#' acmed <- as.dendrogram(acme, heightAttribute = "height")
+#' acme$Do( function(x) x$myPlotHeight <- (10 - x$level))
+#' acmed <- as.dendrogram(acme, heightAttribute = "myPlotHeight")
 #' plot(acmed, center = TRUE)
 #' 
 #' #or directly a function
@@ -79,7 +82,7 @@ as.Node.dendrogram <- function(x, name = "root", ...) {
 #'
 #' @import stats
 #' @export
-as.dendrogram.Node <- function(object, heightAttribute = Height, ...) {
+as.dendrogram.Node <- function(object, heightAttribute = DefaultPlotHeight, ...) {
   node <- object
   
   #strange: the original dendrogram will

@@ -1,6 +1,18 @@
 # All changes to data.tree are documented here.
 
-## Version 0.2.0 Chestnut
+
+## Version next Pine
+
+- Node
+  - CHANGE: Node$depth is now called Node$height, as the old naming was confusing for many, because in CS, the Node$level is sometimes 
+- Utils
+  - CHANGE: Renamed CreateDummyTree to CreateRegularTree
+  - ADD: CreateRandomTree to test trees
+  - ADD: trees can now be climbed directly, e.g. acme$IT$`Go agile`
+  - ADD: print.Node with limit parameter is now much faster
+  - ADD: Clone is now much faster
+
+## Version 0.1.7 Chestnut
 
 - General
   - ADD: demo portfolio
@@ -9,6 +21,7 @@
 - Node
   - CHANGE: Node$level is now 1-based (used to be: 0-based), i.e. if Node$isRoot then Node$level = 1
   - CHANGE: Node$Find is now called Node$Climb to avoid confusion with base::Find
+called depth
   - ADD: print.Node contains a limit parameter, allowing to limit the max number of Nodes to be printed
   - ADD: Clone (returning a deep copy)
   - ADD: Prune (pruning the tree)
@@ -19,6 +32,7 @@
   - ADD: AreNamesUnique to test if names of the node's are unique throughout the tree (and not only among siblings)
   - FIX: node$position now returns 1 for root
   - ADD: Aggregate function now supports functions
+  - ADD: node$averageBranchingFactor
   - CHANGE: Aggregate function does not cache anymore by default. See cacheAttribute for details.
   - Node$Get: 
     - CHANGE: Renamed filterFun parameter to pruneFun

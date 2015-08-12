@@ -9,16 +9,17 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddChildNode',
                                 'AddSibling',
                                 'AddSiblingNode',
+                                'averageBranchingFactor',
                                 'children',
                                 'Climb',
                                 'clone',
                                 'count',
-                                'depth',
                                 'Do',
                                 'fields',
                                 'fieldsAll',
                                 'Get',
                                 'GetAttribute',
+                                'height',
                                 'initialize',
                                 'isBinary',
                                 'isLeaf',
@@ -80,7 +81,8 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'  \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
 #'  \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
 #'  \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
-#'  \item{\code{depth}}{Returns 1 + max(nr of edges between a \code{Node} and any of its descendants)}
+#'  \item{\code{height}}{Returns max(level) of any of the \code{Nodes} of the tree}
+#'  \item{\code{averageBranchingFactor}}{Returns the average number of crotches below this \code{Node}}
 #'  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
 #'  
 #' }
@@ -250,12 +252,7 @@ Node <- R6Class("Node",
                         # match(self$name, names(self$parent$children))
                         return (result)
                       },
-                      
-                      levelName = function() {
-                        paste0(self$.separator, self$name)
-                      },
-                      
-                      
+                                            
                       fields = function() {
                         nms <- ls(self)
                         nms <- nms[!(nms %in% NODE_RESERVED_NAMES_CONST)]
@@ -268,21 +265,11 @@ Node <- R6Class("Node",
                         as.vector(na.omit(unique(unlist(self$Get("fields")))))
                       },
                       
-                      
-                      .separator = function() {
-                        if (self$isRoot) return("")
-                        if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--") 
-                        else mySeparator <- paste0(" ", "\u00A6", "--")
-                        return (paste0(self$parent$.parentSeparator, mySeparator))
+                      levelName = function() {
+                        paste0(.separator(self), self$name)
                       },
                       
-                      .parentSeparator = function() {
-                        if (self$isRoot) return("")
-                        if (self$position == self$parent$count) mySeparator <- "    "
-                        else mySeparator <- paste0(" ", "\u00A6", "  ")
-                        paste0(self$parent$.parentSeparator, mySeparator)
-                        
-                      },
+                      
                       
                       leaves = function() {
                         if (self$isLeaf) {
@@ -304,8 +291,9 @@ Node <- R6Class("Node",
                         }
                       },
                       
-                      depth = function() {
-                        max(self$Get("level")) - self$level + 1
+                      height = function() {
+                        if (isLeaf(self)) return (1)
+                        max(self$Get("level", filterFun = function(x) isLeaf(x) && x$position == 1)) - self$level + 1
                       },
                       
                       isBinary = function() {
@@ -318,6 +306,10 @@ Node <- R6Class("Node",
                         } else {
                           invisible (self$parent$root)
                         }
+                      },
+                      
+                      averageBranchingFactor = function() {
+                        averageBranchingFactor(self)
                       }
                       
                       

@@ -82,18 +82,25 @@ Revert <- function(node, recursive = TRUE) {
 #' @param The node whose children should be pruned
 #' @param pruneFun a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
 #' and its descendants should be kept, FALSE otherwise.
-#' @return The node (invisibly)
+#' @return the number of nodes removed
 #' @keywords internal
 Prune <- function(node, pruneFun) { 
-  
-  if ( node$isLeaf) return()
+  return (.Prune(node, pruneFun, TRUE))
+}
+
+
+.Prune <- function(node, pruneFun, isFirstCall = FALSE) { 
+  if (isFirstCall) cnt <- node$totalCount
+  if ( node$isLeaf) return (0)
   for( i in length(node$children):1 ) {
     if ( !pruneFun(node$children[[i]]) ) {
+      rm(list = names(node$children)[i], envir = node)
       node$children <- node$children[-i]
     }
   }
   for( child in node$children) {
-    Prune(child, pruneFun)
+    .Prune(child, pruneFun)
   }
-  invisible (node)
+  if (isFirstCall) return (cnt - node$totalCount)
 }
+

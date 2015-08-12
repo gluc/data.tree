@@ -18,7 +18,7 @@
 #' @family ape phylo conversions
 #' 
 #' @export
-as.phylo.Node <- function(x, heightAttribute = Height, ...) {
+as.phylo.Node <- function(x, heightAttribute = DefaultPlotHeight, ...) {
   txt <- ToNewick(x, heightAttribute)
   return (ape::read.tree(text = txt))
 }
@@ -33,11 +33,11 @@ as.phylo.Node <- function(x, heightAttribute = Height, ...) {
 #' @param ... any other parameter to be passed to sub-implementations
 #' 
 #' @examples
-#' #which bird familes have the max depth?
+#' #which bird familes have the max height?
 #' library(ape)
 #' data(bird.families)
 #' bf <- as.Node(bird.families)
-#' depth <- bf$depth
+#' height <- bf$height
 #' t <- Traverse(bf, filterFun = function(x) x$level == 25)
 #' Get(t, "name")
 #' 
@@ -45,7 +45,7 @@ as.phylo.Node <- function(x, heightAttribute = Height, ...) {
 #' @family as.Node
 #' 
 #' @export
-as.Node.phylo <- function(x, heightName = "height", replaceUnderscores = TRUE, ...) {
+as.Node.phylo <- function(x, heightName = "plotHeight", replaceUnderscores = TRUE, ...) {
   
   #find root node
   rootNr <- unique(x$edge[,1][!x$edge[,1] %in% x$edge[,2]])

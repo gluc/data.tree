@@ -58,7 +58,7 @@ Traverse = function(node,
     
   } else if (traversal == "level") {
     
-    for(level in node$level:(node$level + node$depth)) {
+    for(level in node$level:(node$level + node$height)) {
       fifu <- function(x) {
         a <- (length(filterFun) == 0 || filterFun(x))
         b <- x$level == level
@@ -150,11 +150,8 @@ Get = function(nodes,
 Do <- function(nodes,
                fun, 
                ...) {
+  for (node in nodes) fun(node, ...)
   
-  f <- function(x) GetAttribute(x, attribute = fun, 
-                                ...)
-  
-  mapply(fun, nodes, MoreArgs = list(...))
   invisible (nodes)
 }
 

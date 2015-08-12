@@ -41,11 +41,9 @@ As a result, people often try to resolve hierarchical problems in a tabular fash
 
 ## What does data.tree offer
 
-This package offers an alternative. The tree package allows you to create hierarchies, callde `data.tree` structures. The building block of theses structures are `Node` objects. `Node` provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Node`s with your own attributes and methods, so as to extend the package to your needs. 
+This package offers an alternative. The tree package allows you to create hierarchies, called `data.tree` structures. The building block of theses structures are `Node` objects. `Node` provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Node`s with your own attributes and methods, so as to extend the package to your needs. 
 
 The package also provides convenient methods for neatly printing trees, and converting trees to `data.frame`s, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph` and other packages.
-
-The example in this vignette revolves around [decision trees](http://en.wikipedia.org/wiki/Decision_tree).
 
 # Chapter 2
 
@@ -103,7 +101,7 @@ GNI2010$pathString <- paste("world",
 
 #conversion to Node is then very easy:
 population <- as.Node(GNI2010)
-print(population, "continent", "country", limit = 20)
+print(population, "iso3", "population", "GNI", limit = 20)
 ```
 
 
@@ -117,7 +115,7 @@ Often, trees are created from one of many file formats. Typical import patterns 
 * yaml -> list of lists (`?yaml::yaml.load`) -> data.tree (`?as.Node.list`, `demo('decisiontree', package='data.tree')`
 * json -> list of lists (e.g. `?jsonlite::fromJSON`) -> data.tree (`?as.Node.list`)
 
-If you have a choice, we recommend you consider yaml format, as it is concise, human-readable, and very easy to convert to a data.tree. An example is provided here for illustration:
+If you have a choice, we recommend you consider yaml format, as it is concise, human-readable, and very easy to convert to a data.tree. An example of a sample population is provided here for illustration:
 
 ```{r}
 library(yaml)
@@ -189,18 +187,15 @@ population$totalFields
 ```
 
 The naming convention of the package is that fields and actives are lower case, whereas methods are upper / Camelcase.
-RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available attributes. Also, there is a list of reserved names:
-
-```{r}
-NODE_RESERVED_NAMES_CONST
-```
+RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available attributes. 
 
 
 ### 
 
 ## Custom attributes
 
-Now, let's associate some costs with the projects. We do this by setting custom attributes on the leaf `Node`s:
+Just as with a `list`, we can add any custom attribute to a node.
+
 ```{r}
 software$cost <- 1000000
 standards$cost <- 500000
@@ -223,6 +218,15 @@ agile$p <- 0.05
 goToR$p <- 1
 
 ```
+
+Note that there is a list of reserved names:
+
+```{r}
+NODE_RESERVED_NAMES_CONST
+```
+
+You cannot use any field name that is reserved.
+
 
 ## Converting to `data.frame`
 

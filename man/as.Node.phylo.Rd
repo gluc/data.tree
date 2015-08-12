@@ -4,8 +4,8 @@
 \alias{as.Node.phylo}
 \title{Convert a \code{phylo} object from the ape package to a \code{Node}}
 \usage{
-\method{as.Node}{phylo}(x, heightName = "height", replaceUnderscores = TRUE,
-  ...)
+\method{as.Node}{phylo}(x, heightName = "plotHeight",
+  replaceUnderscores = TRUE, ...)
 }
 \arguments{
 \item{x}{The phylo object to be converted}
@@ -21,11 +21,11 @@ to a height and stored in a field named according to this parameter (the default
 Convert a \code{phylo} object from the ape package to a \code{Node}
 }
 \examples{
-#which bird familes have the max depth?
+#which bird familes have the max height?
 library(ape)
 data(bird.families)
 bf <- as.Node(bird.families)
-depth <- bf$depth
+height <- bf$height
 t <- Traverse(bf, filterFun = function(x) x$level == 25)
 Get(t, "name")
 }

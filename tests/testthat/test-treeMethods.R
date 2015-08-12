@@ -500,13 +500,13 @@ test_that("fieldsAll", {
 })
 
 
-test_that("depth", {
+test_that("height", {
   data(acme)
-  expect_equal(acme$depth, 3)
-  expect_equal(acme$Climb("IT")$depth, 2)
+  expect_equal(acme$height, 3)
+  expect_equal(acme$Climb("IT")$height, 2)
   acme$Climb("IT", "Outsource")$AddChild("New")
   
-  expect_equal(acme$depth, 4)
+  expect_equal(acme$height, 4)
 })
 
 
@@ -514,7 +514,7 @@ test_that("isRoot", {
   data(acme)
   expect_true(acme$isRoot)
   expect_false(acme$Climb("IT")$isRoot)
-  expect_equal(acme$Climb("IT")$depth, 2)
+  expect_equal(acme$Climb("IT")$height, 2)
   isRoot <- acme$Get("isRoot")
   expect_equal(sum(isRoot), 1)
   

@@ -53,30 +53,30 @@ FormatFixedDecimal <- function(x, digits = 3) {
 #'   
 #'   @examples
 #'   data(acme)
-#'   dacme <- as.dendrogram(acme, heightAttribute = function(x) Height(x, 200))
+#'   dacme <- as.dendrogram(acme, heightAttribute = function(x) DefaultPlotHeight(x, 200))
 #'   plot(dacme, center = TRUE)
 #'   
 #'   @export
-Height <- function(node, rootHeight = 100) {
+DefaultPlotHeight <- function(node, rootHeight = 100) {
   if (node$isRoot) return ( rootHeight )
   if (node$isLeaf) return ( 0 )
-  h <- Height(node$parent, rootHeight) * (1 - 1 / node$depth)
+  h <- DefaultPlotHeight(node$parent, rootHeight) * (1 - 1 / node$height)
   return (h)
 }
 
 
 #' Create a tree for demo and testing
 #'
-#' @param levels the number of levels
-#' @param children the number of children per node
+#' @param height the number of levels
+#' @param branchingFactor the number of children per node
 #' @param parent the parent node (for recursion)
 #'
 #' @export
-CreateDummyTree <- function(levels = 5, children = 3, parent = Node$new("1")) {
-  if (levels == 0) return()
-  for (i in 1:children) {
+CreateRegularTree <- function(height = 5, branchingFactor = 3, parent = Node$new("1")) {
+  if (height <= 1) return()
+  for (i in 1:branchingFactor) {
     child <- parent$AddChild(as.character(i))
-    CreateDummyTree(levels - 1, children, child)
+    CreateRegularTree(height - 1, branchingFactor, child)
   }
   return (parent)
 }
@@ -88,13 +88,13 @@ CreateDummyTree <- function(levels = 5, children = 3, parent = Node$new("1")) {
 #' Create a tree for demo and testing
 #'
 #' @param nodes The number of nodes to create
-#' @param previous the previous node (for recursion)
+#' @param root the previous node (for recursion, typically use default value)
 #' @param id The id (for recursion)
 #'
 #' @export
 CreateRandomTree <- function(nodes = 100, root = Node$new("1"), id = 1) {
   if (nodes == 0) return()
-  dpth <- root$depth
+  dpth <- root$height
   lvl <- sample(1:dpth, 1, rep(1/dpth))
   t <- Traverse(root, filterFun = function(x) x$level == lvl)
   parent <- sample(t, 1)[[1]]
@@ -106,62 +106,42 @@ CreateRandomTree <- function(nodes = 100, root = Node$new("1"), id = 1) {
 
 
 PruneNaive <- function(x, limit) {
-  xc <- Clone(x)
-  k <- 2
-  tc <- xc$totalCount
-  xc$Set(.id = 1:tc)
-  toBeCropped <- tc - limit
+  tc <- x$totalCount
+  toBeCropped <- tc - limit 
+  if (toBeCropped < 1) return (x)  
+
+  t <- Traverse(x, traversal = "post-order")
   
-  while(xc$totalCount > limit && xc$depth > 1) { 
-    
-    #prune leaves
-    xc$Set(.co = NULL)
-    t <- Traverse(xc, filterFun = function(x) x$isLeaf && x$position > k)
-    df <- data.frame(id = Get(t, ".id"),
-                     parentCount = Get(t, function(x) x$parent$count), 
-                     level = Get(t, "level"),
-                     parentId = Get(t, function(x) x$parent$id)
-    )
-    
-    df <- df[order(df$parentCount, 
-                   df$level, 
-                   df$parentId,
-                   decreasing = TRUE),]
-    df$co <- 1:dim(df)[1]
-    df <- df[order(df$id),]
-    Set(t, .co = df$co)
-    cnt <- xc$totalCount
-    xc$Prune(function(x) length(x$.co) == 0 || x$.co > toBeCropped)
-    toBeCropped <- toBeCropped - (cnt - xc$totalCount)
-    
-    xc$Set(.co = NULL)
-    t <- Traverse(xc, filterFun = function(x) x$depth == 2 && x$count == k)
-    df <- data.frame(id = Get(t, ".id"),
-                     level = Get(t, "level")
-                     )
-    
-    df <- df[order(df$level,
-                   df$id,
-                   decreasing = TRUE),]
-    df$co <- (1 + k) * (1:dim(df)[1])
-    df <- df[order(df$id),]
-    Set(t, .co = df$co)
-    cnt <- xc$totalCount
-    xc$Prune(function(x) length(x$.co) == 0 || x$.co > (toBeCropped + k))
-    toBeCropped <- toBeCropped - (cnt - xc$totalCount)
-    
-  }
+  Do(t, function(x) {
+    x$.height <- ifelse(x$isLeaf, 1, x$children[[1]]$.height + 1)
+  })
+  
+  Do(t, function(x) {
+    x$.originalTotalCount <- ifelse(x$isLeaf, 1, sum( sapply(x$children, function(x) x$.originalTotalCount)) + 1)
+  })
+  
+  
   t <- Traverse(x)
-  df <- data.frame(id = 1:x$totalCount,
-                   count = Get(t, "count"),
-                   totalCount = Get(t, "totalCount"))
+  Set(t, .id = 1:tc)
+  x$.level <- 1
+  Do(t, function(x) {
+    x$.originalCount <- x$count
+    x$.level <- ifelse(x$isRoot, 1, x$parent$.level + 1)
+  })
+  
+  
+
+  t <- t[order(Get(t, ".level"),
+               - Get(t, ".height"),
+               Get(t, function(x) x$position > 2))]
+  
+  keep <- c(rep(TRUE, limit), rep(FALSE, toBeCropped))
+  
+  Set(t, .keep = keep)
+  #sapply(t, function(x) paste(x$.height, x$.level, x$name, sep = "."))
+  xc <- Clone(x, pruneFun = function(x) x$.keep)
   
   t <- Traverse(xc)
-  ids <- Get(t, ".id")
-  df <- df[df$id %in% ids, ]
-  Set(t, 
-      .originalTotalCount = df$totalCount,
-      .originalCount = df$count)
   
   Do(t, function(x) {
     if(x$count < x$.originalCount) {
@@ -170,7 +150,6 @@ PruneNaive <- function(x, limit) {
       x$AddChild(paste0("... ", nds, " nodes w/ ", sub, " sub"))
     }
   })
-  
   
   x <- xc
   
