@@ -6,6 +6,38 @@
 
 
 
+#' Print a \code{Node} in a human-readable fashion.
+#'  
+#' @param x The Node
+#' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
+#' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
+#' the meaning of \code{attribute}.
+#' @param limit The maximum number of nodes to print. Can be \code{NULL} if the 
+#' entire tree should be printed
+#' 
+#' @inheritParams Prune
+#' 
+#' @examples
+#' data(acme)
+#' print(acme, "cost", "p")
+#' print(acme, "cost", probability = "p")
+#' print(acme, expectedCost = function(x) x$cost * x$p)
+#' do.call(print, c(acme, acme$fieldsAll))
+#'
+#' @export
+print.Node <- function(x, ..., pruneFun = NULL, limit = 100) {
+  
+  if(!x$isRoot || length(pruneFun) > 0) {
+    #clone s.t. x is root (for pretty level names)
+    x <- Clone(x, pruneFun = pruneFun, attributes = TRUE)
+    x$parent <- NULL
+  }
+  
+  x <- PruneNaive(x, limit = limit)
+  df <- ToDataFrameTree(x, ...)
+  print(df, na.print = "")
+}
+
 
 #' Aggregate child values of a \code{Node}, standalone or in traversal.
 #' 
@@ -58,6 +90,10 @@ Aggregate = function(node,
                      cacheAttribute = NULL,
                      ...) {
   
+  
+  
+  
+  #####
   #if(is.function(attribute)) browser()
   #if (!is.function(attribute)) {
   if (length(cacheAttribute) > 0) {
@@ -122,6 +158,7 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 #' The method also clones object attributes (such as the formatters). 
 #' 
 #' @param node the root node of the tree or sub-tree to clone
+#' @param attributes if FALSE, then attributes are not cloned. This makes the method much faster.
 #' @return the clone of the tree
 #' 
 #' @examples
@@ -131,23 +168,26 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
 #' # acmeClone does not point to the same reference object anymore:
 #' acme$name
 #' 
+#' @inheritParams Prune
+#' 
 #' @seealso SetFormat
 #' 
 #' @export
-Clone <- function(node) {
-  l <- as.list(node, mode = "explicit", rootName = node$name)
-  clone <- as.Node(l, mode = "explicit")
+Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 
-  #attributes
-  filterFun <- function(x) {
-    length(attributes(x)) > 1
+  myclone <- node$clone()
+  if (attributes) attributes(myclone) <- attributes(node)
+  if (!is.null(pruneFun)) {
+    keep <- sapply(node$children, pruneFun)
+    children <- node$children[keep]
+    rm(list = names(node$children)[!keep], envir = myclone)
+  } else children <- node$children
+  myclone$children <- lapply(children, function(x) Clone(x, pruneFun, attributes))
+  for(child in myclone$children) {
+    myclone[[child$name]] <- child
+    child$parent <- myclone
   }
-  t <- Traverse(node, filterFun = filterFun)
-  as <- lapply(t, function(x) attributes(x))
-  names(as) <- Get(t, "pathString")
-  tc <- Traverse(clone, filterFun = function(x) x$pathString %in% names(as))
-  Do(tc, function(x) attributes(x) <- as[[x$pathString]])
-  return (clone)
+  return (myclone)
 }
 
 

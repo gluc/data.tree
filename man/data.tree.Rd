@@ -79,10 +79,10 @@ acme$fieldsAll
 acme$count
 acme$totalCount
 acme$isRoot
-acme$depth
+acme$height
 print(acme, "p", "cost")
 
-outsource <- acme$Climb("IT", "Outsource")
+outsource <- acme$IT$Outsource
 class(outsource)
 print(outsource)
 outsource$fields

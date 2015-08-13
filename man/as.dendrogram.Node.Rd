@@ -4,7 +4,7 @@
 \alias{as.dendrogram.Node}
 \title{Convert a \code{Node} to a \code{dendrogram}}
 \usage{
-\method{as.dendrogram}{Node}(object, heightAttribute = Height, ...)
+\method{as.dendrogram}{Node}(object, heightAttribute = DefaultPlotHeight, ...)
 }
 \arguments{
 \item{object}{The Node to convert}
@@ -25,8 +25,8 @@ acmed <- as.dendrogram(acme)
 plot(acmed, center = TRUE)
 
 #you can take an attribute for the height:
-acme$Do( function(x) x$height <- (10 - x$level))
-acmed <- as.dendrogram(acme, heightAttribute = "height")
+acme$Do( function(x) x$myPlotHeight <- (10 - x$level))
+acmed <- as.dendrogram(acme, heightAttribute = "myPlotHeight")
 plot(acmed, center = TRUE)
 
 #or directly a function

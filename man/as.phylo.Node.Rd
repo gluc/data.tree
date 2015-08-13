@@ -4,7 +4,7 @@
 \alias{as.phylo.Node}
 \title{Convert a \code{Node} to a phylo object from the ape package.}
 \usage{
-as.phylo.Node(x, heightAttribute = Height, ...)
+as.phylo.Node(x, heightAttribute = DefaultPlotHeight, ...)
 }
 \arguments{
 \item{x}{The root \code{Node} of the tree or sub-tree to be converted}

@@ -40,33 +40,6 @@ FormatFixedDecimal <- function(x, digits = 3) {
 
 
 
-#' Print a \code{Node} in a human-readable fashion.
-#'  
-#' @param x The Node
-#' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
-#' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
-#' the meaning of \code{attribute}.
-#' @param limit The maximum number of nodes to print. Can be \code{NULL} if the 
-#' entire tree should be printed
-#' 
-#' @examples
-#' data(acme)
-#' print(acme, "cost", "p")
-#' print(acme, "cost", probability = "p")
-#' print(acme, expectedCost = function(x) x$cost * x$p)
-#' do.call(print, c(acme, acme$fieldsAll))
-#'
-#' @export
-print.Node <- function(x, ..., limit = 100) {
-  df <- as.data.frame(x, row.names = NULL, optional = FALSE, ...)
-  if (length(limit) > 0 && dim(df)[1] > limit) {
-    limit_u <- as.integer(limit / 2)
-    df <- rbind(head(df, limit_u), '...', tail(df, limit_u))
-  }
-  print(df, na.print = "")
-}
-
-
 
 #'   Calculates the height of a \code{Node} given the hight of the root.
 #'   
@@ -80,30 +53,105 @@ print.Node <- function(x, ..., limit = 100) {
 #'   
 #'   @examples
 #'   data(acme)
-#'   dacme <- as.dendrogram(acme, heightAttribute = function(x) Height(x, 200))
+#'   dacme <- as.dendrogram(acme, heightAttribute = function(x) DefaultPlotHeight(x, 200))
 #'   plot(dacme, center = TRUE)
 #'   
 #'   @export
-Height <- function(node, rootHeight = 100) {
+DefaultPlotHeight <- function(node, rootHeight = 100) {
   if (node$isRoot) return ( rootHeight )
   if (node$isLeaf) return ( 0 )
-  h <- Height(node$parent, rootHeight) * (1 - 1 / node$depth)
+  h <- DefaultPlotHeight(node$parent, rootHeight) * (1 - 1 / node$height)
   return (h)
 }
 
 
 #' Create a tree for demo and testing
 #'
-#' @param levels the number of levels
-#' @param children the number of children per node
+#' @param height the number of levels
+#' @param branchingFactor the number of children per node
 #' @param parent the parent node (for recursion)
 #'
 #' @export
-CreateDummyTree <- function(levels = 5, children = 3, parent = Node$new("1")) {
-  if (levels == 0) return()
-  for (i in 1:children) {
+CreateRegularTree <- function(height = 5, branchingFactor = 3, parent = Node$new("1")) {
+  if (height <= 1) return()
+  for (i in 1:branchingFactor) {
     child <- parent$AddChild(as.character(i))
-    CreateDummyTree(levels - 1, children, child)
+    CreateRegularTree(height - 1, branchingFactor, child)
   }
   return (parent)
 }
+
+
+
+
+
+#' Create a tree for demo and testing
+#'
+#' @param nodes The number of nodes to create
+#' @param root the previous node (for recursion, typically use default value)
+#' @param id The id (for recursion)
+#'
+#' @export
+CreateRandomTree <- function(nodes = 100, root = Node$new("1"), id = 1) {
+  if (nodes == 0) return()
+  dpth <- root$height
+  lvl <- sample(1:dpth, 1, rep(1/dpth))
+  t <- Traverse(root, filterFun = function(x) x$level == lvl)
+  parent <- sample(t, 1)[[1]]
+  parent$AddChild(as.character(id + 1))
+  CreateRandomTree(nodes - 1, root = root, id = id + 1)
+  return (root)
+}
+
+
+
+PruneNaive <- function(x, limit) {
+  tc <- x$totalCount
+  toBeCropped <- tc - limit 
+  if (toBeCropped < 1) return (x)  
+
+  t <- Traverse(x, traversal = "post-order")
+  
+  Do(t, function(x) {
+    x$.height <- ifelse(x$isLeaf, 1, x$children[[1]]$.height + 1)
+  })
+  
+  Do(t, function(x) {
+    x$.originalTotalCount <- ifelse(x$isLeaf, 1, sum( sapply(x$children, function(x) x$.originalTotalCount)) + 1)
+  })
+  
+  
+  t <- Traverse(x)
+  Set(t, .id = 1:tc)
+  x$.level <- 1
+  Do(t, function(x) {
+    x$.originalCount <- x$count
+    x$.level <- ifelse(x$isRoot, 1, x$parent$.level + 1)
+  })
+  
+  
+
+  t <- t[order(Get(t, ".level"),
+               - Get(t, ".height"),
+               Get(t, function(x) x$position > 2))]
+  
+  keep <- c(rep(TRUE, limit), rep(FALSE, toBeCropped))
+  
+  Set(t, .keep = keep)
+  #sapply(t, function(x) paste(x$.height, x$.level, x$name, sep = "."))
+  xc <- Clone(x, pruneFun = function(x) x$.keep)
+  
+  t <- Traverse(xc)
+  
+  Do(t, function(x) {
+    if(x$count < x$.originalCount) {
+      nds <- x$.originalCount - x$count
+      sub <- x$.originalTotalCount - x$totalCount - nds
+      x$AddChild(paste0("... ", nds, " nodes w/ ", sub, " sub"))
+    }
+  })
+  
+  x <- xc
+  
+}
+

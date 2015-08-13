@@ -4,14 +4,15 @@
 \name{NODE_RESERVED_NAMES_CONST}
 \alias{NODE_RESERVED_NAMES_CONST}
 \title{Names that are reserved by the Node class.}
-\format{\preformatted{ chr [1:34] "AddChild" "AddChildNode" "AddSibling" "AddSiblingNode" ...
+\format{\preformatted{ chr [1:35] "AddChild" "AddChildNode" "AddSibling" "AddSiblingNode" ...
 }}
 \usage{
 NODE_RESERVED_NAMES_CONST
 }
 \description{
 These are reserved by the Node class, you cannot use these as
-Attribute names.
+attribute names.
+Note also that all fields starting with a . are reserved.
 }
 \keyword{datasets}
 

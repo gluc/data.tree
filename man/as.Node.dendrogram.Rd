@@ -4,12 +4,15 @@
 \alias{as.Node.dendrogram}
 \title{Convert a \code{\link{dendrogram}} to a data.tree \code{Node}}
 \usage{
-\method{as.Node}{dendrogram}(x, name = "root", ...)
+\method{as.Node}{dendrogram}(x, name = "root", heightName = "plotHeight",
+  ...)
 }
 \arguments{
 \item{x}{The dendrogram}
 
 \item{name}{The name of the root Node}
+
+\item{heightName}{The name under which the dendrogram's height is stored}
 
 \item{...}{Additional parameters}
 }
@@ -26,7 +29,7 @@ tree1 <- as.Node(dend1)
 tree1$fieldsAll
 tree1$totalCount
 tree1$leafCount
-tree1$depth
+tree1$height
 }
 \seealso{
 Other as.Node: \code{\link{FromDataFrameTable}},

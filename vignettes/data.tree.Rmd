@@ -41,11 +41,9 @@ As a result, people often try to resolve hierarchical problems in a tabular fash
 
 ## What does data.tree offer
 
-This package offers an alternative. The tree package allows you to create hierarchies, callde `data.tree` structures. The building block of theses structures are `Node` objects. `Node` provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Node`s with your own attributes and methods, so as to extend the package to your needs. 
+This package offers an alternative. The tree package allows you to create hierarchies, called `data.tree` structures. The building block of theses structures are `Node` objects. `Node` provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Node`s with your own attributes and methods, so as to extend the package to your needs. 
 
 The package also provides convenient methods for neatly printing trees, and converting trees to `data.frame`s, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph` and other packages.
-
-The example in this vignette revolves around [decision trees](http://en.wikipedia.org/wiki/Decision_tree).
 
 # Chapter 2
 
@@ -71,14 +69,14 @@ acme <- Node$new("Acme Inc.")
 
 print(acme)
 ```
-Note that `Node` is an `R6` reference class. Essentially, this has two implications:
+Note that `Node` is an `R6` reference class. This has the following implications:
 
-1. You can call methods on a `Node` in OO style
-2. You can call methods on a `Node` that modify it, without having to re-assign to a new variable. This is different from the *value semantics*, which is much more widely used in R.
+1. You can call methods on a `Node` in OO style, e.g. `acme$Get("name")`
+2. `Node` exhibits *reference semantics*. Thus, multiple variables in R can point to the same `Node`, and modifying a `Node` will modify it for all referencing variables. In the above code example, both `acme$IT` and `it` reference the same object. This is different from the *value semantics*, which is much more widely used in R.
 
 ### Create a tree from a data.frame
 
-Creating a tree programmatically is useful especially in the context of algorithms. However, most times you will create a try by conversion. This could be by conversion from a list-of-list, by conversion from another R tree-structure (e.g. an ape phylo), or by conversion from a `data.frame`. For more details on all the options type:
+Creating a tree programmatically is useful especially in the context of algorithms. However, most times you will create a tree by conversion. This could be by conversion from a list-of-list, by conversion from another R tree-structure (e.g. an ape phylo), or by conversion from a `data.frame`. For more details on all the options type:
 
 ```{r eval=FALSE}
 ?as.Node
@@ -86,7 +84,7 @@ Creating a tree programmatically is useful especially in the context of algorith
 
 and refer to the See Also section.
 
-One of the most common conversions is the one from a data.frame in table format. The following code illustrats this:
+One of the most common conversions is the one from a data.frame in table format. The following code illustrates this:
 
 ```{r}
 library(treemap)
@@ -103,7 +101,7 @@ GNI2010$pathString <- paste("world",
 
 #conversion to Node is then very easy:
 population <- as.Node(GNI2010)
-print(population, "continent", "country", limit = 25)
+print(population, "iso3", "population", "GNI", limit = 20)
 ```
 
 
@@ -117,40 +115,92 @@ Often, trees are created from one of many file formats. Typical import patterns 
 * yaml -> list of lists (`?yaml::yaml.load`) -> data.tree (`?as.Node.list`, `demo('decisiontree', package='data.tree')`
 * json -> list of lists (e.g. `?jsonlite::fromJSON`) -> data.tree (`?as.Node.list`)
 
-If you have a choice, we recommend you consider yaml format, as it is concise, human-readable, and very easy to convert to a data.tree.
+If you have a choice, we recommend you consider yaml format, as it is concise, human-readable, and very easy to convert to a data.tree. An example of a sample population is provided here for illustration:
+
+```{r}
+library(yaml)
+yaml <- "
+name: OS Students 2014/15
+OS X:
+  Yosemite:
+    users: 16
+  Leopard:
+    users: 43
+Linux:
+  Debian:
+    users: 27
+  Ubuntu:
+    users: 36
+Windows:
+  W7:
+    users: 31
+  W8:
+    users: 32
+  W10:
+    users: 4
+"
+
+osList <- yaml.load(yaml)
+osNode <- as.Node(osList)
+print(osNode, "users")
+```
+
+Once converted to a `data.tree` structure, we can use all its features to work with the hierarchical data. We will explain these functions later, but provide here a quick sample for illustration:
+
+```{r}
+#hierarchically sum up the users per OS
+osNode$Do(function(x) Aggregate(node = x, 
+                                attribute = "users", 
+                                aggFun = sum, 
+                                cacheAttribute = "users"))
+
+#sort by users
+osNode$Sort(attribute = "users", decreasing = TRUE, recursive = TRUE)
+
+#print the tree, showing only OS having more than 20 users
+print(node = osNode, "users", pruneFun = function(x) x$users > 20)
+
+```
+
 
 
 ## Node methods
 
-A `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, typically the root `Node` of a tree.
+As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, typically the root `Node` of a tree.
 
 There are different types of methods:
 
 * OO-style actives (sometimes called properties) on `Node`s, such as e.g. `Node$isRoot`
 * OO-style methods on `Node`s, such as e.g. `Node$Prune(pruneFun)`
-* Classical R methods, such as e.g. `Clone(node)`. The main reason for these are not design considerations, but performance. As OO-style methods maintain their own "copy" of the function in each `Node` instance, OO-style methods are inflating memory usage of the `Node`s. For this reason, their use is kept to a minimum
+* Classical R methods, such as e.g. `Clone(node)`. The main reason for these are not design considerations, but performance. As OO-style methods maintain their own "copy" of the function in each `Node` instance, they are inflating memory usage of the `Node`s. For this reason, their use is kept to a minimum, and often only a classical R method exists instead.
 
 ### Actives Examples
 
 Actives look like fields, but they are dynamically evaluated:
 
 ```{r}
-
-population
+print(population, limit = 15)
 population$isRoot
-population$depth
+population$height
 population$count
 population$totalCount
 population$fields
 population$totalFields
+population$averageBranchingFactor
 ```
 
+The naming convention of the package is that fields and actives are lower case, whereas methods are upper / Camelcase.
+RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available attributes. 
 
+
+### 
 
 ## Custom attributes
 
-Now, let's associate some costs with the projects. We do this by setting custom attributes on the leaf `Node`s:
+Just as with a `list`, we can add any custom attribute to any `Node` in a data.tree structure.
+
 ```{r}
+acme
 software$cost <- 1000000
 standards$cost <- 500000
 newProductLine$cost <- 2000000
@@ -158,7 +208,7 @@ newLabs$cost <- 750000
 outsource$cost <- 400000
 agile$cost <- 250000
 goToR$cost <- 50000
-
+print(acme, "cost")
 ```
 Also, we set the probabilities that the projects will be executed in the next year:
 
@@ -172,6 +222,15 @@ agile$p <- 0.05
 goToR$p <- 1
 
 ```
+
+Note that there is a list of reserved names:
+
+```{r}
+NODE_RESERVED_NAMES_CONST
+```
+
+You cannot use any field name that is reserved.
+
 
 ## Converting to `data.frame`
 

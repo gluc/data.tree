@@ -356,7 +356,7 @@ test_that("Clone formatter", {
   SetFormat(acme, "count", FormatFixedDecimal)
   SetFormat(acme$Climb("IT", "Outsource"), "p", FormatPercent)
   
-  n <- Clone(acme)
+  n <- Clone(acme, attributes = TRUE)
   
   fo <- attr(n, "formatters")[["count"]]
   expect_equal(fo, FormatFixedDecimal)
@@ -500,13 +500,13 @@ test_that("fieldsAll", {
 })
 
 
-test_that("depth", {
+test_that("height", {
   data(acme)
-  expect_equal(acme$depth, 3)
-  expect_equal(acme$Climb("IT")$depth, 2)
+  expect_equal(acme$height, 3)
+  expect_equal(acme$Climb("IT")$height, 2)
   acme$Climb("IT", "Outsource")$AddChild("New")
   
-  expect_equal(acme$depth, 4)
+  expect_equal(acme$height, 4)
 })
 
 
@@ -514,7 +514,7 @@ test_that("isRoot", {
   data(acme)
   expect_true(acme$isRoot)
   expect_false(acme$Climb("IT")$isRoot)
-  expect_equal(acme$Climb("IT")$depth, 2)
+  expect_equal(acme$Climb("IT")$height, 2)
   isRoot <- acme$Get("isRoot")
   expect_equal(sum(isRoot), 1)
   
@@ -545,7 +545,7 @@ test_that("level (active)", {
 })
 
 
-test_that("set name", {
+test_that("set name Climb", {
   data(acme)
   rs <- acme$Climb("Research")
   rs$name <- "Research2"
@@ -555,4 +555,17 @@ test_that("set name", {
   rs2 <- acme$Climb("Research2")
   expect_true(rs2$name == "Research2")
   expect_equal(names(rs$parent$children), c("Accounting", "Research2", "IT"))
+})
+
+
+test_that("change name", {
+  data(acme)
+#  acme$Research$name <- "Research2"
+  
+#  expect_true(is.null(acme$Research))
+
+  rs <- acme$Research
+  rs$name <- "Research2"
+  expect_true(is.null(acme$Research))
+  expect_true(acme$Research2$name == "Research2")
 })

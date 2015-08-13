@@ -1,23 +1,25 @@
 #' Names that are reserved by the Node class.
 #'
 #' These are reserved by the Node class, you cannot use these as 
-#' Attribute names.
+#' attribute names.
+#' Note also that all fields starting with a . are reserved.
 #' 
 #' @export
 NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'AddChildNode',
                                 'AddSibling',
                                 'AddSiblingNode',
+                                'averageBranchingFactor',
                                 'children',
                                 'Climb',
                                 'clone',
                                 'count',
-                                'depth',
                                 'Do',
                                 'fields',
                                 'fieldsAll',
                                 'Get',
                                 'GetAttribute',
+                                'height',
                                 'initialize',
                                 'isBinary',
                                 'isLeaf',
@@ -36,8 +38,8 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'root',
                                 'Set',
                                 'Sort',
-                                'tmp',
-                                'totalCount')
+                                'totalCount',
+                                '.*')
 
 
 #' Create a \code{data.tree} Structure With \code{Nodes}
@@ -79,7 +81,8 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'  \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
 #'  \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
 #'  \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
-#'  \item{\code{depth}}{Returns 1 + max(nr of edges between a \code{Node} and any of its descendants)}
+#'  \item{\code{height}}{Returns max(level) of any of the \code{Nodes} of the tree}
+#'  \item{\code{averageBranchingFactor}}{Returns the average number of crotches below this \code{Node}}
 #'  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
 #'  
 #' }
@@ -102,7 +105,7 @@ Node <- R6Class("Node",
                       children = NULL,
                       
                       initialize=function(name, ...) {
-                        if (!missing(name)) self$name <- as.character(name)
+                        if (!missing(name)) private$p_name <- as.character(name)
                         invisible (self)
                       },
                       
@@ -118,6 +121,7 @@ Node <- R6Class("Node",
                       
                       AddChildNode = function(child) {
                         self$children[[child$name]] <- child
+                        self[[child$name]] <- child
                         child$parent <- self
                         invisible (child)
                       },
@@ -214,18 +218,7 @@ Node <- R6Class("Node",
                       
                       name = function(value) {
                         if (missing(value)) return (private$p_name)
-                        else {
-                          private$p_name <- value
-                          #if name is changed, parent$children index must also be adjusted
-                          if(!self$isRoot) {
-                            chldrn <- self$parent$children
-                            nms <- names(chldrn)
-                            i <- which(sapply(chldrn, function(x) identical(x, self)))
-                            nms[i] <- value
-                            names(chldrn) <- nms
-                            self$parent$children <- chldrn                    
-                          }
-                        }
+                        else private$p_name <- changeName(self, private$p_name, value)
                       },
                       
                       isLeaf = function() {
@@ -241,7 +234,7 @@ Node <- R6Class("Node",
                       },
                       
                       totalCount = function() {
-                        return (1 + sum(as.numeric(sapply(self$children, function(x) x$totalCount))))
+                        return (1 + sum(as.numeric(sapply(self$children, function(x) x$totalCount, simplify = TRUE, USE.NAMES = FALSE))))
                       }, 
                       
                       path = function() {
@@ -255,39 +248,28 @@ Node <- R6Class("Node",
                       position = function() {
                         if (self$isRoot) return (1)
                         
-                        result <- which(unname(sapply(self$parent$children, function(x) identical(self, x))))
+                        result <- which(names(self$parent$children) == self$name)
                         # match(self$name, names(self$parent$children))
                         return (result)
                       },
-                      
-                      levelName = function() {
-                        paste0(self$.separator, self$name)
-                      },
-                      
-                      
+                                            
                       fields = function() {
-                        ls(self)[!(ls(self) %in% NODE_RESERVED_NAMES_CONST)]
+                        nms <- ls(self)
+                        nms <- nms[!(nms %in% NODE_RESERVED_NAMES_CONST)]
+                        nms <- nms[!(nms %in% names(self$children))]
+                        nms <- nms[!(str_sub(nms, 1, 1) == '.')]
+                        return (nms)
                       },
                       
                       fieldsAll = function() {
                         as.vector(na.omit(unique(unlist(self$Get("fields")))))
                       },
                       
-                      
-                      .separator = function() {
-                        if (self$isRoot) return("")
-                        if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--") 
-                        else mySeparator <- paste0(" ", "\u00A6", "--")
-                        return (paste0(self$parent$.parentSeparator, mySeparator))
+                      levelName = function() {
+                        paste0(.separator(self), self$name)
                       },
                       
-                      .parentSeparator = function() {
-                        if (self$isRoot) return("")
-                        if (self$position == self$parent$count) mySeparator <- "    "
-                        else mySeparator <- paste0(" ", "\u00A6", "  ")
-                        paste0(self$parent$.parentSeparator, mySeparator)
-                        
-                      },
+                      
                       
                       leaves = function() {
                         if (self$isLeaf) {
@@ -309,8 +291,9 @@ Node <- R6Class("Node",
                         }
                       },
                       
-                      depth = function() {
-                        max(self$Get("level")) - self$level + 1
+                      height = function() {
+                        if (isLeaf(self)) return (1)
+                        max(self$Get("level", filterFun = function(x) isLeaf(x) && x$position == 1)) - self$level + 1
                       },
                       
                       isBinary = function() {
@@ -323,6 +306,10 @@ Node <- R6Class("Node",
                         } else {
                           invisible (self$parent$root)
                         }
+                      },
+                      
+                      averageBranchingFactor = function() {
+                        averageBranchingFactor(self)
                       }
                       
                       

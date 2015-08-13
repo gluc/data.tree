@@ -4,10 +4,15 @@
 \alias{Clone}
 \title{Clone a tree (creates a deep copy)}
 \usage{
-Clone(node)
+Clone(node, pruneFun = NULL, attributes = FALSE)
 }
 \arguments{
 \item{node}{the root node of the tree or sub-tree to clone}
+
+\item{pruneFun}{a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
+and its descendants should be kept, FALSE otherwise.}
+
+\item{attributes}{if FALSE, then attributes are not cloned. This makes the method much faster.}
 }
 \value{
 the clone of the tree

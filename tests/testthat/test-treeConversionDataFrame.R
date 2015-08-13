@@ -9,6 +9,7 @@ test_that("as.Node.data.frame", {
   acmedf <- as.data.frame(acme, row.names = NULL, optional = FALSE, 'p', 'cost', 'pathString')
   acme2 <- as.Node(acmedf, na.rm = TRUE)
   expect_equal(as.list(acme), as.list(acme2))
+  expect_true(is.null(acme2$children[[1]]$p))
   expect_equal(as.data.frame(acme, row.names = NULL, optional = FALSE, 'p', 'cost'), as.data.frame(acme2, row.names = NULL, optional = FALSE, 'p', 'cost'))
   #test that if they are not different it fails
   # acc2 <- acme2$Climb("Accounting")
@@ -83,7 +84,7 @@ test_that("FromDataFrameTaxonomy", {
   expect_equal(xN$totalCount, acme$totalCount)
   expect_equal(xN$Get("name"), acme$Get("name"))
   expect_equal(xN$Get("p"), acme$Get("p"))
-  expect_equal(xN$depth, acme$depth)
+  expect_equal(xN$height, acme$height)
   expect_equal(xN$Get("level"), acme$Get("level"))
   expect_equal(xN$Get(function(x) x$parent$name), acme$Get(function(x) x$parent$name))
   expect_equal(xN$Get("isLeaf"), acme$Get("isLeaf"))

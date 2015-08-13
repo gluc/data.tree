@@ -13,7 +13,7 @@ and its descendants should be kept, FALSE otherwise.}
 \item{The}{node whose children should be pruned}
 }
 \value{
-A Node
+the number of nodes removed
 }
 \description{
 Prunes a tree

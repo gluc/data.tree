@@ -4,7 +4,7 @@
 \alias{ToNewick}
 \title{Write a \code{data.tree} structure to Newick notation}
 \usage{
-ToNewick(node, heightAttribute = Height, ...)
+ToNewick(node, heightAttribute = DefaultPlotHeight, ...)
 }
 \arguments{
 \item{node}{The root \code{Node} of a tree or sub-tree to be converted}
@@ -21,7 +21,7 @@ object to a \code{data.tree} structure.
 data(acme)
 ToNewick(acme)
 ToNewick(acme, heightAttribute = NULL)
-ToNewick(acme, heightAttribute = function(x) Height(x, 200))
+ToNewick(acme, heightAttribute = function(x) DefaultPlotHeight(x, 200))
 ToNewick(acme, rootHeight = 200)
 }
 \seealso{

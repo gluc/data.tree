@@ -86,7 +86,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
       childName <- ""
     }
     child <- children[[i]]
-    childNode <- as.Node(child, mode, nameName, childrenName, nodeName = childName, ...)
+    childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, ...)
     n$AddChildNode(childNode)
     
   }
@@ -102,7 +102,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
 #' 
 #' @export
 FromListExplicit <- function(explicitList, nameName = "name", childrenName = "children", nodeName = NULL) {
-  as.Node(explicitList, mode = "explicit", nameName = nameName, childrenName = childrenName, nodeName = nodeName)
+  as.Node.list(explicitList, mode = "explicit", nameName = nameName, childrenName = childrenName, nodeName = nodeName)
 }
 
 
@@ -113,7 +113,7 @@ FromListExplicit <- function(explicitList, nameName = "name", childrenName = "ch
 #' 
 #' @export
 FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL) {
-  as.Node(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName)
+  as.Node.list(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName)
 }
 
 
