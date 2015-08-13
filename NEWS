@@ -1,12 +1,13 @@
 # All changes to data.tree are documented here.
 
 
-## Version next Pine
+## Version 0.1.8 Pine
 
 - Node
   - CHANGE: Node$depth is now called Node$height, as the old naming was confusing for many, because in CS, the Node$level is sometimes 
 - Utils
   - CHANGE: Renamed CreateDummyTree to CreateRegularTree
+  - CHANGE: Height renamed to DefaultPlotHeight, so as to avoid confusion with Node$height
   - ADD: CreateRandomTree to test trees
   - ADD: trees can now be climbed directly, e.g. acme$IT$`Go agile`
   - ADD: print.Node with limit parameter is now much faster
