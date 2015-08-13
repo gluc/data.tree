@@ -69,14 +69,14 @@ acme <- Node$new("Acme Inc.")
 
 print(acme)
 ```
-Note that `Node` is an `R6` reference class. Essentially, this has two implications:
+Note that `Node` is an `R6` reference class. This has the following implications:
 
-1. You can call methods on a `Node` in OO style
-2. You can call methods on a `Node` that modify it, without having to re-assign to a new variable. This is different from the *value semantics*, which is much more widely used in R.
+1. You can call methods on a `Node` in OO style, e.g. `acme$Get("name")`
+2. `Node` exhibits *reference semantics*. Thus, multiple variables in R can point to the same `Node`, and modifying a `Node` will modify it for all referencing variables. In the above code example, both `acme$IT` and `it` reference the same object. This is different from the *value semantics*, which is much more widely used in R.
 
 ### Create a tree from a data.frame
 
-Creating a tree programmatically is useful especially in the context of algorithms. However, most times you will create a try by conversion. This could be by conversion from a list-of-list, by conversion from another R tree-structure (e.g. an ape phylo), or by conversion from a `data.frame`. For more details on all the options type:
+Creating a tree programmatically is useful especially in the context of algorithms. However, most times you will create a tree by conversion. This could be by conversion from a list-of-list, by conversion from another R tree-structure (e.g. an ape phylo), or by conversion from a `data.frame`. For more details on all the options type:
 
 ```{r eval=FALSE}
 ?as.Node
@@ -120,7 +120,7 @@ If you have a choice, we recommend you consider yaml format, as it is concise, h
 ```{r}
 library(yaml)
 yaml <- "
-name: Operating Systems
+name: OS Students 2014/15
 OS X:
   Yosemite:
     users: 16
@@ -149,13 +149,16 @@ Once converted to a `data.tree` structure, we can use all its features to work w
 
 ```{r}
 #hierarchically sum up the users per OS
-osNode$Do(function(x) Aggregate(x, "users", sum, "users"))
+osNode$Do(function(x) Aggregate(node = x, 
+                                attribute = "users", 
+                                aggFun = sum, 
+                                cacheAttribute = "users"))
 
 #sort by users
-osNode$Sort("users", decreasing = TRUE)
+osNode$Sort(attribute = "users", decreasing = TRUE, recursive = TRUE)
 
 #print the tree, showing only OS having more than 20 users
-print(osNode, "users", pruneFun = function(x) x$users > 20)
+print(node = osNode, "users", pruneFun = function(x) x$users > 20)
 
 ```
 
@@ -163,7 +166,7 @@ print(osNode, "users", pruneFun = function(x) x$users > 20)
 
 ## Node methods
 
-A `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, typically the root `Node` of a tree.
+As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, typically the root `Node` of a tree.
 
 There are different types of methods:
 
@@ -176,14 +179,14 @@ There are different types of methods:
 Actives look like fields, but they are dynamically evaluated:
 
 ```{r}
-
-population
+print(population, limit = 15)
 population$isRoot
-population$depth
+population$height
 population$count
 population$totalCount
 population$fields
 population$totalFields
+population$averageBranchingFactor
 ```
 
 The naming convention of the package is that fields and actives are lower case, whereas methods are upper / Camelcase.
@@ -194,9 +197,10 @@ RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply 
 
 ## Custom attributes
 
-Just as with a `list`, we can add any custom attribute to a node.
+Just as with a `list`, we can add any custom attribute to any `Node` in a data.tree structure.
 
 ```{r}
+acme
 software$cost <- 1000000
 standards$cost <- 500000
 newProductLine$cost <- 2000000
@@ -204,7 +208,7 @@ newLabs$cost <- 750000
 outsource$cost <- 400000
 agile$cost <- 250000
 goToR$cost <- 50000
-
+print(acme, "cost")
 ```
 Also, we set the probabilities that the projects will be executed in the next year:
 
