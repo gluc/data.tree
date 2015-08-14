@@ -1,6 +1,10 @@
 # All changes to data.tree are documented here.
 
 
+## Version 0.1.9 Pine II
+
+- Set correct version number in DESCRIPTION file
+
 ## Version 0.1.8 Pine
 
 - Node
