@@ -174,6 +174,7 @@ There are different types of methods:
 * OO-style methods on `Node`s, such as e.g. `Node$Prune(pruneFun)`
 * Classical R methods, such as e.g. `Clone(node)`. The main reason for these are not design considerations, but performance. As OO-style methods maintain their own "copy" of the function in each `Node` instance, they are inflating memory usage of the `Node`s. For this reason, their use is kept to a minimum, and often only a classical R method exists instead.
 
+
 ### Actives Examples
 
 Actives look like fields, but they are dynamically evaluated:
@@ -192,12 +193,44 @@ population$averageBranchingFactor
 The naming convention of the package is that fields and actives are lower case, whereas methods are upper / Camelcase.
 RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available attributes. 
 
+### OO-Style Methods Examples
 
-### 
+```{r}
+#Get will traverse the tree and collect a specific attribute. More details below
+sum(population$Get("population", filterFun = isLeaf))
+
+#Prune traverses the tree and keeps only the subtrees for which the pruneFun returns TRUE
+population$Prune(pruneFun = function(x) !x$isLeaf || x$population > 1000000)
+
+#Note that the Prune function has side-effects, as it acts on the original population object.
+#The population sum is now smaller
+sum(population$Get("population", filterFun = isLeaf), na.rm = TRUE)
+```
+
+
+### Traditional R Methods
+
+```{r}
+popClone <- Clone(acme)
+
+```
+
+Traditional S3 generics are available especially for conversion:
+
+```{r}
+as.data.frame(acme)
+```
+
+Though there is also a more specialised non-generic version:
+
+```{r}
+ToDataFrameTaxonomy(acme)
+```
+
 
 ## Custom attributes
 
-Just as with a `list`, we can add any custom attribute to any `Node` in a data.tree structure.
+Just as with, say, a `list`, we can add any custom attribute to any `Node` in a data.tree structure. Let's go back to our acme company and add costs and probabilities on the leaf nodes, i.e. the projects in each department:
 
 ```{r}
 acme
@@ -208,11 +241,7 @@ newLabs$cost <- 750000
 outsource$cost <- 400000
 agile$cost <- 250000
 goToR$cost <- 50000
-print(acme, "cost")
-```
-Also, we set the probabilities that the projects will be executed in the next year:
 
-```{r}
 software$p <- 0.5
 standards$p <- 0.75
 newProductLine$p <- 0.25
@@ -220,16 +249,14 @@ newLabs$p <- 0.9
 outsource$p <- 0.2
 agile$p <- 0.05
 goToR$p <- 1
-
+print(acme, "cost", "p")
 ```
 
-Note that there is a list of reserved names:
+Note that there is a list of reserved names you cannot use as `Node` attributes:
 
 ```{r}
 NODE_RESERVED_NAMES_CONST
 ```
-
-You cannot use any field name that is reserved.
 
 
 ## Converting to `data.frame`
