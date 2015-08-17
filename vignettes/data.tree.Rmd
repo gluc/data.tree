@@ -292,8 +292,7 @@ print(acme, "level", "cost")
 For example, using :
 
 ```{r}
-acmeG <- as.igraph(acme)
-plot(acmeD, type = "triangle", center = TRUE, horiz = TRUE)
+plot(as.dendrogram(CreateRandomTree(nodes = 20)), center = TRUE)
 ```
 
 
