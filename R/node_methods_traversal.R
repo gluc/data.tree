@@ -187,6 +187,7 @@ Do <- function(nodes,
 Set <- function(nodes, 
                 ...) {
   
+  if (length(nodes) == 0) return()
   args <- list(...)
   argsnames <- sapply(substitute(list(...))[-1], deparse)
   gargsnames <- names(args)

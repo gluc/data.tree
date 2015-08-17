@@ -1,3 +1,4 @@
-decisiontree     Calculate and plot the Jenny Lynd decision tree (requires the ape and yaml packages)
-portfolio        Do a portfolio breakdown (and use the Aggregate method)
-population       Plot a treemap (and use the Cumulate method, requires the treemap package)
+decisiontree     Calculate and plot the Jenny Lynd decision tree (requires packages ape, yaml, and DiagrammeR)
+portfolio        Do a portfolio breakdown using the Aggregate method
+population       Plot a treemap using the Cumulate method (requires the treemap package)
+genedefect       Generate simulations of a multi generation population inheriting and developing a certain feature (e.g. colour blindness)
