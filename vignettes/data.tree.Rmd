@@ -269,9 +269,9 @@ We can now convert the tree into a `data.frame`. Note that we always call such m
 ```{r}
 acmedf <- as.data.frame(acme)
 ```
-The same can be achieved by using the OO-style method `Node$ToDataFrame`:
+The same can be achieved by using the more specialised method:
 ```{r, eval=FALSE}
-acme$ToDataFrame()
+ToDataFrameTree(acme)
 ```
 
 We can also add attributes of the tree as columns to the `data.frame`:
@@ -279,35 +279,39 @@ We can also add attributes of the tree as columns to the `data.frame`:
 ToDataFrameTree(acme, "level", "cost")
 ```
 
-Internally, the same is called when printing a tree:
+Other data frame conversions are:
 
-```{r, eval=FALSE}
-print(acme, "level", "cost")
+```{r}
+ToDataFrameTable(acme, "pathString", "cost")
 ```
+
+```{r}
+ToDataFrameTaxonomy(acme, "cost")
+```
+
+
 
 ### Plotting
 
 `data.tree` is a data structure, and as such it does not offer its own printing facilities. However, R contains many packages that are well suited to print hierarchies.
 
-For example, using :
+For example, using dendrogram:
 
 ```{r}
 plot(as.dendrogram(CreateRandomTree(nodes = 20)), center = TRUE)
 ```
 
+Or, using igraph: 
 
+```{r echo=FALSE }
+library(igraph, quietly = TRUE, warn.conflicts = FALSE, verbose = FALSE)
+```
 
-### Using `Get` when converting to `data.frame` and for printing
-
-Above, we saw how we can add the name of an attribute to the ellipsis argument of the `as.data.frame`. We can also add the results of the `Get` method directly to the `as.data.frame` . This allows, for example, formatting the column in a specific way. Details of the `Get` method are explained in the next section.
 
 ```{r}
-
-ToDataFrameTree(acme, "level",
-                probability = acme$Get("p", format = FormatPercent)
-                )
-
-
+library(igraph)
+ig <- as.igraph(acme, "p", c("level", "isLeaf"))
+plot(ig)
 ```
 
 
