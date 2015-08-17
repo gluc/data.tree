@@ -4,7 +4,8 @@
 \alias{as.dendrogram.Node}
 \title{Convert a \code{Node} to a \code{dendrogram}}
 \usage{
-\method{as.dendrogram}{Node}(object, heightAttribute = DefaultPlotHeight, ...)
+\method{as.dendrogram}{Node}(object, heightAttribute = DefaultPlotHeight,
+  edgetext = FALSE, ...)
 }
 \arguments{
 \item{object}{The Node to convert}

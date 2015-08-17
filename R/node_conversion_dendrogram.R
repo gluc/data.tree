@@ -25,8 +25,10 @@ as.Node.dendrogram <- function(x, name = "root", heightName = "plotHeight", ...)
   #str(unclass(dend1))
   if (is.leaf(x)) {
     name <- attr(x, 'label')
-  } else if(is.null(name)) {
+  } else if(is.null(name) && is.null(attr(x, "edgetext"))) {
     name <- tempfile(pattern = '', tmpdir = '')
+  } else if(!is.null(attr(x, "edgetext"))) {
+    name <- attr(x, "edgetext")
   }
   
   n <- Node$new(name)
@@ -82,7 +84,7 @@ as.Node.dendrogram <- function(x, name = "root", heightName = "plotHeight", ...)
 #'
 #' @import stats
 #' @export
-as.dendrogram.Node <- function(object, heightAttribute = DefaultPlotHeight, ...) {
+as.dendrogram.Node <- function(object, heightAttribute = DefaultPlotHeight, edgetext = FALSE, ...) {
   node <- object
   
   #strange: the original dendrogram will
@@ -116,6 +118,8 @@ as.dendrogram.Node <- function(object, heightAttribute = DefaultPlotHeight, ...)
                      midpoint = node$midpoint,
                      height = height,
                      class = "dendrogram")
+    
+    if (edgetext) attr(res, "edgetext") <- node$name
     
   }
   

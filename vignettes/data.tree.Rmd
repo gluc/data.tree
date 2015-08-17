@@ -20,9 +20,9 @@ output:
   %\VignetteIndexEntry{Quick introduction to data.tree}
 -->
 
-# Chapter 1: The basics
+# Chapter 1: Introduction
 
-## About trees
+## Trees
 
 Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other fields. Trees are especially useful when we are facing *hierarchical data*. For example, trees are used:
 
@@ -39,19 +39,19 @@ Tree-like structures are already used in R. For example, environments can be see
 
 As a result, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames (or - perish the thought! - in Excel sheets). But often, hierarchies don't marry with tables and various workarounds are usually required. 
 
-## What does data.tree offer
+## Trees in data.tree
 
-This package offers an alternative. The tree package allows you to create hierarchies, called `data.tree` structures. The building block of theses structures are `Node` objects. `Node` provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Node`s with your own attributes and methods, so as to extend the package to your needs. 
+This package offers an alternative. The tree package allows you to create hierarchies, called `data.tree` structures. The building block of theses structures are `Node` objects. The package provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Node`s with your own attributes and methods, so as to extend the package to your needs. 
 
-The package also provides convenient methods for neatly printing trees, and converting trees to `data.frame`s, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph` and other packages.
+The package also provides convenient methods for neatly printing trees, and converting trees from and to `data.frame`s, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
 
-# Chapter 2
+# Chapter 2: data.tree basics
 
 ## Tree creation
 
 ### Create a tree programmatically
 
-Let's start by creating a tree of `Node`s. In our example, we are looking at a company, Acme Inc., and the tree reflects its organisational structure. The root (level 0) is the company. On level 1, the nodes represent departments, and the leaves of the tree represent projects that the company is considering for next year:
+Let's start by creating a tree of `Node`s. In our example, we are looking at a company, Acme Inc., and the tree reflects its organisational structure. The root (level 1) is the company. On level 2, the nodes represent departments, and the leaves of the tree represent projects that the company is considering for next year:
 
 ```{r}
 library(data.tree)
@@ -258,8 +258,11 @@ Note that there is a list of reserved names you cannot use as `Node` attributes:
 NODE_RESERVED_NAMES_CONST
 ```
 
+## Outputting
 
-## Converting to `data.frame`
+### Printing
+
+### Converting to `data.frame`
 
 We can now convert the tree into a `data.frame`. Note that we always call such methods on the root `Node`:
 
@@ -271,13 +274,7 @@ The same can be achieved by using the OO-style method `Node$ToDataFrame`:
 acme$ToDataFrame()
 ```
 
-Adding the project cost to our `data.frame` is easy to do with the `Get` method. We'll explain the `Get` method in more detail below.
-```{r}
-acmedf$level <- acme$Get("level")
-acmedf$cost <- acme$Get("cost")
-```
-
-We could have achieved the same result in one go, using the OO-style `ToDataFrame` method:
+We can also add attributes of the tree as columns to the `data.frame`:
 ```{r}
 ToDataFrameTree(acme, "level", "cost")
 ```
@@ -287,6 +284,18 @@ Internally, the same is called when printing a tree:
 ```{r, eval=FALSE}
 print(acme, "level", "cost")
 ```
+
+### Plotting
+
+`data.tree` is a data structure, and as such it does not offer its own printing facilities. However, R contains many packages that are well suited to print hierarchies.
+
+For example, using :
+
+```{r}
+acmeD <- as.dendrogram(acme)
+plot(acmeD, type = "triangle", center = TRUE, horiz = TRUE)
+```
+
 
 
 ### Using `Get` when converting to `data.frame` and for printing
