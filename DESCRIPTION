@@ -21,7 +21,7 @@ Suggests:
     treemap
 Enhances:
 Description: Create tree structures from hierarchical data, and use the utility 
-    methods to traverse the tree in various orders. Aggregate, print, convert to and from data.frame, 
+    methods to traverse the tree in various orders. Aggregate, cumulate, print, convert to and from data.frame, 
     and apply functions to your tree data. Useful for decision trees, machine learning, finance, and
     many other applications.
 License: GPL (>= 2)

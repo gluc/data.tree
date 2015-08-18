@@ -103,12 +103,12 @@ Aggregate = function(node,
   
   
   v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
-  if (!length(v) == 0) result <- v
+  if (!length(v) == 0) result <- unname(v)
   else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
   
   if (!exists("result", envir = environment()) || length(result) == 0) {
     values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, cacheAttribute, ...))
-    result <- as.vector(aggFun(values))
+    result <- unname(aggFun(values))
   }
   if (length(cacheAttribute) > 0) {
     node[[cacheAttribute]] <- result
@@ -193,49 +193,148 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 
 
 
-#' Find a \code{Node} by its path
+#' Find a \code{Node} by provided criteria.
 #' 
 #' 
-#' This method lets you climb the tree, from crutch to crutch. More precisely,
-#' \code{Climb} returns the \code{Node} at path \code{...}. The path is relative to the \code{Node} on which this method is called. Each argument provided corresponds to an 
-#' element in the path, specified by the \code{Node}'s name. 
+#' This method lets you climb the tree, from crutch to crutch. On each \code{Node}, the 
+#' \code{Climb} finds the first child having attribute value equal to the the provided argument.
 #' 
-#' @param node The root node
-#' @param ... the names of the nodes in the path
+#' @param node The root node of the tree or subtree to climb
+#' @param ... an attribute name to searched value pairlist. For brevity, you can also provide a character vector.
 #' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 #' 
 #' @examples
 #' data(acme)
 #' acme$Climb('IT', 'Outsource')$name
 #' acme$Climb('IT')$Climb('Outsource')$name
+#' 
+#' acme$Climb(name = 'IT')
+#' 
+#' acme$Climb(position = c(2, 1))
+#' #or, equivalent:
+#' acme$Climb(position = 2, position = 1)
+#' acme$Climb(name = "IT", cost = 250000)
+#' 
+#' tree <- CreateRegularTree(5, 2)
+#' tree$Climb(c("1", "1"), position = c(2, 2))$path
 #'
 #' @seealso \code{\link{Node}}
 #'
 #' @export
 Climb <- function(node, ...) {
   
-  path <- as.character(list(...))
+  path <- list(...)
   if (length(path) == 0) {
     return (node)
   } else {
-    child <- node$children[[path[1]]]
+    
+    #convert args to standard
+    #e.g. id = (3, 5), name = "myname"
+    #to
+    # id = 3, id = 5, name = "mynam"
+    # path <- list(id = c(3, 5), "myname", c("bla", "blo"))
+    # path <- list(id = 3, id = 5, name = "myname")
+    # path <- c("IT")
+    mpath <- NULL
+    for (i in 1:length(path)) names(path[[i]]) <- rep(names(path)[i], length(path[[i]]))
+    for (i in 1:length(path)) mpath <- c(mpath, as.list(path[[i]]))
+    
+    attribute <- names(mpath)[[1]]
+    if (length(attribute) == 0 || is.na(attribute) || nchar(attribute) == 0) attribute <- "name"
+    
+    
+    value <- mpath[[1]]
+    
+    getA <- Get(node$children, attribute)
+    child <- node$children[getA == value]
+    if(length(child) == 0) return (NULL)
+    
+    child <- child[[1]]
+    
     if (is.null(child)) {
       return (NULL)
-    } else if (length(path) == 1) {
+    } else if (length(mpath) == 1) {
       return (child)
     } else {
-      return (do.call(Climb, c(node = child, list(...)[-1])))
+      return (do.call(Climb, c(node = child, mpath[-1])))
     }
   }
   
 }
 
 
+
+#' Find a \code{Node} by provided criteria.
+#' 
+#' 
+#' This method lets you climb the tree, from crutch to crutch. On each \code{Node}, the 
+#' \code{Climb} finds the first child having attribute value equal to the the provided argument.
+#' 
+#' @param node The root node of the tree or subtree to climb
+#' @param ... an attribute name to searched value pairlist. For brevity, you can also provide a character vector.
+#' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
+#' 
+#' @examples
+#' data(acme)
+#' 
+#' Aggregate(acme, attribute = "cost", aggFun = max, cacheAttribute = "cost")
+#' ClimbByAttribute(acme, cost = function(x) x$parent$cost, recursive = TRUE)
+#' 
+#'
+#' @seealso \code{\link{Node}}
+#'
+#' #@export
+ClimbByAttribute <- function(node, ..., recursive = FALSE) {
+  
+  path <- list(...)
+  if (length(path) == 0) {
+    return (node)
+  } else {
+    
+    #convert args to standard
+    #e.g. id = (3, 5), name = "myname"
+    #to
+    # id = 3, id = 5, name = "mynam"
+    # path <- list(id = c(3, 5), "myname", c("bla", "blo"))
+    # path <- list(id = 3, id = 5, name = "myname")
+    # path <- c("IT")
+    #mpath <- NULL
+    #for (i in 1:length(path)) names(path[[i]]) <- rep(names(path)[i], length(path[[i]]))
+    #for (i in 1:length(path)) mpath <- c(mpath, as.list(path[[i]]))
+    mpath <- path
+    attribute <- names(mpath)[[1]]
+    if (length(attribute) == 0 || is.na(attribute) || nchar(attribute) == 0) attribute <- "name"
+    
+    
+    value <- mpath[[1]]
+    
+    getA <- Get(node$children, attribute)
+    getV <- Get(node$children, value)
+    child <- node$children[getA == getV]
+    if(length(child) == 0) return (NULL)
+    
+    child <- child[[1]]
+    
+    if (is.null(child)) {
+      return (NULL)
+    } else if (length(mpath) == 1 && !recursive) {
+      return (child)
+    } else if (recursive) {
+      return (do.call(ClimbByAttribute, c(node = child, mpath, recursive = recursive)))
+    } else {
+      return (do.call(ClimbByAttribute, c(node = child, mpath[-1], recursive = recursive)))
+    }
+  }
+  
+}
+
+
+
 ###############################
 ## Private Methods
 
 GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
-  if(is.function(attribute)) {
+  if (is.function(attribute)) {
     #function
     
     v <- attribute(node, ...)
@@ -247,7 +346,7 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
     stop("attribute must be a function, the name of a public property, or the name of method")
   }
   
-  if(length(v) == 0 && inheritFromAncestors && !node$isRoot) {
+  if (length(v) == 0 && inheritFromAncestors && !node$isRoot) {
     v <- GetAttribute(node$parent, attribute, 
                       ..., 
                       inheritFromAncestors = TRUE,
@@ -258,16 +357,27 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   if (length(v) == 0) v <- NA
   if (length(v) == 0) v <- NA
   
-  if(is.vector(v)) names(v) <- node$name
   
-  if(is.null(format) && !is.function(attribute)) {
+  
+  if (is.null(format) && !is.function(attribute)) {
     format <- GetObjectAttribute(node, "formatters")[[attribute]]
   }
   
-  if(!is.null(format)) {
+  if (!is.null(format)) {
     if (!is.function(format)) stop("format must be a function!")
     v <- format(v)
   }
+  
+  if (is.vector(v) && length(v) == 1) {
+    names(v) <- node$name 
+  } else if (length(v) > 1) {
+    if (!is.null(names(v))) nms <- names(v)
+    else nms = NULL
+    dim(v) <- c(length(v), 1)
+    colnames(v) <- node$name
+    if (!is.null(nms)) rownames(v) <- nms
+  }
+  
   return (v)
 }
 

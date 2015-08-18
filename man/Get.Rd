@@ -5,7 +5,7 @@
 \title{Traverse a Tree and Collect Values}
 \usage{
 Get(nodes, attribute, ..., format = NULL, inheritFromAncestors = FALSE,
-  simplify = TRUE)
+  simplify = c(TRUE, FALSE, "array", "regular"))
 }
 \arguments{
 \item{nodes}{The nodes on which to perform the Get (e.g. obtained via \code{\link{Traverse}}}
@@ -23,14 +23,8 @@ Get(nodes, attribute, ..., format = NULL, inheritFromAncestors = FALSE,
 
 \item{inheritFromAncestors}{if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.}
 
-\item{simplify}{logical or character string; should the result be
-    simplified to a vector, matrix or higher dimensional array if
-    possible?  For \code{sapply} it must be named and not abbreviated.
-    The default value, \code{TRUE}, returns a vector or matrix if appropriate,
-    whereas if \code{simplify = "array"} the result may be an
-    \code{\link{array}} of \dQuote{rank}
-    (\eqn{=}\code{length(dim(.))}) one higher than the result
-    of \code{FUN(X[[i]])}.}
+\item{simplify}{same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can sepcify "regular" if
+each returned value is of length > 1, and equally named. See below for an example.}
 }
 \value{
 a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
@@ -58,6 +52,9 @@ acme$Get(calculateAggregateChildCost,
         mean,
         traversal = "post-order",
         format = myFormat)
+
+#simplify = "regular"
+acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
 }
 \seealso{
 \code{\link{Node}}
