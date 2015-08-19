@@ -62,6 +62,7 @@ as.Node.dendrogram <- function(x, name = "root", heightName = "plotHeight", ...)
 #' 
 #' @param object The Node to convert
 #' @param heightAttribute The attribute (field name or function) storing the height
+#' @param edgetext If TRUE, then the for non-leaf nodes the node name is stored as the dendrogram's edge text.
 #' @param ... Additional parameters
 #' 
 #' @return An object of class dendrogram
