@@ -39,11 +39,28 @@ Tree-like structures are already used in R. For example, environments can be see
 
 As a result, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames (or - perish the thought! - in Excel sheets). But often, hierarchies don't marry with tables and various workarounds are usually required. 
 
+
 ## Trees in data.tree
 
 This package offers an alternative. The tree package allows you to create hierarchies, called `data.tree` structures. The building block of theses structures are `Node` objects. The package provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Node`s with your own attributes and methods, so as to extend the package to your needs. 
 
 The package also provides convenient methods for neatly printing trees, and converting trees from and to `data.frame`s, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
+
+## Useful applications of data.tree
+
+data.tree has proven to be useful in the following fields:
+
+* Finance: Calculate and display a portfolio breakdown, i.e. calculate exposure to various asset classes and sub-assetclasses. For some inspiration, type `demo(portfolio)`
+* Machine Learning: quickly build or prototype a new classification algorithm. Type `vignette(ID3)` for an example.
+* Convert a complex JSON document to a data.frame
+* Decision Trees: Create, calculate, and plot decision trees. For an example, see `demo(decisiontree)`
+* Computer Science: Teaching Search Algorithms. While I would not go as far as recommending to use data.tree to develop real-world search algorithms, its clean syntax and flexibility can be very useful for classroom exercises
+* Game Theory / Game Complexity: What is the average branching factor of Tic-Tac-Toe?
+* Display data in a hierarchic html widget. See e.g. `demo(decisiontree)`
+* Bio-Informatics
+
+
+If you are using data.tree for an application that is not listed here, drop us a note. 
 
 # data.tree basics
 
