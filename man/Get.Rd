@@ -53,7 +53,7 @@ acme$Get(calculateAggregateChildCost,
         traversal = "post-order",
         format = myFormat)
 
-#simplify = "regular"
+#simplify = "regular" will preserve names
 acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
 }
 \seealso{

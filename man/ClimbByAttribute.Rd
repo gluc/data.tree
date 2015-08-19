@@ -10,6 +10,8 @@ ClimbByAttribute(node, ..., recursive = FALSE)
 \item{node}{The root node of the tree or subtree to climb}
 
 \item{...}{an attribute name to searched value pairlist. For brevity, you can also provide a character vector.}
+
+\item{recursive}{If TRUE, then}
 }
 \value{
 the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist

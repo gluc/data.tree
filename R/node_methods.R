@@ -97,12 +97,12 @@ Aggregate = function(node,
   #if(is.function(attribute)) browser()
   #if (!is.function(attribute)) {
   if (length(cacheAttribute) > 0) {
-    v <- GetAttribute(node, cacheAttribute, ..., nullAsNa = FALSE)
+    v <- GetAttribute(node, cacheAttribute, ..., format = identity, nullAsNa = FALSE)
     if (!length(v) == 0) return (v)
   } 
   
   
-  v <- GetAttribute(node, attribute, ..., nullAsNa = FALSE)
+  v <- GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE)
   if (!length(v) == 0) result <- unname(v)
   else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
   
@@ -135,10 +135,10 @@ Aggregate = function(node,
 #' print(acme, "cost", "cumCost")
 #' 
 #' @export
-Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
+Cumulate = function(node, attribute, aggFun, cacheAttribute = NULL, ...) {
   pos <- node$position
   if(length(cacheAttribute) > 0 || node$isRoot) {
-    res <- as.vector(GetAttribute(node, attribute, ..., nullAsNa = FALSE))
+    res <- as.vector(GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE))
     if (pos > 1) {
       res <- aggFun(node$parent$children[[pos - 1]][[cacheAttribute]], res)
     }
@@ -148,7 +148,7 @@ Cumulate = function(node, attribute, aggFun, cacheAttribute, ...) {
                       pruneFun = function(x) x$level <= (node$level + 1),
                       filterFun = function(x) x$position <= pos)
                     
-    res <- aggFun(Get(nodes, attribute))
+    res <- aggFun(Get(nodes, attribute, format = identity))
   }
   return (res)
 }
@@ -272,6 +272,8 @@ Climb <- function(node, ...) {
 #' 
 #' @param node The root node of the tree or subtree to climb
 #' @param ... an attribute name to searched value pairlist. For brevity, you can also provide a character vector.
+#' @param recursive If TRUE, then 
+#' 
 #' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 #' 
 #' @examples
