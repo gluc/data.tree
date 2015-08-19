@@ -18,7 +18,8 @@ Suggests:
     jsonlite, 
     DiagrammeR, 
     igraph,
-    treemap
+    treemap,
+    curl
 Enhances:
 Description: Create tree structures from hierarchical data, and use the utility 
     methods to traverse the tree in various orders. Aggregate, cumulate, print, convert to and from data.frame, 

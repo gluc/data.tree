@@ -52,12 +52,13 @@ data.tree has proven to be useful in the following fields:
 
 * Finance: Calculate and display a portfolio breakdown, i.e. calculate exposure to various asset classes and sub-assetclasses. For some inspiration, type `demo(portfolio)`
 * Machine Learning: quickly build or prototype a new classification algorithm. Type `vignette(ID3)` for an example.
-* Convert a complex JSON document to a data.frame
+* Convert a complex JSON document to a data.frame (or vice versa). See `demo(bubbles)`
 * Decision Trees: Create, calculate, and plot decision trees. For an example, see `demo(decisiontree)`
 * Computer Science: Teaching Search Algorithms. While I would not go as far as recommending to use data.tree to develop real-world search algorithms, its clean syntax and flexibility can be very useful for classroom exercises
 * Game Theory / Game Complexity: What is the average branching factor of Tic-Tac-Toe?
 * Display data in a hierarchic html widget. See e.g. `demo(decisiontree)`
 * Bioinformatics: For an example, see `demo(genedefect)`
+* Utility: print files in a directory structure. See `demo(files)`
 
 
 If you are using data.tree for an application that is not listed here, drop us a note. 
@@ -198,7 +199,7 @@ There are different types of methods:
 
 ### Actives Examples
 
-Actives look like fields, but they are dynamically evaluated:
+Actives look like fields, but they are dynamically evaluated. Remember our population example:
 
 ```{r}
 print(population, limit = 15)
@@ -413,8 +414,29 @@ library(igraph)
 plot(as.igraph(acme))
 ```
 
+Another example, which at the same tame shows conversion from csv:
 
-There are many more examples in the package's demos. Type `demo(package = "data.tree")` for a list of available demoes.
+```{r}
+library(curl)
+#load all the presentations from useR15 in Aalborg
+url <- curl("https://raw.github.com/gluc/useR15/master/00_data/useR15.csv")
+useRdf <- read.csv(url)
+#define the hierarchy (Session/Room/Speaker)
+useRdf$pathString <- paste("useR", useRdf$session, useRdf$room, useRdf$speaker, sep="|")
+#convert to Node
+useRtree <- as.Node(useRdf, pathDelimiter = "|")
+
+#plot with networkD3
+library(networkD3)
+useRtreeList <- ToListExplicit(useRtree, unname = TRUE)
+network <- treeNetwork(useRtreeList)
+network
+
+```
+
+
+
+There are many more examples in the package's demos. Type `demo(package = "data.tree")` for a list of available demos.
 
 # Tree Traversal
 
