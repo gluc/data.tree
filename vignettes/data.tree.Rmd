@@ -57,7 +57,7 @@ data.tree has proven to be useful in the following fields:
 * Computer Science: Teaching Search Algorithms. While I would not go as far as recommending to use data.tree to develop real-world search algorithms, its clean syntax and flexibility can be very useful for classroom exercises
 * Game Theory / Game Complexity: What is the average branching factor of Tic-Tac-Toe?
 * Display data in a hierarchic html widget. See e.g. `demo(decisiontree)`
-* Bio-Informatics
+* Bioinformatics: For an example, see `demo(genedefect)`
 
 
 If you are using data.tree for an application that is not listed here, drop us a note. 

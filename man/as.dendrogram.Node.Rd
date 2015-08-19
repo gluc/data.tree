@@ -12,6 +12,8 @@
 
 \item{heightAttribute}{The attribute (field name or function) storing the height}
 
+\item{edgetext}{If TRUE, then the for non-leaf nodes the node name is stored as the dendrogram's edge text.}
+
 \item{...}{Additional parameters}
 }
 \value{
