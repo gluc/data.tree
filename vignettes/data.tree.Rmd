@@ -33,6 +33,8 @@ Trees are ubiquitous in mathematics, computer science, data sciences, finance, a
 * in computer science and programming (e.g. binary search trees, XML)
 * e.g. for family trees
 
+For more details, see the applications vignette by typing `vignette("applications", package = "data.tree")`
+
 ## Trees in R
 
 Tree-like structures are already used in R. For example, environments can be seen as nodes in a tree. And CRAN provides numerous packages that deal with tree-like structures, especially in the area of decision theory. Yet, there is no general purpose hierarchical data structure that could be used as conveniently and generically as, say, data.frame. 
@@ -46,22 +48,6 @@ This package offers an alternative. The tree package allows you to create hierar
 
 The package also provides convenient methods for neatly printing trees, and converting trees from and to `data.frame`s, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
 
-## Useful applications of data.tree
-
-data.tree has proven to be useful in the following fields:
-
-* Finance: Calculate and display a portfolio breakdown, i.e. calculate exposure to various asset classes and sub-assetclasses. For some inspiration, type `demo(portfolio)`
-* Machine Learning: quickly build or prototype a new classification algorithm. Type `vignette(ID3)` for an example.
-* Convert a complex JSON document to a data.frame (or vice versa). See `demo(bubbles)`
-* Decision Trees: Create, calculate, and plot decision trees. For an example, see `demo(decisiontree)`
-* Computer Science: Teaching Search Algorithms. While I would not go as far as recommending to use data.tree to develop real-world search algorithms, its clean syntax and flexibility can be very useful for classroom exercises
-* Game Theory / Game Complexity: What is the average branching factor of Tic-Tac-Toe?
-* Display data in a hierarchic html widget. See e.g. `demo(decisiontree)`
-* Bioinformatics: For an example, see `demo(genedefect)`
-* Utility: print files in a directory structure. See `demo(files)`
-
-
-If you are using data.tree for an application that is not listed here, drop us a note. 
 
 # data.tree basics
 

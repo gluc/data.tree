@@ -36,7 +36,7 @@ AddPossibleMoves <- function(node) {
     }
     
   }
-  
+  return (node)  
 }
 
 HasWon <- function(node) {
@@ -68,9 +68,17 @@ PrintBoard <- function(node) {
   mineM
 }
 
-for (child in ttt$children) AddPossibleMoves(child)
-
+if (FALSE) {
+  library(foreach)
+  library(doParallel)
+  registerDoParallel(makeCluster(3))
+  x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AddPossibleMoves(child)
+  stopImplicitCluster()
+}
 
 winnerOne <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 1)
 winnerTwo <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 2)
 ties <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 0)
+
+
+#as an exercise: Do the same for Chess!
