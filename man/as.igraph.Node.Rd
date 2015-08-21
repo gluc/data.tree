@@ -4,7 +4,8 @@
 \alias{as.igraph.Node}
 \title{Convert a \code{data.tree} structure to an igraph network}
 \usage{
-as.igraph.Node(node, vertexAttributes, edgeAttributes)
+as.igraph.Node(node, vertexAttributes = character(),
+  edgeAttributes = character(), directed = FALSE)
 }
 \arguments{
 \item{node}{The root \code{Node} to convert}
@@ -14,6 +15,8 @@ in the \code{data.tree} structure to add as attributes to the vertices of the ig
 
 \item{edgeAttributes}{A vector of strings, representing the attributes
 in the \code{data.tree} structure to add as edge attributes of the igraph}
+
+\item{directed}{Logical scalar, whether or not to create a directed graph.}
 }
 \value{
 an \code{igraph} object

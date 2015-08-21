@@ -4,7 +4,7 @@
 \alias{Cumulate}
 \title{Cumulate values among siblings}
 \usage{
-Cumulate(node, attribute, aggFun, cacheAttribute, ...)
+Cumulate(node, attribute, aggFun, cacheAttribute = NULL, ...)
 }
 \arguments{
 \item{node}{The node on which we want to cumulate}

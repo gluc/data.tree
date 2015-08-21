@@ -1,3 +1,5 @@
+readline("How is population distributed by continent and country? (Hit key)")
+
 #This is an example inspired by the treemap examples
 #As there are many countries, the chart gets
 #clustered with many very small countries.
@@ -39,7 +41,6 @@ filterFun = function(x) x$level == 2
 plot(as.dendrogram(n2, heightAttribute = "population"))
               
 #or, as classical treemap
-
 
 df <- ToDataFrameTable(n2, "iso3", "country", "continent", "population", "GNI")
 

@@ -30,6 +30,7 @@ FormatDuration <- function(x) {
 }
 SetFormat(pfo, "Duration", FormatDuration)
 
+
 #Print
 print(pfo, 
       "Weight", 

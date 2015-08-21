@@ -1,5 +1,10 @@
 # All changes to data.tree are documented here.
 
+## Version 0.2 Elder
+
+- ADD: ClimbByAttribute
+- FIX: Aggregate and Cumulate now work always on attributes having a formatter
+- ADD: as.igraph now has a 'directed' parameter
 
 ## Version 0.1.9 Pine II
 
