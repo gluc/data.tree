@@ -458,7 +458,7 @@ flareLoL <- fromJSON("http://bl.ocks.org/mbostock/raw/4063269/flare.json",
 
 flareTree <- as.Node(flareLoL, mode = "explicit")
 flareTree$fieldsAll
-print(flareTree, limit = 30)
+print(flareTree, "size", limit = 30)
 
 ```
 
@@ -467,12 +467,20 @@ from ancestors:
 
 ```{r}
 
-flare_df <- ToDataFrameTable(flareTree, className = function(x) x$parent$name, packageName = "name", "size")
+flare_df <- ToDataFrameTable(flareTree, 
+                             className = function(x) x$parent$name, 
+                             packageName = "name", 
+                             "size")
 head(flare_df)
 
 ```
 
-The following code creates the bubbles chart. But as it depends on non-CRAN packages, it is not evaluated. Try to run it yourself!
+
+This does not look spectacular. But take a look at this [stack overflow](http://stackoverflow.com/questions/31339805/converting-json-format-to-csv-to-upload-data-table-in-r-to-produce-d3-bubble-cha) question to see how people struggle to do this type of operation. 
+
+Here, it was particularly simple, because the underlying JSON structure is regular. If it were not, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` to remove unwanted nodes.
+
+What follows has nothing to do with data.tree anymore. We simply provide the bubble chart printing for your enjoyment. In order to run it yourself, you need to install the bubbles package from github:
 
 
 ```{r, eval=FALSE}
@@ -480,15 +488,20 @@ The following code creates the bubbles chart. But as it depends on non-CRAN pack
 devtools::install_github("jcheng5/bubbles")
 library(scales)
 library(bubbles)
+library(RColorBrewer)
 bubbles(
-  flare_df$size
-  ,flare_df$className
-  ,color = col_factor(
-    RColorBrewer::brewer.pal(9,"Set1")
-    ,factor(flare_df$packageName)
-  )(flare_df$packageName)
-  ,height = 600
-  ,width = 960
+  flare_df$size,
+  substr(flare_df$packageName, 1, 2),
+  tooltip = flare_df$packageName,
+  color = col_factor(
+    brewer.pal(9,"Set1"),
+    factor(flare_df$className)
+  )(flare_df$className),
+  height = 800,
+  width = 800
 )
 ```
 
+![Bubbles](assets/bubbles.png)
+
+Note that if you run it yourself, you'll see that the tooltips are actually working, and displaying the full package names. In the chart itself, we only disply the first two letters for better readability.

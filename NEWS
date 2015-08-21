@@ -5,6 +5,7 @@
 - ADD: ClimbByAttribute
 - FIX: Aggregate and Cumulate now work always on attributes having a formatter
 - ADD: as.igraph now has a 'directed' parameter
+- ADD: print now has a pruneMethod, allowing different ways to print a part of a tree only
 
 ## Version 0.1.9 Pine II
 

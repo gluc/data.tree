@@ -12,10 +12,12 @@
 #' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
 #' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
 #' the meaning of \code{attribute}.
+#' @param pruneMethod The method used to prune for printing. If NULL, the entire tree is displayed. If
+#' "simple", then only the first \code{limit} nodes are displayed. If "dist", then Nodes are removed
+#' everywhere in the tree, according to their level.
 #' @param limit The maximum number of nodes to print. Can be \code{NULL} if the 
-#' entire tree should be printed
+#' entire tree should be printed.
 #' 
-#' @inheritParams Prune
 #' 
 #' @examples
 #' data(acme)
@@ -25,15 +27,22 @@
 #' do.call(print, c(acme, acme$fieldsAll))
 #'
 #' @export
-print.Node <- function(x, ..., pruneFun = NULL, limit = 100) {
-  
-  if(!x$isRoot || length(pruneFun) > 0) {
-    #clone s.t. x is root (for pretty level names)
-    x <- Clone(x, pruneFun = pruneFun, attributes = TRUE)
-    x$parent <- NULL
+print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 100) {
+  pruneMethod <- pruneMethod[1]
+  if (length(pruneMethod) > 0 && length(limit) > 0) {
+    if (pruneMethod == "simple") {
+      x <- PrintPruneSimple(x, limit = limit)    
+    } else if (pruneMethod == "dist") {
+      x <- PrintPruneDist(x, limit = limit)    
+    } else {
+      stop (paste0("Unknown pruneMethod ", pruneMethod, "!"))
+    }
+  } else if(!x$isRoot) {
+      #clone s.t. x is root (for pretty level names)
+      x <- Clone(x, pruneFun = pruneFun, attributes = TRUE)
+      x$parent <- NULL
   }
-  
-  x <- PruneNaive(x, limit = limit)
+
   df <- ToDataFrameTree(x, ...)
   print(df, na.print = "")
 }

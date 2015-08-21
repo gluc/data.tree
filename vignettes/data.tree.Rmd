@@ -698,7 +698,7 @@ The data.tree package has been built to support visualization, to foster rapid p
 
 However, if you are respecting the following guidelines, I promise you will have a lot of fun with your `Nodes`:
 
-1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a data.tree structure with 9331 `Nodes`. On my computer (a mid-end Notebook), this takes about 9 seconds.
+1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a data.tree structure with 9331 `Nodes`. On my computer (a mid-end Notebook), this takes about 3 seconds.
 2. `Clone` is similar to `Node` creation, with an extra penalty of about 20%.
 3. Traversing (`Traverse`, `Get`, `Set` and `Do`) is realtively cheap. 
 
