@@ -1,7 +1,7 @@
 context("util")
 
 
-test_that("create dummy", {
+test_that("createRegular", {
   lvls <- 3
   children <- 4
   t <- CreateRegularTree(height = 3, branchingFactor = 4)
@@ -13,9 +13,9 @@ test_that("create dummy", {
 
 
 
-test_that("PruneNaive 1", {
+test_that("PruneDist 1", {
   data(acme)
-  acme1 <- data.tree:::PruneNaive(acme, limit = 1)
+  acme1 <- data.tree:::PrintPruneDist(acme, limit = 1)
   expect_equal(acme1$totalCount, 2)
   expect_equal(acme1$children[[1]]$name, "... 3 nodes w/ 7 sub")
 })
@@ -23,9 +23,16 @@ test_that("PruneNaive 1", {
 
 
 
-test_that("PruneNaive 2", {
+test_that("PruneDist 2", {
   data(acme)
-  acme1 <- data.tree:::PruneNaive(acme, limit = 5)
+  acme1 <- data.tree:::PrintPruneDist(acme, limit = 5)
   expect_equal(acme1$totalCount, 8)
   expect_equal(acme1$IT$children[[1]]$name, "... 3 nodes w/ 0 sub")
+})
+
+test_that("PruneSimple", {
+  data(acme)
+  acme1 <- data.tree:::PrintPruneSimple(acme, limit = 5)
+  expect_equal(acme1$totalCount, 5)
+  expect_equal(acme1$children[[2]]$name, "... 2 nodes w/ 5 sub")
 })
