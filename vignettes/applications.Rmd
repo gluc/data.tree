@@ -19,19 +19,31 @@ output:
 -->
 
 
+```{r echo=F}
+### get knitr just the way we like it
+
+knitr::opts_chunk$set(
+  message = FALSE
+  , warning = FALSE
+  , error = FALSE
+  , tidy = FALSE
+  , cache = FALSE
+)
+```
+
 # Introduction
 
 ## Useful applications of data.tree
 
 data.tree has proven to be useful in the following fields:
 
-* Finance: Calculate and display a portfolio breakdown, i.e. calculate exposure to various asset classes and sub-assetclasses. For some inspiration, type `demo(portfolio)`
+* Finance: Calculate and display a portfolio breakdown, i.e. calculate exposure to various asset classes and sub-asset classes. For some inspiration, type `demo(portfolio)`
 * Machine Learning: quickly build or prototype a new classification algorithm. Type `vignette(ID3)` for an example.
 * Convert a complex JSON document to a data.frame (or vice versa). See `demo(bubbles)`
 * Decision Trees: Create, calculate, and plot decision trees. For an example, see `demo(decisiontree)`
 * Computer Science: Teaching Search Algorithms. While I would not go as far as recommending to use data.tree to develop real-world search algorithms, its clean syntax and flexibility can be very useful for classroom exercises
 * Game Theory / Game Complexity: What is the average branching factor of Tic-Tac-Toe?
-* Display data in a hierarchic html widget. See e.g. `demo(decisiontree)`
+* Display data in a hierarchical htmlwidget. See e.g. `demo(decisiontree)`
 * Bioinformatics: For an example, see `demo(genedefect)`
 * Utility: print files in a directory structure. See `demo(files)`
 
@@ -52,12 +64,11 @@ This example shows you the following:
 ## What is ID3?
 
 This vignette provides a stylized example of the capabilities of the data.tree package. 
-The code for this vignette was written in less than an hour. This is possible because, thanks to the data.tree package.
-The implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
+The code for this vignette was written in less than an hour. Without the data.tree package, this would have taken much longer.  The implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
 
-Classification trees are very populare these days. If you have never come accross them, you might be interested in this: [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edibel or not. 
+Classification trees are very popular these days. If you have never come accross them, you might be interested in [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edible or not. 
 
-You might have guessed already that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). Just to avoid confusion: I do not suggest that ID3 is particularly appropriate for anything else then teaching introductory courses.
+You might have guessed already that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). Just to avoid confusion, I do not suggest that ID3 is particularly appropriate for anything else then teaching introductory courses.
 
 We will not go into more details about ID3. You will find lots of documentation on this and more refined algorithms on the internet. 
 
@@ -93,7 +104,7 @@ Mathematically, the information gain IG is defined as:
 
 $$ IG(T,a) = H(T)-\sum_{v\in vals(a)}\frac{|\{\textbf{x}\in T|x_a=v\}|}{|T|} \cdot H(\{\textbf{x}\in T|x_a=v\}) $$
 
-In words, the information gain measures the *difference* between the entropy *before the split*, and the weighted sum of the entropies *after the split*:
+In words, the information gain measures the *difference* between the entropy *before the split*, and the weighted sum of the entropies *after the split*.
 
 So, let's rewrite that in R:
 
@@ -222,13 +233,14 @@ Predict(tree, c(color = 'red',
         )
 ```
 
-Oops, trusting classification blindly might be dangerious ;-)
+Oops, trusting classification blindly might be dangerous ;-)
 
 # Decision Tree
 
 ## Introduction
 
 This demo calculates and plots a simple decision tree. It demonstrates the following:
+
 * how can I read a yaml file into a data.tree structure?
 * how can I calculate a decision tree?
 * how can I plot my data.tree with the ape package?
@@ -238,7 +250,7 @@ This demo calculates and plots a simple decision tree. It demonstrates the follo
 
 YAML is similar to JSON, but targeted towards humans (as opposed to computers). It's consise and easy to read.
 YAML can be a neat format to store your data.tree structures, as you can use it across different software
-and systems, you can edit it with any text editor. You can even send it as an email.
+and systems, you can edit it with any text editor, and you can even send it as an email.
 
 This is how our YAML file looks:
 
@@ -249,7 +261,7 @@ cat(readChar(fileName, file.info(fileName)$size))
 
 ```
 
-Let's convert the YAML into a data.tree structure. First, we load it with the yaml package into a list of list. Then we use as.Node to convert the list into a data.tree structure:
+Let's convert the YAML into a data.tree structure. First, we load it with the yaml package into a list of lists. Then we use `as.Node` to convert the list into a data.tree structure:
 
 ```{r}
 
@@ -285,7 +297,6 @@ decision <- function(x) {
 }
 
 jl$Do(decision, filterFun = function(x) x$type == 'decision')
-
 
 
 ```
@@ -431,12 +442,12 @@ DiagrammeR(diagram)
 
 # JSON Conversion
 
-In this example, we will replicate Mike Bostock's bubble example. See here for details: http://bl.ocks.org/mbostock/4063269
-We use Joe Cheng's bubbles package. All this is inspired by (Timelyportfolio)[http://bl.ocks.org/timelyportfolio], the king of html widgets.
+In this example, we will replicate Mike Bostock's bubble example. See here for details: http://bl.ocks.org/mbostock/4063269.  
+We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of this is inspired by [Timelyportfolio](https://github.com/timelyportfolio), the king of [htmlwidgets](http://htmlwidgets.org).
 
-You'll learn how to convert a complex JSON into a data.frame
+You'll learn how to convert a complex JSON into a data.frame.
 
-The JSON is long and complicated:
+The JSON is long, deeply nested, and complicated:
 
 ```{r}
 library(jsonlite)
