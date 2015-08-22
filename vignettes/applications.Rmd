@@ -23,12 +23,13 @@ output:
 ### get knitr just the way we like it
 
 knitr::opts_chunk$set(
-  message = FALSE
-  , warning = FALSE
-  , error = FALSE
-  , tidy = FALSE
-  , cache = FALSE
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE,
+  tidy = FALSE,
+  cache = FALSE
 )
+
 ```
 
 # Introduction
@@ -52,7 +53,258 @@ If you are using data.tree for things not listed here, drop us a note.
 
 This vignette gives you a quick introduction to data.tree applications. We took care to keep the examples simple enough so non-specialists can follow them. 
 
-#ID3
+# TreeMap
+
+In this section, you'll learn how to
+* convert a data.frame to a data.tree structure
+* use `Aggregate` and `Cumulate`
+* manipulate an existing tree
+
+## Original Example, to be improved
+
+This is an example inspired by the examples of the treemap package. The original example is like this:
+
+```{r}
+library(treemap)
+data(GNI2010)
+treemap(GNI2010,
+       index=c("continent", "iso3"),
+       vSize="population",
+       vColor="GNI",
+       type="value")
+```
+
+
+As there are many countries, the chart gets clustered with many very small boxes.
+We would like to limit the number of countries and sum the remainder in a catch-all country called "Other".
+
+We use data.tree to do this aggregation.
+
+## Convert the population data.frame to a data.tree structure
+
+First, let's convert the population data into a data.tree structure:
+
+```{r}
+library(data.tree)
+GNI2010$pathString <- paste("world", GNI2010$continent, GNI2010$country, sep = "/")
+n <- as.Node(GNI2010[,])
+print(n, pruneMethod = "dist", limit = 20)
+```
+
+## Inspect the data
+
+We can also navigate the tree to find the population of a specific country. Luckily, RStudio is quite helpful with its code completion (use CTRL + SPACE):
+
+```{r}
+
+n$Europe$Switzerland$population
+
+```
+
+
+Or, we can look at a sub-tree:
+
+```{r}
+northAm <- n$`North America`
+northAm$Sort("GNI", decreasing = TRUE)
+print(northAm, "iso3", "population", "GNI")
+```
+
+Or we can find out what is the country with the largest GNI:
+
+```{r}
+maxGNI <- Aggregate(n, "GNI", max)
+#same thing, in a more traditional way:
+maxGNI <- max(sapply(n$leaves, function(x) x$GNI))
+
+n$Get("name", filterFun = function(x) x$isLeaf && x$GNI == maxGNI)
+```
+
+
+## Aggregate and Cumulate
+
+We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. The main reason why we do this is not to calculate the population of the world, but to store the result via the cacheAttribute.
+
+```{r}
+Aggregate(node = n, 
+          attribute = "population", 
+          aggFun = sum, 
+          cacheAttribute = "population")
+```
+
+Next, we sort each node by population:
+
+```{r}
+n$Sort(attribute = "population", decreasing = TRUE, recursive = TRUE)
+
+```
+
+Finally, we cumulate among siblings, and store the running sum in an attribute called `cumPop`:
+
+```{r}
+n$Do(function(x) Cumulate(x, "population", sum, "cumPop"))
+
+```
+
+The tree now looks like this:
+
+```{r}
+print(n, "population", "cumPop", pruneMethod = "dist", limit = 20)
+```
+
+
+## Prune population tree
+
+The previous steps were done to define our threshold: big countries should be displayed, while small ones should be grouped together. This lets us define a pruning fuction that will allow a maximum of 7 countries per continent, and that will prune all countries making up less than 90% of a continent's population:
+
+```{r}
+
+myPruneFun <- function(x, cutoff = 0.9, maxCountries = 7) {
+  if (isNotLeaf(x)) return (TRUE)
+  if (x$position > maxCountries) return (FALSE)
+  return (x$cumPop < (x$parent$population * cutoff))
+}
+
+```
+
+We clone the tree, because we might want to play around with different parameters:
+
+```{r}
+n2 <- Clone(n, pruneFun = myPruneFun)
+print(n2$Oceania, "population", pruneMethod = "simple", limit = 20)
+```
+
+Finally, we need to sum countries that we pruned away into a new "Other" node:
+
+```{r}
+
+n2$Do(function(x) {
+  missing <- x$population - sum(sapply(x$children, function(x) x$population))
+  other <- x$AddChild("Other")
+  other$iso3 <- "OTH"
+  other$country <- "Other"
+  other$continent <- x$name
+  other$GNI <- 0
+  other$population <- missing
+},
+filterFun = function(x) x$level == 2
+)
+
+```
+
+              
+## Plotting the treemap
+
+In order to plot the treemap, we need to convert the data.tree structure back to a data.frame:
+
+```{r}
+df <- ToDataFrameTable(n2, "iso3", "country", "continent", "population", "GNI")
+
+treemap(df,
+        index=c("continent", "iso3"),
+        vSize="population",
+        vColor="GNI",
+        type="value")
+
+```
+
+
+## Plot as dendrogram
+
+Just for fun, and for no reason other than to demonstrate conversion to dendrogram, we can plot this in a very unusual way:
+
+```{r}
+plot(as.dendrogram(n2, heightAttribute = "population"))
+
+```
+
+# Portfolio Breakdown
+
+In this example, we show how to display an investment portfolio as a hierarchic breakdown into asset classes.
+You'll see:
+* how you can re-use a traversal
+* advanced use of `Aggregate`
+* how to add default attribute formatters to your tree
+
+## Convert from data.frame
+
+```{r}
+pfodf <- read.csv('../inst/extdata/portfolio.csv', stringsAsFactors = FALSE)
+head(pfodf)
+```
+
+Let us convert the data.frame to a data.tree structure. Here, we use again the path string method. For other options, see `?as.Node.data.frame`
+
+```{r}
+pfodf$pathString <- paste("portfolio", pfodf$AssetCategory, pfodf$AssetClass, pfodf$SubAssetClass, pfodf$ISIN, sep = "/")
+pfo <- as.Node(pfodf)
+
+```
+
+
+## Calculate breakdown
+
+To calculate the weight per asset class, we use the `Aggregate` method:
+
+```{r}
+Aggregate(node = pfo, attribute = "Weight", aggFun = sum, cacheAttribute = "Weight")
+```
+
+We now calculate the `WeightOfParent`, 
+
+```{r}
+t <- Traverse(pfo, traversal = "post-order")
+Do(t, function(x) x$WeightOfParent <- x$Weight / x$parent$Weight)
+
+```
+
+Duration is a bit more complicated, as this is a concept that applies only to the fixed income asset class. Note that, in the second statement, we are reusing
+the traversal from above.
+
+```{r}
+
+pfo$Do(function(x) x$Duration <- ifelse(is.null(x$Duration), 0, x$Duration), filterFun = isLeaf)
+Do(t, function(x) x$Duration <- Aggregate(x, function(x) x$WeightOfParent * x$Duration, sum))
+
+```
+
+## Formatters
+
+We can add default formatters to our data.tree structure. Here, we add them to the root, but 
+we might as well add them to any Node in the tree. 
+
+```{r}
+SetFormat(pfo, "WeightOfParent", function(x) FormatPercent(x, digits = 1))
+SetFormat(pfo, "Weight", FormatPercent)
+
+FormatDuration <- function(x) {
+  if (x != 0) res <- FormatFixedDecimal(x, digits = 1)
+  else res <- ""
+  return (res)
+}
+
+SetFormat(pfo, "Duration", FormatDuration)
+
+```
+
+These formatter functions will be called when printing a data.tree structure
+
+## Printing
+
+```{r}
+
+#Print
+print(pfo, 
+      "Weight", 
+      "WeightOfParent",
+      "Duration",
+      filterFun = function(x) !x$isLeaf)
+
+```
+
+
+
+# ID3
 
 ## Introduction
 
@@ -440,21 +692,22 @@ DiagrammeR(diagram)
 
 ```
 
-# JSON Conversion
+# Bubble Chart
 
 In this example, we will replicate Mike Bostock's bubble example. See here for details: http://bl.ocks.org/mbostock/4063269.  
 We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of this is inspired by [Timelyportfolio](https://github.com/timelyportfolio), the king of [htmlwidgets](http://htmlwidgets.org).
 
 You'll learn how to convert a complex JSON into a data.frame.
 
-The JSON is long, deeply nested, and complicated:
+## Converting a complex JSON file to a data.frame
+
+Data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
 ```{r}
 library(jsonlite)
 library(curl)
 
 flareJSON <- paste(readLines(curl("http://bl.ocks.org/mbostock/raw/4063269/flare.json"), warn = FALSE), collapse = "\n")
-
 cat(substr(flareJSON, 1, 300))
 
 ```
@@ -489,7 +742,9 @@ head(flare_df)
 
 This does not look spectacular. But take a look at this [stack overflow](http://stackoverflow.com/questions/31339805/converting-json-format-to-csv-to-upload-data-table-in-r-to-produce-d3-bubble-cha) question to see how people struggle to do this type of operation. 
 
-Here, it was particularly simple, because the underlying JSON structure is regular. If it were not, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` to remove unwanted nodes.
+Here, it was particularly simple, because the underlying JSON structure is regular. If it were not (e.g. some nodes contain different attributes than others), the conversion from JSON to data.tree would still work. And then, as a second step, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` to remove unwanted nodes, use `Set` to remove or add default values, etc.
+
+## Printing the Bubbles Chart
 
 What follows has nothing to do with data.tree anymore. We simply provide the bubble chart printing for your enjoyment. In order to run it yourself, you need to install the bubbles package from github:
 
@@ -515,4 +770,324 @@ bubbles(
 
 ![Bubbles](assets/bubbles.png)
 
-Note that if you run it yourself, you'll see that the tooltips are actually working, and displaying the full package names. In the chart itself, we only disply the first two letters for better readability.
+Note that if you run it yourself, you'll see that the tooltips are actually working, and displaying the full package names. In the chart itself, we only display the first two letters for better readability.
+
+
+# File System
+
+In this example, we print the files of the data.tree package. As a special goodie, we'll show code that lets you build your own *R File Explorer*, an interactive tree / list widget that lets you expand folders.
+
+## Print the Files in a Folder
+
+First, let's read the files in the current directory into R. The path is the parent of the `vignettes` folder, i.e. the data.tree package folder:
+
+
+```{r}
+path <- ".."
+files <- list.files(path = path, 
+                    recursive = TRUE,
+                    include.dirs = FALSE) 
+
+df <- data.frame(
+      filename = sapply(files, 
+                        function(fl) paste0(tail(strsplit(getwd(),"/")[[1]],1),"/",fl)
+      ), 
+      file.info(paste(path, files, sep = "/")),
+      stringsAsFactors = FALSE
+    )
+ 
+print(head(df)[-c(3,5,6)], row.names = FALSE)
+
+```
+
+We now convert this into a data.tree:
+
+```{r}
+
+fileStructure <- as.Node(df, pathName = "filename")
+fileStructure$leafCount / (fileStructure$totalCount - fileStructure$leafCount)
+print(fileStructure, "mode", "size", limit = 25)
+
+```
+
+## Display Files with the Listviewer html widget
+
+Finally, we could display the files by timelyportfolio's listviewer. As it's not on CRAN, we only display a screenshot of the widget in in this vignette. This is not half as fun, of course, as the interactivity of the widget really is the amazing part.
+
+```{r, eval=FALSE}
+
+
+#This requires listviewer, which is available only on github
+#devtools::install_github("timelyportfolio/listviewer")
+
+library(listviewer)
+
+l <- ToListSimple(fileStructure)
+jsonedit(l)
+
+```
+
+![ListViewer](assets/listviewer.png)
+
+
+# Gene Defect
+
+This is a simplistic example from the area of genetics. But it could apply to any field where you have multi-generation models and probabilities.
+
+The code generates 100 simulations of a 3 generation population, inheriting and developing a certain feature (e.g. colour blindness). It then plots the probability distribution of the feature in the last generation.
+
+You'll learn how to build a data.tree structure according to probabilistic rules, and to use the structure to infer a probability distribution.
+
+## Generate a multi-generation population
+
+First, we generate a family tree of a population exhibiting a certain feature (e.g. colour blindness).
+
+```{r}
+
+#' @param children the number of children each population member has
+#' @param probSex the probability of the sex of a descendant
+#' @param probInherit the probability the feature is inherited, depending on the sex of the descendant
+#' @param probDevelop the probability the feature is developed (e.g. a gene defect), depending on the sex
+#' of the descendant
+#' @param generations the number of generations our simulated population should have
+#' @param parent for recursion
+GenerateChildrenTree <- function(children = 2, 
+                                 probSex = c(male = 0.52, female = 0.48), 
+                                 probInherit = c(male = 0.8, female = 0.5),
+                                 probDevelop = c(male = 0.05, female = 0.01),
+                                 generations = 3, 
+                                 parent = NULL) {
+  
+  if (is.null(parent)) {
+    parent <- Node$new("1")
+    parent$sex <- 1
+    parent$feature <- TRUE
+    parent$develop <- FALSE
+  }
+  
+  #sex of descendants
+  #1 = male
+  #2 = female
+  sex <- sample.int(n = 2, size = children, replace = TRUE, prob = probSex)
+  for (i in 1:children) child <- parent$AddChild(i)
+  Set(parent$children, sex = sex)
+  
+  #inherit
+  if (parent$feature == TRUE) {
+    for (i in 1:2) {
+      subPop <- Traverse(parent, filterFun = function(x) x$sex == i)
+      inherit <- sample.int(n = 2, size = length(subPop), replace = TRUE, prob = c(1 - probInherit[i], probInherit[i]))
+      Set(subPop, feature = as.logical(inherit - 1))
+    }
+  } else {
+    Set(parent$children, feature = FALSE)
+  }
+  
+  #develop
+  Set(parent$children, develop = FALSE)
+  for (i in 1:2) {
+    subPop <- Traverse(parent, filterFun = function(x) x$sex == i && !x$feature)
+    develop <- sample.int(n = 2, size = length(subPop), replace = TRUE, prob = c(1 - probDevelop[i], probDevelop[i]))
+    Set(subPop, feature = as.logical((develop - 1)), develop = as.logical((develop - 1)))
+  }
+  
+  #recursion to next generation
+  if (generations > 0) for (i in 1:children) GenerateChildrenTree(children, 
+                                                                  probSex, 
+                                                                  probInherit, 
+                                                                  probDevelop, 
+                                                                  generations - 1, 
+                                                                  parent$children[[i]])
+  
+  return (parent)
+}
+
+```
+
+
+
+## Analysis on a single tree
+
+Just for demonstration purpose, this is what a tree looks like:
+
+```{r}
+
+tree <- GenerateChildrenTree()
+print(tree, "sex", "feature", "develop", limit = 20)
+
+```
+
+How big is our population after three generations?
+
+```{r}
+tree$totalCount
+```
+
+
+For a given tree, how many have the feature?
+
+```{r}
+length(Traverse(tree, filterFun = function(x) x$feature))
+```
+
+
+How many males have developed the feature without inheritance?
+
+```{r}
+length(Traverse(tree, filterFun = function(x) x$sex == 1 && x$develop))
+```
+
+What is the occurrence of the feature in the last generation?
+
+```{r}
+freqLastGen <- function(tree) {
+  l <- tree$leaves
+  sum(sapply(l, function(x) x$feature))/length(l)
+}
+
+freqLastGen(tree)
+
+```
+
+## Simulation
+
+Generate 100 sample trees and get the frequency of the feature in the last generation
+
+```{r}
+x <- sapply(1:100, function(x) freqLastGen(GenerateChildrenTree()))
+```
+
+Plot a histogram of the 
+```{r}
+hist(x, probability = TRUE, main = "Frequency of feature in last generation")
+```
+
+For larger populations, you might consider parallelisation, of course.
+
+
+# Tic-Tac-Toe / Game Complexity
+
+In this example, we do a brute force solution of Tic-Tac-Toe, the well-known 3*3 game.
+You'll learn how data.tree can be used to buil a tree of game history, and how the resulting data.tree structure can
+be used to analyse the game.
+In addition, this example shows you how you could parallelise the tree creation algorithm.
+
+## Problem set up
+
+```{r}
+
+fields <- expand.grid(letters[1:3], 1:3)
+
+ttt <- Node$new("ttt")
+
+#consider rotation, so first move is explicit
+ttt$AddChild("a3")
+ttt$a3$f <- 7
+ttt$AddChild("b3")
+ttt$b3$f <- 8
+ttt$AddChild("b2")
+ttt$b2$f <- 5
+
+
+ttt$Set(player = 1, filterFun = isLeaf)
+
+
+```
+
+
+## Tree Generation
+
+```{r}
+AddPossibleMoves <- function(node) {
+  t <- Traverse(node, traversal = "ancestor", filterFun = isNotRoot)
+  
+  available <- rownames(fields)[!rownames(fields) %in% Get(t, "f")]
+  for (f in available) {
+    child <- node$AddChild(paste0(fields[f, 1], fields[f, 2]))
+    child$f <- as.numeric(f)
+    child$player <- ifelse(node$player == 1, 2, 1)
+    hasWon <- HasWon(child)
+    if (!hasWon && child$level <= 10) AddPossibleMoves(child)
+    if (hasWon) {
+      child$result <- child$player
+      print(paste("Player ", child$player, "wins!"))
+    } else if(child$level == 10) {
+      child$result <- 0
+      print("Tie!")
+    }
+    
+  }
+  return (node)  
+}
+
+```
+
+
+## Exit Criteria
+
+
+```{r}
+HasWon <- function(node) {
+  t <- Traverse(node, traversal = "ancestor", filterFun = function(x) !x$isRoot && x$player == node$player)
+  mine <- Get(t, "f")
+  mineV <- rep(0, 9)
+  mineV[mine] <- 1
+  mineM <- matrix(mineV, 3, 3, byrow = TRUE)
+  result <- any(rowSums(mineM) == 3) ||
+    any(colSums(mineM) == 3) ||
+    sum(diag(mineM)) == 3 ||
+    sum(diag(t(mineM))) == 3
+  return (result)
+}
+
+```
+
+```{r}
+
+PrintBoard <- function(node) {
+  t <- Traverse(node, traversal = "ancestor", filterFun = function(x) !x$isRoot && x$player == 1)
+  one <- Get(t, "f")
+  mineV <- rep(0, 9)
+  mineV[one] <- 1
+  
+  t <- Traverse(node, traversal = "ancestor", filterFun = function(x) !x$isRoot && x$player == 2)
+  two <- Get(t, "f")
+  
+  mineV[two] <- 2
+  
+  
+  mineM <- matrix(mineV, 3, 3, byrow = TRUE)
+  mineM
+}
+
+```
+
+```{r, eval=FALSE}
+
+x <- for (child in ttt$children) AddPossibleMoves(child)
+
+winnerOne <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 1)
+winnerTwo <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 2)
+ties <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 0)
+
+```
+
+As an exercise: Do the same for Chess!
+
+## Parallelisation
+
+(TODO): add MC for Linux. Explain why not so easy for Win
+
+```{r, eval=FALSE}
+
+library(foreach)
+library(parallel)
+registerDoParallel(makeCluster(3))
+x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AddPossibleMoves(child)
+stopImplicitCluster()
+winnerOne <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 1)
+winnerTwo <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 2)
+ties <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 0)
+
+```
+
