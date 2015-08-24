@@ -1068,7 +1068,7 @@ system.time(for (child in ttt$children) AddPossibleMoves(child))
 c(user = 345.645, system = 3.245, elapsed = 346.445)
 ```
 
-```{r}
+```{r, eval = FALSE}
 
 winnerOne <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 1)
 winnerTwo <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 2)
