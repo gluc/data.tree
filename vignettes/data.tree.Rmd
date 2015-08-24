@@ -698,28 +698,73 @@ The data.tree package has been built to support visualization, to foster rapid p
 
 However, if you are respecting the following guidelines, I promise you will have a lot of fun with your `Nodes`:
 
-1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a data.tree structure with 9331 `Nodes`. On my computer (a mid-end Notebook), this takes about 3 seconds.
-2. `Clone` is similar to `Node` creation, with an extra penalty of about 20%.
+1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a data.tree structure with 9331 `Nodes`. On an AWS c4.large instance, this takes about 2.5 seconds.
+2. `Clone` is similar to `Node` creation, with an extra penalty of about 50%.
 3. Traversing (`Traverse`, `Get`, `Set` and `Do`) is realtively cheap. 
 
-Just to give you an order of magnitude: The following times are achieved on wherever this document is built:
+Just to give you an order of magnitude: The following times are achieved on an AWS c4.large instance:
 
-```{r}
+```{r, eval = FALSE}
 system.time(tree <- CreateRegularTree(6, 6))
+```
+
+```{r, echo = FALSE}
+c(user = 2.499, system = 0.009, elapsed = 2.506)
+```
+
+```{r, eval = FALSE}
 system.time(tree <- Clone(tree))
+```
+
+```{r, echo = FALSE}
+c(user = 3.704, system = 0.023, elapsed = 3.726)
+```
+
+```{r, eval = FALSE}
 system.time(traversal <- Traverse(tree))
+```
+
+```{r, echo = FALSE}
+c(user = 0.096, system = 0.000, elapsed = 0.097)
+```
+
+```{r, eval = FALSE}
 system.time(Set(traversal, id = 1:tree$totalCount))
+```
+
+```{r, echo = FALSE}
+c(user = 0.205, system = 0.000, elapsed = 0.204)
+```
+
+```{r, eval = FALSE}
 system.time(ids <- Get(traversal, "id"))
+```
+
+```{r, echo = FALSE}
+c(user = 0.569, system = 0.000, elapsed = 0.569)
+```
 
 
+```{r, eval = FALSE}
 leaves <- Traverse(tree, filterFun = isLeaf)
 Set(leaves, leafId = 1:length(leaves))
 system.time(Get(traversal, function(node) Aggregate(node, "leafId", max)))
-#with caching, you can save some time:
-system.time(tree$Get(function(node) Aggregate(tree, "leafId", max, "maxLeafId"), traversal = "post-order"))
-
-
 ```
+
+```{r, echo = FALSE}
+c(user = 1.418, system = 0.000, elapsed = 1.417)
+```
+
+With caching, you can save some time:
+
+```{r, eval = FALSE}
+system.time(tree$Get(function(node) Aggregate(tree, "leafId", max, "maxLeafId"), traversal = "post-order"))
+```
+
+```{r, echo = FALSE}
+c(user = 0.69, system = 0.00, elapsed = 0.69)
+```
+
 
 ## Memory
 

@@ -417,7 +417,7 @@ TrainID3 <- function(node, data) {
     node$feature <- feature
     
     #take the subset of the data-set having that feature value
-    childObs <- split(data[,!(names(data) %in% feature)], data[,feature], drop = TRUE)
+    childObs <- split(data[,!(names(data) %in% feature)], data[,feature], drop = FALSE)
     
     for(i in 1:length(childObs)) {
       #construct a child having the name of that feature value (e.g. 'red')
@@ -1061,8 +1061,14 @@ HasWon <- function(node) {
 The following plays all possible games, actually more than 200'000. Depending on your computer, this might take a few minutes:
 
 ```{r, eval=FALSE}
+system.time(for (child in ttt$children) AddPossibleMoves(child))
+```
 
-x <- for (child in ttt$children) AddPossibleMoves(child)
+```{r, echo= FALSE}
+c(user = 345.645, system = 3.245, elapsed = 346.445)
+```
+
+```{r}
 
 winnerOne <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 1)
 winnerTwo <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 2)
@@ -1070,6 +1076,7 @@ ties <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 0)
 
 c(winnerOne = length(winnerOne), winnerTwo = length(winnerTwo), ties = length(ties))
 ```
+
 
 ```{r, echo=FALSE}
 c(winnerOne = 39588, winnerTwo = 21408, ties = 28800)
@@ -1114,41 +1121,27 @@ As an exercise: Do the same for Chess!
 
 ## Parallelisation
 
-data.tree and parallelisation work hand in hand. Many operations are recursive, and can be called equally well on a subtree or on an entire tree. Therefore, it is very natural to delegate the calculation of multiple sub-trees to different processes.
+In a perfect world, data.tree and parallelisation would tell a love story: Many operations are recursive, and can be called equally well on a subtree or on an entire tree. Therefore, it is very natural to delegate the calculation of multiple sub-trees to different processes.
 
-For example, tic-tac-toe is almost trivial to parallelise: Remember that, on level 2, we created manually 3 `Nodes`. The creation of the sub-trees on these `Nodes` will be completely independent on the other sub-trees. Then, each sub-tree can be created in its own process. 
+For example, tic-tac-toe seems almost trivial to parallelise: Remember that, on level 2, we created manually 3 `Nodes`. The creation of the sub-trees on these `Nodes` will be completely independent on the other sub-trees. Then, each sub-tree can be created in its own process. 
 
 So, in theory, we could use any parallelisation mechanism available in R.
-Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a child process to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees takes ages. This leaves us with two options:
+Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a child process to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees takes ages. 
 
-1. use shared-memory parallelisation
-2. convert the objects before returning them to the main process
+So, instead, we can
 
-Unfortunately, the second option will take additional time for conversion and back, which, for large trees as here, is prohibitive. 
-Even worse, the first option is available only on Linux machines.
-
-### Linux
-
-On Linux, we use the `doMC` package to run shared-memory parallelisation. 
-
-```{r, eval = FALSE}
-library(foreach)
-library(doMC)
-registerDoMC(3)
-x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AnalyseTicTacToe(child)
-
-```
-
-
-### Windows
-
-On Windows, the only acceptable option we have is to return the result, and aggregate the results:
+1. create the sub-trees, each in its own process
+2. run the analysis in the same process
+3. return the result of the analysis to the main process
+4. aggregate
 
 ```{r, eval=FALSE}
 
 
 AnalyseTicTacToe <- function(subtree) {
+  # 1. create sub-tree
   AddPossibleMoves(subtree)
+  # 2. run the analysis
   winnerOne <- Traverse(subtree, filterFun = function(x) x$isLeaf && x$result == 1)
   winnerTwo <- Traverse(subtree, filterFun = function(x) x$isLeaf && x$result == 2)
   ties <- Traverse(subtree, filterFun = function(x) x$isLeaf && x$result == 0)
@@ -1156,7 +1149,7 @@ AnalyseTicTacToe <- function(subtree) {
   res <- c(winnerOne = length(winnerOne), 
            winnerTwo = length(winnerTwo),
            ties = length(ties))
-
+  # 3. return the result
   return(res)
 }
 
@@ -1164,8 +1157,17 @@ AnalyseTicTacToe <- function(subtree) {
 library(foreach)
 library(doParallel)
 registerDoParallel(makeCluster(3))
-x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AnalyseTicTacToe(child)
+system.time(x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AnalyseTicTacToe(child))
+```
+
+```{r, echo= FALSE}
+c(user = 7.406, system = 3.622, elapsed = 256.351)
+```
+
+
+```{r, eval = FALSE}
 stopImplicitCluster()
+# 4. aggregate results
 rowSums(sapply(x, c))
 ```
 
