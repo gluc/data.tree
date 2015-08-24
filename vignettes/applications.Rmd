@@ -1006,7 +1006,7 @@ ttt$Set(player = 1, filterFun = isLeaf)
 ```
 
 
-## Tree Generation
+## Game play
 
 Now we recurse through the tree, and add possible moves to the leaves. To do this, we define a method which, based on a `Node's` path, adds possible moves as children.
 
@@ -1056,7 +1056,7 @@ HasWon <- function(node) {
 
 ```
 
-# Running the analysis
+## Tree creation
 
 The following plays all possible games, actually more than 200'000. Depending on your computer, this might take a few minutes:
 
@@ -1085,7 +1085,7 @@ c(winnerOne = 39588, winnerTwo = 21408, ties = 28800)
 ```
 
 
-# Analysis
+## Analysis
 
 We can, for example, look at any Node, using the `PrintBoard` function:
 
@@ -1126,7 +1126,7 @@ In a perfect world, data.tree and parallelisation would tell a love story: Many 
 For example, tic-tac-toe seems almost trivial to parallelise: Remember that, on level 2, we created manually 3 `Nodes`. The creation of the sub-trees on these `Nodes` will be completely independent on the other sub-trees. Then, each sub-tree can be created in its own process. 
 
 So, in theory, we could use any parallelisation mechanism available in R.
-Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a child process to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees takes ages. 
+Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a child process to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees would take ages. 
 
 So, instead, we can
 
@@ -1157,11 +1157,12 @@ AnalyseTicTacToe <- function(subtree) {
 library(foreach)
 library(doParallel)
 registerDoParallel(makeCluster(3))
+#On Linux, there are alternatives, e.g.: library(doMC);  registerDoMC(3)
 system.time(x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AnalyseTicTacToe(child))
 ```
 
 ```{r, echo= FALSE}
-c(user = 7.406, system = 3.622, elapsed = 256.351)
+c(user = 0.05, system = 0.04, elapsed = 116.86)
 ```
 
 
