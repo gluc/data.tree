@@ -20,6 +20,20 @@ output:
   %\VignetteIndexEntry{Quick introduction to data.tree}
 -->
 
+```{r echo=F}
+### get knitr just the way we like it
+
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE,
+  tidy = FALSE,
+  cache = FALSE
+)
+
+```
+
+
 # Introduction
 
 ## Trees
