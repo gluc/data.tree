@@ -929,12 +929,12 @@ length(Traverse(tree, filterFun = function(x) x$sex == 1 && x$develop))
 What is the occurrence of the feature in the last generation?
 
 ```{r}
-freqLastGen <- function(tree) {
+FreqLastGen <- function(tree) {
   l <- tree$leaves
   sum(sapply(l, function(x) x$feature))/length(l)
 }
 
-freqLastGen(tree)
+FreqLastGen(tree)
 
 ```
 
@@ -943,7 +943,7 @@ freqLastGen(tree)
 Generate 100 sample trees and get the frequency of the feature in the last generation
 
 ```{r}
-x <- sapply(1:100, function(x) freqLastGen(GenerateChildrenTree()))
+system.time(x <- sapply(1:100, function(x) FreqLastGen(GenerateChildrenTree())))
 ```
 
 Plot a histogram of the frequency of the defect in the last generation:
@@ -954,6 +954,23 @@ hist(x, probability = TRUE, main = "Frequency of feature in last generation")
 
 For larger populations, you might consider parallelisation, of course. See below for some hints.
 
+## Parallelisation
+
+It is straight forward to parallelise the simulation. If, as in this example, you do not need to pass around a data.tree from one process (fork) to another, it is also rather efficient.
+
+```{r}
+library(foreach)
+library(doParallel)
+registerDoParallel(makeCluster(3))
+#On Linux, there are other alternatives, e.g.: library(doMC);  registerDoMC(3)
+
+system.time(x <- foreach (i = 1:100, .packages = "data.tree") %dopar% FreqLastGen(GenerateChildrenTree()))
+x <- as.numeric(x)
+
+stopImplicitCluster()
+```
+
+For the more complicated case where you want to parallelise operations on a single tree, see below.
 
 # Tic-Tac-Toe (game complexity)
 
@@ -964,9 +981,9 @@ In addition, this example shows you how parallelisation can speed up data.tree.
 
 ## Problem set up
 
-We want to set up the problem in a way such that each `Node` is a move of a player, and each path describes the entire history of the game.
+We want to set up the problem in a way such that each `Node` is a move of a player, and each path describes the entire history of a game.
 
-We number the fields from 1 to 9. For easy readability, we label the Nodes in an Excel-like manner, such that field 9, say, is 'c3':
+We number the fields from 1 to 9. Additionally, for easy readability, we label the Nodes in an Excel-like manner, such that field 9, say, is 'c3':
 
 ```{r}
 
@@ -975,7 +992,7 @@ fields
 
 ```
 
-To speed up things a bit, we consider ratation, so that, say, the first move in a3 and a1 are considered equal, because they could be achieved with a 90 degree rotation of the board. This leaves us with only a3, b3, and b2 for the first move of player 1:
+To speed up things a bit, we consider rotation, so that, say, the first move in a3 and a1 are considered equal, because they could be achieved with a 90 degree rotation of the board. This leaves us with only a3, b3, and b2 for the first move of player 1:
 
 
 ```{r}
@@ -996,7 +1013,7 @@ ttt$Set(player = 1, filterFun = isLeaf)
 ```
 
 
-## Tree Generation
+## Game play
 
 Now we recurse through the tree, and add possible moves to the leaves, growing it eventally to hold all possible games. To do this, we define a method which, based on a `Node's` path, adds possible moves as children.
 
@@ -1049,15 +1066,16 @@ HasWon <- function(node) {
 
 ```
 
-# Running the analysis
+## Tree creation
 
 The following code plays all possible games. Depending on your computer, this might take a few minutes:
 
 ```{r, eval=FALSE}
+system.time(for (child in ttt$children) AddPossibleMoves(child))
+```
 
-x <- for (child in ttt$children) AddPossibleMoves(child)
-
-
+```{r, echo= FALSE}
+c(user = 345.645, system = 3.245, elapsed = 346.445)
 ```
 
 
@@ -1116,10 +1134,10 @@ ties <- Traverse(ttt, filterFun = function(x) x$isLeaf && x$result == 0)
 c(winnerOne = length(winnerOne), winnerTwo = length(winnerTwo), ties = length(ties))
 ```
 
+
 ```{r, echo=FALSE}
 c(winnerOne = 39588, winnerTwo = 21408, ties = 28800)
 ```
-
 
 
 We can, for example, look at any Node, using the `PrintBoard` function:
@@ -1158,41 +1176,29 @@ As an exercise: Do the same for Chess!
 
 ## Parallelisation
 
-data.tree and parallelisation work hand in hand. Many operations are recursive, and can be called equally well on a subtree or on an entire tree. Therefore, it is very natural to delegate the calculation of multiple sub-trees to different processes.
+Here, the parallelisation is more challenging as with the Gene Defect example above. The reason is that we have only one tree, albeit a big one. So we need a strategy to do what we call intra-tree parallelisation.
 
-For example, tic-tac-toe is almost trivial to parallelise: Remember that, on level 2, we created manually 3 `Nodes`. The creation of the sub-trees on these `Nodes` will be completely independent on the other sub-trees. Then, each sub-tree can be created in its own process. 
+In a perfect world, data.tree and intra-tree parallelisation would tell a love story: Many operations are recursive, and can be called equally well on a subtree or on an entire tree. Therefore, it is very natural to delegate the calculation of multiple sub-trees to different processes.
+
+For example, tic-tac-toe seems almost trivial to parallelise: Remember that, on level 2, we created manually 3 `Nodes`. The creation of the sub-trees on these `Nodes` will be completely independent on the other sub-trees. Then, each sub-tree can be created in its own process. 
 
 So, in theory, we could use any parallelisation mechanism available in R.
-Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a child process to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees takes ages. This leaves us with two options:
+Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a child process to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees would take ages. 
 
-1. use shared-memory parallelisation
-2. convert the objects before returning them to the main process
+So, instead, we can
 
-Unfortunately, the second option will take additional time for conversion and back, which, for large trees as here, is prohibitive. 
-Even worse, the first option is available only on Linux machines.
-
-### Linux
-
-On Linux, we use the `doMC` package to run shared-memory parallelisation. 
-
-```{r, eval = FALSE}
-library(foreach)
-library(doMC)
-registerDoMC(3)
-x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AnalyseTicTacToe(child)
-
-```
-
-
-### Windows
-
-On Windows, the only acceptable option we have is to return the result, and aggregate the results:
+1. create the sub-trees, each in its own process
+2. run the analysis in the child process
+3. return the result of the analysis to the main process
+4. aggregate the results
 
 ```{r, eval=FALSE}
 
 
 AnalyseTicTacToe <- function(subtree) {
+  # 1. create sub-tree
   AddPossibleMoves(subtree)
+  # 2. run the analysis
   winnerOne <- Traverse(subtree, filterFun = function(x) x$isLeaf && x$result == 1)
   winnerTwo <- Traverse(subtree, filterFun = function(x) x$isLeaf && x$result == 2)
   ties <- Traverse(subtree, filterFun = function(x) x$isLeaf && x$result == 0)
@@ -1200,7 +1206,7 @@ AnalyseTicTacToe <- function(subtree) {
   res <- c(winnerOne = length(winnerOne), 
            winnerTwo = length(winnerTwo),
            ties = length(ties))
-
+  # 3. return the result
   return(res)
 }
 
@@ -1208,8 +1214,21 @@ AnalyseTicTacToe <- function(subtree) {
 library(foreach)
 library(doParallel)
 registerDoParallel(makeCluster(3))
-x <- foreach (child = ttt$children, .packages = "data.tree") %dopar% AnalyseTicTacToe(child)
+#On Linux, there are other alternatives, e.g.: library(doMC);  registerDoMC(3)
+system.time(
+  x <- foreach (child = ttt$children, 
+                .packages = "data.tree") %dopar% AnalyseTicTacToe(child)
+)
+```
+
+```{r, echo= FALSE}
+c(user = 0.05, system = 0.04, elapsed = 116.86)
+```
+
+
+```{r, eval = FALSE}
 stopImplicitCluster()
+# 4. aggregate results
 rowSums(sapply(x, c))
 ```
 
