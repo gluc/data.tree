@@ -84,7 +84,7 @@
 #' 
 #' ToDataFrameTable(acme, "name", "p", "cost", "level", "pathString")
 #' ToDataFrameTree(acme, "name", "p", "cost", "level")
-#' ToDataFrameTaxonomy(acme, "p", "cost")
+#' ToDataFrameNetwork(acme, "p", "cost")
 #' 
 #' 
 #' @seealso \code{\link{Node}}

@@ -134,7 +134,7 @@ Often, trees are created from one of many file formats. Typical import patterns 
 
 * csv -> data.frame in table format (`?read.csv`) -> data.tree (`?as.Node.data.frame`)
 * Newick -> ape phylo (`?ape::read.tree`) -> data.tree (`?as.Node.phylo` )
-* csv -> data.frame in taxonomy / edge format (`?read.csv`) -> data.tree (c.f. `?FromDataFrameTaxonomy`)
+* csv -> data.frame in network format (`?read.csv`) -> data.tree (c.f. `?FromDataFrameNetwork`)
 * yaml -> list of lists (`?yaml::yaml.load`) -> data.tree (`?as.Node.list`, `demo('decisiontree', package='data.tree')`
 * json -> list of lists (e.g. `?jsonlite::fromJSON`) -> data.tree (`?as.Node.list`)
 
@@ -247,7 +247,7 @@ as.data.frame(acme)
 Though there is also a more specialised non-generic version:
 
 ```{r}
-ToDataFrameTaxonomy(acme)
+ToDataFrameNetwork(acme)
 ```
 
 
@@ -389,7 +389,7 @@ ToDataFrameTable(acme, "pathString", "cost")
 ```
 
 ```{r}
-ToDataFrameTaxonomy(acme, "cost")
+ToDataFrameNetwork(acme, "cost")
 ```
 
 
@@ -438,7 +438,7 @@ Or, as a network:
 (you can actually touch these thingies and drag them around, don't be shy!)
 
 ```{r}
-acmeNetwork <- ToDataFrameTaxonomy(acme, "name")
+acmeNetwork <- ToDataFrameNetwork(acme, "name")
 simpleNetwork(acmeNetwork[-3], fontSize = 12)
 ```
 
