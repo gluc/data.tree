@@ -38,3 +38,25 @@ as.igraph.Node <- function(node, vertexAttributes = character(), edgeAttributes 
   return (ig)
 }
 
+<<<<<<< HEAD
+#not a god idea -> too complex, as we don't know if 
+#it's a tree, cycles, etc.
+as.Node.igraph <- function(igraph) {
+  res <- igraph::as_data_frame(igraph, what = "both")
+  edges <- res$edges
+  edges <- edges[,c(2, 1, 3:ncol(edges))]
+  colnames(edges)[1:3] <- c("children", "parents", "level")
+  n <- FromDataFrameNetwork(edges)
+  vert <- res$vertices
+  for (i in 1:dim(vert)[1]) {
+    vals <- vert[i,, drop = FALSE]
+    nd <- Traverse(n, filterFun = function(x) x$name == rownames(vals))[[1]]
+    for (nm in names(vals)) {
+      if(!nm %in% NODE_RESERVED_NAMES_CONST) {
+        nd[[nm]] <- vals[[nm]]
+      }
+    }
+  }
+}
+=======
+>>>>>>> dev

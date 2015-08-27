@@ -23,6 +23,17 @@ test_that("Climb 3rd Level", {
   data(acme)
   acme$Climb('IT', 'Go agile')$AddChild('MyTest')$AddChild('MyTest2')
   expect_equal("MyTest2", acme$Climb('IT', 'Go agile', 'MyTest', 'MyTest2')$name )
+  expect_equal("MyTest2", acme$Climb(c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
+  expect_equal("MyTest2", acme$Climb(name = c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
+  
+})
+
+
+
+test_that("Climb non-name", {
+  tree <- CreateRegularTree(5, 2)
+  p <- tree$Climb(c("1", "1"), position = c(2, 2))$path
+  expect_equal(as.character(c(1, 1, 1, 2, 2)), p)
   
 })
 

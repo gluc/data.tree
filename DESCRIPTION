@@ -1,7 +1,7 @@
 Package: data.tree
 Type: Package
 Title: General Purpose Hierarchical Data Structure
-Version: 0.1.7
+Version: 0.1.9
 Date: 2015-08-01
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.com>
@@ -18,12 +18,13 @@ Suggests:
     jsonlite, 
     DiagrammeR, 
     igraph,
-    treemap
+    treemap,
+    curl
 Enhances:
 Description: Create tree structures from hierarchical data, and use the utility 
-    methods to traverse the tree in various orders. Aggregate, print, convert to and from data.frame, 
-    and apply functions to your tree data. Useful for decision trees, machine learning, finance, and
-    many other applications.
+    methods to traverse the tree in various orders. Aggregate, cumulate, print, convert to and from data.frame, 
+    and apply functions to your tree data. Useful for decision trees, machine learning, finance, conversion
+    from and to JSON, and many other applications.
 License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
