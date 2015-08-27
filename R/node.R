@@ -280,7 +280,7 @@ Node <- R6Class("Node",
                       },
                       
                       leafCount = function() {
-                        sum(self$Get("isLeaf"))
+                        length(Traverse(self, filterFun = isLeaf))
                       },
                       
                       level = function() {

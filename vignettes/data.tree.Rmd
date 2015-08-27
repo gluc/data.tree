@@ -9,16 +9,30 @@ output:
     self_contained: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
+    toc_depth: 2
   pdf_document:
     toc: yes
-    toc_depth: 3
+    toc_depth: 2
 ---
 
 <!--
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Quick introduction to data.tree}
 -->
+
+```{r echo=F}
+### get knitr just the way we like it
+
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE,
+  tidy = FALSE,
+  cache = FALSE
+)
+
+```
+
 
 # Introduction
 
@@ -48,6 +62,7 @@ This package offers an alternative. The tree package allows you to create hierar
 
 The package also provides convenient methods for neatly printing trees, and converting trees from and to `data.frame`s, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
 
+Technically, `data.tree` structures are bi-directional, ordered trees. Bi-directional means that you can navigate from parent to chidren and vice versa. Orded means that the sort order of to children of a parent are well-defined.
 
 # data.tree basics
 
@@ -174,7 +189,7 @@ print(node = osNode, "users", pruneFun = function(x) x$users > 20)
 
 ## Node methods
 
-As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, typically the root `Node` of a tree.
+As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, often the root `Node` of a tree.
 
 There are different types of methods:
 
@@ -185,7 +200,7 @@ There are different types of methods:
 
 ### Actives Examples
 
-Actives look like fields, but they are dynamically evaluated. Remember our population example:
+Actives look and fell like fields, but they are dynamically evaluated. Remember our population example:
 
 ```{r}
 print(population, limit = 15)
@@ -198,7 +213,7 @@ population$totalFields
 population$averageBranchingFactor
 ```
 
-The naming convention of the package is that fields and actives are lower case, whereas methods are upper / Camelcase.
+The naming convention of the package is that fields and actives are lower case, whereas methods are upper / CamelCase.
 RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available attributes. 
 
 ### OO-Style Methods Examples
@@ -316,7 +331,7 @@ Note that there is a list of reserved names you cannot use as `Node` attributes:
 NODE_RESERVED_NAMES_CONST
 ```
 
-## Outputting
+## Printing and Plotting
 
 ### Printing
 
@@ -430,7 +445,7 @@ There are more examples in the applications vignette. Type `vignette('applicatio
 
 Tree traversal is one of the core concepts of trees. See, for example, here: [Tree Traversal on Wikipedia](http://en.wikipedia.org/wiki/Tree_traversal).
 
-## `Get` method
+## `Get`
 
 The `Get` method traverses the tree and collects values from each node. It then returns a vector containing the collected values. 
 
@@ -545,7 +560,7 @@ data.frame(ec = acme$Get(ExpectedCost, fun = mean))
 ```
 
 
-## `Do` method
+## `Do`
 
 We can tell the `Do` method to assign the value to a specific attribute for each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. For instance, we can store the calculated expected cost for later use and printing:
 
@@ -557,7 +572,7 @@ print(acme, "p", "cost", "expectedCost")
 ```
 
 
-## `Set` method
+## `Set`
 
 The `Set` method is the counterpart to the `Get` method. The `Set` method takes a vector or a single value as an input, and traverses the tree in a certain order. Each `Node` is assigned a value from the vector, one after the other, recycling.
 
@@ -591,7 +606,7 @@ The `Set` method can also be used to assign a single value directly to all `Node
 acme$Set(avgExpectedCost = NULL)
 ```
 
-## Explicit traversal
+## `Traverse` and explicit traversal
 
 Previously, we have used the Get, Set and Do methods in their OO-style version. This is often very convenient for quick access to variables. However, often times you want to use the same traversal for various operations. For this reason, we have the explicit traversal mode. It works like so:
 
@@ -614,23 +629,31 @@ Get(traversal, "extension")
 
 ## `Aggregate` method
 
-The `Aggregate` method provides a shorthand for the oft-used case when a parent is the aggregate of its children values, as seen in the previous example. `Aggregate` calls a function recursively on children. For example:
+The `Aggregate` method provides a shorthand for the oft-used case when a parent is the aggregate of its children values, as seen in the previous example. `Aggregate` calls a function recursively on children. If a child holds the attribute, that value is returned. Otherwise, the attribute is collected from all children, and aggregated using the aggFun. For example:
 
 
 
 ```{r}
-Aggregate(acme, "cost", sum)
+Aggregate(node = acme, attribute = "cost", aggFun = sum)
 
 ```
 
-We can use this in the `Get` method:
+We can even use this in the `Get` method:
 
 ```{r, eval=FALSE}
 acme$Get(Aggregate, "cost", sum)
 ```
 
-We can also store/cache the calculated value along the way. For one thing, this is a convenient way to save an additional `Set` call. Additionally, it speeds up calculation:
+Note that this is not very efficient: `Aggregate` will be called twice on, say, *IT*: Once when the traversal passe *IT* itself, the second time recursively when `Aggregate` is called on the root. For this reason, we can also store/cache the calculated value along the way. For one thing, this is a convenient way to save an additional `Set` call. Additionally, it speeds up calculation:
 
+```{r}
+
+Aggregate(acme, attribute = "cost", aggFun = sum, cacheAttribute = "cost") 
+print(acme, "cost")
+
+```
+
+The `attribute` can also be a function. And `aggFun` does not have to be `sum`: 
 
 ```{r}
 
@@ -696,13 +719,15 @@ acme
 
 ## CPU
 
-The data.tree package has been built to support visualization, to foster rapid prototyping, and for other applications where development time saved is more important than computing time lost. Having said this, it becomes clear that big data and data.tree do not marry particularly well. Do not try to build a data.tree structure with a few million `Nodes`. Do not try to convert a JSON document with a size of a gigabyte to a data.tree structure.
+The data.tree package has been built to work with hierarchical data, to support visualization, to foster rapid prototyping, and for other applications where development time saved is more important than computing time lost. Having said this, it becomes clear that big data and data.tree do not marry particularly well. Don't expect R to build your data.tree structure with a few million `Nodes` during your cigarette break. Do not try to convert a gigabyte JSON document to a data.tree structure in a testthat test case.
 
-However, if you are respecting the following guidelines, I promise you will have a lot of fun with your `Nodes`:
+However, if you are respecting the following guidelines, I promise that you and your `Nodes` will have a lot of fun together. So here it goes:
 
 1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a data.tree structure with 9331 `Nodes`. On an AWS c4.large instance, this takes about 2.5 seconds.
 2. `Clone` is similar to `Node` creation, with an extra penalty of about 50%.
 3. Traversing (`Traverse`, `Get`, `Set` and `Do`) is realtively cheap. 
+
+This is really what you would expect. data.tree builds on R6, i.e. refernce objects. There is an overhead in creating them, as your computer needs to manage the references they hold. However, performing operations that change your tree (e.g. `Prune` or `Set`) are often faster than value semantics, as your computer does not need to copy the entire object in memory.
 
 Just to give you an order of magnitude: The following times are achieved on an AWS c4.large instance:
 

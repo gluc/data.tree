@@ -12,6 +12,7 @@ Suggests:
     testthat, 
     magrittr, 
     knitr, 
+    devtools,
     ape, 
     networkD3, 
     yaml, 
