@@ -717,9 +717,9 @@ acme
 
 ## CPU
 
-The data.tree package has been built to support visualization, to foster rapid prototyping, and for other applications where development time saved is more important than computing time lost. Having said this, it becomes clear that big data and data.tree do not marry particularly well. Do not try to build a data.tree structure with a few million `Nodes`. Do not try to convert a JSON document with a size of a gigabyte to a data.tree structure.
+The data.tree package has been built to work with hierarchical data, to support visualization, to foster rapid prototyping, and for other applications where development time saved is more important than computing time lost. Having said this, it becomes clear that big data and data.tree do not marry particularly well. Don't expect R to build your data.tree structure with a few million `Nodes` during your cigarette break. Do not try to convert a gigabyte JSON document to a data.tree structure in a testthat test case.
 
-However, if you are respecting the following guidelines, I promise you will have a lot of fun with your `Nodes`:
+However, if you are respecting the following guidelines, I promise you and your `Nodes` will have a lot of fun together:
 
 1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a data.tree structure with 9331 `Nodes`. On an AWS c4.large instance, this takes about 2.5 seconds.
 2. `Clone` is similar to `Node` creation, with an extra penalty of about 50%.
