@@ -226,7 +226,12 @@ head(pfodf)
 Let us convert the data.frame to a data.tree structure. Here, we use again the path string method. For other options, see `?as.Node.data.frame`
 
 ```{r}
-pfodf$pathString <- paste("portfolio", pfodf$AssetCategory, pfodf$AssetClass, pfodf$SubAssetClass, pfodf$ISIN, sep = "/")
+pfodf$pathString <- paste("portfolio", 
+                          pfodf$AssetCategory, 
+                          pfodf$AssetClass, 
+                          pfodf$SubAssetClass, 
+                          pfodf$ISIN, 
+                          sep = "/")
 pfo <- as.Node(pfodf)
 
 ```
@@ -584,7 +589,11 @@ plot(jlp, show.tip.label = FALSE, type = "cladogram")
 
 
 #We set arrow heads to the leaf-edges:
-for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), arrows = 2, type = "triangle", angle = 60)
+for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), 
+                              GetPhyloNr(node, "node"), 
+                              arrows = 2, 
+                              type = "triangle", 
+                              angle = 60)
 
 #Finally, we iterate over all the nodes and print the labels. Note that the `GetPhyloNr`
 #methods lets us map a `Node` in the data.tree to its counterpart in the phylo object.
@@ -594,7 +603,8 @@ for(node in Traverse(jl)) {
   if(node$type == 'decision') {
     nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.3, -0.5))
   } else if(node$type == 'chance') {
-    if (node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), col = "red")
+    if (node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), 
+                                                 GetPhyloNr(node, "node"), col = "red")
     nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle")
     nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
     edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "white")
@@ -665,19 +675,23 @@ Finally, we paste together our Mermaid string defining our graph:
 
 ```{r}
 
-format <- paste0(
-  "classDef default fill:none, bg:none, stroke-width:0px;
+jlformat <- paste0(
+  "classDef default fill:none, bg:none, stroke-width:0px, font-size:10px;
 classDef decision fill:#9f6,stroke:#333,stroke-width:1px;
 classDef chance fill:red,stroke:#333,stroke-width:1px;
 class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
 class ", paste(jl$Get("id", filterFun = function(x) x$type == "chance"), collapse = ","), " chance;")
-format <- ""
+
 t <- Traverse(jl, traversal = "level", filterFun = isNotRoot)
 df <- data.frame(from = Get(t, FromLabel), edge = Get(t, EdgeLabel), to = Get(t, ToLabel))
 
-diagram <- paste("graph LR", paste( paste0(df$from, df$edge, df$to), collapse = "\n"), format, sep = "\n")
+diagram <- paste("graph LR", paste( paste0(df$from, 
+                                           df$edge, 
+                                           df$to), 
+                                    collapse = "\n"), 
+                 jlformat, sep = "\n")
 
-diagram
+cat(diagram)
 
 DiagrammeR(diagram)
 
@@ -758,9 +772,6 @@ bubbles(
   width = 800
 )
 ```
-
-
-Note that if you run it yourself, you'll see that the tooltips are actually working, and displaying the full package names. In the chart itself, we only display the first two letters for better readability.
 
 
 # File Explorer (System Utilities, visualisation)
@@ -1113,7 +1124,7 @@ mean(ttt$Get(function(x) x$level - 1, filterFun = isLeaf))
 ```
 
 
-On average, how many different possibilities does a player have?
+What is the average branching factor?
 
 ```{r, eval = FALSE}
 ttt$averageBranchingFactor
@@ -1140,7 +1151,7 @@ c(winnerOne = 39588, winnerTwo = 21408, ties = 28800)
 ```
 
 
-We can, for example, look at any Node, using the `PrintBoard` function:
+We can, for example, look at any Node, using the `PrintBoard` function. This function prints the game history:
 
 ```{r}
 
@@ -1159,11 +1170,13 @@ PrintBoard <- function(node) {
   mineV[field] <- value
     
   mineM <- matrix(mineV, 3, 3, byrow = TRUE)
+  rownames(mineM) <- letters[1:3]
+  colnames(mineM) <- as.character(1:3)
   mineM
 }
 
 ```
-
+The first number denotes the player. The second number is the move (1 to 9):
 
 ```{r, eval = FALSE}
 
@@ -1171,12 +1184,18 @@ PrintBoard(ties[[1]])
 
 ```
 
+```{r, echo = FALSE}
+mt <- matrix(c(22, 13, 24, 15, 26, 17, 11, 28, 19), nrow = 3, ncol = 3, byrow = TRUE)
+rownames(mt) <- letters[1:3]
+colnames(mt) <- as.character(1:3)
+mt
+```
 
-As an exercise: Do the same for Chess!
+Exercise: Do the same for Chess!
 
 ## Parallelisation
 
-Here, the parallelisation is more challenging as with the Gene Defect example above. The reason is that we have only one tree, albeit a big one. So we need a strategy to do what we call intra-tree parallelisation.
+Here, the parallelisation is more challenging as with the *Gene Defect* example above. The reason is that we have only one tree, albeit a big one. So we need a strategy to do what we call intra-tree parallelisation.
 
 In a perfect world, data.tree and intra-tree parallelisation would tell a love story: Many operations are recursive, and can be called equally well on a subtree or on an entire tree. Therefore, it is very natural to delegate the calculation of multiple sub-trees to different processes.
 

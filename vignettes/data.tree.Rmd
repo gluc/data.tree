@@ -430,13 +430,17 @@ useRtree <- as.Node(useRdf, pathDelimiter = "|")
 #plot with networkD3
 library(networkD3)
 useRtreeList <- ToListExplicit(useRtree, unname = TRUE)
-network <- radialNetwork( useRtreeList)
-network
+radialNetwork( useRtreeList)
 
 ```
 
 Or, as a network:
+(you can actually touch these thingies and drag them around, don't be shy!)
 
+```{r}
+acmeNetwork <- ToDataFrameTaxonomy(acme, "name")
+simpleNetwork(acmeNetwork[-3], fontSize = 12)
+```
 
 
 There are more examples in the applications vignette. Type `vignette('application', package = "data.tree")`.
