@@ -7,6 +7,9 @@ warnings_are_errors: true
 r_build_args: 
 r_check_args: --as-cran
 
+r_packages:
+  - rmarkdown
+
 r_github_packages:
   - jimhester/covr
 
