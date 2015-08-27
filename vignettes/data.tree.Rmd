@@ -420,9 +420,11 @@ network
 
 ```
 
+Or, as a network:
 
 
-There are many more examples in the package's demos. Type `demo(package = "data.tree")` for a list of available demos.
+
+There are more examples in the applications vignette. Type `vignette('application', package = "data.tree")`.
 
 # Tree Traversal
 
