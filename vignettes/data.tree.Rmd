@@ -415,7 +415,7 @@ useRtree <- as.Node(useRdf, pathDelimiter = "|")
 #plot with networkD3
 library(networkD3)
 useRtreeList <- ToListExplicit(useRtree, unname = TRUE)
-network <- treeNetwork(useRtreeList)
+network <- radialNetwork( useRtreeList)
 network
 
 ```
