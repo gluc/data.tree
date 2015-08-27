@@ -20,7 +20,7 @@
 #' as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p") 
 #' 
 #' ToDataFrameTree(acme, "cost", "p")
-#' ToDataFrameTaxonomy(acme, "cost", "p")
+#' ToDataFrameNetwork(acme, "cost", "p")
 #' ToDataFrameTable(acme, "cost", "p")
 #' 
 #' #use the pruneFun:
@@ -114,12 +114,12 @@ ToDataFrameTable <- function(x, ..., pruneFun = NULL) {
 
 #' @rdname as.data.frame.Node
 #' 
-#' @return ToDataFrameTaxonomy: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree 
+#' @return ToDataFrameNetwork: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree 
 #' spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first column is called 'children', while the
 #' second is called 'parents', describing the parent to child edge. The third column is caled 'level'. x itself is not returned.
 #' 
 #' @export
-ToDataFrameTaxonomy <- function(x, 
+ToDataFrameNetwork <- function(x, 
                                 ..., 
                                 pruneFun = NULL, 
                                 inheritFromAncestors = FALSE) {
@@ -147,7 +147,7 @@ ToDataFrameTaxonomy <- function(x,
 #' 
 #' @param x The data.frame in the required format.
 #' @param ... Any other argument implementations of this might need
-#' @param mode Either "table" (if x is a data.frame in tree or table format) or "taxonomy"
+#' @param mode Either "table" (if x is a data.frame in tree or table format) or "network"
 #' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
 #'
 #' @return The root \code{Node} of the \code{data.tree} structure
@@ -174,10 +174,10 @@ ToDataFrameTaxonomy <- function(x,
 #' xN <- FromDataFrameTable(x, colLevels = list(NULL, "floor", c("p", "cost")), na.rm = TRUE)
 #' print(xN, "floor", "p", "cost")
 #'  
-#' #Taxonomy
-#' x <- ToDataFrameTaxonomy(acme, "p", "cost")
+#' #Network
+#' x <- ToDataFrameNetwork(acme, "p", "cost")
 #' x
-#' xN <- FromDataFrameTaxonomy(x)
+#' xN <- FromDataFrameNetwork(x)
 #' print(xN, "p", "cost")
 #' 
 #' @seealso \code{\link{as.data.frame.Node}}
@@ -186,7 +186,7 @@ ToDataFrameTaxonomy <- function(x,
 #' @export
 as.Node.data.frame <- function(x, 
                                ..., 
-                               mode = c("table", "taxonomy"),
+                               mode = c("table", "network"),
                                pathName = 'pathString', 
                                pathDelimiter = '/', 
                                colLevels = NULL,
@@ -194,7 +194,7 @@ as.Node.data.frame <- function(x,
   
   mode <- mode[1]
   if (mode == 'table') return (FromDataFrameTable(x, pathName, pathDelimiter, colLevels, na.rm))
-  else if (mode == 'taxonomy') return (FromDataFrameTaxonomy(x))
+  else if (mode == 'network') return (FromDataFrameNetwork(x))
   else stop(paste0("Mode ", mode, " unknown."))
   
 }
@@ -268,7 +268,7 @@ FromDataFrameTable <- function(table,
 
 #' @rdname as.Node.data.frame
 #' 
-#' @param taxonomy A \code{data.frame} in taxonomy format, i.e.
+#' @param network A \code{data.frame} in network format, i.e.
 #' it must adhere to the following requirements:
 #' \itemize{
 #'  \item{It must contain as many rows as there are nodes, excluding the root}
@@ -279,24 +279,24 @@ FromDataFrameTable <- function(table,
 #' }
 #' 
 #' @export
-FromDataFrameTaxonomy <- function(taxonomy) {
-  if (any(names(taxonomy)[1:3] != c("children", "parents", "level"))) stop("taxonomy is not a taxonomy. First three columns must be children, parents, and level, respectively.")
-  rootName <- unique(taxonomy$parents[!(taxonomy$parents %in% taxonomy$children)])
-  if (length(rootName) != 1) stop("Cannot find root name. taxonomy is not a taxonomy.")
+FromDataFrameNetwork <- function(network) {
+  if (any(names(network)[1:3] != c("children", "parents", "level"))) stop("network is not a network First three columns must be children, parents, and level, respectively.")
+  rootName <- unique(network$parents[!(network$parents %in% network$children)])
+  if (length(rootName) != 1) stop("Cannot find root name. network is not a network")
   root <- Node$new(rootName)
   GetNodeByName <- function(name, level) {
     t <- Traverse(root, filterFun = function(x) x$name == name && x$level == level)
-    if (length(t) == 0) stop(paste0("Cannot find node ", name, ". taxonomy is not a taxonomy."))
-    if (length(t) > 1) stop(paste0("More than one node named ", name, ". taxonomy is not a taxonomy."))
+    if (length(t) == 0) stop(paste0("Cannot find node ", name, ". network is not a network"))
+    if (length(t) > 1) stop(paste0("More than one node named ", name, ". network is not a network"))
     t[[1]]
   }
-  for (i in 1:dim(taxonomy)[1]) {
-    parent <- GetNodeByName(taxonomy[i, "parents"], taxonomy[i, "level"] - 1)
-    child <- parent$AddChild(taxonomy[i, "children"])
-    if (dim(taxonomy)[2] > 3) {
-      for (j in 4:dim(taxonomy)[2]) {
-        nm <- names(taxonomy)[j]
-        if (!nm %in% NODE_RESERVED_NAMES_CONST) child[[nm]] <- taxonomy[i, j]
+  for (i in 1:dim(network)[1]) {
+    parent <- GetNodeByName(network[i, "parents"], network[i, "level"] - 1)
+    child <- parent$AddChild(network[i, "children"])
+    if (dim(network)[2] > 3) {
+      for (j in 4:dim(network)[2]) {
+        nm <- names(network)[j]
+        if (!nm %in% NODE_RESERVED_NAMES_CONST) child[[nm]] <- network[i, j]
       }
     }
   }

@@ -15,8 +15,8 @@ as.Node(x, ...)
 Convert an object to a \code{data.tree} data structure
 }
 \seealso{
-Other as.Node: \code{\link{FromDataFrameTable}},
-  \code{\link{FromDataFrameTaxonomy}},
+Other as.Node: \code{\link{FromDataFrameNetwork}},
+  \code{\link{FromDataFrameTable}},
   \code{\link{as.Node.data.frame}};
   \code{\link{FromListExplicit}},
   \code{\link{FromListSimple}}, \code{\link{as.Node.list}};
