@@ -81,7 +81,7 @@ print(n, pruneMethod = "dist", limit = 20)
 
 ## Inspect the data
 
-We can also navigate the tree to find the population of a specific country. Luckily, RStudio is quite helpful with its code completion (use CTRL + SPACE):
+We can also navigate the tree to find the population of a specific country. Luckily, RStudio is quite helpful with its code completion (use `CTRL + SPACE`):
 
 ```{r}
 
@@ -512,6 +512,14 @@ cat(readChar(fileName, file.info(fileName)$size))
 
 Let's convert the YAML into a data.tree structure. First, we load it with the yaml package into a list of lists. Then we use `as.Node` to convert the list into a data.tree structure:
 
+```{r, eval = FALSE}
+
+#for debug
+fileName <- './inst/extdata/jennylind.yaml'
+```
+
+
+
 ```{r}
 
 library(data.tree)
@@ -529,8 +537,8 @@ Next, we define our payoff function, and apply it to the tree. Note that we use 
 ```{r}
 
 payoff <- function(x) {
-  if (x$type == 'chance') x$payoff <- Aggregate(x, function(node) node$payoff * node$p, sum)
-  else if (x$type == 'decision') x$payoff <- Aggregate(x, "payoff", max)
+  if (x$type == 'chance') x$payoff <- sum(sapply(x$children, function(node) node$payoff * node$p))
+  else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
 }
 
 jl$Do(payoff, traversal = "post-order", filterFun = isNotLeaf)
@@ -588,8 +596,8 @@ Here's the plotting:
 par(mar=c(1,1,1,1))
 plot(jlp, show.tip.label = FALSE, type = "cladogram")
 
-
 #We set arrow heads to the leaf-edges:
+
 for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), 
                               GetPhyloNr(node, "node"), 
                               arrows = 2, 

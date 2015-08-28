@@ -411,7 +411,7 @@ library(igraph)
 plot(as.igraph(acme))
 ```
 
-Another example, which at the same tame shows conversion from csv:
+Another example, which at the same time shows conversion from csv:
 
 ```{r}
 library(curl)

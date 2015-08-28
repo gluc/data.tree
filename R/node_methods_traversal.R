@@ -201,7 +201,7 @@ Do <- function(nodes,
 Set <- function(nodes, 
                 ...) {
   
-  if (length(nodes) == 0) invisible(nodes)
+  if (length(nodes) == 0) return(nodes)
   if (!is(nodes, "list")) stop("nodes must be a list of Node objects!")
       
   args <- list(...)
