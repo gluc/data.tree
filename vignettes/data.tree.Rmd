@@ -145,7 +145,7 @@ Often, trees are created from one of many file formats. We opted for a multi-ste
 * yaml -> list of lists (`?yaml::yaml.load`) -> data.tree (`?as.Node.list`, `demo('decisiontree', package='data.tree')`
 * json -> list of lists (e.g. `?jsonlite::fromJSON`) -> data.tree (`?as.Node.list`)
 
-If you have a choice, we recommend you consider yaml format, as it is concise, human-readable, and very easy to convert to a data.tree. An example of a sample population is provided here for illustration:
+If you have a choice, we recommend you consider yaml format to store and share your hierarchies. It is concise, human-readable, and very easy to convert to a data.tree. An example of a sample population is provided here for illustration:
 
 ```{r}
 library(yaml)
@@ -175,7 +175,7 @@ osNode <- as.Node(osList)
 print(osNode, "users")
 ```
 
-Once converted to a `data.tree` structure, we can use all its features to work with the hierarchical data. We will explain these functions later, but provide here a quick sample for illustration:
+Once converted to a `data.tree` structure, we can use all its features to work with the hierarchical data. We will explain these functions later, but provide here a quick wrap-up for illustration:
 
 ```{r}
 #hierarchically sum up the users per OS
@@ -196,13 +196,16 @@ print(node = osNode, "users", pruneFun = function(x) x$users > 20)
 
 ## Node methods
 
-As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, often the root `Node` of a tree.
+As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, often the **root** `Node` of a tree.
 
 There are different types of methods:
 
 * OO-style actives (sometimes called properties) on `Node`s, such as e.g. `Node$isRoot`
 * OO-style methods on `Node`s, such as e.g. `Node$Prune(pruneFun)`
-* Classical R methods, such as e.g. `Clone(node)`. The main reason for these are not design considerations, but performance. As OO-style methods maintain their own "copy" of the function in each `Node` instance, they are inflating memory usage of the `Node`s. For this reason, their use is kept to a minimum, and often only a classical R method exists instead.
+* Classical R methods, such as e.g. `Clone(node)`. The are at least two reasons why these exist (sometimes in co-existence with their OO-style counterpart):
+** performance: OO-style methods maintain their own copy of the function in each `Node` instance, they are inflating memory usage of the `Node`s. For this reason, OO-style methods are kept to a minimum
+** documentation: OO-style methods are difficult to document. So, to find documentation for, say, `Node$Prune`, you can just type `?Prune`. Be aware, however, that this documents the classical R method. Thus, the first argument (`node`) needs to be omitted when called OO-style. In short, you can call either `mynode$Prune(myPruneFunction)` or `Prune(mynode, myPruneFunction)`. The effect is exactly the same.
+** debugging: OO-style methods are difficult to debug. So, in this packge, the just re-direct to their classical R counterpart, which is very easy to debug.
 
 
 ### Actives Examples
@@ -216,7 +219,7 @@ population$height
 population$count
 population$totalCount
 population$fields
-population$totalFields
+population$fieldsAll
 population$averageBranchingFactor
 ```
 
