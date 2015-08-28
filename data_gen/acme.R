@@ -1,6 +1,6 @@
 #Run this to generate data(acme)
 
-#library(data.tree)
+#library(data.tree)ac
 acme <- Node$new("Acme Inc.")
 accounting <- acme$AddChild("Accounting")
 software <- accounting$AddChild("New Software")

@@ -319,9 +319,53 @@ print(acme, "cost", "p")
 
 Note that there is a list of reserved names you cannot use as `Node` attributes:
 
+
 ```{r}
 NODE_RESERVED_NAMES_CONST
 ```
+### Custom Attributes in constructor
+
+An alternative, often convenient way to assign custom attributes is in the constructor, or in the `Node$AddChild` method:
+
+```{r}
+birds <- Node$new("Aves", vulgo = "Bird")
+birds$AddChild("Neognathae", vulgo = "New Jaws", species = 10000)
+birds$AddChild("Palaeognathae", vulgo = "Old Jaws", species = 60)
+print(birds, "vulgo", "species")
+
+```
+
+### Custom Attributes as function
+
+Nothin stops you from setting a function as an attribute. This is a very powerful feature that lets you modify your tree without having to recalculate. Think of this as a hierarchical spreadsheet.
+
+Consider the following example:
+
+```{r}
+birds$species <- function(self) sum(sapply(self$children, function(x) x$species))
+print(birds, "species")
+
+```
+data.tree maps the `self` argument to the `Node` at hand. Thus, you must name the argument `self`.
+
+Now, let's assume we discovered a new species:
+
+```{r}
+birds$Palaeognathae$species <- 61
+print(birds, "species")
+```
+
+This, together with the `Set` method and recursion, becomes even more powerful:
+
+```{r}
+acme$Set(cost = c(function(self) sum(sapply(self$children, 
+                                            function(x) GetAttribute(x, "cost")))), 
+         filterFun = isNotLeaf)
+print(acme, "cost")
+acme$IT$AddChild("Paperless", cost = 240000)
+print(acme, "cost")
+```
+
 
 ## Printing and Plotting
 

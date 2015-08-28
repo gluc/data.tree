@@ -109,12 +109,10 @@ Aggregate = function(node,
     v <- GetAttribute(node, cacheAttribute, ..., format = identity, nullAsNa = FALSE)
     if (!length(v) == 0) return (v)
   } 
-  
-  if (node$isLeaf) {
-    v <- GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE)
-    if (!length(v) == 0) result <- unname(v)
-    else stop(paste0("Attribute returns NULL on leaf!"))
-  }
+  v <- GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE)
+  if (!length(v) == 0) result <- unname(v)
+  else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
+
   if (!exists("result", envir = environment()) || length(result) == 0) {
     values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, cacheAttribute, ...))
     result <- unname(aggFun(values))
@@ -341,9 +339,20 @@ ClimbByAttribute <- function(node, ..., recursive = FALSE) {
 
 
 
-###############################
-## Private Methods
 
+
+#' Get an attribute from a Node.
+#' 
+#' @param nullAsNa If TRUE (the default), then NULL is returned as NA. Otherwise it is returned as NULL.
+#' 
+#' 
+#' @inheritParams Get
+#' 
+#' @examples
+#' data(acme)
+#' GetAttribute(acme$IT$Outsource, "cost")
+#' 
+#' @export
 GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
   if (is.function(attribute)) {
     #function
@@ -353,7 +362,7 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
     #property
     v <- node[[attribute]]
     if (is.function(v)) {
-      if (names(formals(v))[[1]] == "self") v <- v(self = node, ...)
+      if (names(formals(v))[[1]] == "self") v <- v(self = node, ...) #allow storing functions whose first arg is self
       else v <- v(...)
     }
   } else {

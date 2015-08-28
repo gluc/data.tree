@@ -106,6 +106,8 @@ Node <- R6Class("Node",
                       
                       initialize=function(name, ...) {
                         if (!missing(name)) private$p_name <- as.character(name)
+                        args <- list(...)
+                        mapply(FUN = function(arg, nme) self[[nme]] <- arg, args, names(args))
                         invisible (self)
                       },
                       
@@ -114,8 +116,8 @@ Node <- R6Class("Node",
                       ####################
                       # Tree creation
                       
-                      AddChild = function(name) {
-                        child <- Node$new(as.character(name))
+                      AddChild = function(name, ...) {
+                        child <- Node$new(as.character(name), ...)
                         invisible (self$AddChildNode(child))
                       },
                       
