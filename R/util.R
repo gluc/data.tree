@@ -75,7 +75,7 @@ DefaultPlotHeight <- function(node, rootHeight = 100) {
 CreateRegularTree <- function(height = 5, branchingFactor = 3, parent = Node$new("1")) {
   if (height <= 1) return()
   for (i in 1:branchingFactor) {
-    child <- parent$AddChild(as.character(i))
+    child <- parent$AddChild(paste(parent$name, i, sep = "."))
     CreateRegularTree(height - 1, branchingFactor, child)
   }
   return (parent)
