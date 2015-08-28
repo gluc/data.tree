@@ -10,7 +10,6 @@ Imports:
     R6, stringr
 Suggests:
     testthat, 
-    magrittr, 
     knitr, 
     devtools,
     ape, 

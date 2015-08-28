@@ -51,7 +51,7 @@ For more details, see the applications vignette by typing `vignette("application
 
 ## Trees in R
 
-Tree-like structures are already used in R. For example, environments can be seen as nodes in a tree. And CRAN provides numerous packages that deal with tree-like structures, especially in the area of decision theory. Yet, there is no general purpose hierarchical data structure that could be used as conveniently and generically as, say, data.frame. 
+Tree-like structures are already used in R. For example, environments can be seen as nodes in a tree. And CRAN provides numerous packages that deal with tree-like structures, especially in the area of decision theory. Yet, there is no general purpose hierarchical data structure that could be used as conveniently and generically as, say, `data.frame`. 
 
 As a result, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames (or - perish the thought! - in Excel sheets). But often, hierarchies don't marry with tables, and various workarounds are usually required. 
 
@@ -97,7 +97,7 @@ As you can see from the previous example, each `Node` is identified by its *name
 1. You can call methods on a `Node` in OO style, e.g. `acme$Get("name")`
 2. `Node` exhibits *reference semantics*. Thus, multiple variables in R can point to the same `Node`, and modifying a `Node` will modify it for all referencing variables. In the above code example, both `acme$IT` and `it` reference the same object. This is different from the *value semantics*, which is much more widely used in R.
 
-### Create a tree from a data.frame
+### Create a tree from a `data.frame`
 
 Creating a tree programmatically is useful especially in the context of algorithms. However, most times you will create a tree by conversion. This could be by conversion from a nested list-of-lists, by conversion from another R tree-structure (e.g. an ape `phylo`), or by conversion from a `data.frame`. For more details on all the options, type:
 
@@ -107,7 +107,7 @@ Creating a tree programmatically is useful especially in the context of algorith
 
 and refer to the See Also section.
 
-One of the most common conversions is the one from a data.frame in table format. The following code illustrates this. The GNI2010 data we load from the treemap package is in table format, meaning that each row in the `data.frame` represents a *leaf* in the `data.tree` structure:
+One of the most common conversions is the one from a `data.frame` in table format. The following code illustrates this. The GNI2010 data we load from the treemap package is in table format, meaning that each row in the `data.frame` represents a *leaf* in the `data.tree` structure:
 
 ```{r}
 library(treemap)
@@ -175,37 +175,20 @@ osNode <- as.Node(osList)
 print(osNode, "users")
 ```
 
-Once converted to a `data.tree` structure, we can use all its features to work with the hierarchical data. We will explain these functions later, but provide here a quick wrap-up for illustration:
-
-```{r}
-#hierarchically sum up the users per OS
-osNode$Do(function(x) Aggregate(node = x, 
-                                attribute = "users", 
-                                aggFun = sum, 
-                                cacheAttribute = "users"))
-
-#sort by users
-osNode$Sort(attribute = "users", decreasing = TRUE, recursive = TRUE)
-
-#print the tree, showing only OS having more than 20 users
-print(node = osNode, "users", pruneFun = function(x) x$users > 20)
-
-```
-
-
+Once converted to a `data.tree` structure, we can use all its features to work with the hierarchical data. 
 
 ## Node methods
 
-As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, often the **root** `Node` of a tree.
+As seen above, a `data.tree` structure is composed of `Node` objects, and the entry point to a `data.tree` structure is always a `Node`, often the *root* `Node` of a tree.
 
 There are different types of methods:
 
-* OO-style actives (sometimes called properties) on `Node`s, such as e.g. `Node$isRoot`
-* OO-style methods on `Node`s, such as e.g. `Node$Prune(pruneFun)`
+* OO-style actives (sometimes called properties) on `Nodes`, such as e.g. `Node$isRoot`
+* OO-style methods on `Nodes`, such as e.g. `Node$Prune(pruneFun)`
 * Classical R methods, such as e.g. `Clone(node)`. The are at least two reasons why these exist (sometimes in co-existence with their OO-style counterpart):
-** performance: OO-style methods maintain their own copy of the function in each `Node` instance, they are inflating memory usage of the `Node`s. For this reason, OO-style methods are kept to a minimum
-** documentation: OO-style methods are difficult to document. So, to find documentation for, say, `Node$Prune`, you can just type `?Prune`. Be aware, however, that this documents the classical R method. Thus, the first argument (`node`) needs to be omitted when called OO-style. In short, you can call either `mynode$Prune(myPruneFunction)` or `Prune(mynode, myPruneFunction)`. The effect is exactly the same.
-** debugging: OO-style methods are difficult to debug. So, in this packge, the just re-direct to their classical R counterpart, which is very easy to debug.
+    + performance: OO-style methods maintain their own copy of the function in each `Node` instance, they are inflating memory usage of the `Nodes`. For this reason, OO-style methods are kept to a minimum
+    + documentation: OO-style methods are difficult to document. So, to find documentation for, say, `Node$Prune`, you can just type `?Prune`. Be aware, however, that this documents the classical R method. Thus, the first argument (`node`) needs to be omitted when called OO-style. In short, you can call either `mynode$Prune(myPruneFunction)` or `Prune(mynode, myPruneFunction)`. The effect is exactly the same.
+    + debugging: OO-style methods are difficult to debug. So, in this packge, the just re-direct to their classical R counterpart, which is very easy to debug.
 
 
 ### Actives Examples
@@ -263,7 +246,7 @@ ToDataFrameNetwork(acme)
 
 ## Climbing a tree (tree navigation)
 
-To *climb* a tree means to navigate to a specific `Node` in the data.tree structure. The most natural is to climb a tree by `Node's` path.
+To *climb* a tree means to navigate to a specific `Node` in the data.tree structure. The most natural is to climb a tree by path.
 
 ### Navigation by path
 
@@ -345,7 +328,7 @@ NODE_RESERVED_NAMES_CONST
 
 ### Printing
 
-Printing a tree is easy. Printing displays a tree in a tree-grid view. On the left, you have the hierarchy. Then you have a column per variable you want to print:
+Printing a tree is easy. `print` displays a tree in a tree-grid view. On the left, you have the hierarchy. Then you have a column per variable you want to print:
 
 ```{r}
 
@@ -353,7 +336,11 @@ print(acme, "cost", "p")
 
 ```
 
-You can use *formatters* to output a variable in a certain way:
+You can use *formatters* to output a variable in a certain way. You can use formatters in two ways:
+* You can set them on a `Node` using the `SetFormat` method. If you do this, then `print` will pick up the formatter as a default formatter
+* You can add an explicit ad-hoc formater to the `Get` method (see below). This will overwrite default formatters set using the `SetFormat` method.
+
+Setting a formatter using the `SetFormat` method:
 
 ```{r}
 SetFormat(acme, "p", formatFun = FormatPercent)
@@ -362,7 +349,7 @@ print(acme, "cost", "p")
 
 ```
 
-For even more flexibility, you can use tree-traversal to compose your data.frame. This is explained below. But just for your convenience, a simple example:
+Formatting with the `Get` method:
 
 ```{r}
 data.frame(cost = acme$Get("cost", format = function(x) FormatFixedDecimal(x, 2)),
@@ -528,59 +515,51 @@ acme$Get(ExpectedCost, filterFun = isLeaf)
 
 ```
 
-The requirements for the function (`ExpectedCost` in the above example) is that the first argument of the function is a `Node`.
+`ExpectedCost` is expected to accept a `Node` as its first argument.
 
 
 #### Using recursion
 
-In the following examples, we use `magrittr` to enhance readability of the code. 
+Recursion comes naturally with data.tree, and it's one of its core strengths: 
 
 ```{r}
-library(magrittr)
+
 ExpectedCost <- function(node) {
   result <- node$cost * node$p
-  if(length(result) == 0) {
-    if (node$isLeaf) result <- NA
-    else {
-      node$children %>% sapply(ExpectedCost) %>% sum -> result
-    }
-  }
+  if(length(result) == 0) result <- sum(sapply(node$children, ExpectedCost))
   return (result)
 }
 
-data.frame(ec = acme$Get(ExpectedCost))
+print(acme, ec = acme$Get(ExpectedCost))
 
 ```
 
+There is a built-in function that would make this example simpler: `Aggregate`. It is explained below.
+
 #### Add parameters to the passed function
 
-The `Traverse` method accepts an ellipsis (`...`). Any additional parameters with which `Get` is called will be passed on to the `ExpectedCost` function. This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
+The `Get` method accepts an ellipsis (`...`). Any additional parameters with which `Get` is called will be handed over to the `ExpectedCost` function. This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
 
 ```{r}
 
-ExpectedCost <- function(node, fun = sum) {
+AggregateCost <- function(node, fun = sum) {
   result <- node$cost * node$p
-  if(length(result) == 0) {
-    if (node$isLeaf) result <- NA
-    else {
-      node$children %>% sapply(function(x) ExpectedCost(x, fun = fun)) %>% fun -> result
-    }
-  }
+  if(length(result) == 0) result <- fun(sapply(node$children, AggregateCost))
   return (result)
 }
 
-data.frame(ec = acme$Get(ExpectedCost, fun = mean))
+print(acme, "cost", "p", ec = acme$Get(AggregateCost, fun = max))
 
 ```
 
 
 ## `Do`
 
-We can tell the `Do` method to assign the value to a specific attribute for each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. For instance, we can store the calculated expected cost for later use and printing:
+Do is similar to `Get` in that it also traverses a tree in a specific traversal order. However, instead of fetching an attribute, it, surprise, does something. For example, we can tell the `Do` method to assign a value to each `Node` it traverses. This is especially useful if the attribute parameter is a function, as in the previous examples. For instance, we can store the calculated expected cost for later use and printing:
 
 ```{r}
 
-acme$Do(function(x) x$expectedCost <- x$p * x$cost)
+acme$Do(function(node) node$expectedCost <- ExpectedCost(node))
 print(acme, "p", "cost", "expectedCost")
 
 ```
@@ -614,7 +593,7 @@ print(acme, "employees", "secretaries", "id")
 
 ### Deleting attributes
 
-The `Set` method can also be used to assign a single value directly to all `Node`s traversed. For example, to remove the `avgExpectedCost`, we assign `NULL` on each node, using the fact that the `Set` recycles:
+The `Set` method can also be used to assign a single value directly to all `Nodes` traversed. For example, to remove the `avgExpectedCost`, we assign `NULL` on each node, using the fact that the `Set` recycles:
 
 ```{r}
 acme$Set(avgExpectedCost = NULL)
@@ -622,7 +601,7 @@ acme$Set(avgExpectedCost = NULL)
 
 ## `Traverse` and explicit traversal
 
-Previously, we have used the Get, Set and Do methods in their OO-style version. This is often very convenient for quick access to variables. However, often times you want to use the same traversal for various operations. For this reason, we have the explicit traversal mode. It works like so:
+Previously, we have used the `Get`, `Set` and `Do` methods in their OO-style version. This is often very convenient for quick access to variables. However, often times you want to re-use the same traversal for various operations. For this reason, we have the explicit traversal mode. It works like so:
 
 ```{r}
 traversal <- Traverse(acme, traversal = "post-order", filterFun = function(x) x$level == 2)
