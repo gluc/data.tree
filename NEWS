@@ -1,12 +1,15 @@
 # All changes to data.tree are documented here.
 
-## Version 0.2 Elder
+## Version 0.2.0-rc.1 Elder
 
 - ADD: ClimbByAttribute
 - FIX: Aggregate and Cumulate now work always on attributes having a formatter
 - ADD: as.igraph now has a 'directed' parameter
-- ADD: print now has a pruneMethod, allowing different ways to print a part of a tree only
-- CHANGE: renamed FromDataFrameTaxonomy and ToDataFrameTaxonomy to FromDataFrameNetwork and ToDataFrameNetwork, respectively
+- ADD: print now has a pruneMethod, allowing different methods to avoid that a huge tree is printed to the console
+- REMOVE: FromDataFrameTaxonomy and ToDataFrameTaxonomy (replaced by FromDataFrameNetwork and ToDataFrameNetwork, but with some differences)
+- ADD: FromDataFrameNetwork and ToDataFrameNetwork
+- IMPROVE: make Traversal "level" much faster
+
 
 ## Version 0.1.9 Pine II
 
