@@ -77,12 +77,20 @@ Revert <- function(node, recursive = TRUE) {
 }
 
 
-#' Prunes a tree
+#' Prunes a tree. This function has side-effects, it modifies your data.tree structure!
 #' 
-#' @param The node whose children should be pruned
+#' @param node The root of the sub-tree to be pruned
 #' @param pruneFun a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
 #' and its descendants should be kept, FALSE otherwise.
 #' @return the number of nodes removed
+#' 
+#' @examples
+#' data(acme)
+#' Aggregate(acme, "cost", sum, "cost")
+#' acme$Prune(function(x) x$cost > 700000)
+#' print(acme, "cost")
+#' 
+#' 
 #' @keywords internal
 Prune <- function(node, pruneFun) { 
   return (.Prune(node, pruneFun, TRUE))

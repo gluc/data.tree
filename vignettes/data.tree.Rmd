@@ -246,22 +246,21 @@ ToDataFrameNetwork(acme)
 
 ## Climbing a tree (tree navigation)
 
-To *climb* a tree means to navigate to a specific `Node` in the data.tree structure. The most natural is to climb a tree by path.
+To *climb* a tree means to navigate to a specific `Node` in the data.tree structure. 
 
 ### Navigation by path
 
-Once you have a tree, you can localise any node by its path, where each path element is the name of a node:
+The most natural form of climbing a tree is to climb by path:
 
 ```{r}
 acme$IT$Outsource
 acme$Research$`New Labs`
 ```
 
-There is a number of other ways to get to a specific `Node`.
 
 ### Naviation by position
 
-You can access the children of a `Node` directly through the `Node$children` attribute: 
+However, there is a number of other ways to get to a specific `Node`. We can access the children of a `Node` directly through the `Node$children` attribute: 
 
 
 ```{r}
@@ -273,7 +272,7 @@ acme$children[[1]]$children[[2]]$name
 
 ### Navigation by attributes
 
-You can not only navigate by path, but also by other attributes:
+Furthermore, we can not only navigate by path, but also by other attributes. This is achieved with the `Climb` method:
 
 ```{r}
 acme$Climb(position = 1, name = "New Software")$name
@@ -287,10 +286,10 @@ tree <- CreateRegularTree(5, 5)
 tree$Climb(position = c(2, 3, 4))$path
 ```
 
-Finally, you can even combine. The following example starts on the root, then looks for child at position 2. The in turn its child at position 3. Next its child having name = "4", and finally its child having name "5".
+Finally, you can even combine. The following example starts on the root, then looks for child at position 2, then for child at position 3. Next, we move to the child having name = "4", and finally its child having name "5".
 
 ```{r}
-tree$Climb(position = c(2, 3), name = c(4, 5))$path
+tree$Climb(position = c(2, 3), name = c("1.2.3.4", "1.2.3.4.5"))$path
 ```
 
 
@@ -707,6 +706,21 @@ acme
 acme$Sort(Aggregate, "cost", sum, decreasing = TRUE, recursive = TRUE)
 acme
 ```
+
+## `Prune` method
+
+You can prune sub-trees out of a tree. There are two variations of this:
+* *temporary* pruning, e.g. just for printing: This is the `pruneFun` parameter, e.g. in `Get`
+* *side effect* pruning, meaning that you modify your data.tree structure for good.
+
+For example:
+
+```{r}
+#Aggregate(acme, "cost", sum, "cost")
+acme$Prune(function(x) x$cost > 700000)
+print(acme, "cost")
+```
+
 
 # Performance Considerations
 
