@@ -1,6 +1,6 @@
 # All changes to data.tree are documented here.
 
-## Version 0.2 Elder
+## Version 0.2.0-rc.1 Elder
 
 - ADD: ClimbByAttribute
 - FIX: Aggregate and Cumulate now work always on attributes having a formatter
