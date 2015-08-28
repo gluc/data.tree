@@ -38,10 +38,11 @@ describing the path of each row.}
 it must adhere to the following requirements:
 \itemize{
  \item{It must contain as many rows as there are nodes, excluding the root}
- \item{Its first column must be called *children*, and contain the name of each node, whereby each name must be unique within a node's level}
- \item{Its second column must be called *parents*, and contain the name of the parent of each node}
- \item{Its third column must be called *level*, and contain the level of the node}
- \item{The rows must be ordered by level, increasing}
+ \item{Its first and second columns contain the network relationships. This can be either climbing (from parent to children) or descending (from child to parent)}
+ \item{Its subsequent columns contain the attributes to be set as fields on the nodes}
+ \item{It must contain a single root}
+ \item{There are no cycles in the network}
+ \item{Node names are unique throughout the network (and not only per level, as required by data.tree)}
 }}
 }
 \value{
@@ -73,7 +74,7 @@ xN <- FromDataFrameTable(x, colLevels = list(NULL, "floor", c("p", "cost")), na.
 print(xN, "floor", "p", "cost")
 
 #Network
-x <- ToDataFrameNetwork(acme, "p", "cost")
+x <- ToDataFrameNetwork(acme, "p", "cost", direction = "climb")
 x
 xN <- FromDataFrameNetwork(x)
 print(xN, "p", "cost")

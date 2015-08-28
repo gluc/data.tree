@@ -32,8 +32,8 @@ test_that("Climb 3rd Level", {
 
 test_that("Climb non-name", {
   tree <- CreateRegularTree(5, 2)
-  p <- tree$Climb(c("1", "1"), position = c(2, 2))$path
-  expect_equal(as.character(c(1, 1, 1, 2, 2)), p)
+  p <- tree$Climb(c("1.1", "1.1.1"), position = c(2, 2))$path
+  expect_equal(c("1", "1.1", "1.1.1", "1.1.1.2", "1.1.1.2.2"), p)
   
 })
 
