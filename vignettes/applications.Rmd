@@ -409,14 +409,15 @@ TrainID3 <- function(node, data) {
     #chose the feature with the highest information gain (e.g. 'color')
     #if more than one feature have the same information gain, then take
     #the first one
-    feature <- names(ig)[ig == max(ig)][1]
+    feature <- names(which.max(ig))
     node$feature <- feature
     
     #take the subset of the data-set having that feature value
-    childObs <- split(data[ ,!(names(data) == feature), drop = FALSE], 
+    
+    childObs <- split(data[ ,names(data) != feature, drop = FALSE], 
                       data[ ,feature], 
                       drop = TRUE)
-    
+  
     for(i in 1:length(childObs)) {
       #construct a child having the name of that feature value (e.g. 'red')
       child <- node$AddChild(names(childObs)[i])
