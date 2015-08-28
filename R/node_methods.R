@@ -110,11 +110,11 @@ Aggregate = function(node,
     if (!length(v) == 0) return (v)
   } 
   
-  
-  v <- GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE)
-  if (!length(v) == 0) result <- unname(v)
-  else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
-  
+  if (node$isLeaf) {
+    v <- GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE)
+    if (!length(v) == 0) result <- unname(v)
+    else stop(paste0("Attribute returns NULL on leaf!"))
+  }
   if (!exists("result", envir = environment()) || length(result) == 0) {
     values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, cacheAttribute, ...))
     result <- unname(aggFun(values))
@@ -352,7 +352,10 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   } else if(is.character(attribute) && length(attribute) == 1) {
     #property
     v <- node[[attribute]]
-    if (is.function(v)) v <- v(...)
+    if (is.function(v)) {
+      if (names(formals(v))[[1]] == "self") v <- v(self = node, ...)
+      else v <- v(...)
+    }
   } else {
     stop("attribute must be a function, the name of a public property, or the name of method")
   }
