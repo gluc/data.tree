@@ -33,8 +33,8 @@ Get(t, "name")
 Other ape phylo conversions: \code{\link{GetPhyloNr}};
   \code{\link{as.phylo.Node}}
 
-Other as.Node: \code{\link{FromDataFrameTable}},
-  \code{\link{FromDataFrameTaxonomy}},
+Other as.Node: \code{\link{FromDataFrameNetwork}},
+  \code{\link{FromDataFrameTable}},
   \code{\link{as.Node.data.frame}};
   \code{\link{FromListExplicit}},
   \code{\link{FromListSimple}}, \code{\link{as.Node.list}};

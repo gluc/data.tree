@@ -48,9 +48,9 @@ test_that("ToDataFrameTable", {
 
 
 
-test_that("ToDataFrameTaxonomy", {
+test_that("ToDataFrameNetwork", {
   data(acme)
-  acmedf <- ToDataFrameTaxonomy(acme, "p")
+  acmedf <- ToDataFrameNetwork(acme, "p")
   expect_equal(acmedf$children, c("Accounting", "Research", "IT", "New Software", "New Accounting Standards", "New Product Line", "New Labs", "Outsource", "Go agile", "Switch to R"))
   expect_equal(acmedf$parents, c("Acme Inc.", "Acme Inc.", "Acme Inc.", "Accounting", "Accounting", "Research", "Research", "IT", "IT", "IT"))
 })
@@ -77,10 +77,10 @@ test_that("FromDataFrameTable col-levels", {
   
 })
 
-test_that("FromDataFrameTaxonomy", {
+test_that("FromDataFrameNetwork", {
   data(acme)
-  x <- ToDataFrameTaxonomy(acme, "p", "cost")
-  xN <- FromDataFrameTaxonomy(x)
+  x <- ToDataFrameNetwork(acme, "p", "cost")
+  xN <- FromDataFrameNetwork(x)
   expect_equal(xN$totalCount, acme$totalCount)
   expect_equal(xN$Get("name"), acme$Get("name"))
   expect_equal(xN$Get("p"), acme$Get("p"))

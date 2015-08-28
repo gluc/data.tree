@@ -29,8 +29,8 @@
 #' @export
 as.igraph.Node <- function(node, vertexAttributes = character(), edgeAttributes = character(), directed = FALSE) {
   if (!AreNamesUnique(node)) stop("Node names must be unique withing the tree")
-  taxonomy <- do.call("ToDataFrameTaxonomy", c(node, "name", vertexAttributes, edgeAttributes)) 
-  data <- taxonomy[,c("children", "parents", edgeAttributes)]
+  network <- do.call("ToDataFrameNetwork", c(node, "name", vertexAttributes, edgeAttributes)) 
+  data <- network[,c("children", "parents", edgeAttributes)]
   vert <- do.call("ToDataFrameTree", c(node, "name", vertexAttributes))[,-1]
   ig <- igraph::graph_from_data_frame(data, 
                                       directed = directed,
