@@ -337,7 +337,7 @@ print(birds, "vulgo", "species")
 
 ### Custom Attributes as function
 
-Nothin stops you from setting a function as an attribute. This is a very powerful feature that lets you modify your tree without having to recalculate. Think of this as a hierarchical spreadsheet.
+Nothin stops you from setting a function as an attribute. This lets you modify your tree without having to recalculate. Think of this as a hierarchical spreadsheet, in which you can set formulas into cells.
 
 Consider the following example:
 
@@ -355,11 +355,11 @@ birds$Palaeognathae$species <- 61
 print(birds, "species")
 ```
 
-This, together with the `Set` method and recursion, becomes even more powerful:
+This, together with the `Set` method and recursion, becomes a very powerful tool:
 
 ```{r}
 acme$Set(cost = c(function(self) sum(sapply(self$children, 
-                                            function(x) GetAttribute(x, "cost")))), 
+                                            function(child) GetAttribute(child, "cost", format = identity)))), 
          filterFun = isNotLeaf)
 print(acme, "cost")
 acme$IT$AddChild("Paperless", cost = 240000)
@@ -371,7 +371,7 @@ print(acme, "cost")
 
 ### Printing
 
-Printing a tree is easy. `print` displays a tree in a tree-grid view. On the left, you have the hierarchy. Then you have a column per variable you want to print:
+Printing a tree is easy, as you surely have seen in the previous sections. `print` displays a tree in a tree-grid view. On the left, you have the hierarchy. Then you have a column per variable you want to print:
 
 ```{r}
 
@@ -380,8 +380,8 @@ print(acme, "cost", "p")
 ```
 
 You can use *formatters* to output a variable in a certain way. You can use formatters in two ways:
-* You can set them on a `Node` using the `SetFormat` method. If you do this, then `print` will pick up the formatter as a default formatter
-* You can add an explicit ad-hoc formater to the `Get` method (see below). This will overwrite default formatters set using the `SetFormat` method.
+* You can set them on a `Node` using the `SetFormat` method. If you do this, then the formatter will be picked up as a default formatter whenever you `print`, `Get`, convert to `data.frame`, etc. 
+* You can add an explicit ad-hoc formater to the `Get` method (see below). This will overwrite default formatters previously set via the `SetFormat` method. You can also set the formatter to `identity` to void a formatter.
 
 Setting a formatter using the `SetFormat` method:
 

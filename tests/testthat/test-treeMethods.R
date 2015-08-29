@@ -580,3 +580,13 @@ test_that("change name", {
   expect_true(is.null(acme$Research))
   expect_true(acme$Research2$name == "Research2")
 })
+
+
+test_that("attribute function with formatter", {
+  data(acme)
+  SetFormat(acme, "cost", FormatFixedDecimal)
+  acme$IT$cost <- function(self) sum(sapply(self$children, function(x) x$cost))
+  mycost <- acme$Get("cost")
+  expect_equal(mycost[[8]], "700000.000")
+  
+})
