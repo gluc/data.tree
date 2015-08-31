@@ -355,16 +355,8 @@ birds$Palaeognathae$species <- 61
 print(birds, "species")
 ```
 
-This, together with the `Set` method and recursion, becomes a very powerful tool:
+This, together with the `Set` method and recursion, becomes a very powerful tool, as we'll see later.
 
-```{r}
-acme$Set(cost = c(function(self) sum(sapply(self$children, 
-                                            function(child) GetAttribute(child, "cost", format = identity)))), 
-         filterFun = isNotLeaf)
-print(acme, "cost")
-acme$IT$AddChild("Paperless", cost = 240000)
-print(acme, "cost")
-```
 
 
 ## Printing and Plotting
@@ -544,14 +536,12 @@ data.frame(level = agile$Get('level', traversal = "ancestor"))
 
 #### Pass a function to the `Get` method
 
-You can pass a standard R function to the `Get` method. For example:
+You can pass a standard R function to the `Get` method (and thus to `print`, `as.data.frame`, etc.). For example:
 
 ```{r}
 
 ExpectedCost <- function(node) {
-  result <- node$cost * node$p
-  if(length(result) == 0) result <- NA
-  return (result)
+  return ( node$cost * node$p )
 }
 
 acme$Get(ExpectedCost, filterFun = isLeaf)
@@ -563,38 +553,19 @@ acme$Get(ExpectedCost, filterFun = isLeaf)
 
 #### Using recursion
 
-Recursion comes naturally with data.tree, and it's one of its core strengths: 
+Recursion comes naturally with data.tree, and it is one of its core strengths: 
 
 ```{r}
-
-ExpectedCost <- function(node) {
-  result <- node$cost * node$p
-  if(length(result) == 0) result <- sum(sapply(node$children, ExpectedCost))
+Cost <- function(node) {
+  result <- node$cost
+  if(length(result) == 0) result <- sum(sapply(node$children, Cost))
   return (result)
 }
 
-print(acme, ec = acme$Get(ExpectedCost))
-
+print(acme, "p", cost = Cost)
 ```
 
-There is a built-in function that would make this example simpler: `Aggregate`. It is explained below.
-
-#### Add parameters to the passed function
-
-The `Get` method accepts an ellipsis (`...`). Any additional parameters with which `Get` is called will be handed over to the `ExpectedCost` function. This gives us more flexibility. For instance, we don't have to hard-code the `sum` function into `ExpectedCost`, but we can leave it to the caller to provide the function to use:
-
-```{r}
-
-AggregateCost <- function(node, fun = sum) {
-  result <- node$cost * node$p
-  if(length(result) == 0) result <- fun(sapply(node$children, AggregateCost))
-  return (result)
-}
-
-print(acme, "cost", "p", ec = acme$Get(AggregateCost, fun = max))
-
-```
-
+There is a built-in function that would make this example even simpler: `Aggregate`. It is explained below.
 
 ## `Do`
 
@@ -602,8 +573,8 @@ Do is similar to `Get` in that it also traverses a tree in a specific traversal 
 
 ```{r}
 
-acme$Do(function(node) node$expectedCost <- ExpectedCost(node))
-print(acme, "p", "cost", "expectedCost")
+acme$Do(function(node) node$cost <- Cost(node), filterFun = isNotLeaf)
+print(acme, "p", "cost")
 
 ```
 
@@ -641,6 +612,18 @@ The `Set` method can also be used to assign a single value directly to all `Node
 ```{r}
 acme$Set(avgExpectedCost = NULL)
 ```
+
+### Using Set and recursion
+
+```{r}
+acme$Set(cost = c(function(self) sum(sapply(self$children, 
+                                            function(child) GetAttribute(child, "cost", format = identity)))), 
+         filterFun = isNotLeaf)
+print(acme, "cost")
+acme$IT$AddChild("Paperless", cost = 240000)
+print(acme, "cost")
+```
+
 
 ## `Traverse` and explicit traversal
 
@@ -680,21 +663,12 @@ We can even use this in the `Get` method:
 acme$Get(Aggregate, "cost", sum)
 ```
 
-Note that this is not very efficient: `Aggregate` will be called twice on, say, *IT*: Once when the traversal passe *IT* itself, the second time recursively when `Aggregate` is called on the root. For this reason, we can also store/cache the calculated value along the way. For one thing, this is a convenient way to save an additional `Set` call. Additionally, it speeds up calculation:
+Note that this is not very efficient: `Aggregate` will be called twice on, say, *IT*: Once when the traversal passes *IT* itself, the second time recursively when `Aggregate` is called on the root. For this reason, we can also store/cache the calculated value along the way. For one thing, this is a convenient way to save an additional `Set` call. Additionally, it speeds up calculation because `Aggregate` on an ancestor will use a cached value on a descendant:
 
 ```{r}
-
+acme$Do(function(node) node$cost <- NULL, filterFun = isNotLeaf)
 Aggregate(acme, attribute = "cost", aggFun = sum, cacheAttribute = "cost") 
 print(acme, "cost")
-
-```
-
-The `attribute` can also be a function. And `aggFun` does not have to be `sum`: 
-
-```{r}
-
-Aggregate(acme, function(x) x$cost * x$p, aggFun =  max, cacheAttribute = "expCost") 
-print(acme, "expCost")
 
 ```
 
@@ -742,13 +716,13 @@ acme$name == acmeClone$name
 
 ## `Sort` method
 
-You can sort an entire tree, a sub-tree, or a `Node's` children by using the `Sort` method. The method will sort recursively and, for each `Node`, sort children by a child attribute. As before, the child attribute can also be a function or a method (e.g. of a sub-class of `Node`, see below).
+You can sort an entire tree, a sub-tree, or a `Node's` children by using the `Sort` method. The method will sort recursively and, for each `Node`, sort children by a child attribute. As before, the child attribute can also be a function or a method.
 
-```{r, eval=FALSE}
+```{r}
 acme$Sort("name")
 acme
 acme$Sort(Aggregate, "cost", sum, decreasing = TRUE, recursive = TRUE)
-acme
+print(acme, "cost", aggCost = acme$Get(Aggregate, "cost", sum))
 ```
 
 ## `Prune` method
@@ -760,7 +734,7 @@ You can prune sub-trees out of a tree. There are two variations of this:
 For example:
 
 ```{r}
-#Aggregate(acme, "cost", sum, "cost")
+Aggregate(acme, "cost", sum, "cost")
 acme$Prune(function(x) x$cost > 700000)
 print(acme, "cost")
 ```

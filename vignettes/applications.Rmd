@@ -721,8 +721,10 @@ Data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is
 library(jsonlite)
 library(curl)
 
-flareJSON <- paste(readLines(curl("http://bl.ocks.org/mbostock/raw/4063269/flare.json"), warn = FALSE), collapse = "\n")
+con <- curl("http://bl.ocks.org/mbostock/raw/4063269/flare.json")
+flareJSON <- paste(readLines(con, warn = FALSE), collapse = "\n")
 cat(substr(flareJSON, 1, 300))
+close(con)
 
 ```
 

@@ -590,3 +590,21 @@ test_that("attribute function with formatter", {
   expect_equal(mycost[[8]], "700000.000")
   
 })
+
+
+test_that("Remove Child", {
+  data(acme)
+  sw <- acme$Accounting$RemoveChild("New Software")
+  expect_equal(sw$name, "New Software")
+  expect_true(sw$isRoot)
+  expect_equal(acme$Accounting$count, 1)
+  expect_equal(names(acme$Accounting$children), c("New Accounting Standards"))
+})
+
+test_that("Remove Attribute", {
+  data(acme)
+  acme$Research$floor <- 21
+  expect_true("floor" %in% acme$Research$fields)
+  acme$Research$RemoveAttribute("floor")
+  expect_false("floor" %in% acme$Research$fields)
+})
