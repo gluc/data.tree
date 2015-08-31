@@ -8,6 +8,8 @@ GetAttribute(node, attribute, ..., format = NULL,
   inheritFromAncestors = FALSE, nullAsNa = TRUE)
 }
 \arguments{
+\item{node}{The \code{\link{Node}} from which the \code{attribute} should be fetched.}
+
 \item{attribute}{determines what is collected. The \code{attribute} can be
 \itemize{
   \item a.) the name of a \bold{field} of each \code{Node} in the tree

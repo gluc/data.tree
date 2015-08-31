@@ -343,6 +343,7 @@ ClimbByAttribute <- function(node, ..., recursive = FALSE) {
 
 #' Get an attribute from a Node.
 #' 
+#' @param node The \code{\link{Node}} from which the \code{attribute} should be fetched.
 #' @param nullAsNa If TRUE (the default), then NULL is returned as NA. Otherwise it is returned as NULL.
 #' 
 #' 
