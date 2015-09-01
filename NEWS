@@ -11,6 +11,7 @@
 - IMPROVE: make Traversal "level" much faster
 - ADD: Node$RemoveChild
 - ADD: Node$RemoveAttribute
+- ADD: as.igraph.Node now supports different directions (climb and descend)
 
 ## Version 0.1.9 Pine II
 
