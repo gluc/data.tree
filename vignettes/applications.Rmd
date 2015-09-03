@@ -43,6 +43,7 @@ If you are using data.tree for things not listed here, and if you believe this i
 This example is inspired by the examples of the treemap package. 
 
 You'll learn how to
+
 * convert a data.frame to a data.tree structure
 * navigate a tree and locate specific nodes
 * use `Aggregate` and `Cumulate`
@@ -64,7 +65,7 @@ treemap(GNI2010,
 
 
 As there are many countries, the chart gets clustered with many very small boxes.
-We would like to limit the number of countries and sum the remaining population in a catch-all country called "Other".
+In this example, we will limit the number of countries and sum the remaining population in a catch-all country called "Other".
 
 We use data.tree to do this aggregation.
 
@@ -93,10 +94,10 @@ Or, we can look at a sub-tree:
 ```{r}
 northAm <- n$`North America`
 northAm$Sort("GNI", decreasing = TRUE)
-print(northAm, "iso3", "population", "GNI")
+print(northAm, "iso3", "population", "GNI", limit = 12)
 ```
 
-Or we can find out what is the country with the largest GNI:
+Or, we can find out what is the country with the largest GNI:
 
 ```{r}
 maxGNI <- Aggregate(n, "GNI", max)
@@ -109,7 +110,7 @@ n$Get("name", filterFun = function(x) x$isLeaf && x$GNI == maxGNI)
 
 ## Aggregate and Cumulate
 
-We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. The main reason why we do this is not to calculate the population of the world, but to store the result via the cacheAttribute.
+We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. The main reason why we do this is not to calculate the population of the world, but to store the result via the `cacheAttribute`.
 
 ```{r}
 Aggregate(node = n, 
@@ -206,10 +207,15 @@ plot(as.dendrogram(n2, heightAttribute = "population"))
 
 ```
 
-# Portfolio Breakdown (Finance)
+## Further developments
+
+Obviously, we should also aggregate the GNI as a weighted averag. Namely, we should do this for the *Other* catch-all country that we add to the tree.
+
+# Portfolio Breakdown (Finance, aggregation and printing)
 
 In this example, we show how to display an investment portfolio as a hierarchic breakdown into asset classes.
 You'll see:
+
 * how you can re-use a traversal
 * advanced use of `Aggregate`
 * how to add default attribute formatters to your tree
@@ -280,7 +286,7 @@ SetFormat(pfo, "Duration", FormatDuration)
 
 ```
 
-These formatter functions will be called when printing a data.tree structure
+These formatter functions will be used when printing a data.tree structure. 
 
 ## Print
 
@@ -297,19 +303,19 @@ print(pfo,
 
 
 
-# ID3 (Machine Learning)
+# ID3 (Machine Learning, algorithms)
 
 This example shows you the following:
+
 * How to build a data.tree structure in an algorithm
 * How to prune a tree
 * How to use data.tree to develop learning algorithms
 
 Thanks a lot for all the helpful comments made by Holger von Jouanne-Diedrich.
 
-This vignette provides a stylized example of the capabilities of the data.tree package. 
-The code for this vignette was written in less than an hour. Without the data.tree package, this would have taken much longer.  The implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
+The code for this vignette was written in less than an hour, which was possible because the implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
 
-Classification trees are very popular these days. If you have never come accross them, you might be interested in [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edible or not. 
+Classification trees are very popular these days. If you have never come accross them, you might be interested in [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning), an article from Wikipedia. These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edible or not. 
 
 You might have guessed already that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). Just to avoid confusion, I do not suggest that ID3 is particularly appropriate for anything else then teaching introductory courses.
 
@@ -317,9 +323,9 @@ We will not go into more details about ID3. You will find lots of documentation 
 
 ## Feature Selection
 
-As mentioned above, during the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? Should we first separate our set according to color or size? That is where classification models differ. 
+As mentioned above, our final tree should route our mushroom according to a feature. But how do we chose the feature? Should we first separate our set according to color or size? That is where classification models differ. 
 
-In ID3, we pick at each node the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible feature than "organic". 
+In ID3, we pick at each node the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, *dots* might be a more sensible feature than *organic*. 
 
 ### Purity and Entropy
 
@@ -366,9 +372,11 @@ InformationGain <- function( tble ) {
 
 ## ID3 Algorithm
 
+We are all set for the ID3 training algorithm. 
+
 ### Pseudo code
 
-We are all set for the ID3 training algorithm. We start with the entire training data, and with a root. Then:
+We start with the entire training data, and with a root. Then:
 
 1. if the data-set is pure (e.g. all toxic), then  
     1. construct a leaf having the name of the class (e.g. 'toxic')
@@ -488,8 +496,8 @@ This demo calculates and plots a simple decision tree. It demonstrates the follo
 
 * how to read a yaml file into a data.tree structure
 * how to calculate a decision tree
-* how to plot my data.tree with the ape package
-* how to plot my data.tree with the DiagrammeR package
+* how to plot a data.tree with the ape package
+* how to plot a data.tree with the DiagrammeR package
 
 ## Load YAML file
 
@@ -625,6 +633,8 @@ nodelabels("   ", GetPhyloNr(jl, "node"), frame = "rect")
 
 ### Plotting with DiagrammeR / Mermaid
 
+Another way to plot our decision tree is via the DiagrammeR package. It provides (among other great features) a wrapper to plot graphs using the [Mermaid](http://knsv.github.io/mermaid/index.html) syntax.
+
 First, we give each `Node` a unique id:
 
 ```{r}
@@ -707,11 +717,11 @@ DiagrammeR(diagram)
 In this example, we will replicate Mike Bostock's bubble example. See here for details: http://bl.ocks.org/mbostock/4063269.  
 We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of this is inspired by [Timelyportfolio](https://github.com/timelyportfolio), the king of [htmlwidgets](http://htmlwidgets.org).
 
-You'll learn how to convert a complex JSON into a data.frame.
+You'll learn how to convert a complex JSON into a data.frame, and how to use this to plot hierarchic visualisations.
 
 ## Load JSON file
 
-Data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
+The data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
 ```{r}
 library(jsonlite)
@@ -738,8 +748,7 @@ print(flareTree, "size", limit = 30)
 
 ```
 
-Finally, we can convert it into a data.frame. The `ToDataFrameTable` only converts leafs, but inherits attributes
-from ancestors:
+Finally, we can convert it into a data.frame. The `ToDataFrameTable` only converts leafs, but inherits attributes from ancestors:
 
 ```{r}
 
@@ -841,7 +850,7 @@ jsonedit(l)
 
 This is a simplistic example from the area of genetics. Similar models are found in many fields, namely wherever you have multi-generation models and probabilities.
 
-The code generates 100 simulations of a 3 generation population. Individuals can inherit or develop a certain feature (e.g. colour blindness), with certain probabilities based on sex. We then plot the probability distribution of the feature in the last generation.
+The code generates 100 simulations of a 3 generation population. Individuals can inherit or develop a certain feature (e.g. colour blindness). The probability to develop the feature is based on sex. We then plot the probability distribution of the feature in the last generation.
 
 You'll learn how to build a data.tree structure according to probabilistic rules, and how to use the structure to infer a probability distribution.
 
@@ -993,8 +1002,7 @@ For the more complicated case where you want to parallelise operations on a sing
 # Tic-Tac-Toe (game complexity)
 
 In this example, we do a brute force solution of Tic-Tac-Toe, the well-known 3*3 game.
-You'll learn how data.tree can be used to buil a tree of game history, and how the resulting data.tree structure can
-be used to analyse the game.
+You'll learn how data.tree can be used to build a tree of game history, and how the resulting data.tree structure can be used to analyse the game.
 In addition, this example shows you how parallelisation can speed up data.tree.
 
 We want to set up the problem in a way such that each `Node` is a move of a player, and each path describes the entire history of a game.
@@ -1171,7 +1179,7 @@ PrintBoard <- function(node) {
   
   t <- Traverse(node, traversal = "ancestor", filterFun = function(x) !x$isRoot && x$player == 2)
   field <- Get(t, "f")
-  value <- Get(t, function(x) 10*x$player + (x$level - 1))
+  value <- Get(t, function(x) 10*(x$level - 1) + x$player)
   mineV[field] <- value
     
   mineM <- matrix(mineV, 3, 3, byrow = TRUE)
@@ -1181,7 +1189,7 @@ PrintBoard <- function(node) {
 }
 
 ```
-The first number denotes the player. The second number is the move (1 to 9):
+The first number denotes  the move (1 to 9). The second number is the player:
 
 ```{r, eval = FALSE}
 
