@@ -34,9 +34,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This vignette gives you a quick introduction to data.tree applications. We took care to keep the examples simple enough so non-specialists can follow them. 
+This vignette gives you a quick introduction to data.tree applications. We took care to keep the examples simple enough so non-specialists can follow them. The price for this is, obviously, that the examples are often simple compared to real-life applications.
 
-If you are using data.tree for things not listed here, drop us a note. 
+If you are using data.tree for things not listed here, and if you believe this is of general interest, then please do drop us a note, so we can include your application in a future version of this vignette. 
 
 # World PopulationTreeMap (basic manipulation/visualisation)
 
@@ -48,7 +48,7 @@ You'll learn how to
 * use `Aggregate` and `Cumulate`
 * manipulate an existing tree, e.g. by using the `Prune` method
 
-## Original TreeMap Example, to be improved
+## Original Example, to be improved
 
 The original example visualises the world population as a tree map.
 
@@ -68,7 +68,7 @@ We would like to limit the number of countries and sum the remaining population 
 
 We use data.tree to do this aggregation.
 
-## Convert the population data.frame to a data.tree structure
+## Convert from data.frame
 
 First, let's convert the population data into a data.tree structure:
 
@@ -78,8 +78,6 @@ GNI2010$pathString <- paste("world", GNI2010$continent, GNI2010$country, sep = "
 n <- as.Node(GNI2010[,])
 print(n, pruneMethod = "dist", limit = 20)
 ```
-
-## Inspect the data
 
 We can also navigate the tree to find the population of a specific country. Luckily, RStudio is quite helpful with its code completion (use `CTRL + SPACE`):
 
@@ -141,7 +139,7 @@ print(n, "population", "cumPop", pruneMethod = "dist", limit = 20)
 ```
 
 
-## Prune population tree
+## Prune
 
 The previous steps were done to define our threshold: big countries should be displayed, while small ones should be grouped together. This lets us define a pruning fuction that will allow a maximum of 7 countries per continent, and that will prune all countries making up less than 90% of a continent's population:
 
@@ -181,7 +179,7 @@ filterFun = function(x) x$level == 2
 ```
 
               
-## Plotting 
+## Plot 
 
 ### Plotting the treemap
 
@@ -237,7 +235,7 @@ pfo <- as.Node(pfodf)
 ```
 
 
-## Calculate the breakdown
+## Aggregate
 
 To calculate the weight per asset class, we use the `Aggregate` method:
 
@@ -263,7 +261,7 @@ Do(t, function(x) x$Duration <- Aggregate(x, function(x) x$WeightOfParent * x$Du
 
 ```
 
-## Adding Default Formatters to the data.tree structure 
+## Formatters
 
 We can add default formatters to our data.tree structure. Here, we add them to the root, but 
 we might as well add them to any Node in the tree. 
@@ -284,7 +282,7 @@ SetFormat(pfo, "Duration", FormatDuration)
 
 These formatter functions will be called when printing a data.tree structure
 
-## Printing the breakdown
+## Print
 
 ```{r}
 
@@ -307,8 +305,6 @@ This example shows you the following:
 * How to use data.tree to develop learning algorithms
 
 Thanks a lot for all the helpful comments made by Holger von Jouanne-Diedrich.
-
-## What is ID3?
 
 This vignette provides a stylized example of the capabilities of the data.tree package. 
 The code for this vignette was written in less than an hour. Without the data.tree package, this would have taken much longer.  The implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
@@ -368,7 +364,7 @@ InformationGain <- function( tble ) {
 ```
 
 
-## The ID3 algorithm
+## ID3 Algorithm
 
 ### Pseudo code
 
@@ -495,7 +491,7 @@ This demo calculates and plots a simple decision tree. It demonstrates the follo
 * how to plot my data.tree with the ape package
 * how to plot my data.tree with the DiagrammeR package
 
-## Loading a YAML file
+## Load YAML file
 
 YAML is similar to JSON, but targeted towards humans (as opposed to computers). It's consise and easy to read.
 YAML can be a neat format to store your data.tree structures, as you can use it across different software
@@ -530,7 +526,7 @@ print(jl, "type", "payoff", "p")
 ```
 
 
-## Calculate the decision tree
+## Calculate
 
 Next, we define our payoff function, and apply it to the tree. Note that we use post-order traversal, meaning that we calculate the tree from leaf to root:
 
@@ -558,7 +554,7 @@ jl$Do(decision, filterFun = function(x) x$type == 'decision')
 
 ```
 
-## Plot the decision tree
+## Plot
 
 ### Plot with the ape package
 
@@ -713,7 +709,7 @@ We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of
 
 You'll learn how to convert a complex JSON into a data.frame.
 
-## Converting a complex JSON file to a data.frame
+## Load JSON file
 
 Data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
@@ -760,7 +756,7 @@ This does not look spectacular. But take a look at this [stack overflow](http://
 
 Here, it was particularly simple, because the underlying JSON structure is regular. If it were not (e.g. some nodes contain different attributes than others), the conversion from JSON to data.tree would still work. And then, as a second step, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` to remove unwanted nodes, use `Set` to remove or add default values, etc.
 
-## Printing the Bubbles Chart
+## Plot
 
 What follows has nothing to do with data.tree anymore. We simply provide the bubble chart printing for your enjoyment. In order to run it yourself, you need to install the bubbles package from github:
 
@@ -789,7 +785,7 @@ bubbles(
 
 In this example, we print the files in the folder structure of the file system. As a special goodie, we'll show code that lets you build your own *R File Explorer*, an interactive tree / list widget that lets you expand folders.
 
-## Print the files in a directory structure
+## Print
 
 First, let's read the files in a directory tree into R. The root path is the parent of the `vignettes` folder, i.e. the data.tree package folder itself:
 
@@ -822,7 +818,7 @@ print(fileStructure, "mode", "size", limit = 25)
 
 ```
 
-## Display files with the interactive Listviewer html widget
+## Listviewer html widget
 
 Finally, we can display the files by timelyportfolio's listviewer. As it's not on CRAN, we only display a screenshot of the widget in in this vignette. This is not half as fun as the interactive widget, of course. So please try it out for yourself to see it in action.
 
@@ -849,7 +845,7 @@ The code generates 100 simulations of a 3 generation population. Individuals can
 
 You'll learn how to build a data.tree structure according to probabilistic rules, and how to use the structure to infer a probability distribution.
 
-## Generate a multi-generation population
+## Algorithm
 
 First, we generate a family tree of a population exhibiting a certain feature (e.g. colour blindness).
 
@@ -917,7 +913,7 @@ GenerateChildrenTree <- function(children = 2,
 
 
 
-## Analysis on a single tree
+## Analysis
 
 Just for demonstration purpose, this is what a tree looks like:
 
@@ -1000,8 +996,6 @@ In this example, we do a brute force solution of Tic-Tac-Toe, the well-known 3*3
 You'll learn how data.tree can be used to buil a tree of game history, and how the resulting data.tree structure can
 be used to analyse the game.
 In addition, this example shows you how parallelisation can speed up data.tree.
-
-## Problem set up
 
 We want to set up the problem in a way such that each `Node` is a move of a player, and each path describes the entire history of a game.
 
