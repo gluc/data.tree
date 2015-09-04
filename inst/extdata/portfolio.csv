@@ -2,9 +2,9 @@ ISIN,Name,Ccy,Type,Duration,Weight,AssetCategory,AssetClass,SubAssetClass
 LI0015327682,LGT Money Market Fund (CHF) - B,CHF,Fund,,0.0300,Cash,CHF,
 LI0214880598,CS (Lie) Money Market Fund EUR EB,EUR,Fund,,0.0600,Cash,EUR,
 LI0214880689,CS (Lie) Money Market Fund USD EB,USD,Fund,,0.0200,Cash,USD,
-LU0243957825,Invesco Euro Corporate Bond A EUR Acc,EUR,Fund,5.1,0.1200,Fixed Income,EUR,Sovereign and Corporate Bonds
-LU0408877412,JPM Euro Gov Sh. Duration Bd A (acc)-EUR,EUR,Fund,2.45,0.0650,Fixed Income,EUR,Sovereign and Corporate Bonds
-LU0376989207,Aberdeen Global Sel Emerg Mkt Bd A2 HEUR,EUR,Fund,6.8,0.0300,Fixed Income,EUR,Emerging Markets Bonds
+LU0243957825,Invesco Euro Corporate Bond A EUR Acc,EUR,Fund,5.1,0.1200,Fixed Income,EUR,Sov. and Corp. Bonds
+LU0408877412,JPM Euro Gov Sh. Duration Bd A (acc)-EUR,EUR,Fund,2.45,0.0650,Fixed Income,EUR,Sov. and Corp. Bonds
+LU0376989207,Aberdeen Global Sel Emerg Mkt Bd A2 HEUR,EUR,Fund,6.8,0.0300,Fixed Income,EUR,Em. Mkts Bonds
 GB00B42R2118,Threadneedle European High Yield Bond Ret Grs EUR,EUR,Fund,3.4,0.0450,Fixed Income,EUR,High Yield Bonds
 LU0292585030,AXA IM FIIS US Short Dur HY F-C USD,USD,Fund,1.6,0.0250,Fixed Income,USD,High Yield Bonds
 CH0011037469,Syngenta AG,CHF,Stock,,0.0100,Equities,Switzerland,

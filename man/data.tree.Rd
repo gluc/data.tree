@@ -30,11 +30,14 @@ Similarly, you can collect and store data while traversing a tree using the \cod
 \section{Methods}{
 
 
-The package also contains utility functions to \code{\link{Sort}}, to \code{\link{Prune}}, and to \code{\link{print}} in custom formats.
+The package also contains utility functions to \code{\link{Sort}}, to \code{\link{Prune}}, to \code{\link{Aggregate}} and \code{\link{Cumulate}}
+and to \code{\link{print}} in custom formats.
 }
 
 \section{Construction and Conversion}{
 
+
+The package also contains many conversions from and to data.tree structures. Check out the see also section of \code{\link{as.Node}}.
 
 You can construct a tree from a \code{data.frame} using \code{\link{as.Node.data.frame}}, and convert it back using \code{\link{as.data.frame.Node}}.
 Similar options exist for list of lists.
@@ -69,8 +72,8 @@ data.tree is always useful when
  \item{you need to do homework}
 }
 
-For a quick overview of the features, read the \code{\link{data.tree}} vignette by running \code{vignette("data.tree")}. For a stylized
-application in algorithm development, read \code{vignette("ID3")}
+For a quick overview of the features, read the \code{\link{data.tree}} vignette by running \code{vignette("data.tree")}. For stylized
+applications, see \code{vignette("applications", package='data.tree')}
 }
 \examples{
 data(acme)
@@ -101,7 +104,7 @@ acme$Get("expCost", filterFun = isLeaf)
 
 ToDataFrameTable(acme, "name", "p", "cost", "level", "pathString")
 ToDataFrameTree(acme, "name", "p", "cost", "level")
-ToDataFrameTaxonomy(acme, "p", "cost")
+ToDataFrameNetwork(acme, "p", "cost")
 }
 \seealso{
 \code{\link{Node}}

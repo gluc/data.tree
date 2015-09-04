@@ -4,6 +4,7 @@
 #' @param ... the attributes to be added as columns of the data.frame. See \code{\link{Get}} for details.
 #' If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.
 #' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'. See \code{\link{Traverse}} for details.
+#' @param direction when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?
 #' @param pruneFun a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.
 #' @param filterFun a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.
 #' @param inheritFromAncestors if FALSE, and if the attribute is a field or a method, then only a \code{Node} itself is
@@ -20,7 +21,7 @@
 #' as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p") 
 #' 
 #' ToDataFrameTree(acme, "cost", "p")
-#' ToDataFrameTaxonomy(acme, "cost", "p")
+#' ToDataFrameNetwork(acme, "cost", "p", direction = "climb")
 #' ToDataFrameTable(acme, "cost", "p")
 #' 
 #' #use the pruneFun:
@@ -114,22 +115,33 @@ ToDataFrameTable <- function(x, ..., pruneFun = NULL) {
 
 #' @rdname as.data.frame.Node
 #' 
-#' @return ToDataFrameTaxonomy: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree 
-#' spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first column is called 'children', while the
-#' second is called 'parents', describing the parent to child edge. The third column is caled 'level'. x itself is not returned.
+#' @return ToDataFrameNetwork: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree 
+#' spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first column is called 'from', while the
+#' second is called 'to', describing the parent to child edge (for direction "climb") or the child to parent edge (for direction "descend").
+#' 
 #' 
 #' @export
-ToDataFrameTaxonomy <- function(x, 
-                                ..., 
-                                pruneFun = NULL, 
-                                inheritFromAncestors = FALSE) {
-  
+ToDataFrameNetwork <- function(x, 
+                               ..., 
+                               direction = c("climb", "descend"),
+                               pruneFun = NULL, 
+                               inheritFromAncestors = FALSE) {
+  direction <- direction[1]
+  if(!AreNamesUnique(x)) stop("Names are not unique in tree! Cannot export to network.")
   t <- Traverse(x, traversal = "level", pruneFun = pruneFun)
-  children <- Get(t, "name")
+  children <- Get(t, function(x) x$name)
   parents <- Get(t, function(x) x$parent$name)
-  level <- Get(t, "level")
-  df <- data.frame(children = children, parents = parents, level = level, stringsAsFactors = FALSE)
+  
+  if (direction == "descend") df <- data.frame(from = children, 
+                                             to = parents, 
+                                             stringsAsFactors = FALSE)
 
+  else if(direction == "climb") df <- data.frame(from = parents, 
+                                                  to = children, 
+                                                  stringsAsFactors = FALSE)
+    
+  else stop(paste0("direction ", direction, " unknown. Must be either climb or descen."))
+  
   df2 <- ToDataFrameTree(x, ..., traversal = "level", pruneFun = pruneFun, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
   
   df <- cbind(df, df2)
@@ -147,7 +159,7 @@ ToDataFrameTaxonomy <- function(x,
 #' 
 #' @param x The data.frame in the required format.
 #' @param ... Any other argument implementations of this might need
-#' @param mode Either "table" (if x is a data.frame in tree or table format) or "taxonomy"
+#' @param mode Either "table" (if x is a data.frame in tree or table format) or "network"
 #' @param na.rm If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes
 #'
 #' @return The root \code{Node} of the \code{data.tree} structure
@@ -174,10 +186,10 @@ ToDataFrameTaxonomy <- function(x,
 #' xN <- FromDataFrameTable(x, colLevels = list(NULL, "floor", c("p", "cost")), na.rm = TRUE)
 #' print(xN, "floor", "p", "cost")
 #'  
-#' #Taxonomy
-#' x <- ToDataFrameTaxonomy(acme, "p", "cost")
+#' #Network
+#' x <- ToDataFrameNetwork(acme, "p", "cost", direction = "climb")
 #' x
-#' xN <- FromDataFrameTaxonomy(x)
+#' xN <- FromDataFrameNetwork(x)
 #' print(xN, "p", "cost")
 #' 
 #' @seealso \code{\link{as.data.frame.Node}}
@@ -186,7 +198,7 @@ ToDataFrameTaxonomy <- function(x,
 #' @export
 as.Node.data.frame <- function(x, 
                                ..., 
-                               mode = c("table", "taxonomy"),
+                               mode = c("table", "network"),
                                pathName = 'pathString', 
                                pathDelimiter = '/', 
                                colLevels = NULL,
@@ -194,7 +206,7 @@ as.Node.data.frame <- function(x,
   
   mode <- mode[1]
   if (mode == 'table') return (FromDataFrameTable(x, pathName, pathDelimiter, colLevels, na.rm))
-  else if (mode == 'taxonomy') return (FromDataFrameTaxonomy(x))
+  else if (mode == 'network') return (FromDataFrameNetwork(x))
   else stop(paste0("Mode ", mode, " unknown."))
   
 }
@@ -268,38 +280,54 @@ FromDataFrameTable <- function(table,
 
 #' @rdname as.Node.data.frame
 #' 
-#' @param taxonomy A \code{data.frame} in taxonomy format, i.e.
+#' @param network A \code{data.frame} in network format, i.e.
 #' it must adhere to the following requirements:
 #' \itemize{
 #'  \item{It must contain as many rows as there are nodes, excluding the root}
-#'  \item{Its first column must be called *children*, and contain the name of each node, whereby each name must be unique within a node's level}
-#'  \item{Its second column must be called *parents*, and contain the name of the parent of each node}
-#'  \item{Its third column must be called *level*, and contain the level of the node}
-#'  \item{The rows must be ordered by level, increasing}
+#'  \item{Its first and second columns contain the network relationships. This can be either climbing (from parent to children) or descending (from child to parent)}
+#'  \item{Its subsequent columns contain the attributes to be set as fields on the nodes}
+#'  \item{It must contain a single root}
+#'  \item{There are no cycles in the network}
+#'  \item{Node names are unique throughout the network (and not only per level, as required by data.tree)}
 #' }
 #' 
 #' @export
-FromDataFrameTaxonomy <- function(taxonomy) {
-  if (any(names(taxonomy)[1:3] != c("children", "parents", "level"))) stop("taxonomy is not a taxonomy. First three columns must be children, parents, and level, respectively.")
-  rootName <- unique(taxonomy$parents[!(taxonomy$parents %in% taxonomy$children)])
-  if (length(rootName) != 1) stop("Cannot find root name. taxonomy is not a taxonomy.")
-  root <- Node$new(rootName)
-  GetNodeByName <- function(name, level) {
-    t <- Traverse(root, filterFun = function(x) x$name == name && x$level == level)
-    if (length(t) == 0) stop(paste0("Cannot find node ", name, ". taxonomy is not a taxonomy."))
-    if (length(t) > 1) stop(paste0("More than one node named ", name, ". taxonomy is not a taxonomy."))
-    t[[1]]
+FromDataFrameNetwork <- function(network) {
+  
+  if (!is(network, "data.frame")) stop("network must be a data.frame")
+  if (dim(network)[2] < 2) stop("network must hold the relationships in the first two columns")
+  
+  if (length(unique(network[ , 1])) > length(unique(network[ , 2]))) {
+    children <- network[ , 1]
+    parents <- network[ , 2]
+  } else {
+    children <- network[ , 2]
+    parents <- network[ , 1]
   }
-  for (i in 1:dim(taxonomy)[1]) {
-    parent <- GetNodeByName(taxonomy[i, "parents"], taxonomy[i, "level"] - 1)
-    child <- parent$AddChild(taxonomy[i, "children"])
-    if (dim(taxonomy)[2] > 3) {
-      for (j in 4:dim(taxonomy)[2]) {
-        nm <- names(taxonomy)[j]
-        if (!nm %in% NODE_RESERVED_NAMES_CONST) child[[nm]] <- taxonomy[i, j]
+  
+  rootName <- unique(parents[!(parents %in% children)])
+  if (length(rootName) != 1) stop("Cannot find root name. network is not a tree!")
+  
+  root <- Node$new(rootName)
+  AddChildren <- function(node) {
+    childrenIdxs <- which(parents == node$name)
+    for (idx in childrenIdxs) {
+      nodeName <- children[idx]
+      child <- node$AddChild(nodeName)
+      if (dim(network)[2] > 2) {
+        for (j in 3:dim(network)[2]) {
+          vlu <- network[idx, j]
+          if (!is.na(vlu)) {
+            nm <- names(network)[j]
+            if (!nm %in% NODE_RESERVED_NAMES_CONST) child[[nm]] <- network[idx, j]
+          }
+        }
       }
+      AddChildren(child)
     }
   }
+  AddChildren(root)
+ 
   return (root)
 }
 

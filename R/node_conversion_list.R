@@ -58,12 +58,13 @@
 #' @export
 as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, ...) {
   mode <- mode[1]
-  if(is.null(nameName) || is.null(x[[nameName]])) {
+  if (is.null(nameName) || is.null(x[[nameName]])) {
     if (length(nodeName)==0) myName <- tempfile(pattern = '', tmpdir = '')
     else myName <- nodeName
   } else {
     myName <- x[[nameName]]
   }
+  if (myName %in% NODE_RESERVED_NAMES_CONST) myName <- paste0(myName, "2")
   n <- Node$new(as.character(myName))
   
   fields <- names(x)[!(names(x) %in% NODE_RESERVED_NAMES_CONST)]
@@ -165,18 +166,13 @@ as.list.Node <- function(x,
     res[l_nameName] <- myname
   }
   
-  for (fieldName in ls(self)) {
-    #print(fieldName)
-    field <- self[[fieldName]]
-    if(!is.function(field) 
-       && !is.environment(field)
-       && !(fieldName %in% NODE_RESERVED_NAMES_CONST)
-    ) {
-      res[fieldName] <- field
-    }
-  }
+  fields <- self$fields
+  fields <- fields[!is.function(fields) && !is.environment(fields)]
+  
+  for (fieldName in fields) res[fieldName] <- self[[fieldName]]
+    
   if(!self$isLeaf) {
-    kids <- lapply(self$children, FUN = function(x) as.list(x, mode, unname, nameName, childrenName, ...))
+    kids <- lapply(self$children, FUN = function(x) as.list.Node(x, mode, unname, nameName, childrenName, ...))
     if(mode == "explicit") {
       res[[childrenName]] <- kids
       if (unname) res[[childrenName]] <- unname(res[[childrenName]])

@@ -75,7 +75,7 @@ DefaultPlotHeight <- function(node, rootHeight = 100) {
 CreateRegularTree <- function(height = 5, branchingFactor = 3, parent = Node$new("1")) {
   if (height <= 1) return()
   for (i in 1:branchingFactor) {
-    child <- parent$AddChild(as.character(i))
+    child <- parent$AddChild(paste(parent$name, i, sep = "."))
     CreateRegularTree(height - 1, branchingFactor, child)
   }
   return (parent)
@@ -105,10 +105,58 @@ CreateRandomTree <- function(nodes = 100, root = Node$new("1"), id = 1) {
 
 
 
-PruneNaive <- function(x, limit) {
+PrintPruneSimple <- function(x, limit) {
   tc <- x$totalCount
   toBeCropped <- tc - limit 
-  if (toBeCropped < 1) return (x)  
+  if (toBeCropped < 1) {
+    if(!x$isRoot) {
+      #clone s.t. x is root (for pretty level names)
+      x <- Clone(x, attributes = TRUE)
+      x$parent <- NULL
+    }
+    return (x)  
+  }
+  
+  x$Set(.id = 1:tc)
+  
+  x$Do(function(x) {
+       x$.originalTotalCount <- ifelse(x$isLeaf, 
+                                       1, 
+                                       sum( sapply(x$children, function(x) x$.originalTotalCount)) + 1)
+       x$.originalCount <- x$count
+       },
+       traversal = "post-order"
+  )
+  
+  xc <- Clone(x, pruneFun = function(x) x$.id < limit)
+  
+  xc$Do(function(x) {
+          if(x$count < x$.originalCount) {
+            nds <- x$.originalCount - x$count
+            sub <- x$.originalTotalCount - x$totalCount - nds
+            x$AddChild(paste0("... ", nds, " nodes w/ ", sub, " sub"))
+          }
+        })
+  
+  x <- xc
+  
+}
+
+
+
+
+
+PrintPruneDist <- function(x, limit) {
+  tc <- x$totalCount
+  toBeCropped <- tc - limit 
+  if (toBeCropped < 1) {
+    if(!x$isRoot) {
+      #clone s.t. x is root (for pretty level names)
+      x <- Clone(x, attributes = TRUE)
+      x$parent <- NULL
+    }
+    return (x)  
+  }
 
   t <- Traverse(x, traversal = "post-order")
   

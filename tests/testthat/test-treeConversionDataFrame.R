@@ -48,12 +48,24 @@ test_that("ToDataFrameTable", {
 
 
 
-test_that("ToDataFrameTaxonomy", {
+test_that("ToDataFrameNetwork climb", {
   data(acme)
-  acmedf <- ToDataFrameTaxonomy(acme, "p")
-  expect_equal(acmedf$children, c("Accounting", "Research", "IT", "New Software", "New Accounting Standards", "New Product Line", "New Labs", "Outsource", "Go agile", "Switch to R"))
-  expect_equal(acmedf$parents, c("Acme Inc.", "Acme Inc.", "Acme Inc.", "Accounting", "Accounting", "Research", "Research", "IT", "IT", "IT"))
+  acmedf <- ToDataFrameNetwork(acme, "p", direction = "climb")
+  expect_equal(names(acmedf), c("from", "to", "p"))
+  expect_equal(acmedf$to, c("Accounting", "Research", "IT", "New Software", "New Accounting Standards", "New Product Line", "New Labs", "Outsource", "Go agile", "Switch to R"))
+  expect_equal(acmedf$from, c("Acme Inc.", "Acme Inc.", "Acme Inc.", "Accounting", "Accounting", "Research", "Research", "IT", "IT", "IT"))
 })
+
+
+test_that("ToDataFrameNetwork descend", {
+  data(acme)
+  acmedf <- ToDataFrameNetwork(acme, "p", direction = "descend")
+  expect_equal(names(acmedf), c("from", "to", "p"))
+  expect_equal(acmedf$from, c("Accounting", "Research", "IT", "New Software", "New Accounting Standards", "New Product Line", "New Labs", "Outsource", "Go agile", "Switch to R"))
+  expect_equal(acmedf$to, c("Acme Inc.", "Acme Inc.", "Acme Inc.", "Accounting", "Accounting", "Research", "Research", "IT", "IT", "IT"))
+})
+
+
 
 
 test_that("ToDataFrame sub-tree", {
@@ -77,10 +89,10 @@ test_that("FromDataFrameTable col-levels", {
   
 })
 
-test_that("FromDataFrameTaxonomy", {
+test_that("FromDataFrameNetwork descend", {
   data(acme)
-  x <- ToDataFrameTaxonomy(acme, "p", "cost")
-  xN <- FromDataFrameTaxonomy(x)
+  x <- ToDataFrameNetwork(acme, "p", "cost", direction = "descend")
+  xN <- FromDataFrameNetwork(x)
   expect_equal(xN$totalCount, acme$totalCount)
   expect_equal(xN$Get("name"), acme$Get("name"))
   expect_equal(xN$Get("p"), acme$Get("p"))
@@ -89,3 +101,30 @@ test_that("FromDataFrameTaxonomy", {
   expect_equal(xN$Get(function(x) x$parent$name), acme$Get(function(x) x$parent$name))
   expect_equal(xN$Get("isLeaf"), acme$Get("isLeaf"))
 })
+
+
+test_that("FromDataFrameNetwork climb", {
+  data(acme)
+  x <- ToDataFrameNetwork(acme, "p", "cost", direction = "climb")
+  xN <- FromDataFrameNetwork(x)
+  expect_equal(xN$totalCount, acme$totalCount)
+  expect_equal(xN$Get("name"), acme$Get("name"))
+  expect_equal(xN$Get("p"), acme$Get("p"))
+  expect_equal(xN$height, acme$height)
+  expect_equal(xN$Get("level"), acme$Get("level"))
+  expect_equal(xN$Get(function(x) x$parent$name), acme$Get(function(x) x$parent$name))
+  expect_equal(xN$Get("isLeaf"), acme$Get("isLeaf"))
+})
+
+
+test_that("FromDataFrameNetwork order", {
+  data(acme)
+  x <- ToDataFrameNetwork(acme, "p", "cost")
+  odr <- c(4, 1, 6, 8, 9, 10, 2, 7, 5, 3)
+  x <- x[odr, ]
+  xN <- FromDataFrameNetwork(x)
+  expect_equal(xN$Get("name"), acme$Get("name"))
+
+})
+
+

@@ -23,6 +23,17 @@ test_that("Climb 3rd Level", {
   data(acme)
   acme$Climb('IT', 'Go agile')$AddChild('MyTest')$AddChild('MyTest2')
   expect_equal("MyTest2", acme$Climb('IT', 'Go agile', 'MyTest', 'MyTest2')$name )
+  expect_equal("MyTest2", acme$Climb(c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
+  expect_equal("MyTest2", acme$Climb(name = c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
+  
+})
+
+
+
+test_that("Climb non-name", {
+  tree <- CreateRegularTree(5, 2)
+  p <- tree$Climb(c("1.1", "1.1.1"), position = c(2, 2))$path
+  expect_equal(c("1", "1.1", "1.1.1", "1.1.1.2", "1.1.1.2.2"), p)
   
 })
 
@@ -568,4 +579,58 @@ test_that("change name", {
   rs$name <- "Research2"
   expect_true(is.null(acme$Research))
   expect_true(acme$Research2$name == "Research2")
+})
+
+
+test_that("attribute function with formatter", {
+  data(acme)
+  SetFormat(acme, "cost", FormatFixedDecimal)
+  acme$IT$cost <- function(self) sum(sapply(self$children, function(x) x$cost))
+  mycost <- acme$Get("cost")
+  expect_equal(mycost[[8]], "700000.000")
+  
+})
+
+
+test_that("Remove Child", {
+  data(acme)
+  sw <- acme$Accounting$RemoveChild("New Software")
+  expect_equal(sw$name, "New Software")
+  expect_true(sw$isRoot)
+  expect_equal(acme$Accounting$count, 1)
+  expect_equal(names(acme$Accounting$children), c("New Accounting Standards"))
+})
+
+test_that("Remove Attribute", {
+  data(acme)
+  acme$Research$floor <- 21
+  expect_true("floor" %in% acme$Research$fields)
+  acme$Research$RemoveAttribute("floor")
+  expect_false("floor" %in% acme$Research$fields)
+})
+
+test_that("print", {
+  data(acme)
+  acme2 <- print(acme, "cost")
+  expect_equal(colnames(acme2), c("levelName", "cost"))
+})
+
+
+test_that("ClimbByAttribute", {
+  data(acme)
+  Aggregate(acme, attribute = "cost", aggFun = max, cacheAttribute = "cost")
+  n <- ClimbByAttribute(acme, cost = function(x) x$parent$cost, recursive = TRUE)
+  expect_equal(n$name, "New Product Line")
+})
+
+test_that("Cumulate", {
+  data(acme)
+  acme$Do(function(x) Aggregate(x, "cost", sum, "cost"), traversal = "post-order")
+  acme$Do(function(x) Cumulate(x, "cost", sum, "cumCost"))
+  expect_equal(unname(acme$Get("cumCost")),  c(4950000, 1500000, 1000000, 1500000, 4250000, 2000000, 2750000, 4950000, 400000, 650000, 700000))
+})
+
+test_that("averageBranchingFactor", {
+  t <- CreateRegularTree(3, 3)
+  expect_equal(t$averageBranchingFactor, 3)
 })

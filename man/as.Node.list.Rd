@@ -81,8 +81,8 @@ kingJosephs <- list(spouse = "Mary",
 FromListSimple(kingJosephs, nodeName = "Joseph I")
 }
 \seealso{
-Other as.Node: \code{\link{FromDataFrameTable}},
-  \code{\link{FromDataFrameTaxonomy}},
+Other as.Node: \code{\link{FromDataFrameNetwork}},
+  \code{\link{FromDataFrameTable}},
   \code{\link{as.Node.data.frame}};
   \code{\link{as.Node.dendrogram}};
   \code{\link{as.Node.phylo}}; \code{\link{as.Node}}

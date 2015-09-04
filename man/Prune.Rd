@@ -2,21 +2,27 @@
 % Please edit documentation in R/node_methods_sideeffect.R
 \name{Prune}
 \alias{Prune}
-\title{Prunes a tree}
+\title{Prunes a tree. This function has side-effects, it modifies your data.tree structure!}
 \usage{
 Prune(node, pruneFun)
 }
 \arguments{
+\item{node}{The root of the sub-tree to be pruned}
+
 \item{pruneFun}{a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
 and its descendants should be kept, FALSE otherwise.}
-
-\item{The}{node whose children should be pruned}
 }
 \value{
 the number of nodes removed
 }
 \description{
-Prunes a tree
+Prunes a tree. This function has side-effects, it modifies your data.tree structure!
+}
+\examples{
+data(acme)
+Aggregate(acme, "cost", sum, "cost")
+acme$Prune(function(x) x$cost > 700000)
+print(acme, "cost")
 }
 \keyword{internal}
 

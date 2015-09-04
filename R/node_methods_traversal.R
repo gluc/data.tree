@@ -58,14 +58,9 @@ Traverse = function(node,
     
   } else if (traversal == "level") {
     
-    for(level in node$level:(node$level + node$height)) {
-      fifu <- function(x) {
-        a <- (length(filterFun) == 0 || filterFun(x))
-        b <- x$level == level
-        return (a && b)
-      }
-      nodes <- c(nodes, Traverse(node, pruneFun = pruneFun, filterFun = fifu))
-    }
+    nodes <- Traverse(node, filterFun = filterFun, pruneFun = pruneFun)
+    nodes <- nodes[order(Get(nodes, function(x) x$level))]
+    
   } else {
     stop("traversal must be pre-order, post-order, in-order, ancestor, or level")
   }
@@ -92,11 +87,12 @@ Traverse = function(node,
 #' @param ... in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
 #' @param format can be a function that transforms the collected values, e.g. for printing
 #' @param inheritFromAncestors if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.
-#'    
+#' @param simplify same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can sepcify "regular" if
+#' each returned value is of length > 1, and equally named. See below for an example.
+#'        
 #' @return a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
 #' to NA, such that \code{length(Node$Get) == Node$totalCount}
 #'  
-#' @inheritParams base::sapply
 #'  
 #' @examples
 #'data(acme)
@@ -116,6 +112,9 @@ Traverse = function(node,
 #'         mean, 
 #'         traversal = "post-order", 
 #'         format = myFormat)
+#'         
+#' #simplify = "regular" will preserve names
+#' acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
 #'  
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Set}}
@@ -126,16 +125,28 @@ Get = function(nodes,
                ..., 
                format = NULL,
                inheritFromAncestors = FALSE, 
-               simplify = TRUE) {
-  
-  
+               simplify = c(TRUE, FALSE, "array", "regular")) {
+  if (length(nodes) == 0) return(NULL)
+  if (!is(nodes, "list")) stop("nodes must be a list of Node objects!")
+  simplify <- simplify[1]
+                 
+  nodes <- unname(nodes)
+  if (simplify == "regular") {
+    regular = TRUE
+    simplify = FALSE
+  } else regular = FALSE
   res <- sapply(nodes, 
-                function(x) GetAttribute(x, attribute, 
-                                                ...,
-                                                format = format, 
-                                                inheritFromAncestors = inheritFromAncestors),
+                function(x) GetAttribute(x, 
+                                         attribute, 
+                                         ...,
+                                         format = format, 
+                                         inheritFromAncestors = inheritFromAncestors),
                 simplify = simplify
   )
+  
+  if (regular) {
+    res <- do.call(cbind, res)
+  }
   
   return (res)
 }
@@ -150,6 +161,9 @@ Get = function(nodes,
 Do <- function(nodes,
                fun, 
                ...) {
+  if (length(nodes) == 0) invisible(nodes)
+  if (!is(nodes, "list")) stop("nodes must be a list of Node objects!")
+      
   for (node in nodes) fun(node, ...)
   
   invisible (nodes)
@@ -187,6 +201,9 @@ Do <- function(nodes,
 Set <- function(nodes, 
                 ...) {
   
+  if (length(nodes) == 0) return(nodes)
+  if (!is(nodes, "list")) stop("nodes must be a list of Node objects!")
+      
   args <- list(...)
   argsnames <- sapply(substitute(list(...))[-1], deparse)
   gargsnames <- names(args)
@@ -196,14 +213,14 @@ Set <- function(nodes,
   
   
   
-  appFun <- function(x, name, arg) {
+  appFun <- function(x, arg, name) {
     x[[name]] <- arg
   }
   
   for(nme in names(args)) {
     arg <- args[[nme]]
     if (length(arg) == 0) arg <- vector("list", 1)
-    mapply(appFun, nodes, nme, arg)
+    mapply(appFun, nodes, arg, nme)
   }
   
   invisible (nodes)
