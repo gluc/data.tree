@@ -633,4 +633,4 @@ test_that("Cumulate", {
 test_that("averageBranchingFactor", {
   t <- CreateRegularTree(3, 3)
   expect_equal(t$averageBranchingFactor, 3)
-}
+})
