@@ -300,26 +300,22 @@ print(pfo,
 # ID3 (Machine Learning)
 
 This example shows you the following:
+
 * How to build a data.tree structure in an algorithm
 * How to prune a tree
 * How to use data.tree to develop learning algorithms
 
 Thanks a lot for all the helpful comments made by Holger von Jouanne-Diedrich.
 
-This vignette provides a stylized example of the capabilities of the data.tree package. 
-The code for this vignette was written in less than an hour. Without the data.tree package, this would have taken much longer.  The implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
-
 Classification trees are very popular these days. If you have never come accross them, you might be interested in [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edible or not. 
 
-You might have guessed already that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). Just to avoid confusion, I do not suggest that ID3 is particularly appropriate for anything else then teaching introductory courses.
-
-We will not go into more details about ID3. You will find lots of documentation on this and more refined algorithms on the internet. 
+There are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This example provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). It lends itself well for this example, but of course today there are much more elaborate and refined algorithms available.
 
 ## Feature Selection
 
-As mentioned above, during the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? Should we first separate our set according to color or size? That is where classification models differ. 
+During the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? Should we first separate our set according to color or size? That is where classification models differ. 
 
-In ID3, we pick at each node the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible feature than "organic". 
+In ID3, we pick, at each node, the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible feature than "organic". 
 
 ### Purity and Entropy
 
@@ -364,7 +360,7 @@ InformationGain <- function( tble ) {
 ```
 
 
-## ID3 Algorithm
+## Training
 
 ### Pseudo code
 
@@ -457,7 +453,7 @@ print(tree, "feature", "obsCount")
 
 ### The prediction method
 
-Now, let's predict some classes. For this, we need a predict function, which will route data through our tree and make a prediction based on the leave it ends up:
+We need a predict function, which will route data through our tree and make a prediction based on the leave where it ends up:
 
 ```{r}
 
@@ -532,9 +528,9 @@ Next, we define our payoff function, and apply it to the tree. Note that we use 
 
 ```{r}
 
-payoff <- function(x) {
-  if (x$type == 'chance') x$payoff <- sum(sapply(x$children, function(node) node$payoff * node$p))
-  else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
+payoff <- function(node) {
+  if (node$type == 'chance') node$payoff <- sum(sapply(node$children, function(child) child$payoff * child$p))
+  else if (node$type == 'decision') node$payoff <- max(sapply(node$children, function(child) child$payoff))
 }
 
 jl$Do(payoff, traversal = "post-order", filterFun = isNotLeaf)
@@ -555,6 +551,8 @@ jl$Do(decision, filterFun = function(x) x$type == 'decision')
 ```
 
 ## Plot
+
+data.tree does not provide its own plotting facility, but there are plenty of options for plotting.
 
 ### Plot with the ape package
 
@@ -625,7 +623,7 @@ nodelabels("   ", GetPhyloNr(jl, "node"), frame = "rect")
 
 ### Plotting with DiagrammeR / Mermaid
 
-First, we give each `Node` a unique id:
+This is another option. First, we give each `Node` a unique id:
 
 ```{r}
 
@@ -754,7 +752,7 @@ head(flare_df)
 
 This does not look spectacular. But take a look at this [stack overflow](http://stackoverflow.com/questions/31339805/converting-json-format-to-csv-to-upload-data-table-in-r-to-produce-d3-bubble-cha) question to see how people struggle to do this type of operation. 
 
-Here, it was particularly simple, because the underlying JSON structure is regular. If it were not (e.g. some nodes contain different attributes than others), the conversion from JSON to data.tree would still work. And then, as a second step, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` to remove unwanted nodes, use `Set` to remove or add default values, etc.
+Here, it was particularly simple, because the underlying JSON structure is regular. If it were not (e.g. some nodes contain different attributes than others), the conversion from JSON to data.tree would still work. And then, as a second step, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` and `Remove` to remove unwanted nodes, use `Set` to remove or add default values, etc.
 
 ## Plot
 
@@ -783,11 +781,11 @@ bubbles(
 
 # File Explorer (System Utilities, visualisation)
 
-In this example, we print the files in the folder structure of the file system. As a special goodie, we'll show code that lets you build your own *R File Explorer*, an interactive tree / list widget that lets you expand folders.
+In this example, we print the files that exist in the folder structure of the file system. As a special goodie, we'll show code that lets you build your own *R File Explorer*, an interactive tree / list widget that lets you expand folders and browse through your file system.
 
 ## Print
 
-First, let's read the files in a directory tree into R. The root path is the parent of the `vignettes` folder, i.e. the data.tree package folder itself:
+First, let's read the files in a directory tree into R. In this example, the root path ".." is the parent of the `vignettes` folder, i.e. the data.tree package folder itself:
 
 
 ```{r}
@@ -798,7 +796,7 @@ files <- list.files(path = path,
 
 df <- data.frame(
       filename = sapply(files, 
-                        function(fl) paste0(tail(strsplit(getwd(),"/")[[1]],1),"/",fl)
+                        function(fl) paste0("data.tree","/",fl)
       ), 
       file.info(paste(path, files, sep = "/")),
       stringsAsFactors = FALSE
@@ -883,7 +881,11 @@ GenerateChildrenTree <- function(children = 2,
   if (parent$feature == TRUE) {
     for (i in 1:2) {
       subPop <- Traverse(parent, filterFun = function(x) x$sex == i)
-      inherit <- sample.int(n = 2, size = length(subPop), replace = TRUE, prob = c(1 - probInherit[i], probInherit[i]))
+      inherit <- sample.int(n = 2, 
+                            size = length(subPop), 
+                            replace = TRUE, 
+                            prob = c(1 - probInherit[i], probInherit[i]))
+      
       Set(subPop, feature = as.logical(inherit - 1))
     }
   } else {
@@ -894,7 +896,10 @@ GenerateChildrenTree <- function(children = 2,
   Set(parent$children, develop = FALSE)
   for (i in 1:2) {
     subPop <- Traverse(parent, filterFun = function(x) x$sex == i && !x$feature)
-    develop <- sample.int(n = 2, size = length(subPop), replace = TRUE, prob = c(1 - probDevelop[i], probDevelop[i]))
+    develop <- sample.int(n = 2, 
+                          size = length(subPop), 
+                          replace = TRUE, 
+                          prob = c(1 - probDevelop[i], probDevelop[i]))
     Set(subPop, feature = as.logical((develop - 1)), develop = as.logical((develop - 1)))
   }
   
@@ -974,7 +979,7 @@ For larger populations, you might consider parallelisation, of course. See below
 
 ## Parallelisation
 
-It is straight forward to parallelise the simulation. If, as in this example, you do not need to pass around a data.tree from one process (fork) to another, it is also rather efficient.
+It is straight forward to parallelise the simulation. If, as in this example, you do not need to pass around a data.tree structure from one process (fork) to another, it is also rather efficient.
 
 ```{r}
 library(foreach)
@@ -993,7 +998,7 @@ For the more complicated case where you want to parallelise operations on a sing
 # Tic-Tac-Toe (game complexity)
 
 In this example, we do a brute force solution of Tic-Tac-Toe, the well-known 3*3 game.
-You'll learn how data.tree can be used to buil a tree of game history, and how the resulting data.tree structure can
+You'll learn how data.tree can be used to build a tree of game history, and how the resulting data.tree structure can
 be used to analyse the game.
 In addition, this example shows you how parallelisation can speed up data.tree.
 
