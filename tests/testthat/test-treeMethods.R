@@ -608,3 +608,29 @@ test_that("Remove Attribute", {
   acme$Research$RemoveAttribute("floor")
   expect_false("floor" %in% acme$Research$fields)
 })
+
+test_that("print", {
+  data(acme)
+  acme2 <- print(acme, "cost")
+  expect_equal(colnames(acme2), c("levelName", "cost"))
+})
+
+
+test_that("ClimbByAttribute", {
+  data(acme)
+  Aggregate(acme, attribute = "cost", aggFun = max, cacheAttribute = "cost")
+  n <- ClimbByAttribute(acme, cost = function(x) x$parent$cost, recursive = TRUE)
+  expect_equal(n$name, "New Product Line")
+})
+
+test_that("Cumulate", {
+  data(acme)
+  acme$Do(function(x) Aggregate(x, "cost", sum, "cost"), traversal = "post-order")
+  acme$Do(function(x) Cumulate(x, "cost", sum, "cumCost"))
+  expect_equal(unname(acme$Get("cumCost")),  c(4950000, 1500000, 1000000, 1500000, 4250000, 2000000, 2750000, 4950000, 400000, 650000, 700000))
+})
+
+test_that("averageBranchingFactor", {
+  t <- CreateRegularTree(3, 3)
+  expect_equal(t$averageBranchingFactor, 3)
+}
