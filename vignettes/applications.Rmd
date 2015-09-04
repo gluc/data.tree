@@ -34,21 +34,22 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This vignette gives you a quick introduction to data.tree applications. We took care to keep the examples simple enough so non-specialists can follow them. 
+This vignette gives you a quick introduction to data.tree applications. We took care to keep the examples simple enough so non-specialists can follow them. The price for this is, obviously, that the examples are often simple compared to real-life applications.
 
-If you are using data.tree for things not listed here, drop us a note. 
+If you are using data.tree for things not listed here, and if you believe this is of general interest, then please do drop us a note, so we can include your application in a future version of this vignette. 
 
 # World PopulationTreeMap (basic manipulation/visualisation)
 
 This example is inspired by the examples of the treemap package. 
 
 You'll learn how to
+
 * convert a data.frame to a data.tree structure
 * navigate a tree and locate specific nodes
 * use `Aggregate` and `Cumulate`
 * manipulate an existing tree, e.g. by using the `Prune` method
 
-## Original TreeMap Example, to be improved
+## Original Example, to be improved
 
 The original example visualises the world population as a tree map.
 
@@ -64,11 +65,11 @@ treemap(GNI2010,
 
 
 As there are many countries, the chart gets clustered with many very small boxes.
-We would like to limit the number of countries and sum the remaining population in a catch-all country called "Other".
+In this example, we will limit the number of countries and sum the remaining population in a catch-all country called "Other".
 
 We use data.tree to do this aggregation.
 
-## Convert the population data.frame to a data.tree structure
+## Convert from data.frame
 
 First, let's convert the population data into a data.tree structure:
 
@@ -79,9 +80,7 @@ n <- as.Node(GNI2010[,])
 print(n, pruneMethod = "dist", limit = 20)
 ```
 
-## Inspect the data
-
-We can also navigate the tree to find the population of a specific country. Luckily, RStudio is quite helpful with its code completion (use CTRL + SPACE):
+We can also navigate the tree to find the population of a specific country. Luckily, RStudio is quite helpful with its code completion (use `CTRL + SPACE`):
 
 ```{r}
 
@@ -95,10 +94,10 @@ Or, we can look at a sub-tree:
 ```{r}
 northAm <- n$`North America`
 northAm$Sort("GNI", decreasing = TRUE)
-print(northAm, "iso3", "population", "GNI")
+print(northAm, "iso3", "population", "GNI", limit = 12)
 ```
 
-Or we can find out what is the country with the largest GNI:
+Or, we can find out what is the country with the largest GNI:
 
 ```{r}
 maxGNI <- Aggregate(n, "GNI", max)
@@ -111,7 +110,7 @@ n$Get("name", filterFun = function(x) x$isLeaf && x$GNI == maxGNI)
 
 ## Aggregate and Cumulate
 
-We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. The main reason why we do this is not to calculate the population of the world, but to store the result via the cacheAttribute.
+We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. The main reason why we do this is not to calculate the population of the world, but to store the result via the `cacheAttribute`.
 
 ```{r}
 Aggregate(node = n, 
@@ -141,7 +140,7 @@ print(n, "population", "cumPop", pruneMethod = "dist", limit = 20)
 ```
 
 
-## Prune population tree
+## Prune
 
 The previous steps were done to define our threshold: big countries should be displayed, while small ones should be grouped together. This lets us define a pruning fuction that will allow a maximum of 7 countries per continent, and that will prune all countries making up less than 90% of a continent's population:
 
@@ -181,7 +180,7 @@ filterFun = function(x) x$level == 2
 ```
 
               
-## Plotting 
+## Plot 
 
 ### Plotting the treemap
 
@@ -208,10 +207,15 @@ plot(as.dendrogram(n2, heightAttribute = "population"))
 
 ```
 
-# Portfolio Breakdown (Finance)
+## Further developments
+
+Obviously, we should also aggregate the GNI as a weighted averag. Namely, we should do this for the *Other* catch-all country that we add to the tree.
+
+# Portfolio Breakdown (finance, aggregation and printing)
 
 In this example, we show how to display an investment portfolio as a hierarchic breakdown into asset classes.
 You'll see:
+
 * how you can re-use a traversal
 * advanced use of `Aggregate`
 * how to add default attribute formatters to your tree
@@ -237,7 +241,7 @@ pfo <- as.Node(pfodf)
 ```
 
 
-## Calculate the breakdown
+## Aggregate
 
 To calculate the weight per asset class, we use the `Aggregate` method:
 
@@ -263,7 +267,7 @@ Do(t, function(x) x$Duration <- Aggregate(x, function(x) x$WeightOfParent * x$Du
 
 ```
 
-## Adding Default Formatters to the data.tree structure 
+## Formatters
 
 We can add default formatters to our data.tree structure. Here, we add them to the root, but 
 we might as well add them to any Node in the tree. 
@@ -282,9 +286,9 @@ SetFormat(pfo, "Duration", FormatDuration)
 
 ```
 
-These formatter functions will be called when printing a data.tree structure
+These formatter functions will be used when printing a data.tree structure. 
 
-## Printing the breakdown
+## Print
 
 ```{r}
 
@@ -299,31 +303,25 @@ print(pfo,
 
 
 
-# ID3 (Machine Learning)
+# ID3 (Machine Learning, algorithms)
 
 This example shows you the following:
+
 * How to build a data.tree structure in an algorithm
 * How to prune a tree
 * How to use data.tree to develop learning algorithms
 
 Thanks a lot for all the helpful comments made by Holger von Jouanne-Diedrich.
 
-## What is ID3?
-
-This vignette provides a stylized example of the capabilities of the data.tree package. 
-The code for this vignette was written in less than an hour. Without the data.tree package, this would have taken much longer.  The implementation of the training algorithm follows the algorithm's pseudo code almost line by line.
-
 Classification trees are very popular these days. If you have never come accross them, you might be interested in [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edible or not. 
 
-You might have guessed already that there are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This vignette provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). Just to avoid confusion, I do not suggest that ID3 is particularly appropriate for anything else then teaching introductory courses.
-
-We will not go into more details about ID3. You will find lots of documentation on this and more refined algorithms on the internet. 
+There are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This example provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). It lends itself well for this example, but of course today there are much more elaborate and refined algorithms available.
 
 ## Feature Selection
 
-As mentioned above, during the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? Should we first separate our set according to color or size? That is where classification models differ. 
+During the prediction step, each node routes our mushroom according to a feature. But how do we chose the feature? Should we first separate our set according to color or size? That is where classification models differ. 
 
-In ID3, we pick at each node the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, "dots" might be a more sensible feature than "organic". 
+In ID3, we pick, at each node, the feature with the highest *Information Gain*. In a nutshell, this is the feature which splits the sample in the possibly *purest* subsets. For example, in the case of mushrooms, *dots* might be a more sensible feature than *organic*. 
 
 ### Purity and Entropy
 
@@ -368,11 +366,13 @@ InformationGain <- function( tble ) {
 ```
 
 
-## The ID3 algorithm
+## Training
+
+We are all set for the ID3 training algorithm. 
 
 ### Pseudo code
 
-We are all set for the ID3 training algorithm. We start with the entire training data, and with a root. Then:
+We start with the entire training data, and with a root. Then:
 
 1. if the data-set is pure (e.g. all toxic), then  
     1. construct a leaf having the name of the class (e.g. 'toxic')
@@ -461,7 +461,7 @@ print(tree, "feature", "obsCount")
 
 ### The prediction method
 
-Now, let's predict some classes. For this, we need a predict function, which will route data through our tree and make a prediction based on the leave it ends up:
+We need a predict function, which will route data through our tree and make a prediction based on the leave where it ends up:
 
 ```{r}
 
@@ -492,10 +492,10 @@ This demo calculates and plots a simple decision tree. It demonstrates the follo
 
 * how to read a yaml file into a data.tree structure
 * how to calculate a decision tree
-* how to plot my data.tree with the ape package
-* how to plot my data.tree with the DiagrammeR package
+* how to plot a data.tree with the ape package
+* how to plot a data.tree with the DiagrammeR package
 
-## Loading a YAML file
+## Load YAML file
 
 YAML is similar to JSON, but targeted towards humans (as opposed to computers). It's consise and easy to read.
 YAML can be a neat format to store your data.tree structures, as you can use it across different software
@@ -512,6 +512,14 @@ cat(readChar(fileName, file.info(fileName)$size))
 
 Let's convert the YAML into a data.tree structure. First, we load it with the yaml package into a list of lists. Then we use `as.Node` to convert the list into a data.tree structure:
 
+```{r, eval = FALSE}
+
+#for debug
+fileName <- './inst/extdata/jennylind.yaml'
+```
+
+
+
 ```{r}
 
 library(data.tree)
@@ -522,15 +530,15 @@ print(jl, "type", "payoff", "p")
 ```
 
 
-## Calculate the decision tree
+## Calculate
 
 Next, we define our payoff function, and apply it to the tree. Note that we use post-order traversal, meaning that we calculate the tree from leaf to root:
 
 ```{r}
 
-payoff <- function(x) {
-  if (x$type == 'chance') x$payoff <- Aggregate(x, function(node) node$payoff * node$p, sum)
-  else if (x$type == 'decision') x$payoff <- Aggregate(x, "payoff", max)
+payoff <- function(node) {
+  if (node$type == 'chance') node$payoff <- sum(sapply(node$children, function(child) child$payoff * child$p))
+  else if (node$type == 'decision') node$payoff <- max(sapply(node$children, function(child) child$payoff))
 }
 
 jl$Do(payoff, traversal = "post-order", filterFun = isNotLeaf)
@@ -550,7 +558,9 @@ jl$Do(decision, filterFun = function(x) x$type == 'decision')
 
 ```
 
-## Plot the decision tree
+## Plot
+
+data.tree does not provide its own plotting facility, but there are plenty of options for plotting.
 
 ### Plot with the ape package
 
@@ -588,8 +598,8 @@ Here's the plotting:
 par(mar=c(1,1,1,1))
 plot(jlp, show.tip.label = FALSE, type = "cladogram")
 
-
 #We set arrow heads to the leaf-edges:
+
 for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), 
                               GetPhyloNr(node, "node"), 
                               arrows = 2, 
@@ -620,6 +630,8 @@ nodelabels("   ", GetPhyloNr(jl, "node"), frame = "rect")
 ```
 
 ### Plotting with DiagrammeR / Mermaid
+
+Another way to plot our decision tree is via the DiagrammeR package. It provides (among other great features) a wrapper to plot graphs using the [Mermaid](http://knsv.github.io/mermaid/index.html) syntax.
 
 First, we give each `Node` a unique id:
 
@@ -703,18 +715,20 @@ DiagrammeR(diagram)
 In this example, we will replicate Mike Bostock's bubble example. See here for details: http://bl.ocks.org/mbostock/4063269.  
 We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of this is inspired by [Timelyportfolio](https://github.com/timelyportfolio), the king of [htmlwidgets](http://htmlwidgets.org).
 
-You'll learn how to convert a complex JSON into a data.frame.
+You'll learn how to convert a complex JSON into a data.frame, and how to use this to plot hierarchic visualisations.
 
-## Converting a complex JSON file to a data.frame
+## Load JSON file
 
-Data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
+The data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
 ```{r}
 library(jsonlite)
 library(curl)
 
-flareJSON <- paste(readLines(curl("http://bl.ocks.org/mbostock/raw/4063269/flare.json"), warn = FALSE), collapse = "\n")
+con <- curl("http://bl.ocks.org/mbostock/raw/4063269/flare.json")
+flareJSON <- paste(readLines(con, warn = FALSE), collapse = "\n")
 cat(substr(flareJSON, 1, 300))
+close(con)
 
 ```
 
@@ -732,8 +746,7 @@ print(flareTree, "size", limit = 30)
 
 ```
 
-Finally, we can convert it into a data.frame. The `ToDataFrameTable` only converts leafs, but inherits attributes
-from ancestors:
+Finally, we can convert it into a data.frame. The `ToDataFrameTable` only converts leafs, but inherits attributes from ancestors:
 
 ```{r}
 
@@ -748,9 +761,9 @@ head(flare_df)
 
 This does not look spectacular. But take a look at this [stack overflow](http://stackoverflow.com/questions/31339805/converting-json-format-to-csv-to-upload-data-table-in-r-to-produce-d3-bubble-cha) question to see how people struggle to do this type of operation. 
 
-Here, it was particularly simple, because the underlying JSON structure is regular. If it were not (e.g. some nodes contain different attributes than others), the conversion from JSON to data.tree would still work. And then, as a second step, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` to remove unwanted nodes, use `Set` to remove or add default values, etc.
+Here, it was particularly simple, because the underlying JSON structure is regular. If it were not (e.g. some nodes contain different attributes than others), the conversion from JSON to data.tree would still work. And then, as a second step, we could modify the data.tree structure before converting it into a data.frame. For example, we could use `Prune` and `Remove` to remove unwanted nodes, use `Set` to remove or add default values, etc.
 
-## Printing the Bubbles Chart
+## Plot
 
 What follows has nothing to do with data.tree anymore. We simply provide the bubble chart printing for your enjoyment. In order to run it yourself, you need to install the bubbles package from github:
 
@@ -777,11 +790,11 @@ bubbles(
 
 # File Explorer (System Utilities, visualisation)
 
-In this example, we print the files in the folder structure of the file system. As a special goodie, we'll show code that lets you build your own *R File Explorer*, an interactive tree / list widget that lets you expand folders.
+In this example, we print the files that exist in the folder structure of the file system. As a special goodie, we'll show code that lets you build your own *R File Explorer*, an interactive tree / list widget that lets you expand folders and browse through your file system.
 
-## Print the files in a directory structure
+## Print
 
-First, let's read the files in a directory tree into R. The root path is the parent of the `vignettes` folder, i.e. the data.tree package folder itself:
+First, let's read the files in a directory tree into R. In this example, the root path ".." is the parent of the `vignettes` folder, i.e. the data.tree package folder itself:
 
 
 ```{r}
@@ -792,7 +805,7 @@ files <- list.files(path = path,
 
 df <- data.frame(
       filename = sapply(files, 
-                        function(fl) paste0(tail(strsplit(getwd(),"/")[[1]],1),"/",fl)
+                        function(fl) paste0("data.tree","/",fl)
       ), 
       file.info(paste(path, files, sep = "/")),
       stringsAsFactors = FALSE
@@ -812,7 +825,7 @@ print(fileStructure, "mode", "size", limit = 25)
 
 ```
 
-## Display files with the interactive Listviewer html widget
+## Listviewer html widget
 
 Finally, we can display the files by timelyportfolio's listviewer. As it's not on CRAN, we only display a screenshot of the widget in in this vignette. This is not half as fun as the interactive widget, of course. So please try it out for yourself to see it in action.
 
@@ -835,11 +848,11 @@ jsonedit(l)
 
 This is a simplistic example from the area of genetics. Similar models are found in many fields, namely wherever you have multi-generation models and probabilities.
 
-The code generates 100 simulations of a 3 generation population. Individuals can inherit or develop a certain feature (e.g. colour blindness), with certain probabilities based on sex. We then plot the probability distribution of the feature in the last generation.
+The code generates 100 simulations of a 3 generation population. Individuals can inherit or develop a certain feature (e.g. colour blindness). The probability to develop the feature is based on sex. We then plot the probability distribution of the feature in the last generation.
 
 You'll learn how to build a data.tree structure according to probabilistic rules, and how to use the structure to infer a probability distribution.
 
-## Generate a multi-generation population
+## Algorithm
 
 First, we generate a family tree of a population exhibiting a certain feature (e.g. colour blindness).
 
@@ -877,7 +890,11 @@ GenerateChildrenTree <- function(children = 2,
   if (parent$feature == TRUE) {
     for (i in 1:2) {
       subPop <- Traverse(parent, filterFun = function(x) x$sex == i)
-      inherit <- sample.int(n = 2, size = length(subPop), replace = TRUE, prob = c(1 - probInherit[i], probInherit[i]))
+      inherit <- sample.int(n = 2, 
+                            size = length(subPop), 
+                            replace = TRUE, 
+                            prob = c(1 - probInherit[i], probInherit[i]))
+      
       Set(subPop, feature = as.logical(inherit - 1))
     }
   } else {
@@ -888,7 +905,10 @@ GenerateChildrenTree <- function(children = 2,
   Set(parent$children, develop = FALSE)
   for (i in 1:2) {
     subPop <- Traverse(parent, filterFun = function(x) x$sex == i && !x$feature)
-    develop <- sample.int(n = 2, size = length(subPop), replace = TRUE, prob = c(1 - probDevelop[i], probDevelop[i]))
+    develop <- sample.int(n = 2, 
+                          size = length(subPop), 
+                          replace = TRUE, 
+                          prob = c(1 - probDevelop[i], probDevelop[i]))
     Set(subPop, feature = as.logical((develop - 1)), develop = as.logical((develop - 1)))
   }
   
@@ -907,7 +927,7 @@ GenerateChildrenTree <- function(children = 2,
 
 
 
-## Analysis on a single tree
+## Analysis
 
 Just for demonstration purpose, this is what a tree looks like:
 
@@ -968,7 +988,7 @@ For larger populations, you might consider parallelisation, of course. See below
 
 ## Parallelisation
 
-It is straight forward to parallelise the simulation. If, as in this example, you do not need to pass around a data.tree from one process (fork) to another, it is also rather efficient.
+It is straight forward to parallelise the simulation. If, as in this example, you do not need to pass around a data.tree structure from one process (fork) to another, it is also rather efficient.
 
 ```{r}
 library(foreach)
@@ -987,11 +1007,10 @@ For the more complicated case where you want to parallelise operations on a sing
 # Tic-Tac-Toe (game complexity)
 
 In this example, we do a brute force solution of Tic-Tac-Toe, the well-known 3*3 game.
-You'll learn how data.tree can be used to buil a tree of game history, and how the resulting data.tree structure can
-be used to analyse the game.
-In addition, this example shows you how parallelisation can speed up data.tree.
 
-## Problem set up
+You'll learn how data.tree can be used to build a tree of game history, and how the resulting data.tree structure can be used to analyse the game.
+
+In addition, this example shows you how parallelisation can speed up data.tree.
 
 We want to set up the problem in a way such that each `Node` is a move of a player, and each path describes the entire history of a game.
 
@@ -1167,7 +1186,7 @@ PrintBoard <- function(node) {
   
   t <- Traverse(node, traversal = "ancestor", filterFun = function(x) !x$isRoot && x$player == 2)
   field <- Get(t, "f")
-  value <- Get(t, function(x) 10*x$player + (x$level - 1))
+  value <- Get(t, function(x) 10*(x$level - 1) + x$player)
   mineV[field] <- value
     
   mineM <- matrix(mineV, 3, 3, byrow = TRUE)
@@ -1177,7 +1196,7 @@ PrintBoard <- function(node) {
 }
 
 ```
-The first number denotes the player. The second number is the move (1 to 9):
+The first number denotes  the move (1 to 9). The second number is the player:
 
 ```{r, eval = FALSE}
 
@@ -1203,7 +1222,7 @@ In a perfect world, data.tree and intra-tree parallelisation would tell a love s
 For example, tic-tac-toe seems almost trivial to parallelise: Remember that, on level 2, we created manually 3 `Nodes`. The creation of the sub-trees on these `Nodes` will be completely independent on the other sub-trees. Then, each sub-tree can be created in its own process. 
 
 So, in theory, we could use any parallelisation mechanism available in R.
-Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a child process to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees would take ages. 
+Unfortunately, you need to take into account a few things. As a matter of fact, to pass the sub-trees from a fork process back to the main process, R needs to serialize the `Nodes` of the sub-tree, and this results in huge objects. As a result, collecting the sub-trees would take ages. 
 
 So, instead, we can
 

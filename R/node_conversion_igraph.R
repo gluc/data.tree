@@ -14,6 +14,7 @@
 #' in the \code{data.tree} structure to add as edge attributes of the igraph
 #' 
 #' @inheritParams igraph::graph_from_data_frame
+#' @inheritParams ToDataFrameNetwork
 #'
 #' @return an \code{igraph} object
 #'   
@@ -27,10 +28,10 @@
 #' 
 #' 
 #' @export
-as.igraph.Node <- function(node, vertexAttributes = character(), edgeAttributes = character(), directed = FALSE) {
+as.igraph.Node <- function(node, vertexAttributes = character(), edgeAttributes = character(), directed = FALSE, direction = c("climb", "descend")) {
   if (!AreNamesUnique(node)) stop("Node names must be unique withing the tree")
-  network <- do.call("ToDataFrameNetwork", c(node, "name", vertexAttributes, edgeAttributes)) 
-  data <- network[,c("children", "parents", edgeAttributes)]
+  network <- do.call("ToDataFrameNetwork", c(node, "name", vertexAttributes, edgeAttributes, direction = direction)) 
+  data <- network[,c("from", "to", edgeAttributes)]
   vert <- do.call("ToDataFrameTree", c(node, "name", vertexAttributes))[,-1]
   ig <- igraph::graph_from_data_frame(data, 
                                       directed = directed,

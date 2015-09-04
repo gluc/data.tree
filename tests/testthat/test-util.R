@@ -11,6 +11,13 @@ test_that("createRegular", {
 })
 
 
+test_that("createRandomTree", {
+  t <- CreateRandomTree(nodes = 100)
+  expect_equal(t$totalCount, 101)
+
+})
+
+
 
 
 test_that("PruneDist 1", {

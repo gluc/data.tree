@@ -9,7 +9,9 @@
 - REMOVE: FromDataFrameTaxonomy and ToDataFrameTaxonomy (replaced by FromDataFrameNetwork and ToDataFrameNetwork, but with some differences)
 - ADD: FromDataFrameNetwork and ToDataFrameNetwork
 - IMPROVE: make Traversal "level" much faster
-
+- ADD: Node$RemoveChild
+- ADD: Node$RemoveAttribute
+- ADD: as.igraph.Node now supports different directions (climb and descend)
 
 ## Version 0.1.9 Pine II
 

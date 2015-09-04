@@ -126,7 +126,8 @@ Get = function(nodes,
                format = NULL,
                inheritFromAncestors = FALSE, 
                simplify = c(TRUE, FALSE, "array", "regular")) {
-  
+  if (length(nodes) == 0) return(NULL)
+  if (!is(nodes, "list")) stop("nodes must be a list of Node objects!")
   simplify <- simplify[1]
                  
   nodes <- unname(nodes)
@@ -160,6 +161,9 @@ Get = function(nodes,
 Do <- function(nodes,
                fun, 
                ...) {
+  if (length(nodes) == 0) invisible(nodes)
+  if (!is(nodes, "list")) stop("nodes must be a list of Node objects!")
+      
   for (node in nodes) fun(node, ...)
   
   invisible (nodes)
@@ -197,7 +201,9 @@ Do <- function(nodes,
 Set <- function(nodes, 
                 ...) {
   
-  if (length(nodes) == 0) return()
+  if (length(nodes) == 0) return(nodes)
+  if (!is(nodes, "list")) stop("nodes must be a list of Node objects!")
+      
   args <- list(...)
   argsnames <- sapply(substitute(list(...))[-1], deparse)
   gargsnames <- names(args)
@@ -207,14 +213,14 @@ Set <- function(nodes,
   
   
   
-  appFun <- function(x, name, arg) {
+  appFun <- function(x, arg, name) {
     x[[name]] <- arg
   }
   
   for(nme in names(args)) {
     arg <- args[[nme]]
     if (length(arg) == 0) arg <- vector("list", 1)
-    mapply(appFun, nodes, nme, arg)
+    mapply(appFun, nodes, arg, nme)
   }
   
   invisible (nodes)
