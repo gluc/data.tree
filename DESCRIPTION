@@ -1,13 +1,13 @@
 Package: data.tree
 Type: Package
 Title: General Purpose Hierarchical Data Structure
-Version: 0.2.0-2
+Version: 0.2.0-3
 Date: 2015-09-07
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.com>
 VignetteBuilder: knitr
 Imports:
-    R6, stringr
+    R6, stringr, methods
 Suggests:
     testthat, 
     knitr, 
