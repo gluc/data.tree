@@ -39,7 +39,7 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
     }
   } else if(!x$isRoot) {
       #clone s.t. x is root (for pretty level names)
-      x <- Clone(x, pruneFun = pruneFun, attributes = TRUE)
+      x <- Clone(x, attributes = TRUE)
       x$parent <- NULL
   }
 

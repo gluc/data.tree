@@ -768,7 +768,7 @@ Here, it was particularly simple, because the underlying JSON structure is regul
 What follows has nothing to do with data.tree anymore. We simply provide the bubble chart printing for your enjoyment. In order to run it yourself, you need to install the bubbles package from github:
 
 
-```{r}
+```{r, eval = FALSE}
 
 devtools::install_github("jcheng5/bubbles@6724e43f5e")
 library(scales)
@@ -786,6 +786,8 @@ bubbles(
   width = 800
 )
 ```
+
+![bubbles](assets/bubbles.jpg)
 
 
 # File Explorer (System Utilities, visualisation)
@@ -829,8 +831,7 @@ print(fileStructure, "mode", "size", limit = 25)
 
 Finally, we can display the files by timelyportfolio's listviewer. As it's not on CRAN, we only display a screenshot of the widget in in this vignette. This is not half as fun as the interactive widget, of course. So please try it out for yourself to see it in action.
 
-```{r}
-
+```{r, eval = FALSE}
 
 #This requires listviewer, which is available only on github
 devtools::install_github("timelyportfolio/listviewer")
@@ -842,7 +843,9 @@ jsonedit(l)
 
 ```
 
+![listviewer](assets/listviewer.jpg)
 
+(Run the code yourself to see the widget in action)
 
 # Gene Defect (genetics, probabilities, multi-generation models)
 
@@ -993,12 +996,10 @@ It is straight forward to parallelise the simulation. If, as in this example, yo
 ```{r}
 library(foreach)
 library(doParallel)
-registerDoParallel(makeCluster(3))
+registerDoParallel(makeCluster(2))
 #On Linux, there are other alternatives, e.g.: library(doMC);  registerDoMC(3)
 
 system.time(x <- foreach (i = 1:100, .packages = "data.tree") %dopar% FreqLastGen(GenerateChildrenTree()))
-x <- as.numeric(x)
-
 stopImplicitCluster()
 ```
 

@@ -17,3 +17,14 @@ The package provides functionality to convert from and to various formats such a
 
 # NOTE:
 The latest from github has some breaking changes compared to CRAN. See [NEWS](https://github.com/gluc/data.tree/blob/master/NEWS) for details.
+
+
+# Conventions:
+
+Coding Conventions: Google Style Guide, see https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml
+
+Versioning Conventions: SemanticVersioning. See http://semver.org/ for details
+
+Branching Conventions: GitFlow. See https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
+
+Pull Requests: Very welcome. Please branch from the dev branch if possible.
