@@ -404,7 +404,7 @@ Setting a formatter using the `SetFormat` method:
 
 ```{r}
 SetFormat(acme, "p", formatFun = FormatPercent)
-SetFormat(acme, "cost", formatFun = FormatFixedDecimal)
+SetFormat(acme, "cost", formatFun = function(x) FormatFixedDecimal(x, digits = 2))
 print(acme, "cost", "p")
 
 ```
