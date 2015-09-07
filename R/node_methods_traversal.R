@@ -119,6 +119,8 @@ Traverse = function(node,
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Set}}
 #'  
+#' @import methods
+#'  
 #' @export
 Get = function(nodes, 
                attribute, 

@@ -291,6 +291,8 @@ FromDataFrameTable <- function(table,
 #'  \item{Node names are unique throughout the network (and not only per level, as required by data.tree)}
 #' }
 #' 
+#' @import methods
+#' 
 #' @export
 FromDataFrameNetwork <- function(network) {
   
