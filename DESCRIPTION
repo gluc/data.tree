@@ -1,8 +1,8 @@
 Package: data.tree
 Type: Package
 Title: General Purpose Hierarchical Data Structure
-Version: 0.1.9
-Date: 2015-08-01
+Version: 0.2.0-2
+Date: 2015-09-07
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.com>
 VignetteBuilder: knitr
@@ -11,7 +11,6 @@ Imports:
 Suggests:
     testthat, 
     knitr, 
-    devtools,
     ape, 
     networkD3, 
     yaml, 
@@ -19,7 +18,10 @@ Suggests:
     DiagrammeR, 
     igraph,
     treemap,
-    curl
+    curl,
+    doParallel,
+    foreach,
+    htmlwidgets
 Enhances:
 Description: Create tree structures from hierarchical data, and use the utility 
     methods to traverse the tree in various orders. Aggregate, cumulate, print, convert to and from data.frame, 
