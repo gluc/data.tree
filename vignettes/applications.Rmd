@@ -722,21 +722,17 @@ You'll learn how to convert a complex JSON into a data.frame, and how to use thi
 The data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
 ```{r}
-library(jsonlite)
-library(curl)
-
-con <- curl("http://bl.ocks.org/mbostock/raw/4063269/flare.json")
-flareJSON <- paste(readLines(con, warn = FALSE), collapse = "\n")
+flarePath <- '../inst/extdata/flare.json'
+flareJSON <- readChar(flarePath, file.info(flarePath)$size)
 cat(substr(flareJSON, 1, 300))
-close(con)
 
 ```
 
 So, let's convert it into a data.tree structure:
 
 ```{r}
-
-flareLoL <- fromJSON("http://bl.ocks.org/mbostock/raw/4063269/flare.json",
+library(jsonlite)
+flareLoL <- fromJSON(file(flarePath),
                      simplifyDataFrame = FALSE
                      )
 
