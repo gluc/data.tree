@@ -722,21 +722,17 @@ You'll learn how to convert a complex JSON into a data.frame, and how to use thi
 The data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
 ```{r}
-library(jsonlite)
-library(curl)
-
-con <- curl("http://bl.ocks.org/mbostock/raw/4063269/flare.json")
-flareJSON <- paste(readLines(con, warn = FALSE), collapse = "\n")
+flarePath <- '../inst/extdata/flare.json'
+flareJSON <- readChar(flarePath, file.info(flarePath)$size)
 cat(substr(flareJSON, 1, 300))
-close(con)
 
 ```
 
 So, let's convert it into a data.tree structure:
 
 ```{r}
-
-flareLoL <- fromJSON("http://bl.ocks.org/mbostock/raw/4063269/flare.json",
+library(jsonlite)
+flareLoL <- fromJSON(file(flarePath),
                      simplifyDataFrame = FALSE
                      )
 
@@ -983,6 +979,7 @@ Generate 100 sample trees and get the frequency of the feature in the last gener
 system.time(x <- sapply(1:100, function(x) FreqLastGen(GenerateChildrenTree())))
 ```
 
+
 Plot a histogram of the frequency of the defect in the last generation:
 
 ```{r}
@@ -995,15 +992,24 @@ For larger populations, you might consider parallelisation, of course. See below
 
 It is straight forward to parallelise the simulation. If, as in this example, you do not need to pass around a data.tree structure from one process (fork) to another, it is also rather efficient.
 
-```{r}
+```{r, eval = FALSE}
 library(foreach)
 library(doParallel)
-registerDoParallel(makeCluster(2))
+registerDoParallel(makeCluster(3))
 #On Linux, there are other alternatives, e.g.: library(doMC);  registerDoMC(3)
 
 system.time(x <- foreach (i = 1:100, .packages = "data.tree") %dopar% FreqLastGen(GenerateChildrenTree()))
 stopImplicitCluster()
 ```
+
+```{r, echo = FALSE}
+
+print(c(user = 0.07, system = 0.02, elapsed = 1.40))
+```
+
+
+
+
 
 For the more complicated case where you want to parallelise operations on a single tree, see below.
 

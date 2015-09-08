@@ -454,11 +454,9 @@ simpleNetwork(acmeNetwork[-3], fontSize = 12)
 
 Another example, which at the same time shows conversion from csv:
 
+
 ```{r}
-library(curl)
-#load all the presentations from useR15 in Aalborg
-url <- curl("https://raw.github.com/gluc/useR15/master/00_data/useR15.csv")
-useRdf <- read.csv(url)
+useRdf <- read.csv('../inst/extdata/useR15.csv', stringsAsFactors = FALSE)
 #define the hierarchy (Session/Room/Speaker)
 useRdf$pathString <- paste("useR", useRdf$session, useRdf$room, useRdf$speaker, sep="|")
 #convert to Node
