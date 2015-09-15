@@ -107,10 +107,10 @@ Aggregate = function(node,
   #if (!is.function(attribute)) {
   if (length(cacheAttribute) > 0) {
     v <- GetAttribute(node, cacheAttribute, ..., format = identity, nullAsNa = FALSE)
-    if (!length(v) == 0) return (v)
+    if (!(length(v) == 0)) return (v)
   } 
   v <- GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE)
-  if (!length(v) == 0) result <- unname(v)
+  if (!(length(v) == 0)) result <- unname(v)
   else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
 
   if (!exists("result", envir = environment()) || length(result) == 0) {
