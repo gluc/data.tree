@@ -143,17 +143,6 @@ test_that("GetAttribute matrix", {
   data(acme)
   acme$IT$matrix <- diag(2)
   
-  res <- acme$IT$GetAttribute("matrix")
-  
-  expect_equal(acme$IT$matrix, res)
-  
-})
-
-
-test_that("GetAttribute matrix rstyle", {
-  data(acme)
-  acme$IT$matrix <- diag(2)
-  
   res <- GetAttribute(acme$IT, "matrix")
   
   expect_equal(acme$IT$matrix, res)
@@ -487,6 +476,17 @@ test_that("Formatter Get Hierarchy", {
   
 })
 
+
+test_that("Set matrix", {
+  
+  data(acme)
+  acme$Set(id = 1:acme$totalCount)
+  ms <- sapply(1:acme$totalCount, function(x) diag(x))
+  acme$Set(matrix = ms)
+  msget <- acme$Get("matrix")
+  expect_equal(unname(acme$Get("name")), names(msget))
+  expect_equal(ms, unname(msget))
+})
 
 
 test_that("Set pre-order", {
