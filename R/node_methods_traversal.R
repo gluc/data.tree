@@ -145,7 +145,11 @@ Get = function(nodes,
                                          inheritFromAncestors = inheritFromAncestors),
                 simplify = simplify
   )
-  
+  if (is.character(attribute) && attribute == "name") {
+    names(res) <- res
+  } else {
+    names(res) <- Get(nodes, "name")
+  }
   if (regular) {
     res <- do.call(cbind, res)
   }

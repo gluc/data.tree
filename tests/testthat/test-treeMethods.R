@@ -139,6 +139,27 @@ test_that("Get ancestor", {
 })
 
 
+test_that("GetAttribute matrix", {
+  data(acme)
+  acme$IT$matrix <- diag(2)
+  
+  res <- acme$IT$GetAttribute("matrix")
+  
+  expect_equal(acme$IT$matrix, res)
+  
+})
+
+
+test_that("GetAttribute matrix rstyle", {
+  data(acme)
+  acme$IT$matrix <- diag(2)
+  
+  res <- GetAttribute(acme$IT, "matrix")
+  
+  expect_equal(acme$IT$matrix, res)
+  
+})
+
 
 test_that("Get format", {
   
