@@ -1124,7 +1124,7 @@ c(user = 345.645, system = 3.245, elapsed = 346.445)
 What is the total number of games?
 
 ```{r, eval = FALSE}
-ttt$leafount
+ttt$leafCount
 ```
 
 ```{r, echo = FALSE}
