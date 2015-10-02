@@ -39,6 +39,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
                                 'RemoveChild',
                                 'root',
                                 'Set',
+                                'siblings',
                                 'Sort',
                                 'totalCount',
                                 '.*')
@@ -88,6 +89,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'  \item{\code{height}}{Returns max(level) of any of the \code{Nodes} of the tree}
 #'  \item{\code{averageBranchingFactor}}{Returns the average number of crotches below this \code{Node}}
 #'  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
+#'  \item{\code{siblings}}{Returns a list of the siblings of this \code{Node}}
 #'  
 #' }
 #'
@@ -326,6 +328,14 @@ Node <- R6Class("Node",
                           invisible (self)
                         } else {
                           invisible (self$parent$root)
+                        }
+                      },
+                      
+                      siblings = function() {
+                        if (self$isRoot) {
+                          return (list())
+                        } else {
+                          self$parent$children[names(self$parent$children) != self$name]
                         }
                       },
                       

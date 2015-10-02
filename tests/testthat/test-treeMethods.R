@@ -655,3 +655,13 @@ test_that("averageBranchingFactor", {
   t <- CreateRegularTree(3, 3)
   expect_equal(t$averageBranchingFactor, 3)
 })
+
+
+test_that("siblings", {
+  data(acme)
+  s <- acme$IT$siblings
+  expect_equal(2, length(s))
+  nms <- unname(Get(s, "name"))
+  expect_equal(c("Accounting", "Research"), nms)
+  
+})
