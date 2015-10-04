@@ -1,5 +1,11 @@
 # All changes to data.tree are documented here.
 
+
+## Version 0.2.2
+- FIX: Get can now fetch vectors and matrices too
+- ADD: Node$siblings
+
+
 ## Version 0.2.0-rc.1 Elder
 
 - ADD: ClimbByAttribute

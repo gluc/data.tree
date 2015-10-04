@@ -392,16 +392,17 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
     v <- format(v)
   }
   
-  if (is.vector(v) && length(v) == 1) {
-    names(v) <- node$name 
-  } else if (length(v) > 1) {
-    if (!is.null(names(v))) nms <- names(v)
-    else nms = NULL
-    dim(v) <- c(length(v), 1)
-    colnames(v) <- node$name
-    if (!is.null(nms)) rownames(v) <- nms
-  }
-  
+  if (FALSE) {
+    if (is.vector(v) && length(v) == 1) {
+      names(v) <- node$name 
+    } else if (length(v) > 1) {
+      if (!is.null(names(v))) nms <- names(v)
+      else nms = NULL
+      dim(v) <- c(length(v), 1)
+      colnames(v) <- node$name
+      if (!is.null(nms)) rownames(v) <- nms
+    }
+  }  
   return (v)
 }
 

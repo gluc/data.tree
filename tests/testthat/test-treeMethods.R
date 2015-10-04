@@ -139,6 +139,16 @@ test_that("Get ancestor", {
 })
 
 
+test_that("GetAttribute matrix", {
+  data(acme)
+  acme$IT$matrix <- diag(2)
+  
+  res <- GetAttribute(acme$IT, "matrix")
+  
+  expect_equal(acme$IT$matrix, res)
+  
+})
+
 
 test_that("Get format", {
   
@@ -467,6 +477,17 @@ test_that("Formatter Get Hierarchy", {
 })
 
 
+test_that("Set matrix", {
+  
+  data(acme)
+  acme$Set(id = 1:acme$totalCount)
+  ms <- sapply(1:acme$totalCount, function(x) diag(x))
+  acme$Set(matrix = ms)
+  msget <- acme$Get("matrix")
+  expect_equal(unname(acme$Get("name")), names(msget))
+  expect_equal(ms, unname(msget))
+})
+
 
 test_that("Set pre-order", {
   data(acme)
@@ -633,4 +654,14 @@ test_that("Cumulate", {
 test_that("averageBranchingFactor", {
   t <- CreateRegularTree(3, 3)
   expect_equal(t$averageBranchingFactor, 3)
+})
+
+
+test_that("siblings", {
+  data(acme)
+  s <- acme$IT$siblings
+  expect_equal(2, length(s))
+  nms <- unname(Get(s, "name"))
+  expect_equal(c("Accounting", "Research"), nms)
+  
 })
