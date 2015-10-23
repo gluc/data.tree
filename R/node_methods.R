@@ -113,7 +113,7 @@ Aggregate = function(node,
   if (!length(v) == 0) result <- unname(v)
   else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
 
-  if (!exists("result", envir = environment()) || length(result) == 0) {
+  if (!("result" %in% ls()) || length(result) == 0) {
     values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, cacheAttribute, ...))
     result <- unname(aggFun(values))
   }
