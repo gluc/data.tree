@@ -48,7 +48,7 @@ changeName <- function(node, oldName, newName) {
 }
 
 
-
+#' @export
 .separator <- function(self) {
   if (self$isRoot) return("")
   if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--") 
@@ -56,6 +56,7 @@ changeName <- function(node, oldName, newName) {
   return (paste0(.parentSeparator(self$parent), mySeparator))
 }
 
+#' @export
 .parentSeparator <- function(self) {
   if (self$isRoot) return("")
   if (self$position == self$parent$count) mySeparator <- "    "
