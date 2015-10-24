@@ -1,10 +1,16 @@
 # All changes to data.tree are documented here.
 
+## Version 0.2.4
+- FIX: applications vignette, changed from http://htmlwidgets.org to http://www.htmlwidgets.org, as requested by CRAN
+
+## Version 0.2.3
+- FIX #33: applications vignette doesn't build because of DiagrammeR update
+- FIX #32: Cannot subclass Node
+- FIX #30: strange errors when using data.tree multiple times
 
 ## Version 0.2.2
 - FIX: Get can now fetch vectors and matrices too
 - ADD: Node$siblings
-
 
 ## Version 0.2.0-rc.1 Elder
 

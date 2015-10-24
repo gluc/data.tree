@@ -633,7 +633,7 @@ nodelabels("   ", GetPhyloNr(jl, "node"), frame = "rect")
 # Bubble Chart (visualisation)
 
 In this example, we will replicate Mike Bostock's bubble example. See here for details: http://bl.ocks.org/mbostock/4063269.  
-We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of this is inspired by [Timelyportfolio](https://github.com/timelyportfolio), the king of [htmlwidgets](http://htmlwidgets.org).
+We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of this is inspired by [Timelyportfolio](https://github.com/timelyportfolio), the king of [htmlwidgets](http://www.htmlwidgets.org).
 
 You'll learn how to convert a complex JSON into a data.frame, and how to use this to plot hierarchic visualisations.
 
