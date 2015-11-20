@@ -1,5 +1,5 @@
 ---
-title: "Sample applications using data.tree"
+title: "data.tree sample applications"
 author: "Christoph Glur"
 date: '`r Sys.Date()`'
 output:
