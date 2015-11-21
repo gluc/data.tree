@@ -1,7 +1,7 @@
 Package: data.tree
 Type: Package
 Title: General Purpose Hierarchical Data Structure
-Version: 0.2.4
+Version: 0.2.5
 Date: 2015-10-24
 Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.com>

@@ -142,7 +142,7 @@ print(n, "population", "cumPop", pruneMethod = "dist", limit = 20)
 
 ## Prune
 
-The previous steps were done to define our threshold: big countries should be displayed, while small ones should be grouped together. This lets us define a pruning fuction that will allow a maximum of 7 countries per continent, and that will prune all countries making up less than 90% of a continent's population:
+The previous steps were done to define our threshold: big countries should be displayed, while small ones should be grouped together. This lets us define a pruning function that will allow a maximum of 7 countries per continent, and that will prune all countries making up less than 90% of a continent's population:
 
 ```{r}
 
