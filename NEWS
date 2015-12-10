@@ -1,5 +1,8 @@
 # All changes to data.tree are documented here.
 
+## Version 0.2.6
+- FormatDecimal works for NULL values
+
 ## Version 0.2.5
 - minor fixes in vignettes
 

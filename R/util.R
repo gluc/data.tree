@@ -17,7 +17,7 @@
 #' @seealso formatC
 #' @export
 FormatPercent <- function(x, digits = 2, format = "f", ...) {
-  ifelse(is.na(x), "", paste(formatC(100 * x, format = format, digits = digits, ...), "%"))
+  ifelse(is.null(x) || is.na(x), "", paste(formatC(100 * x, format = format, digits = digits, ...), "%"))
 }
 
 #' Format a Number as a Decimal
@@ -34,7 +34,7 @@ FormatPercent <- function(x, digits = 2, format = "f", ...) {
 #' 
 #' @export
 FormatFixedDecimal <- function(x, digits = 3) {
-  ifelse(is.na(x), "", sprintf(paste0("%.",digits, "f"),x))
+  ifelse(is.null(x) || is.na(x), "", sprintf(paste0("%.",digits, "f"),x))
 }
 
 
