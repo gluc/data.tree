@@ -209,7 +209,7 @@ plot(as.dendrogram(n2, heightAttribute = "population"))
 
 ## Further developments
 
-Obviously, we should also aggregate the GNI as a weighted averag. Namely, we should do this for the *Other* catch-all country that we add to the tree.
+Obviously, we should also aggregate the GNI as a weighted average. Namely, we should do this for the *Other* catch-all country that we add to the tree.
 
 # Portfolio Breakdown (finance)
 
