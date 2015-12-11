@@ -2,6 +2,7 @@
 % Please edit documentation in R/node_conversion_dataframe.R
 \name{as.data.frame.Node}
 \alias{ToDataFrameNetwork}
+\alias{ToDataFramePathCol}
 \alias{ToDataFrameTable}
 \alias{ToDataFrameTree}
 \alias{as.data.frame.Node}
@@ -17,6 +18,8 @@ ToDataFrameTable(x, ..., pruneFun = NULL)
 
 ToDataFrameNetwork(x, ..., direction = c("climb", "descend"),
   pruneFun = NULL, inheritFromAncestors = FALSE)
+
+ToDataFramePathCol(x, ..., pruneFun = NULL)
 }
 \arguments{
 \item{x}{The root \code{Node} of the tree or sub-tree to be convert to a data.frame}
@@ -51,6 +54,10 @@ spanned by \code{x}, possibly pruned according to \code{pruneFun}.
 ToDataFrameNetwork: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree
 spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first column is called 'from', while the
 second is called 'to', describing the parent to child edge (for direction "climb") or the child to parent edge (for direction "descend").
+
+ToDataFramePathCol: a \code{data.frame}, where each row represents a leaf in the tree or sub-tree
+spanned by \code{x}, possibly pruned according to \code{pruneFun}. In addition to \code{...}, each level
+is output to a colum.
 }
 \description{
 Convert a \code{data.tree} structure to a \code{data.frame}

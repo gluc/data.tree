@@ -152,6 +152,32 @@ ToDataFrameNetwork <- function(x,
 
 
 
+#' @rdname as.data.frame.Node
+#' 
+#' @return ToDataFramePathCol: a \code{data.frame}, where each row represents a leaf in the tree or sub-tree 
+#' spanned by \code{x}, possibly pruned according to \code{pruneFun}. In addition to \code{...}, each level
+#' is output to a colum.
+#' 
+#' 
+#' @export
+ToDataFramePathCol <- function(x, 
+                               ..., 
+                               pruneFun = NULL) {
+  pathArgs <- GetPathV(1:(x$height - 1))
+  names(pathArgs) <- paste0('level', 1:(x$height - 1))
+  do.call(ToDataFrameTable, c(x, pathArgs, leaf = 'name', ...))
+}
+
+
+GetPath <- function(n) {
+  f <- function(x) {
+    if (x$level > n) return (x$path[[n]])
+    return (NA)
+  }
+  return (f)
+}
+
+GetPathV <- Vectorize(GetPath)
 
 
 
