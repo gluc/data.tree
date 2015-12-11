@@ -97,11 +97,11 @@ test_that("ToDataFrameTypeCol type", {
   acme$Set(type = c('company', 'department', 'project', 'project', 'department', 'project', 'project', 'department', 'program', 'project', 'project', 'project', 'project'))
   
   acmedf <- ToDataFrameTypeCol(acme, type = 'type', prefix = NULL)
-  expect_equal(names(acmedf), c('company', 'department', 'project', 'program'))
+  expect_equal(names(acmedf), c('company', 'department', 'program', 'project'))
   expect_true( all(acmedf$company == 'Acme Inc.'))
   expect_equal(acmedf$department, c('Accounting', 'Accounting', 'Research', 'Research', 'IT', 'IT', 'IT', 'IT'))
-  expect_equal(acmedf$project, c('New Software', 'New Accounting Standards', 'New Product Line', 'New Labs', 'India', 'Poland', 'Go agile', 'Switch to R'))
   expect_equal(acmedf$program, c(NA, NA, NA, NA, 'Outsource', 'Outsource', NA, NA))  
+  expect_equal(acmedf$project, c('New Software', 'New Accounting Standards', 'New Product Line', 'New Labs', 'India', 'Poland', 'Go agile', 'Switch to R'))
 })
 
 

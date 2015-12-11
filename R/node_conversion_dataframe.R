@@ -174,7 +174,9 @@ ToDataFrameTypeCol <- function(x,
                                type = 'level',
                                prefix = type,
                                pruneFun = NULL) {
-  cols <- unique(x$Get(type))
+  cols <- unique(c(x$Get(type, filterFun = isNotLeaf), x$Get(type, filterFun = isLeaf)))
+
+  
   pathArgs <- GetPathArgV(cols, type)
   if (is.null(prefix)) names(pathArgs) <- as.character(cols)
   else names(pathArgs) <- paste0(prefix, '_', cols)

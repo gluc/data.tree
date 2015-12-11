@@ -508,6 +508,41 @@ ToDataFrameTable(acme, "pathString", "cost")
 ToDataFrameNetwork(acme, "cost")
 ```
 
+And, finally, we can also put attributes of our nodes in a column, based on a type discriminator. This sounds more complicated then what it is. Consider the default discriminator, `level`:
+
+```{r}
+ToDataFrameTypeCol(acme, 'cost')
+```
+
+Let's look at a somewhat more advanced example. First, let's assume that for the outsourcing project, we have two separate possibilities: Outsourcing to India or outsourcing to Poland:
+
+```{r}
+acme$IT$Outsource$AddChild("India")
+acme$IT$Outsource$AddChild("Poland")
+
+```
+
+Now, with this slightly more complex tree structure, the level is not a usefuly discriminator anymore, because some projects are in level 3, while the new projects are in level 4. For this reason, we introduce a type field on our node objects: A node type can be a company (root only), a department (Accounting, Research, and IT), a program (Oursource), and a project (the rest, i.e. all the leaves):
+
+```{r}
+acme$Set(type = c('company', 'department', 'project', 'project', 'department', 'project', 'project', 'department', 'program', 'project', 'project', 'project', 'project'))
+
+```
+
+Our tree now looks like this:
+
+```{r}
+print(acme, 'type')
+```
+
+
+We can now create a data.frame in which we have one column per distinct type value. Namely, a company column, a department column, a program column, and a project column. Note that the columns are not hardcoded, but derived dynamically from your data in the tree structure:
+
+```{r}
+ToDataFrameTypeCol(acme, type = 'type', prefix = NULL)
+```
+
+
 ### Converting to List of Lists
 
 List of lists are useful for various use cases:
@@ -516,7 +551,9 @@ List of lists are useful for various use cases:
 * for functions that take a lol as an input. This is especially the case for visualisations and charts, e.g with many html widgets
 * to save a data.tree structure as an R object (see performance considerations below)
 
+
 ```{r}
+data(acme)
 str(as.list(acme$IT))
 str(ToListExplicit(acme$IT, unname = FALSE, nameName = "id", childrenName = "dependencies"))
 ```

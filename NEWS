@@ -1,9 +1,8 @@
 # All changes to data.tree are documented here.
 
 ## Version 0.3.0
-- IMPROVE: FormatDecimal and FormatPercent work for NULL values
+- IMPROVE: FormatFixedDecimal and FormatPercent work for NULL values
 - ADD: ToDataFrameTypeCol to export e.g. the path to columns by level
-- minor fixes in vignettes
 
 ## Version 0.2.4
 - FIX: applications vignette, changed from http://htmlwidgets.org to http://www.htmlwidgets.org, as requested by CRAN
