@@ -2,9 +2,9 @@
 % Please edit documentation in R/node_conversion_dataframe.R
 \name{as.data.frame.Node}
 \alias{ToDataFrameNetwork}
-\alias{ToDataFramePathCol}
 \alias{ToDataFrameTable}
 \alias{ToDataFrameTree}
+\alias{ToDataFrameTypeCol}
 \alias{as.data.frame.Node}
 \title{Convert a \code{data.tree} structure to a \code{data.frame}}
 \usage{
@@ -19,7 +19,7 @@ ToDataFrameTable(x, ..., pruneFun = NULL)
 ToDataFrameNetwork(x, ..., direction = c("climb", "descend"),
   pruneFun = NULL, inheritFromAncestors = FALSE)
 
-ToDataFramePathCol(x, ..., pruneFun = NULL)
+ToDataFrameTypeCol(x, ..., type = "level", prefix = type, pruneFun = NULL)
 }
 \arguments{
 \item{x}{The root \code{Node} of the tree or sub-tree to be convert to a data.frame}
@@ -43,6 +43,10 @@ If a specific Node does not contain the attribute, \code{NA} is added to the dat
 searched for the field/method. If TRUE, and if the \code{Node} does not contain the attribute, then ancestors are also searched.}
 
 \item{direction}{when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?}
+
+\item{type}{when converting type columns, the \code{type} is the discriminator, i.e. an attribute (e.g. field name) of each node}
+
+\item{prefix}{when converting type columns, the prefix used for the column names. Can be NULL to omit prefixes.}
 }
 \value{
 ToDataFrameTree: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree
@@ -55,9 +59,9 @@ ToDataFrameNetwork: a \code{data.frame}, where each row represents a \code{Node}
 spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first column is called 'from', while the
 second is called 'to', describing the parent to child edge (for direction "climb") or the child to parent edge (for direction "descend").
 
-ToDataFramePathCol: a \code{data.frame}, where each row represents a leaf in the tree or sub-tree
-spanned by \code{x}, possibly pruned according to \code{pruneFun}. In addition to \code{...}, each level
-is output to a colum.
+ToDataFrameTypeCol: a \code{data.frame} in table format (i.e. where each row represents a leaf in the tree or sub-tree
+spanned by \code{x}), possibly pruned according to \code{pruneFun}. In addition to \code{...}, each distinc
+\code{type} is output to a column.
 }
 \description{
 Convert a \code{data.tree} structure to a \code{data.frame}
@@ -70,6 +74,7 @@ as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p")
 ToDataFrameTree(acme, "cost", "p")
 ToDataFrameNetwork(acme, "cost", "p", direction = "climb")
 ToDataFrameTable(acme, "cost", "p")
+ToDataFrameTypeCol(acme)
 
 #use the pruneFun:
 acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
@@ -85,5 +90,12 @@ acme$Accounting$Head <- "Mrs. Numright"
 acme$Research$Head <- "Mr. Stein"
 acme$IT$Head <- "Mr. Squarehead"
 ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "cost")
+
+#complex TypeCol
+acme$IT$Outsource$AddChild("India")
+acme$IT$Outsource$AddChild("Poland")
+acme$Set(type = c('company', 'department', 'project', 'project', 'department', 'project', 'project', 'department', 'program', 'project', 'project', 'project', 'project'))
+print(acme, 'type')
+ToDataFrameTypeCol(acme, type = 'type')
 }
 

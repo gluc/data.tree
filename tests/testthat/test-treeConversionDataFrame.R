@@ -77,30 +77,30 @@ test_that("ToDataFrame sub-tree", {
 })
 
 
-test_that("ToDataFrameType level", {
+test_that("ToDataFrameTypeCol level", {
   data(acme)
   acme$IT$Outsource$AddChild("India")
   acme$IT$Outsource$AddChild("Poland")
   
   acmedf <- ToDataFrameTypeCol(acme)
-  expect_equal(names(acmedf), c('level1', 'level2', 'level3', 'level4'))
-  expect_true( all(acmedf$level1 == 'Acme Inc.'))
-  expect_equal(acmedf$level2, c('Accounting', 'Accounting', 'Research', 'IT', 'IT', 'IT', 'IT'))
-  expect_equal(acmedf$level3, c('New Software', 'New Accounting Standards', 'New Product Line', 'New Labs', 'Outsource', 'Outsource', 'Go agile', 'Switch to R'))
-  expect_equal(acmedf$level4, c(NA, NA, NA, NA, 'India', 'Poland', NA, NA))  
+  expect_equal(names(acmedf), c('level_1', 'level_2', 'level_3', 'level_4'))
+  expect_true( all(acmedf$level_1 == 'Acme Inc.'))
+  expect_equal(acmedf$level_2, c('Accounting', 'Accounting', 'Research', 'Research', 'IT', 'IT', 'IT', 'IT'))
+  expect_equal(acmedf$level_3, c('New Software', 'New Accounting Standards', 'New Product Line', 'New Labs', 'Outsource', 'Outsource', 'Go agile', 'Switch to R'))
+  expect_equal(acmedf$level_4, c(NA, NA, NA, NA, 'India', 'Poland', NA, NA))  
 })
 
-test_that("ToDataFrameType type", {
+test_that("ToDataFrameTypeCol type", {
   data(acme)
   acme$IT$Outsource$AddChild("India")
   acme$IT$Outsource$AddChild("Poland")
   acme$Set(type = c('company', 'department', 'project', 'project', 'department', 'project', 'project', 'department', 'program', 'project', 'project', 'project', 'project'))
   
-  acmedf <- ToDataFrameTypeCol(acme, type = 'type')
+  acmedf <- ToDataFrameTypeCol(acme, type = 'type', prefix = NULL)
   expect_equal(names(acmedf), c('company', 'department', 'project', 'program'))
   expect_true( all(acmedf$company == 'Acme Inc.'))
-  expect_equal(acmedf$department, c('Accounting', 'Accounting', 'Research', 'IT', 'IT', 'IT', 'IT'))
-  expect_equal(acmedf$project, c('New Software', 'New Accounting Standards', 'New Product Line', 'New Labs', 'India', 'India', 'Go agile', 'Switch to R'))
+  expect_equal(acmedf$department, c('Accounting', 'Accounting', 'Research', 'Research', 'IT', 'IT', 'IT', 'IT'))
+  expect_equal(acmedf$project, c('New Software', 'New Accounting Standards', 'New Product Line', 'New Labs', 'India', 'Poland', 'Go agile', 'Switch to R'))
   expect_equal(acmedf$program, c(NA, NA, NA, NA, 'Outsource', 'Outsource', NA, NA))  
 })
 

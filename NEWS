@@ -1,9 +1,8 @@
 # All changes to data.tree are documented here.
 
-## Version 0.2.6
-- FormatDecimal works for NULL values
-
-## Version 0.2.5
+## Version 0.3.0
+- IMPROVE: FormatDecimal and FormatPercent work for NULL values
+- ADD: ToDataFrameTypeCol to export e.g. the path to columns by level
 - minor fixes in vignettes
 
 ## Version 0.2.4
