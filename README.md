@@ -1,5 +1,6 @@
 [![Build Status master](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree)
 [![Build Status dev](https://travis-ci.org/gluc/data.tree.svg?branch=dev)](https://travis-ci.org/gluc/data.tree)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?svg=true)](https://ci.appveyor.com/project/gluc/data.tree)
 [![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=master)](http://codecov.io/github/gluc/data.tree?branch=master) [![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](http://cran.rstudio.com/web/packages/data.tree)
 
 
@@ -16,7 +17,7 @@ The package provides functionality to convert from and to various formats such a
 
 
 # NOTE:
-The latest from github has some breaking changes compared to CRAN. See [NEWS](https://github.com/gluc/data.tree/blob/master/NEWS) for details.
+The latest from github dev branch may have some breaking changes compared to CRAN. See [NEWS](https://github.com/gluc/data.tree/blob/dev/NEWS) for details.
 
 
 # Conventions:
