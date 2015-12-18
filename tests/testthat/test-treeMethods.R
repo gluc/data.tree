@@ -630,6 +630,17 @@ test_that("Remove Attribute", {
   expect_false("floor" %in% acme$Research$fields)
 })
 
+
+test_that("Remove Attribute stop", {
+  data(acme)
+  acme$Research$floor <- 21
+  expect_true("floor" %in% acme$Research$fields)
+  expect_true(acme$Research$RemoveAttribute("floor", FALSE))
+  expect_false("floor" %in% acme$Research$fields)
+  expect_false(acme$IT$RemoveAttribute("floor", FALSE))
+  
+})
+
 test_that("print", {
   data(acme)
   acme2 <- print(acme, "cost")
