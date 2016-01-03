@@ -58,7 +58,7 @@
 #' @export
 as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, ...) {
   mode <- mode[1]
-  if (is.null(nameName) || is.null(x[[nameName]])) {
+  if (is.null(nameName) || !(nameName %in% names(x))) {
     if (length(nodeName)==0) myName <- tempfile(pattern = '', tmpdir = '')
     else myName <- nodeName
   } else {
