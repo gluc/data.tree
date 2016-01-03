@@ -79,7 +79,6 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   #children
   if(mode == 'simple') children <- x[sapply(x, is.list)]
   else if(mode == 'explicit') {
-    if (!(childrenName %in% names(x))) stop(paste0("Corrupt node at path ", x$pathString, "!"))
     children <- x[[childrenName]]
   }
   if (length(children) == 0) return (n)
