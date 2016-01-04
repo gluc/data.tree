@@ -71,7 +71,9 @@ changeName <- function(node, oldName, newName) {
 #' @export
 averageBranchingFactor <- function(node) {
   t <- Traverse(node, filterFun = isNotLeaf)
+  if (length(t) == 0) return (0)
   cnt <- Get(t, "count")
+  if (!is.numeric(cnt)) browser()
   return (mean(cnt))
 }
 
