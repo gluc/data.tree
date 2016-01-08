@@ -4,6 +4,7 @@
 - IMPROVE: FormatFixedDecimal and FormatPercent work for NULL values
 - ADD: ToDataFrameTypeCol to export e.g. the path to columns by level
 - ADD: Node$RemoveAttribute now contains a mandatory parameter so that it works also if the node does not have the attribute to be removed.
+- FIX: Removed ... parameter from ToListExplicit and ToListSimple 
 
 ## Version 0.2.4
 - FIX: applications vignette, changed from http://htmlwidgets.org to http://www.htmlwidgets.org, as requested by CRAN

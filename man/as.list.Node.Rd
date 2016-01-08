@@ -10,10 +10,10 @@
   nameName = ifelse(unname, "name", ""), childrenName = "children",
   rootName = "", ...)
 
-ToListSimple(x, ..., nameName = "name")
+ToListSimple(x, nameName = "name")
 
-ToListExplicit(x, ..., unname = FALSE, nameName = ifelse(unname, "name",
-  ""), childrenName = "children")
+ToListExplicit(x, unname = FALSE, nameName = ifelse(unname, "name", ""),
+  childrenName = "children")
 }
 \arguments{
 \item{x}{The Node to convert}
@@ -31,7 +31,7 @@ an array rather than named objects.}
 
 \item{rootName}{The name of the node. If provided, this overrides \code{Node$name}}
 
-\item{...}{Additional parameters}
+\item{...}{Additional parameters (ignored)}
 }
 \description{
 Convert a \code{data.tree} structure to a list-of-list structure
@@ -39,10 +39,10 @@ Convert a \code{data.tree} structure to a list-of-list structure
 \examples{
 data(acme)
 
-str(ToListSimple(acme, "p", "cost"))
+str(ToListSimple(acme))
 
-str(ToListExplicit(acme, "cost"))
-str(ToListExplicit(acme, "cost", unname = TRUE))
-str(ToListExplicit(acme, "cost", unname = TRUE, nameName = "id", childrenName = "descendants"))
+str(ToListExplicit(acme))
+str(ToListExplicit(acme, unname = TRUE))
+str(ToListExplicit(acme, unname = TRUE, nameName = "id", childrenName = "descendants"))
 }
 
