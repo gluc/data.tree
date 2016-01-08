@@ -171,7 +171,7 @@ as.list.Node <- function(x,
   fields <- self$fields
   fields <- fields[!is.function(fields) && !is.environment(fields)]
   
-  for (fieldName in fields) res[fieldName] <- self[[fieldName]]
+  for (fieldName in fields) res[[fieldName]] <- self[[fieldName]]
     
   if(!self$isLeaf) {
     kids <- lapply(self$children, FUN = function(x) as.list.Node(x, mode, unname, nameName, childrenName, ...))
