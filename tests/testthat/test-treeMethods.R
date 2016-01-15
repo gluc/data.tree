@@ -641,6 +641,14 @@ test_that("Remove Attribute stop", {
   
 })
 
+test_that("Add Sibling", {
+  data(acme)
+  acme$Research$AddSibling("Marketing")$AddChild("Web")$AddSibling("Print")
+  expect_equal(acme$Marketing$position, 3)
+  expect_equal(acme$IT$position, 4)
+  expect_equal(acme$Marketing$Web$siblings[[1]]$name, "Print")
+})
+
 test_that("print", {
   data(acme)
   acme2 <- print(acme, "cost")

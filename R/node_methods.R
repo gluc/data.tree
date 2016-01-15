@@ -91,14 +91,13 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
 #'        , traversal = "post-order")
 #'   
 #' @seealso \code{\link{Node}}
-#'
+#' 
 #' @export
 Aggregate = function(node, 
                      attribute, 
                      aggFun, 
                      cacheAttribute = NULL,
                      ...) {
-  
   
   
   
