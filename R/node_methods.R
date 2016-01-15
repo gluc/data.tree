@@ -93,8 +93,8 @@ Aggregate = function(node,
   if (isLeaf(node)) return ( GetAttribute(node, attribute, ...) )
   values <- sapply(node$children, 
                    function(x) {
-                     v <- GetAttribute(node, attribute, format = identity, ...)
-                     if (length(v) == 0) return(v)
+                     v <- GetAttribute(x, attribute, format = identity, ...)
+                     if (length(v) > 0 && !is.na(v)) return(v)
                      Aggregate(x, attribute, aggFun, ...)
                    })
   result <- unname(aggFun(values))
