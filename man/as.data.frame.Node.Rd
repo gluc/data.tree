@@ -94,7 +94,11 @@ ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "
 #complex TypeCol
 acme$IT$Outsource$AddChild("India")
 acme$IT$Outsource$AddChild("Poland")
-acme$Set(type = c('company', 'department', 'project', 'project', 'department', 'project', 'project', 'department', 'program', 'project', 'project', 'project', 'project'))
+acme$Set(type = c('company', 'department', 'project', 'project', 'department',
+                  'project', 'project', 'department', 'program', 'project',
+                  'project', 'project', 'project'
+                  )
+        )
 print(acme, 'type')
 ToDataFrameTypeCol(acme, type = 'type')
 }

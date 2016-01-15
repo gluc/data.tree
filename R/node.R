@@ -99,7 +99,12 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #' @examples
 #' library(data.tree)
 #' acme <- Node$new("Acme Inc.")
-#' accounting <- acme$AddChild("Accounting")$AddSibling("Research")$AddChild("New Labs")$parent$AddSibling$("IT")$AddChild("Outsource")
+#' accounting <- acme$AddChild("Accounting")$
+#'               AddSibling("Research")$
+#'               AddChild("New Labs")$
+#'               parent$
+#'               AddSibling("IT")$
+#'               AddChild("Outsource")
 #' print(acme)
 #' 
 #' @seealso For more details see the \code{\link{data.tree}} documentations, or the \code{data.tree} vignette: \code{vignette("data.tree")}

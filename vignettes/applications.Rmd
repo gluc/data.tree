@@ -110,13 +110,15 @@ n$Get("name", filterFun = function(x) x$isLeaf && x$GNI == maxGNI)
 
 ## Aggregate and Cumulate
 
-We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. The main reason why we do this is not to calculate the population of the world, but to store the result via the `cacheAttribute`.
+We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. 
 
 ```{r}
-Aggregate(node = n, 
-          attribute = "population", 
-          aggFun = sum, 
-          cacheAttribute = "population")
+n$Do(function(x) {
+        x$population <- Aggregate(node = x,
+        attribute = "population",
+        aggFun = sum)
+        }, 
+     traversal = "post-order")
 ```
 
 Next, we sort each node by population:
@@ -129,7 +131,7 @@ n$Sort(attribute = "population", decreasing = TRUE, recursive = TRUE)
 Finally, we cumulate among siblings, and store the running sum in an attribute called `cumPop`:
 
 ```{r}
-n$Do(function(x) Cumulate(x, "population", sum, "cumPop"))
+n$Do(function(x) x$cumPop <- Cumulate(x, "population", sum))
 
 ```
 
@@ -246,13 +248,14 @@ pfo <- as.Node(pfodf)
 To calculate the weight per asset class, we use the `Aggregate` method:
 
 ```{r}
-Aggregate(node = pfo, attribute = "Weight", aggFun = sum, cacheAttribute = "Weight")
+t <- Traverse(pfo, traversal = "post-order")
+Do(t, function(x) x$Weight <- Aggregate(node = x, attribute = "Weight", aggFun = sum))
 ```
 
 We now calculate the `WeightOfParent`, 
 
 ```{r}
-t <- Traverse(pfo, traversal = "post-order")
+
 Do(t, function(x) x$WeightOfParent <- x$Weight / x$parent$Weight)
 
 ```
@@ -484,7 +487,7 @@ Predict(tree, c(color = 'red',
         )
 ```
 
-Oops, trusting classification blindly might be dangerous ;-)
+Oops! Looks like trusting classification blindly might get you killed.
 
 # Jenny Lind (decision tree)
 

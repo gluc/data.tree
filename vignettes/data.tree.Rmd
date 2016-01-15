@@ -800,8 +800,7 @@ acme$Get(Aggregate, "cost", sum)
 Note, however, that this is not very efficient: `Aggregate` will be called twice on, say, *IT*: Once when the traversal passes *IT* itself, the second time recursively when `Aggregate` is called on the root. For this reason, we have the option to store/cache the calculated value along the way. For one thing, this is a convenient way to save an additional `Set` call in case we want to store the aggregated value. Additionally, it speeds up calculation because `Aggregate` on an ancestor will use a cached value on a descendant:
 
 ```{r}
-acme$Do(function(node) node$cost <- NULL, filterFun = isNotLeaf)
-Aggregate(acme, attribute = "cost", aggFun = sum, cacheAttribute = "cost") 
+acme$Do(function(node) node$cost <- Aggregate(node, attribute = "cost", aggFun = sum), traversal = "post-order")
 print(acme, "cost")
 
 ```
@@ -827,10 +826,9 @@ This can be useful in combination with traversal, e.g. to calculate a running su
 
 ```{r}
 
-acme$Do(function(node) Cumulate(node, 
-                                attribute = "cost", 
-                                aggFun = sum, 
-                                cacheAttribute = "cumCost"))
+acme$Do(function(node) node$cumCost <- Cumulate(node, 
+                                                attribute = "cost", 
+                                                aggFun = sum))
 print(acme, "cost", "cumCost")
 
 ```
@@ -868,7 +866,7 @@ You can prune sub-trees out of a tree, by that removing an entire sub-tree from 
 Consider the following example of permanent pruning:
 
 ```{r}
-Aggregate(acme, "cost", sum, "cost")
+acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum))
 acme$Prune(function(x) x$cost > 700000)
 print(acme, "cost")
 ```

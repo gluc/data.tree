@@ -86,7 +86,7 @@ Revert <- function(node, recursive = TRUE) {
 #' 
 #' @examples
 #' data(acme)
-#' Aggregate(acme, "cost", sum, "cost")
+#' acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum))
 #' acme$Prune(function(x) x$cost > 700000)
 #' print(acme, "cost")
 #' 

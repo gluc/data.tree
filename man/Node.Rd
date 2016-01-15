@@ -25,6 +25,9 @@ by tying toghether \code{Node} objects.
 \describe{
   \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root when creating trees programmatically.}
   \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node} as a child.}
+  \item{\code{AddChildNode(node)}}{Adds a \code{Node} as a child.}
+  \item{\code{AddSibling(name)}}{Creates a new \code{Node} called \code{name} and adds it after this \code{Node} as a sibling.}
+  \item{\code{AddSiblingNode(sibling)}}{Adds a new \code{Node} after this \code{Node}, as a sibling.}
   \item{\code{RemoveChild(name)}}{Remove the child \code{Node} called \code{name} from a \code{Node} and returns it.}
   \item{\code{RemoveAttribute(name, stopIfNotAvailable)}}{Removes attribute called \code{name} from this \code{Node}. Gives an error if \code{stopIfNotAvailable} and the attribute doesn't exist.}
   \item{\code{\link{Climb}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s, or other field values.}
@@ -65,7 +68,12 @@ by tying toghether \code{Node} objects.
 \examples{
 library(data.tree)
 acme <- Node$new("Acme Inc.")
-accounting <- acme$AddChild("Accounting")
+accounting <- acme$AddChild("Accounting")$
+              AddSibling("Research")$
+              AddChild("New Labs")$
+              parent$
+              AddSibling("IT")$
+              AddChild("Outsource")
 print(acme)
 }
 \seealso{

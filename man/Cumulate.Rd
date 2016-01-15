@@ -4,7 +4,7 @@
 \alias{Cumulate}
 \title{Cumulate values among siblings}
 \usage{
-Cumulate(node, attribute, aggFun, cacheAttribute = NULL, ...)
+Cumulate(node, attribute, aggFun, ...)
 }
 \arguments{
 \item{node}{The node on which we want to cumulate}
@@ -18,9 +18,6 @@ Cumulate(node, attribute, aggFun, cacheAttribute = NULL, ...)
 
 \item{aggFun}{the aggregation function to be applied to the children's \code{attributes}}
 
-\item{cacheAttribute}{A field into which the results should
-be cached. Speeds up calculation.}
-
 \item{...}{any arguments to be passed on to attribute (in case it's a function)}
 }
 \description{
@@ -29,8 +26,8 @@ this \code{Node}.
 }
 \examples{
 data(acme)
-acme$Do(function(x) Aggregate(x, "cost", sum, "cost"), traversal = "post-order")
-acme$Do(function(x) Cumulate(x, "cost", sum, "cumCost"))
+acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
+acme$Do(function(x) x$cumCost <- Cumulate(x, "cost", sum))
 print(acme, "cost", "cumCost")
 }
 

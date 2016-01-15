@@ -20,7 +20,7 @@ Prunes a tree. This function has side-effects, it modifies your data.tree struct
 }
 \examples{
 data(acme)
-Aggregate(acme, "cost", sum, "cost")
+acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum))
 acme$Prune(function(x) x$cost > 700000)
 print(acme, "cost")
 }

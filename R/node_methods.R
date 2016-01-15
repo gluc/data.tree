@@ -62,11 +62,6 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
 #' @param node the \code{Node} on which to aggregate
 #' @param aggFun the aggregation function to be applied to the children's \code{attributes}
 #' @param ... any arguments to be passed on to attribute (in case it's a function)
-#' @param cacheAttribute the name to which results should be stored, if any (NULL otherwise). If not
-#' NULL, then the function checks whether this attribute is set, and only evaluates
-#' attribute if it is not.
-#' If used wisely in connection with post-order traversal, this parameter allows to speed up calculation by breaking
-#' recursion.
 #'
 #' @inheritParams Get
 #'   
@@ -79,11 +74,6 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
 #' #Aggregate using Get
 #' print(acme, "cost", minCost = acme$Get(Aggregate, "cost", min))
 #' 
-#' #use Aggregate with caching:
-#' acme$cost
-#' acme$Do(function(x) Aggregate(x, "cost", sum, cacheAttribute = "cost"), traversal = "post-order")
-#' acme$cost
-#'
 #' #use Aggregate with a function:
 #' acme$Do(function(x) x$expectedCost <- Aggregate(x, 
 #'                                                 function(x) x$cost * x$p, 
@@ -96,29 +86,19 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
 Aggregate = function(node, 
                      attribute, 
                      aggFun, 
-                     cacheAttribute = NULL,
                      ...) {
   
+  if("cacheAttribute" %in% names(list(...))) stop("cacheAttribute not supported anymore! Please use Do instead.")
   
-  
-  #####
-  #if(is.function(attribute)) browser()
-  #if (!is.function(attribute)) {
-  if (length(cacheAttribute) > 0) {
-    v <- GetAttribute(node, cacheAttribute, ..., format = identity, nullAsNa = FALSE)
-    if (!length(v) == 0) return (v)
-  } 
-  v <- GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE)
-  if (!length(v) == 0) result <- unname(v)
-  else if (node$isLeaf) stop(paste0("Attribute returns NULL on leaf!"))
+  if (isLeaf(node)) return ( GetAttribute(node, attribute, ...) )
+  values <- sapply(node$children, 
+                   function(x) {
+                     v <- GetAttribute(node, attribute, format = identity, ...)
+                     if (length(v) == 0) return(v)
+                     Aggregate(x, attribute, aggFun, ...)
+                   })
+  result <- unname(aggFun(values))
 
-  if (!("result" %in% ls()) || length(result) == 0) {
-    values <- sapply(node$children, function(x) Aggregate(x, attribute, aggFun, cacheAttribute, ...))
-    result <- unname(aggFun(values))
-  }
-  if (length(cacheAttribute) > 0) {
-    node[[cacheAttribute]] <- result
-  }
   return (result)
 }
 
@@ -128,34 +108,24 @@ Aggregate = function(node,
 #' this \code{Node}.
 #' 
 #' @param node The node on which we want to cumulate
-#' @param cacheAttribute A field into which the results should
-#' be cached. Speeds up calculation.
 #' 
 #' @inheritParams Aggregate
 #' @inheritParams Get
 #' 
 #' @examples
 #' data(acme)
-#' acme$Do(function(x) Aggregate(x, "cost", sum, "cost"), traversal = "post-order")
-#' acme$Do(function(x) Cumulate(x, "cost", sum, "cumCost"))
+#' acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
+#' acme$Do(function(x) x$cumCost <- Cumulate(x, "cost", sum))
 #' print(acme, "cost", "cumCost")
 #' 
 #' @export
-Cumulate = function(node, attribute, aggFun, cacheAttribute = NULL, ...) {
+Cumulate = function(node, attribute, aggFun, ...) {
+  if ("cacheAttribute" %in% names(list(...))) stop("cacheAttribute not supported anymore! Please use Do instead.")
+  if (node$isRoot) return (GetAttribute(node, attribute, format = identity))
   pos <- node$position
-  if(length(cacheAttribute) > 0 || node$isRoot) {
-    res <- as.vector(GetAttribute(node, attribute, ..., format = identity, nullAsNa = FALSE))
-    if (pos > 1) {
-      res <- aggFun(node$parent$children[[pos - 1]][[cacheAttribute]], res)
-    }
-    node[[cacheAttribute]] <- res
-  } else {
-    nodes <- Traverse(node$parent, 
-                      pruneFun = function(x) x$level <= (node$level + 1),
-                      filterFun = function(x) x$position <= pos)
-                    
-    res <- aggFun(Get(nodes, attribute, format = identity))
-  }
+  nodes <- node$parent$children[1:pos]
+  res <- aggFun(Get(nodes, attribute, format = identity))
+  
   return (res)
 }
 
@@ -285,7 +255,7 @@ Climb <- function(node, ...) {
 #' @examples
 #' data(acme)
 #' 
-#' Aggregate(acme, attribute = "cost", aggFun = max, cacheAttribute = "cost")
+#' acme$Do(function(x) x$cost <- Aggregate(acme, attribute = "cost", aggFun = max))
 #' ClimbByAttribute(acme, cost = function(x) x$parent$cost, recursive = TRUE)
 #' 
 #'

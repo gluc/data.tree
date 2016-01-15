@@ -423,28 +423,7 @@ test_that("Aggregate function", {
 })
 
 
-test_that("Aggregate cache", {
-  data(acme)
-  
-  s1 <- Aggregate(acme, "cost", sum)
-  expect_true(is.null(acme$cost))
-  
-  s2 <- Aggregate(acme, "cost", sum, "cost")
-  expect_equal(s2, s1)
-  expect_equal(acme$cost, s2)
-  
-})
 
-
-test_that("Aggregate cache diff", {
-  data(acme)
-
-  s2 <- Aggregate(acme, "cost", sum, "cost2")
-  expect_true(is.null(acme$cost))
-  expect_equal(acme$cost2, s2)
-  expect_equal(s2, sum(acme$Get(function(x) x$cost, filterFun = isLeaf)))
-  
-})
 
 
 test_that("Formatter Get", {
@@ -658,15 +637,15 @@ test_that("print", {
 
 test_that("ClimbByAttribute", {
   data(acme)
-  Aggregate(acme, attribute = "cost", aggFun = max, cacheAttribute = "cost")
+  acme$Do(function(x) x$cost <- Aggregate(x, "cost", max))
   n <- ClimbByAttribute(acme, cost = function(x) x$parent$cost, recursive = TRUE)
   expect_equal(n$name, "New Product Line")
 })
 
 test_that("Cumulate", {
   data(acme)
-  acme$Do(function(x) Aggregate(x, "cost", sum, "cost"), traversal = "post-order")
-  acme$Do(function(x) Cumulate(x, "cost", sum, "cumCost"))
+  acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
+  acme$Do(function(x) x$cumCost <- Cumulate(x, "cost", sum))
   expect_equal(unname(acme$Get("cumCost")),  c(4950000, 1500000, 1000000, 1500000, 4250000, 2000000, 2750000, 4950000, 400000, 650000, 700000))
 })
 

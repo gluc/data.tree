@@ -3,3 +3,4 @@
 ^\.travis\.yml$
 data_gen
 cran_comments.md
+appveyor.yml

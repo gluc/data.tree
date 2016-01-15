@@ -23,7 +23,7 @@ This method lets you climb the tree, from crutch to crutch. On each \code{Node},
 \examples{
 data(acme)
 
-Aggregate(acme, attribute = "cost", aggFun = max, cacheAttribute = "cost")
+acme$Do(function(x) x$cost <- Aggregate(acme, attribute = "cost", aggFun = max))
 ClimbByAttribute(acme, cost = function(x) x$parent$cost, recursive = TRUE)
 }
 \seealso{
