@@ -153,16 +153,17 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 
   myclone <- node$clone()
   if (attributes) attributes(myclone) <- attributes(node)
-  if (!is.null(pruneFun)) {
+  if (!is.null(pruneFun) && length(node$children) > 0) {
     keep <- sapply(node$children, pruneFun)
     children <- node$children[keep]
     rm(list = names(node$children)[!keep], envir = myclone)
   } else children <- node$children
   myclone$children <- lapply(children, function(x) Clone(x, pruneFun, attributes))
-  for(child in myclone$children) {
+  for (child in myclone$children) {
     myclone[[child$name]] <- child
     child$parent <- myclone
   }
+  if (length(myclone$children) == 0) myclone$children <- NULL
   return (myclone)
 }
 
