@@ -95,29 +95,24 @@ Traverse = function(node,
 #'  
 #'  
 #' @examples
-#'data(acme)
-#'acme$Get("level")
-#'acme$Get("totalCount")
+#' data(acme)
+#' acme$Get("level")
+#' acme$Get("totalCount")
 #'  
-#'calculateAggregateChildCost <- function(node, fun) {
-#'  if (node$isLeaf) return(node$cost)
-#'  fun(sapply(node$children, function(x) x$averageCost))
-#'}
 #'
-#'myFormat <- function(x) {
-#'  format(x, nsmall=2, scientific = FALSE)
-#'}
-#'
-#'acme$Get(calculateAggregateChildCost, 
-#'         mean, 
-#'         traversal = "post-order", 
-#'         format = myFormat)
-#'         
+#' acme$Get(function(node) node$cost * node$p,
+#'          filterFun = isLeaf)
+#' 
+#' #This is equivalent:
+#' nodes <- Traverse(acme, filterFun = isLeaf)
+#' Get(nodes, function(node) node$cost * node$p)
+#'    
 #' #simplify = "regular" will preserve names
 #' acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
 #'  
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Set}}
+#' @seealso \code{\link{Traverse}}
 #'  
 #' @import methods
 #'  

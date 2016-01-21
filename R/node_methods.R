@@ -353,6 +353,7 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   
   
   if (is.null(format) && !is.function(attribute)) {
+    #get default formatter
     format <- GetObjectAttribute(node, "formatters")[[attribute]]
   }
   
