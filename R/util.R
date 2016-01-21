@@ -128,7 +128,7 @@ PrintPruneSimple <- function(x, limit) {
        traversal = "post-order"
   )
   
-  xc <- Clone(x, pruneFun = function(x) x$.id < limit)
+  xc <- Clone(x, pruneFun = function(x) x$.id < limit, attributes = TRUE)
   
   xc$Do(function(x) {
           if(x$count < x$.originalCount) {
