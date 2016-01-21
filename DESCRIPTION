@@ -17,7 +17,7 @@ Suggests:
     yaml, 
     jsonlite, 
     DiagrammeR, 
-    igraph,
+    igraph (>= 1.0.0),
     treemap,
     doParallel,
     foreach,
