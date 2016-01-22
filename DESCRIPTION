@@ -17,16 +17,15 @@ Suggests:
     yaml, 
     jsonlite, 
     DiagrammeR, 
-    igraph (>= 1.0.0),
+    igraph,
     treemap,
     doParallel,
     foreach,
     htmlwidgets
 Enhances:
-Description: Create tree structures from hierarchical data, and use the utility 
-    methods to traverse the tree in various orders. Aggregate, cumulate, print, convert to and from data.frame, 
-    and apply functions to your tree data. Useful for decision trees, machine learning, finance, conversion
-    from and to JSON, and many other applications.
+Description: Create tree structures from hierarchical data, and traverse the tree in various orders. 
+    Aggregate, cumulate, print, convert to and from data.frame in various formats. Useful for decision trees, 
+    machine learning, finance, conversion from and to JSON, and many other applications.
 License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues

@@ -187,7 +187,7 @@ PrintPruneDist <- function(x, limit) {
   
   Set(t, .keep = keep)
   #sapply(t, function(x) paste(x$.height, x$.level, x$name, sep = "."))
-  xc <- Clone(x, pruneFun = function(x) x$.keep)
+  xc <- Clone(x, pruneFun = function(x) x$.keep, attributes = TRUE)
   
   t <- Traverse(xc)
   
