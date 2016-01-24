@@ -417,6 +417,52 @@ SetFormat <- function(node, name, formatFun) {
   attr(node, "formatters")[[name]] <- formatFun
 }
 
+#' @param inherit If TRUE, then children will inherit this node's style. Otherwise they inherit from this 
+#' node's parent.
+#' 
+#' @rdname ToGraphViz
+#' 
+#' @export
+SetNodeStyle <- function(node, 
+                         inherit = TRUE,
+                         ...) {
+  
+#   style = c(NULL, "filled,rounded"),
+#   shape = c(NULL, "box", "polygon",	"ellipse", "oval", "circle", "egg", "triangle", "diamond"),
+#   penwidth = c(NULL, 1:4), 
+#   color = c(NULL, "black", "gray"),
+#   fillcolor = c(NULL, "gray"), 
+#   fontname = c(NULL, "helvetica"),
+#   fontcolor = c(NULL, "black"),
+#   fontsize = c(NULL, 12),
+#   width = c(NULL, 0.5),
+#   tooltip = c(NULL, function(node) node$name, GetDefaultTooltip),
+
+  ll <- list(...)
+  attr(node, "nodeStyle") <- ll
+  attr(node, "nodeStyleInherit") <- inherit
+}
+
+
+#' @rdname ToGraphViz
+#' @export
+SetEdgeStyle <- function(node,
+                         inherit = TRUE,
+                         ...) {
+  ll <- list(...)
+  attr(node, "edgeStyle") <- ll
+  attr(node, "edgeStyleInherit") <- inherit
+}
+  
+
+#' @rdname ToGraphViz 
+#' @export
+SetGraphStyle <- function(root,
+                          ...) {
+  ll <- list(...)
+  attr(root, "graphStyle") <- ll
+}
+
 
 #' Test whether all node names are unique.
 #' 

@@ -203,3 +203,19 @@ PrintPruneDist <- function(x, limit) {
   
 }
 
+
+
+#' @param node The node
+#' @rdname ToGraphViz
+#' @export
+GetDefaultTooltip <- function(node) {
+  
+  
+  if (length(node$fields) > 0) {
+    myfields <- node$fields  
+  } else {
+    myfields <- "name"
+  }
+  tt <- paste(sapply(myfields, function(x) paste0("- ", x, ": ", GetAttribute(node, x), "\n")), collapse = "")
+  return (tt)
+}
