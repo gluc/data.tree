@@ -23,10 +23,10 @@ NULL
 #' The attributes available in the data set are:
 #' 
 #' \itemize{
-#'   \item color the weather outlook
-#'   \item size The temperature of the day (Hot, Mild, Cool, Cold)
-#'   \item points The humidity (High, Normal, Low)
-#'   \item edibility The wind on the day (Weak, Strong)
+#'   \item color the color of a mushroom
+#'   \item size whether a mushroom is small or large
+#'   \item points whether a mushroom has points
+#'   \item edibility whether a mushroom is edible or toxic
 #' }
 #' 
 #' @docType data
