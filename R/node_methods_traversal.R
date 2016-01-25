@@ -157,7 +157,7 @@ Get = function(nodes,
   return (res)
 }
 
-#' Executes a function an a set of nodes
+#' Executes a function on a set of nodes
 #' @param nodes a set of nodes, usually obtained via \code{\link{Traverse}}
 #' @param fun the function to execute. The function is expected to be either a Method, or to take a 
 #' Node as its first argument
