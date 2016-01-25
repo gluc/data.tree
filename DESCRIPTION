@@ -7,22 +7,21 @@ Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.com>
 VignetteBuilder: knitr
 Imports:
-    R6, stringr, methods
+    R6, stringr, methods, DiagrammeR
 Suggests:
     graphics,
     testthat, 
     knitr, 
     ape, 
+    yaml,
     networkD3, 
     jsonlite, 
-    DiagrammeR, 
     igraph,
     treemap,
     doParallel,
     foreach,
     htmlwidgets
 Enhances:
-    ape
 Description: Create tree structures from hierarchical data, and traverse the tree in various orders. 
     Aggregate, cumulate, print, convert to and from data.frame in various formats. Useful for decision trees, 
     machine learning, finance, conversion from and to JSON, and many other applications.

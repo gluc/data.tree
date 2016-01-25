@@ -426,18 +426,6 @@ SetFormat <- function(node, name, formatFun) {
 SetNodeStyle <- function(node, 
                          inherit = TRUE,
                          ...) {
-  
-#   style = c(NULL, "filled,rounded"),
-#   shape = c(NULL, "box", "polygon",	"ellipse", "oval", "circle", "egg", "triangle", "diamond"),
-#   penwidth = c(NULL, 1:4), 
-#   color = c(NULL, "black", "gray"),
-#   fillcolor = c(NULL, "gray"), 
-#   fontname = c(NULL, "helvetica"),
-#   fontcolor = c(NULL, "black"),
-#   fontsize = c(NULL, 12),
-#   width = c(NULL, 0.5),
-#   tooltip = c(NULL, function(node) node$name, GetDefaultTooltip),
-
   ll <- list(...)
   attr(node, "nodeStyle") <- ll
   attr(node, "nodeStyleInherit") <- inherit

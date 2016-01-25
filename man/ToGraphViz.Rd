@@ -28,10 +28,16 @@ GetDefaultTooltip(node)
 \item{inherit}{If TRUE, then children will inherit this node's style. Otherwise they inherit from this
 node's parent.}
 
+\item{...}{Any stlye / value pair. See http://graphviz.org/Documentation.php for details.}
+
 \item{root}{The root \code{\link{Node}} of the data.tree structure to visualize.}
 
-\item{pruneFun}{a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
-and its descendants should be kept, FALSE otherwise.}
+\item{direction}{when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?}
+
+\item{pruneFun}{a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.}
+
+\item{engine}{string for the Graphviz layout engine; can be dot (default),
+neato, circo, or twopi. For more information see https://github.com/mdaines/viz.js#usage.}
 }
 \description{
 Get a graphviz dot representation of the tree
@@ -41,10 +47,12 @@ data(acme)
 SetGraphStyle(acme, rankdir = "TB")
 SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
 #per default, Node style attributes will be inherited:
-SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", fontname = "helvetica", tooltip = GetDefaultTooltip)
+SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow",
+             fontname = "helvetica", tooltip = GetDefaultTooltip)
 SetNodeStyle(acme$IT, fillcolor = "LightBlue", penwidth = "5px")
 #inheritance can be avoided:
-SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle", fontcolor = "Firebrick", tooltip = "This is the accounting department")
+SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle",
+             fontcolor = "Firebrick", tooltip = "This is the accounting department")
 #use Do to set style on specific nodes:
 Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
 Draw(acme)

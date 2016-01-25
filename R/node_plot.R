@@ -1,6 +1,12 @@
 
 #'@rdname ToGraphViz
 #'@import DiagrammeR
+#'
+#'
+#'@param engine string for the Graphviz layout engine; can be dot (default), 
+#'neato, circo, or twopi. For more information see https://github.com/mdaines/viz.js#usage.
+#'@inheritParams ToDataFrameNetwork
+#'
 #'@export
 Draw <- function(root, direction = c("climb", "descend"), pruneFun = NULL, engine = "dot") {
   dotLng <- ToGraphViz(root, direction, pruneFun)
@@ -12,6 +18,7 @@ Draw <- function(root, direction = c("climb", "descend"), pruneFun = NULL, engin
 #' 
 #' @param root The root \code{\link{Node}} of the data.tree structure to visualize.
 #' @param node The \code{\link{Node}} of the data.tree structure on which you would like to set style attributes.
+#' @param ... Any stlye / value pair. See http://graphviz.org/Documentation.php for details.
 #' 
 #' @inheritParams Prune
 #' 
@@ -20,10 +27,12 @@ Draw <- function(root, direction = c("climb", "descend"), pruneFun = NULL, engin
 #' SetGraphStyle(acme, rankdir = "TB")
 #' SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
 #' #per default, Node style attributes will be inherited:
-#' SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", fontname = "helvetica", tooltip = GetDefaultTooltip)
+#' SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", 
+#'              fontname = "helvetica", tooltip = GetDefaultTooltip)
 #' SetNodeStyle(acme$IT, fillcolor = "LightBlue", penwidth = "5px")
 #' #inheritance can be avoided:
-#' SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle", fontcolor = "Firebrick", tooltip = "This is the accounting department")
+#' SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle", 
+#'              fontcolor = "Firebrick", tooltip = "This is the accounting department")
 #' #use Do to set style on specific nodes:
 #' Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
 #' Draw(acme)
