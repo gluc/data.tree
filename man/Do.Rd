@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_methods_traversal.R
 \name{Do}
 \alias{Do}
-\title{Executes a function an a set of nodes}
+\title{Executes a function on a set of nodes}
 \usage{
 Do(nodes, fun, ...)
 }
@@ -15,6 +15,6 @@ Node as its first argument}
 \item{...}{any additional parameters to be passed on to fun}
 }
 \description{
-Executes a function an a set of nodes
+Executes a function on a set of nodes
 }
 
