@@ -62,7 +62,7 @@ This package offers an alternative. The data.tree package lets you create hierar
 
 The package also provides convenience methods for neatly printing trees. It supports conversion from and to `data.frames`, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
 
-Technically, `data.tree` structures are bi-directional, ordered trees. Bi-directional means that you can navigate from parent to chidren and vice versa. Orded means that the sort order of to children of a parent are well-defined.
+Technically, `data.tree` structures are bi-directional, ordered trees. Bi-directional means that you can navigate from parent to chidren and vice versa. Ordered means that the sort order of the children of a parent node is well-defined.
 
 # data.tree basics
 
@@ -185,12 +185,12 @@ There are different types of methods:
 * Classical R methods, such as e.g. `Clone(node)`. There are at least two reasons why these exist (sometimes in co-existence with their OO-style counterpart):
     + performance: OO-style methods maintain their own copy of the function in each `Node` instance, they are inflating memory usage of the `Nodes`. For this reason, OO-style methods are kept to a minimum
     + documentation: OO-style methods are difficult to document. So, to find documentation for, say, `Node$Prune`, you can just type `?Prune`. Be aware, however, that this documents the classical R method. Thus, the first argument (`node`) needs to be omitted when called in OO-style. In short, you can call either `mynode$Prune(myPruneFunction)` or `Prune(mynode, myPruneFunction)`. The effect is exactly the same.
-    + debugging: OO-style methods are difficult to debug. So, in this packge, the just re-direct to their classical R counterpart, which is very easy to debug.
+    + debugging: OO-style methods are difficult to debug. So, in this packge, they just re-direct to their classical R counterpart, which is very easy to debug.
 
 
 ### Actives Examples
 
-Actives look and fell like fields, but they are dynamically evaluated. They are documented in the `Node` documentation, which is accessed by typing `?Node`. 
+Actives look and feel like fields, but they are dynamically evaluated. They are documented in the `Node` documentation, which is accessed by typing `?Node`. 
 
 Remember our population example:
 
@@ -398,7 +398,7 @@ For more advanced printing, you have a few options.
 You can use *formatters* to output a variable in a certain way. You can use formatters in two ways:  
 
 * You can set them on a `Node` using the `SetFormat` method. If you do this, then the formatter will be picked up as a default formatter whenever you `print`, `Get`, convert to `data.frame`, etc.  Formatters can be set on any `Node` in a `data.tree` structure act on any descendant. So you can overwrite a formatter for a sub-tree.
-* You can add an explicit ad-hoc formater to the `Get` method (see below). This will overwrite default formatters previously set via the `SetFormat` method. You can also set the formatter to `identity` to void a default formatter.
+* You can add an explicit ad-hoc formatter to the `Get` method (see below). This will overwrite default formatters previously set via the `SetFormat` method. You can also set the formatter to `identity` to void a default formatter.
 
 Setting a formatter using the `SetFormat` method:
 
@@ -424,7 +424,7 @@ data.frame(cost = acme$Get("cost", format = function(x) FormatFixedDecimal(x, 2)
 
 ### Plotting
 
-`data.tree` is a data structure, and as such it does not offer its own printing facilities. However, R contains many packages that are well suited to print hierarchies.
+`data.tree` is a data structure, and as such it does not offer its own plotting facilities. However, R contains many packages that are well suited to plot hierarchies.
 
 For example, using dendrogram:
 
@@ -849,7 +849,7 @@ However, if you are respecting the following guidelines, I promise that you and 
 2. `Clone` is similar to `Node` creation, with an extra penalty of about 50%.
 3. Traversing (`Traverse`, `Get`, `Set` and `Do`) is realtively cheap. 
 
-This is really what you would expect. data.tree builds on R6, i.e. refernce objects. There is an overhead in creating them, as your computer needs to manage the references they hold. However, performing operations that change your tree (e.g. `Prune` or `Set`) are often faster than value semantics, as your computer does not need to copy the entire object in memory.
+This is really what you would expect. data.tree builds on R6, i.e. reference objects. There is an overhead in creating them, as your computer needs to manage the references they hold. However, performing operations that change your tree (e.g. `Prune` or `Set`) are often faster than value semantics, as your computer does not need to copy the entire object in memory.
 
 Just to give you an order of magnitude: The following times are achieved on an AWS c4.large instance:
 
