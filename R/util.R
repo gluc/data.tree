@@ -205,7 +205,6 @@ PrintPruneDist <- function(x, limit) {
 
 
 
-#' @param node The node
 #' @rdname ToGraphViz
 #' @export
 GetDefaultTooltip <- function(node) {

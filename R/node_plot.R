@@ -1,4 +1,13 @@
 
+#'@rdname ToGraphViz
+#'@import DiagrammeR
+#'@export
+Draw <- function(root, direction = c("climb", "descend"), pruneFun = NULL, engine = "dot") {
+  dotLng <- ToGraphViz(root, direction, pruneFun)
+  grViz(dotLng, engine)
+}
+
+
 #' Get a graphviz dot representation of the tree
 #' 
 #' @param root The root \code{\link{Node}} of the data.tree structure to visualize.
@@ -8,13 +17,16 @@
 #' 
 #' @examples
 #' data(acme)
-#' SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", fontname = "helvetica", width = 2, tooltip = GetDefaultTooltip)
-#' SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
-#' SetNodeStyle(acme$IT, fillcolor = "LightBlue", penwidth = "5px")
-#' SetNodeStyle(acme$Accounting, inherit = FALSE, shape = "circle", fillcolor = "Thistle", fontcolor = "Firebrick", fontsize = 18, width = 2)
-#' Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
 #' SetGraphStyle(acme, rankdir = "TB")
-#' render_graph(ToGraphViz(acme))
+#' SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
+#' #per default, Node style attributes will be inherited:
+#' SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", fontname = "helvetica", tooltip = GetDefaultTooltip)
+#' SetNodeStyle(acme$IT, fillcolor = "LightBlue", penwidth = "5px")
+#' #inheritance can be avoided:
+#' SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle", fontcolor = "Firebrick", tooltip = "This is the accounting department")
+#' #use Do to set style on specific nodes:
+#' Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
+#' Draw(acme)
 #' 
 #' @export
 ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL) {
@@ -79,8 +91,8 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
   
   graph <- create_graph(nodes, graph_attrs = graphAttributes)
   graph <- add_edges(graph, edges)
-  return (graph)
+  #return (graph)
   #render_graph(graph)
-  #return (graph$dot_code)
+  return (graph$dot_code)
   
 }
