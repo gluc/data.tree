@@ -41,11 +41,11 @@ FormatFixedDecimal <- function(x, digits = 3) {
 
 
 
-#'   Calculates the height of a \code{Node} given the hight of the root.
+#'   Calculates the height of a \code{Node} given the height of the root.
 #'   
 #'   This function puts leafs at the bottom (not hanging), and makes edges equally long.
 #'   Useful for easy plotting with third-party packages, e.g. if you have no specific height 
-#'   attribute, e.g. with #'   \code{\link{as.dendrogram.Node}}, \code{\link{ToNewick}}, 
+#'   attribute, e.g. with \code{\link{as.dendrogram.Node}}, \code{\link{ToNewick}}, 
 #'   and \code{\link{as.phylo.Node}}
 #'   
 #'   @param node The node
