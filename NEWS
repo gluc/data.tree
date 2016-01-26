@@ -9,7 +9,9 @@
 - ADD: Node$RemoveAttribute now contains a mandatory parameter so that it works also if the node does not have the attribute to be removed.
 - FIX: Removed ... parameter from ToListExplicit and ToListSimple 
 - FIX: Clone was adding empty children list, which caused a series of problems
+- FIX: Cloning a subtree does not keep reference to un-cloned parent anymore (#49)
 - FIX: print with limit parameter ignored formatter
+
 
 ## Version 0.2.4
 - FIX: applications vignette, changed from http://htmlwidgets.org to http://www.htmlwidgets.org, as requested by CRAN

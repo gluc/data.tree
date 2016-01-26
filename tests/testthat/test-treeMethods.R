@@ -392,14 +392,14 @@ test_that("Clone formatter", {
 test_that("Clone subtree", {
   data(acme)
   it <- acme$Climb("IT")
-  n <- Clone(it)
+  itcl <- Clone(it)
   
-  expect_equal(class(n), class(it))
-  expect_equal(n$name, it$name)
-  expect_equal(n$count, it$count)
-  expect_equal(n$totalCount, it$totalCount)
-  expect_equal(n$Climb("Go agile")$p, it$Climb("Go agile")$p)
-    
+  expect_equal(class(itcl), class(it))
+  expect_equal(itcl$name, it$name)
+  expect_equal(itcl$count, it$count)
+  expect_equal(itcl$totalCount, it$totalCount)
+  expect_equal(itcl$Climb("Go agile")$p, it$Climb("Go agile")$p)
+  expect_true(itcl$isRoot)
 })
 
 

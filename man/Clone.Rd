@@ -12,13 +12,16 @@ Clone(node, pruneFun = NULL, attributes = FALSE)
 \item{pruneFun}{a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
 and its descendants should be kept, FALSE otherwise.}
 
-\item{attributes}{if FALSE, then attributes are not cloned. This makes the method much faster.}
+\item{attributes}{if FALSE, then R class attributes (e.g. formatters and grViz styles)
+are not cloned. This makes the method faster.}
 }
 \value{
-the clone of the tree
+the clone of the tree or sub-tree
 }
 \description{
-The method also clones object attributes (such as the formatters).
+The method also clones object attributes (such as the formatters), if desired.
+If the method is called on a non-root, then the parent relationship is not cloned,
+and the resulting \code{\link{Node}} will be a root.
 }
 \examples{
 data(acme)
@@ -26,6 +29,11 @@ acmeClone <- Clone(acme)
 acmeClone$name <- "New Acme"
 # acmeClone does not point to the same reference object anymore:
 acme$name
+
+#cloning a subtree
+data(acme)
+itClone <- Clone(acme$IT)
+itClone$isRoot
 }
 \seealso{
 SetFormat

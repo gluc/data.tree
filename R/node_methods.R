@@ -131,11 +131,14 @@ Cumulate = function(node, attribute, aggFun, ...) {
 
 #' Clone a tree (creates a deep copy)
 #' 
-#' The method also clones object attributes (such as the formatters). 
+#' The method also clones object attributes (such as the formatters), if desired.
+#' If the method is called on a non-root, then the parent relationship is not cloned,
+#' and the resulting \code{\link{Node}} will be a root.
 #' 
 #' @param node the root node of the tree or sub-tree to clone
-#' @param attributes if FALSE, then attributes are not cloned. This makes the method much faster.
-#' @return the clone of the tree
+#' @param attributes if FALSE, then R class attributes (e.g. formatters and grViz styles) 
+#' are not cloned. This makes the method faster.
+#' @return the clone of the tree or sub-tree
 #' 
 #' @examples
 #' data(acme)
@@ -144,12 +147,24 @@ Cumulate = function(node, attribute, aggFun, ...) {
 #' # acmeClone does not point to the same reference object anymore:
 #' acme$name
 #' 
+#' #cloning a subtree
+#' data(acme)
+#' itClone <- Clone(acme$IT)
+#' itClone$isRoot
+#' 
+#' 
 #' @inheritParams Prune
 #' 
 #' @seealso SetFormat
 #' 
 #' @export
 Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
+  ClonePrivate(node, pruneFun, attributes)
+}
+
+
+
+ClonePrivate <- function(node, pruneFun = NULL, attributes = FALSE, firstCall = TRUE) {
 
   myclone <- node$clone()
   if (attributes) attributes(myclone) <- attributes(node)
@@ -158,12 +173,13 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
     children <- node$children[keep]
     rm(list = names(node$children)[!keep], envir = myclone)
   } else children <- node$children
-  myclone$children <- lapply(children, function(x) Clone(x, pruneFun, attributes))
+  myclone$children <- lapply(children, function(x) ClonePrivate(x, pruneFun, attributes, firstCall = FALSE))
   for (child in myclone$children) {
     myclone[[child$name]] <- child
     child$parent <- myclone
   }
   if (length(myclone$children) == 0) myclone$children <- NULL
+  if (firstCall) myclone$parent <- NULL #myclone$RemoveAttribute("parent", stopIfNotAvailable = FALSE)
   return (myclone)
 }
 
