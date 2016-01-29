@@ -424,7 +424,44 @@ data.frame(cost = acme$Get("cost", format = function(x) FormatFixedDecimal(x, 2)
 
 ### Plotting
 
-`data.tree` is a data structure, and as such it does not offer its own plotting facilities. However, R contains many packages that are well suited to plot hierarchies.
+`data.tree` is a data structure, and as such it does not have a specialized plotting facility. However, R contains many packages that are well suited to plot hierarchies. One of them, DiagrammeR, is built into the data.tree package. 
+You can access these features via the `plot` and `ToGraphViz` functions. For example:
+
+```{r}
+plot(acme)
+```
+
+Similar to formatters for printing, you can style your tree and store the styling directly in the tree, for later use:
+
+```{r}
+SetGraphStyle(acme, rankdir = "TB")
+SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
+SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", 
+            fontname = "helvetica", tooltip = GetDefaultTooltip)
+SetNodeStyle(acme$IT, fillcolor = "LightBlue", penwidth = "5px")
+plot(acme)
+```
+
+For details on the styling attributes, see http://graphviz.org/Documentation.php .
+
+Note that, by default, Node style attributes will be inherited.
+However, inheritance can be avoided, as for the Accounting node in the following example:
+
+```{r}
+SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle", 
+             fontcolor = "Firebrick", tooltip = "This is the accounting department")
+plot(acme)
+```
+
+Use `Do` to set style on specific nodes:
+
+```{r}
+Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
+plot(acme)
+```
+
+
+However, there are also endless other possibilities to visualise data.tree structures.
 
 For example, using dendrogram:
 
