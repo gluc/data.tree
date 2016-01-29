@@ -59,7 +59,7 @@ Traverse = function(node,
   } else if (traversal == "level") {
     
     nodes <- Traverse(node, filterFun = filterFun, pruneFun = pruneFun)
-    nodes <- nodes[order(Get(nodes, function(x) x$level))]
+    if (length(nodes) > 0) nodes <- nodes[order(Get(nodes, function(x) x$level))]
     
   } else {
     stop("traversal must be pre-order, post-order, in-order, ancestor, or level")
