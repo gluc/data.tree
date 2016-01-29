@@ -57,7 +57,7 @@ by tying toghether \code{Node} objects.
  \item{\code{levelName}}{Returns the name of the \code{Node}, preceded by level times '*'. Useful for printing.}
  \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
  \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
- \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 0.}
+ \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 1.}
  \item{\code{height}}{Returns max(level) of any of the \code{Nodes} of the tree}
  \item{\code{averageBranchingFactor}}{Returns the average number of crotches below this \code{Node}}
  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}

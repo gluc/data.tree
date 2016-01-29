@@ -2,14 +2,14 @@
 #'@rdname ToGraphViz
 #'@import DiagrammeR
 #'
-#'
+#'@param x The root node of the data.tree structure to plot
 #'@param engine string for the Graphviz layout engine; can be dot (default), 
 #'neato, circo, or twopi. For more information see https://github.com/mdaines/viz.js#usage.
 #'@inheritParams ToDataFrameNetwork
 #'
 #'@export
-Draw <- function(root, direction = c("climb", "descend"), pruneFun = NULL, engine = "dot") {
-  dotLng <- ToGraphViz(root, direction, pruneFun)
+plot.Node <- function(x, direction = c("climb", "descend"), pruneFun = NULL, engine = "dot") {
+  dotLng <- ToGraphViz(x, direction, pruneFun)
   grViz(dotLng, engine)
 }
 
@@ -35,7 +35,7 @@ Draw <- function(root, direction = c("climb", "descend"), pruneFun = NULL, engin
 #'              fontcolor = "Firebrick", tooltip = "This is the accounting department")
 #' #use Do to set style on specific nodes:
 #' Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
-#' Draw(acme)
+#' plot(acme)
 #' 
 #' @export
 ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL) {

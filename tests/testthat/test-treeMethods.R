@@ -172,6 +172,69 @@ test_that("Get format", {
 })
 
 
+test_that("Traverse pre-order", {
+  data(acme)
+  tr <- Traverse(acme, traversal = "pre-order")
+  nms <- sapply(tr, function(x) x$name)
+  exp <- c("Acme Inc.",
+           "Accounting",
+           "New Software",
+           "New Accounting Standards",
+           "Research",
+           "New Product Line",
+           "New Labs",
+           "IT",
+           "Outsource",
+           "Go agile",
+           "Switch to R")
+  expect_equal(nms, exp)
+  
+})
+
+
+test_that("Traverse post-order", {
+  data(acme)
+  tr <- Traverse(acme, traversal = "post-order")
+  nms <- sapply(tr, function(x) x$name)
+  exp <- c("New Software",             "New Accounting Standards", "Accounting",               "New Product Line",        
+           "New Labs",                 "Research",                 "Outsource",                "Go agile",                
+           "Switch to R",              "IT",                       "Acme Inc."        )
+  expect_equal(nms, exp)
+  
+})
+
+
+test_that("Traverse in-order", {
+  data(acme)
+  tr <- Traverse(acme, traversal = "level")
+  nms <- sapply(tr, function(x) x$name)
+  exp <- c("Acme Inc.",                "Accounting",               "Research",                 "IT",                      
+           "New Software",             "New Accounting Standards", "New Product Line",         "New Labs",                
+           "Outsource",                "Go agile",                 "Switch to R"        )
+  expect_equal(nms, exp)
+  
+})
+
+
+test_that("Traverse empty filter", {
+  data(acme)
+  tr <- Traverse(acme, filterFun = function(x) x$name == "Marketing")
+  nms <- sapply(tr, function(x) x$name)
+  exp <- vector(mode = "list")
+  expect_equal(nms, exp)
+  
+})
+
+
+test_that("Traverse empty filter level", {
+  data(acme)
+  tr <- Traverse(acme, traversal = "level", filterFun = function(x) x$name == "Marketing")
+  nms <- sapply(tr, function(x) x$name)
+  exp <- vector(mode = "list")
+  expect_equal(nms, exp)
+  
+})
+
 
 test_that("Do", {
   
