@@ -42,7 +42,7 @@ changeName <- function(node, oldName, newName) {
   if(!node$isRoot) {
     rm(list = oldName, envir = node$parent)
     names(node$parent$children)[node$position] <- newName
-    node$parent[[newName]] <- node
+    node$parent[[as.character(newName)]] <- node
   }
   return (newName)
 }
