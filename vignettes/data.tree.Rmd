@@ -379,7 +379,7 @@ print(birds, "species")
 This, together with the `Set` method and recursion, becomes a very powerful tool, as we'll see later.
 
 
-## Printing and Plotting
+## Printing
 
 ### Basic Printing
 
@@ -422,14 +422,18 @@ data.frame(cost = acme$Get("cost", format = function(x) FormatFixedDecimal(x, 2)
 
 
 
-### Plotting
+## Plotting
 
-`data.tree` is a data structure, and as such it does not have a specialized plotting facility. However, R contains many packages that are well suited to plot hierarchies. One of them, DiagrammeR, is built into the data.tree package. 
-You can access these features via the `plot` and `ToGraphViz` functions. For example:
+### `plot`
+
+`data.tree` is mainly a data structure. As it is easy to convert data.tree structures to other formats, you have access to a large number of tools to plot a data.tree structure. For example, you can plot a data.tree structure as a dendrogram, as an ape tree, as a treeview, etc. 
+Additionally, data.tree also provides its own plotting facility. It is built on GraphViz/DiagrammeR, and you can access these features via the `plot` and `ToGraphViz` functions. For example:
 
 ```{r}
 plot(acme)
 ```
+
+### Styling
 
 Similar to formatters for printing, you can style your tree and store the styling directly in the tree, for later use:
 
@@ -444,8 +448,7 @@ plot(acme)
 
 For details on the styling attributes, see http://graphviz.org/Documentation.php .
 
-Note that, by default, Node style attributes will be inherited.
-However, inheritance can be avoided, as for the Accounting node in the following example:
+Note that, by default, most Node style attributes will be inherited. Though, for example, `label` will not be inherited. However, inheritance can be avoided for all style attributes, as for the Accounting node in the following example:
 
 ```{r}
 SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle", 
@@ -493,7 +496,8 @@ Another example, which at the same time shows conversion from csv:
 
 
 ```{r}
-useRdf <- read.csv('../inst/extdata/useR15.csv', stringsAsFactors = FALSE)
+fileName <- system.file("extdata", "useR15.csv", package="data.tree")
+useRdf <- read.csv(fileName, stringsAsFactors = FALSE)
 #define the hierarchy (Session/Room/Speaker)
 useRdf$pathString <- paste("useR", useRdf$session, useRdf$room, useRdf$speaker, sep="|")
 #convert to Node

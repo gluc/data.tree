@@ -7,26 +7,31 @@ Author: Christoph Glur
 Maintainer: Christoph Glur <christoph.glur@ipub.com>
 VignetteBuilder: knitr
 Imports:
-    R6, stringr, methods, DiagrammeR
+    R6,
+    stringr,
+    methods,
+    DiagrammeR
 Suggests:
     graphics,
-    testthat, 
-    knitr, 
-    ape, 
+    testthat,
+    knitr,
+    ape,
     yaml,
-    networkD3, 
-    jsonlite, 
+    networkD3,
+    jsonlite,
     igraph,
     treemap,
     doParallel,
     foreach,
     htmlwidgets
-Enhances:
-Description: Create tree structures from hierarchical data, and traverse the tree in various orders. 
-    Aggregate, cumulate, print, convert to and from data.frame in various formats. Useful for decision trees, 
-    machine learning, finance, conversion from and to JSON, and many other applications.
+Enhances: 
+Description: Create tree structures from hierarchical data, and traverse
+    the tree in various orders. Aggregate, cumulate, print, convert to and from
+    data.frame in various formats. Useful for decision trees, machine learning,
+    finance, conversion from and to JSON, and many other applications.
 License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
 Depends:
     R (>= 3.0)
+RoxygenNote: 5.0.1

@@ -41,30 +41,23 @@ plot.Node <- function(x, direction = c("climb", "descend"), pruneFun = NULL, eng
 ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL) {
   # get all node styles
 
-  ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "nodeStyle")), names)))
+  ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "nodeStyle"), simplify = FALSE), names)))
     
-  GetNodeStyle <- function(node, styleName, origNode = node) {
-    inh <- attr(node, "nodeStyleInherit")
-    res <- attr(node, "nodeStyle")[[styleName]]
-    if (!is.null(res) && (identical(node, origNode) || inh)) {
-      if (is.function(res)) res <- res(origNode)
-      return (res)
-    }
-    if (node$isRoot) return ("")
-    return (GetNodeStyle(node$parent, styleName, origNode = origNode))
-  }
-  
   tr <- Traverse(root, pruneFun = pruneFun)
-  
-  myargs <- list(nodes = Get(tr, "name"))
-  
+  anu <- AreNamesUnique(root)
+  myargs <- list(nodes = Get(tr, ifelse(anu, "name", "pathString")))
+  if (!anu && !"label" %in% ns ) ns <- c(ns, "label")
   for (style in ns) {
-    myargs[[style]] <- Get(tr, function(x) GetNodeStyle(x, style))
+    myargs[[style]] <- Get(tr, function(x) {
+      myns <- GetNodeStyle(x, style)
+      if (style == "label" && !anu && length(myns == 0)) myns <- x$name
+      myns
+    })
   }
   #names(myargs) <- c("nodes", ns)
-
-  nodes <- do.call(create_nodes, myargs)
   
+  nodes <- do.call(create_nodes, myargs)
+  if (!anu && !"label" %in% ns) nodes$label <- Get(tr, "name")
   #nodes <- nodes[!names(nodes)=="tooltip"]
   
   ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "edgeStyle")), names)))
@@ -92,14 +85,15 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
   }
 
   #nodes <- do.call(create_nodes, myargs)
+
   edges <- do.call("ToDataFrameNetwork", c(root, direction = direction, pruneFun = pruneFun, myargs)) 
   
   graphStyle <- attr(root, "graphStyle")
   if (!is.null(graphStyle)) graphAttributes <- paste(names(graphStyle), graphStyle, sep = " = ", collapse = ", ")
   else graphAttributes <- ""
   
-  graph <- create_graph(nodes, graph_attrs = graphAttributes)
-  graph <- add_edges(graph, edges)
+  graph <- create_graph(nodes, edges, graph_attrs = graphAttributes)
+  
   #return (graph)
   #render_graph(graph)
   return (graph$dot_code)

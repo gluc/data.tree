@@ -1,5 +1,6 @@
 #' Convert a \code{data.tree} structure to a \code{data.frame}
 #' 
+#' 
 #' @param x The root \code{Node} of the tree or sub-tree to be convert to a data.frame
 #' @param ... the attributes to be added as columns of the data.frame. See \code{\link{Get}} for details.
 #' If a specific Node does not contain the attribute, \code{NA} is added to the data.frame.
@@ -131,6 +132,9 @@ ToDataFrameTable <- function(x, ..., pruneFun = NULL) {
 #' @return ToDataFrameNetwork: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree 
 #' spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first column is called 'from', while the
 #' second is called 'to', describing the parent to child edge (for direction "climb") or the child to parent edge (for direction "descend").
+#' If \code{\link{AreNamesUnique}} is TRUE, then the Network is
+#' based on the \code{Node$name}, otherwise on the \code{Node$pathString}
+
 #' 
 #' 
 #' @export
@@ -140,10 +144,11 @@ ToDataFrameNetwork <- function(x,
                                pruneFun = NULL, 
                                inheritFromAncestors = FALSE) {
   direction <- direction[1]
-  if(!AreNamesUnique(x)) stop("Names are not unique in tree! Cannot export to network.")
+  if(!AreNamesUnique(x)) GetName <- function(x) x$pathString
+  else GetName <- function(x) x$name
   t <- Traverse(x, traversal = "level", pruneFun = pruneFun)
-  children <- Get(t, function(x) x$name)
-  parents <- Get(t, function(x) x$parent$name)
+  children <- Get(t, function(x) GetName(x))
+  parents <- Get(t, function(x) GetName(x$parent))
   
   if (direction == "descend") df <- data.frame(from = children, 
                                              to = parents, 
@@ -335,7 +340,6 @@ FromDataFrameTable <- function(table,
 #'  \item{Its subsequent columns contain the attributes to be set as fields on the nodes}
 #'  \item{It must contain a single root}
 #'  \item{There are no cycles in the network}
-#'  \item{Node names are unique throughout the network (and not only per level, as required by data.tree)}
 #' }
 #' 
 #' @import methods

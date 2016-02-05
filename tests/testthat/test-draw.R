@@ -19,3 +19,81 @@ test_that("grViz", {
   expect_equal(substr(gv, 1, 9), "digraph {")
 })
 
+
+
+test_that("grViz single attribute", {
+  data(acme)
+  SetNodeStyle(acme$Accounting, label = "Mimi")
+  gv <- ToGraphViz(acme)
+  
+  exp <- "digraph {
+
+graph []
+
+
+  'Acme Inc.'
+  'Accounting' [label = 'Mimi'] 
+  'New Software'
+  'New Accounting Standards'
+  'Research'
+  'New Product Line'
+  'New Labs'
+  'IT'
+  'Outsource'
+  'Go agile'
+  'Switch to R'
+  'Acme Inc.'->'Accounting' 
+  'Acme Inc.'->'Research' 
+  'Acme Inc.'->'IT' 
+  'Accounting'->'New Software' 
+  'Accounting'->'New Accounting Standards' 
+  'Research'->'New Product Line' 
+  'Research'->'New Labs' 
+  'IT'->'Outsource' 
+  'IT'->'Go agile' 
+  'IT'->'Switch to R' 
+}"
+  
+  expect_equal(gv, exp)
+  
+})
+
+
+test_that("grViz single attribute names not uniuqe", {
+  mytree <- CreateRegularTree(3, 3)
+  mytree$Do(function(x) x$name <- x$position)
+  SetNodeStyle(acme$Accounting, label = "Mimi")
+  gv <- ToGraphViz(acme)
+  
+  exp <- "digraph {
+  
+  graph []
+  
+  
+  'Acme Inc.'
+  'Accounting' [label = 'Mimi'] 
+  'New Software'
+  'New Accounting Standards'
+  'Research'
+  'New Product Line'
+  'New Labs'
+  'IT'
+  'Outsource'
+  'Go agile'
+  'Switch to R'
+  'Acme Inc.'->'Accounting' 
+  'Acme Inc.'->'Research' 
+  'Acme Inc.'->'IT' 
+  'Accounting'->'New Software' 
+  'Accounting'->'New Accounting Standards' 
+  'Research'->'New Product Line' 
+  'Research'->'New Labs' 
+  'IT'->'Outsource' 
+  'IT'->'Go agile' 
+  'IT'->'Switch to R' 
+}"
+  
+  expect_equal(gv, exp)
+  
+})
+

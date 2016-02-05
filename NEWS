@@ -11,6 +11,7 @@
 - FIX: Clone was adding empty children list, which caused a series of problems
 - FIX: Cloning a subtree does not keep reference to un-cloned parent anymore (#49)
 - FIX: print with limit parameter ignored formatter
+- FIX: cannot rename to int, e.g. acme$Do(function(x) x$name <- x$position) (#53)
 
 
 ## Version 0.2.4

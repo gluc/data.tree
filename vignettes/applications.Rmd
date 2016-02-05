@@ -225,7 +225,8 @@ You'll see:
 ## Convert from data.frame
 
 ```{r}
-pfodf <- read.csv('../inst/extdata/portfolio.csv', stringsAsFactors = FALSE)
+fileName <- system.file("extdata", "portfolio.csv", package="data.tree")
+pfodf <- read.csv(fileName, stringsAsFactors = FALSE)
 head(pfodf)
 ```
 
@@ -495,8 +496,9 @@ This demo calculates and plots a simple decision tree. It demonstrates the follo
 
 * how to read a yaml file into a data.tree structure
 * how to calculate a decision tree
+* how to plot a data.tree with the data.tree plotting facility
 * how to plot a data.tree with the ape package
-* how to plot a data.tree with the DiagrammeR package
+
 
 ## Load YAML file
 
@@ -507,28 +509,19 @@ and systems, you can edit it with any text editor, and you can even send it as a
 This is how our YAML file looks:
 
 ```{r}
-
-fileName <- '../inst/extdata/jennylind.yaml'
+fileName <- system.file("extdata", "jennylind.yaml", package="data.tree")
 cat(readChar(fileName, file.info(fileName)$size))
 
 ```
 
 Let's convert the YAML into a data.tree structure. First, we load it with the yaml package into a list of lists. Then we use `as.Node` to convert the list into a data.tree structure:
 
-```{r, eval = FALSE}
-
-#for debug
-fileName <- './inst/extdata/jennylind.yaml'
-```
-
-
-
 ```{r}
 
 library(data.tree)
 library(yaml)
-l <- yaml.load_file(fileName)
-jl <- as.Node(l)
+lol <- yaml.load_file(fileName)
+jl <- as.Node(lol)
 print(jl, "type", "payoff", "p")
 ```
 
@@ -563,7 +556,42 @@ jl$Do(decision, filterFun = function(x) x$type == 'decision')
 
 ## Plot
 
-data.tree does not provide its own plotting facility, but there are plenty of options for plotting.
+### Plot with the data.tree plotting facility
+
+First, we'll define a function to format the node labels. We'll use it later.
+
+```{r}
+Nodelabel <- function(node) {
+  po <- paste0( '$ ', format(node$payoff, scientific = FALSE, big.mark = "'"))
+  if (node$type == 'terminal') return (po)
+  return ( paste0('ER\n', po) )
+}
+
+```
+
+
+
+```{r, eval=FALSE}
+jl$Do(
+   function(node) {
+      SetNodeStyle(node, label = Nodelabel)
+      if(node$type == 'decision') {
+        
+        
+      } else if(node$type == 'chance') {
+
+      } else if(node$type == 'terminal') {
+
+      }
+   }
+)
+
+
+plot(jl)
+
+```
+
+
 
 ### Plot with the ape package
 
@@ -583,16 +611,6 @@ jlp <- as.phylo(jl)
 
 Now we are ready to plot.
 
-First, we'll define a function to format the node labels. We'll use it later.
-
-```{r}
-Nodelabel <- function(node) {
-  po <- paste0( '$ ', format(node$payoff, scientific = FALSE, big.mark = "'"))
-  if (node$type == 'terminal') return (po)
-  return ( paste0('ER\n', po) )
-}
-
-```
 
 Here's the plotting:
 
@@ -603,30 +621,33 @@ plot(jlp, show.tip.label = FALSE, type = "cladogram")
 
 #We set arrow heads to the leaf-edges:
 
-for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), 
-                              GetPhyloNr(node, "node"), 
-                              arrows = 2, 
-                              type = "triangle", 
-                              angle = 60)
+Do(jl$leaves, function(node) edges(GetPhyloNr(node$parent, "node"), 
+                                   GetPhyloNr(node, "node"), 
+                                   arrows = 2, 
+                                   type = "triangle", 
+                                   angle = 60)
+                                   )
 
 #Finally, we iterate over all the nodes and print the labels. Note that the `GetPhyloNr`
 #methods lets us map a `Node` in the data.tree to its counterpart in the phylo object.
 
 
-for(node in Traverse(jl)) {
-  if(node$type == 'decision') {
-    nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.3, -0.5))
-  } else if(node$type == 'chance') {
-    if (node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), 
-                                                 GetPhyloNr(node, "node"), col = "red")
-    nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle")
-    nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
-    edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "white")
-  } else if(node$type == 'terminal') {
-    tiplabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
-    edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "white")
-  }
-}
+Do(Traverse(jl),
+   function(node) {
+      if(node$type == 'decision') {
+        nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.3, -0.5))
+      } else if(node$type == 'chance') {
+        if (node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), 
+                                                     GetPhyloNr(node, "node"), col = "red")
+        nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle")
+        nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
+        edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "white")
+      } else if(node$type == 'terminal') {
+        tiplabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
+        edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "white")
+      }
+   }
+)
 
 nodelabels("   ", GetPhyloNr(jl, "node"), frame = "rect")
 
@@ -642,11 +663,11 @@ You'll learn how to convert a complex JSON into a data.frame, and how to use thi
 
 ## Load JSON file
 
-The data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a library for creating visualizations. The JSON is long, deeply nested, and complicated.
+The data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a code library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
 ```{r}
-flarePath <- '../inst/extdata/flare.json'
-flareJSON <- readChar(flarePath, file.info(flarePath)$size)
+fileName <- system.file("extdata", "flare.json", package="data.tree")
+flareJSON <- readChar(fileName, file.info(fileName)$size)
 cat(substr(flareJSON, 1, 300))
 
 ```
@@ -655,7 +676,7 @@ So, let's convert it into a data.tree structure:
 
 ```{r}
 library(jsonlite)
-flareLoL <- fromJSON(file(flarePath),
+flareLoL <- fromJSON(file(fileName),
                      simplifyDataFrame = FALSE
                      )
 

@@ -468,6 +468,19 @@ SetGraphStyle <- function(root,
 }
 
 
+GetNodeStyle <- function(node, styleName, origNode = node) {
+  inh <- attr(node, "nodeStyleInherit")
+  res <- attr(node, "nodeStyle")[[styleName]]
+  if (!is.null(res) && (identical(node, origNode) || inh)) {
+    if (is.function(res)) res <- res(origNode)
+    return (res)
+  }
+  if (node$isRoot || styleName %in% c("label", "tooltip")) return ("")
+  return (GetNodeStyle(node$parent, styleName, origNode = origNode))
+}
+
+
+
 #' Test whether all node names are unique.
 #' 
 #' This can be useful for some conversions.
