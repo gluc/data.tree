@@ -62,35 +62,40 @@ graph []
 test_that("grViz single attribute names not uniuqe", {
   mytree <- CreateRegularTree(3, 3)
   mytree$Do(function(x) x$name <- x$position)
-  SetNodeStyle(acme$Accounting, label = "Mimi")
-  gv <- ToGraphViz(acme)
+  SetNodeStyle(mytree, label = "Root")
+  SetNodeStyle(mytree$`1`, tooltip = "L1")
+  gv <- ToGraphViz(mytree)
   
   exp <- "digraph {
-  
-  graph []
-  
-  
-  'Acme Inc.'
-  'Accounting' [label = 'Mimi'] 
-  'New Software'
-  'New Accounting Standards'
-  'Research'
-  'New Product Line'
-  'New Labs'
-  'IT'
-  'Outsource'
-  'Go agile'
-  'Switch to R'
-  'Acme Inc.'->'Accounting' 
-  'Acme Inc.'->'Research' 
-  'Acme Inc.'->'IT' 
-  'Accounting'->'New Software' 
-  'Accounting'->'New Accounting Standards' 
-  'Research'->'New Product Line' 
-  'Research'->'New Labs' 
-  'IT'->'Outsource' 
-  'IT'->'Go agile' 
-  'IT'->'Switch to R' 
+
+graph []
+
+
+  '1' [label = 'Root'] 
+  '1/1' [label = '1', tooltip = 'L1'] 
+  '1/1/1' [label = '1'] 
+  '1/1/2' [label = '2'] 
+  '1/1/3' [label = '3'] 
+  '1/2' [label = '2'] 
+  '1/2/1' [label = '1'] 
+  '1/2/2' [label = '2'] 
+  '1/2/3' [label = '3'] 
+  '1/3' [label = '3'] 
+  '1/3/1' [label = '1'] 
+  '1/3/2' [label = '2'] 
+  '1/3/3' [label = '3'] 
+  '1'->'1/1' 
+  '1'->'1/2' 
+  '1'->'1/3' 
+  '1/1'->'1/1/1' 
+  '1/1'->'1/1/2' 
+  '1/1'->'1/1/3' 
+  '1/2'->'1/2/1' 
+  '1/2'->'1/2/2' 
+  '1/2'->'1/2/3' 
+  '1/3'->'1/3/1' 
+  '1/3'->'1/3/2' 
+  '1/3'->'1/3/3' 
 }"
   
   expect_equal(gv, exp)

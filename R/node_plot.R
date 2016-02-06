@@ -46,11 +46,13 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
   tr <- Traverse(root, pruneFun = pruneFun)
   anu <- AreNamesUnique(root)
   myargs <- list(nodes = Get(tr, ifelse(anu, "name", "pathString")))
+  #need to add label if not all names are unique
   if (!anu && !"label" %in% ns ) ns <- c(ns, "label")
   for (style in ns) {
     myargs[[style]] <- Get(tr, function(x) {
       myns <- GetNodeStyle(x, style)
-      if (style == "label" && !anu && length(myns == 0)) myns <- x$name
+      if (style == "label" && !anu && length(myns) == 0) myns <- x$name
+      if (is.null(myns)) myns <- ""
       myns
     })
   }
@@ -60,19 +62,18 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
   if (!anu && !"label" %in% ns) nodes$label <- Get(tr, "name")
   #nodes <- nodes[!names(nodes)=="tooltip"]
   
-  ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "edgeStyle")), names)))
+  ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "edgeStyle"), simplify = FALSE), names)))
   
   
   GetEdgeStyleFactory <- function(style) {
-    styleName <- style
     function(node = node, origNode = node) {
       inh <- attr(node, "edgeStyleInherit")
-      res <- attr(node, "edgeStyle")[[styleName]]
+      res <- attr(node, "edgeStyle")[[style]]
       if (!is.null(res) && (identical(node, origNode) || inh)) {
         if (is.function(res)) res <- res(origNode)
         return (res)
       }
-      if (node$isRoot) return ("")
+      if (node$isRoot || style %in% c("label", "tooltip")) return ("")
       return (Recall(node = node$parent, origNode = origNode))
     }
   }

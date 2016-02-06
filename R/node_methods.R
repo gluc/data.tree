@@ -475,7 +475,7 @@ GetNodeStyle <- function(node, styleName, origNode = node) {
     if (is.function(res)) res <- res(origNode)
     return (res)
   }
-  if (node$isRoot || styleName %in% c("label", "tooltip")) return ("")
+  if (node$isRoot || styleName %in% c("label", "tooltip")) return (NULL)
   return (GetNodeStyle(node$parent, styleName, origNode = origNode))
 }
 
