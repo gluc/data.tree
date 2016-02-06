@@ -560,33 +560,45 @@ jl$Do(decision, filterFun = function(x) x$type == 'decision')
 
 First, we'll define a function to format the node labels. We'll use it later.
 
-```{r}
-Nodelabel <- function(node) {
-  po <- paste0( '$ ', format(node$payoff, scientific = FALSE, big.mark = "'"))
-  if (node$type == 'terminal') return (po)
-  return ( paste0('ER\n', po) )
-}
-
-```
-
-
 
 ```{r, eval=FALSE}
 jl$Do(
    function(node) {
-      SetNodeStyle(node, label = Nodelabel)
-      if(node$type == 'decision') {
+ 
+     if (!node$isRoot && node$parent$type == 'chance') {
+       SetEdgeStyle(node, label = paste0(node$name, " (", node$p, ")"))
+     } else {
+       SetEdgeStyle(node, label = node$name)
+     }
+     
+     
+      if (node$isRoot) {
+        SetNodeStyle(node, 
+                     style = "filled", 
+                     shape = "box",
+                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")))
         
+      } else if(node$type == 'decision') {
+        SetNodeStyle(node, 
+                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")))        
         
       } else if(node$type == 'chance') {
+        SetNodeStyle(node, 
+                     shape = "circle",
+                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")),
+                     inherit = FALSE)
 
       } else if(node$type == 'terminal') {
+        SetNodeStyle(node, 
+                     style = "none",
+                     shape = "none",
+                     label = paste0( '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")))
 
       }
    }
 )
 
-
+SetGraphStyle(jl, rankdir = "LR", fontname = "helvetica")
 plot(jl)
 
 ```
