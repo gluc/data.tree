@@ -566,7 +566,7 @@ jl$Do(
    function(node) {
  
      if (!node$isRoot && node$parent$type == 'chance') {
-       SetEdgeStyle(node, label = paste0(node$name, " (", node$p, ")"))
+       SetEdgeStyle(node, fontname = 'helvetica', label = paste0(node$name, " (", node$p, ")"))
      } else {
        SetEdgeStyle(node, label = node$name)
      }
@@ -576,7 +576,8 @@ jl$Do(
         SetNodeStyle(node, 
                      style = "filled", 
                      shape = "box",
-                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")))
+                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")),
+                     fontname = 'helvetica')
         
       } else if(node$type == 'decision') {
         SetNodeStyle(node, 
@@ -598,7 +599,7 @@ jl$Do(
    }
 )
 
-SetGraphStyle(jl, rankdir = "LR", fontname = "helvetica")
+SetGraphStyle(jl, rankdir = "LR")
 plot(jl)
 
 ```

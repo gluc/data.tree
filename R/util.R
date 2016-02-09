@@ -215,6 +215,6 @@ GetDefaultTooltip <- function(node) {
   } else {
     myfields <- "name"
   }
-  tt <- paste(sapply(myfields, function(x) paste0("- ", x, ": ", GetAttribute(node, x), "\n")), collapse = "")
+  tt <- paste(sapply(myfields, function(x) paste0("- ", x, ": ", GetAttribute(node, x))), collapse = "\n")
   return (tt)
 }

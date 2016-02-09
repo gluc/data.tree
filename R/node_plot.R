@@ -66,6 +66,7 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
   
   
   GetEdgeStyleFactory <- function(style) {
+    styleName <- force(style)
     function(node = node, origNode = node) {
       inh <- attr(node, "edgeStyleInherit")
       res <- attr(node, "edgeStyle")[[style]]
@@ -73,7 +74,7 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
         if (is.function(res)) res <- res(origNode)
         return (res)
       }
-      if (node$isRoot || style %in% c("label", "tooltip")) return ("")
+      if (node$isRoot || styleName %in% c("label", "tooltip")) return ("")
       return (Recall(node = node$parent, origNode = origNode))
     }
   }
@@ -90,13 +91,14 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
   edges <- do.call("ToDataFrameNetwork", c(root, direction = direction, pruneFun = pruneFun, myargs)) 
   
   graphStyle <- attr(root, "graphStyle")
-  if (!is.null(graphStyle)) graphAttributes <- paste(names(graphStyle), graphStyle, sep = " = ", collapse = ", ")
+  if (!is.null(graphStyle)) graphAttributes <- paste(names(graphStyle), paste0("'", graphStyle, "'"), sep = " = ", collapse = ", ")
   else graphAttributes <- ""
-  
-  graph <- create_graph(nodes, edges, graph_attrs = graphAttributes)
+  nodeAttributes <- GetNodeDefaultStyles(root)
+  graph <- create_graph(nodes, edges, graph_attrs = graphAttributes, node_attrs = nodeAttributes)
   
   #return (graph)
   #render_graph(graph)
+  #cat(graph$dot_code)
   return (graph$dot_code)
   
 }

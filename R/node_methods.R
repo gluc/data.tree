@@ -159,12 +159,12 @@ Cumulate = function(node, attribute, aggFun, ...) {
 #' 
 #' @export
 Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
-  ClonePrivate(node, pruneFun, attributes)
+  .Clone(node, pruneFun, attributes)
 }
 
 
 
-ClonePrivate <- function(node, pruneFun = NULL, attributes = FALSE, firstCall = TRUE) {
+.Clone <- function(node, pruneFun = NULL, attributes = FALSE, firstCall = TRUE) {
 
   myclone <- node$clone()
   if (attributes) attributes(myclone) <- attributes(node)
@@ -173,7 +173,7 @@ ClonePrivate <- function(node, pruneFun = NULL, attributes = FALSE, firstCall = 
     children <- node$children[keep]
     rm(list = names(node$children)[!keep], envir = myclone)
   } else children <- node$children
-  myclone$children <- lapply(children, function(x) ClonePrivate(x, pruneFun, attributes, firstCall = FALSE))
+  myclone$children <- lapply(children, function(x) .Clone(x, pruneFun, attributes, firstCall = FALSE))
   for (child in myclone$children) {
     myclone[[child$name]] <- child
     child$parent <- myclone
@@ -469,15 +469,54 @@ SetGraphStyle <- function(root,
 
 
 GetNodeStyle <- function(node, styleName, origNode = node) {
+  
   inh <- attr(node, "nodeStyleInherit")
   res <- attr(node, "nodeStyle")[[styleName]]
-  if (!is.null(res) && (identical(node, origNode) || inh)) {
+  if (!is.null(res)) {
+    if (!node$isRoot) {
+      if (identical(node, origNode) || inh) {# either on myself or inheritable
+        if (is.function(res)) res <- res(origNode)
+        return (res)
+      }
+    } else {
+      #root
+      if (identical(node, origNode) && styleName %in% c("label", "tooltip")) {
+        if (is.function(res)) res <- res(origNode)
+        return (res)
+      } else {
+        #inherited are only label and tt, and only if function
+        if (styleName %in% c("label", "tooltip") && is.function(res)) {
+          return (res(origNode))
+        }
+      }
+      
+    }
+  }
+  #exit criteria
+  # inherit from root only if label or tt are function
+  if (node$level == 2 && styleName %in% c("label", "tooltip")) {
+    res <- GetNodeStyle(node$parent, styleName, origNode = origNode)
     if (is.function(res)) res <- res(origNode)
     return (res)
   }
-  if (node$isRoot || styleName %in% c("label", "tooltip")) return (NULL)
-  return (GetNodeStyle(node$parent, styleName, origNode = origNode))
+  if (node$level <= 2) return (NULL) 
+  #recursion
+  GetNodeStyle(node$parent, styleName, origNode = origNode)
+  
 }
+
+GetNodeDefaultStyles <- function(node) {
+  node <- node$root
+  inh <- attr(node, "nodeStyleInherit")
+  res <- attr(node, "nodeStyle")
+  if (!is.null(res) && inh) {
+    res <- res[!names(res) %in% c("label", "tooltip")]
+    res <- paste(names(res), paste0("'", res, "'"), sep = " = ", collapse = ", ")
+    return (res) 
+  } else return (NULL)
+}
+
+
 
 
 
