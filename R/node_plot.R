@@ -143,7 +143,7 @@ GetStyle <- function(node, styleName, type = c("node", "edge"), origNode = node)
   res <- attr(node, paste0(type, "Style"))[[styleName]]
   if (!is.null(res)) {
     if (!node$isRoot) {
-      if (identical(node, origNode) || inh) {# either on myself or inheritable
+      if (identical(node, origNode) || (inh && !styleName %in% c("label", "tooltip"))) {# either on myself or inheritable
         if (is.function(res)) res <- res(origNode)
         return (res)
       }
@@ -181,6 +181,7 @@ GetDefaultStyles <- function(node, type = c("node", "edge")) {
   res <- attr(node, paste0(type, "Style"))
   if (!is.null(res) && inh) {
     res <- res[!names(res) %in% c("label", "tooltip")]
+    if (length(res) == 0) return (NULL)
     res <- paste(names(res), paste0("'", res, "'"), sep = " = ", collapse = ", ")
     return (res) 
   } else return (NULL)
