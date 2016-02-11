@@ -490,7 +490,7 @@ Predict(tree, c(color = 'red',
 
 Oops! Looks like trusting classification blindly might get you killed.
 
-# Jenny Lind (decision tree)
+# Jenny Lind (decision tree, plotting)
 
 This demo calculates and plots a simple decision tree. It demonstrates the following:
 
@@ -558,111 +558,48 @@ jl$Do(decision, filterFun = function(x) x$type == 'decision')
 
 ### Plot with the data.tree plotting facility
 
-First, we'll define a function to format the node labels. We'll use it later.
+The data tree plotting facility uses GraphViz / Diagrammer. You can provide a function as a style:
 
 
-```{r, eval=FALSE}
-jl$Do(
-   function(node) {
- 
-     if (!node$isRoot && node$parent$type == 'chance') {
-       SetEdgeStyle(node, fontname = 'helvetica', label = paste0(node$name, " (", node$p, ")"))
-     } else {
-       SetEdgeStyle(node, label = node$name)
-     }
-     
-     
-      if (node$isRoot) {
-        SetNodeStyle(node, 
-                     style = "filled", 
-                     shape = "box",
-                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")),
-                     fontname = 'helvetica')
-        
-      } else if(node$type == 'decision') {
-        SetNodeStyle(node, 
-                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")))        
-        
-      } else if(node$type == 'chance') {
-        SetNodeStyle(node, 
-                     shape = "circle",
-                     label = paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")),
-                     inherit = FALSE)
+```{r}
 
-      } else if(node$type == 'terminal') {
-        SetNodeStyle(node, 
-                     style = "none",
-                     shape = "none",
-                     label = paste0( '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")))
+GetNodeLabel <- function(node) switch(node$type, 
+                                      terminal = paste0( '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")),
+                                      paste0('ER\n', '$ ', format(node$payoff, scientific = FALSE, big.mark = ",")))
 
-      }
-   }
-)
+GetEdgeLabel <- function(node) {
+  if (!node$isRoot && node$parent$type == 'chance') {
+    label = paste0(node$name, " (", node$p, ")")
+  } else {
+    label = node$name
+  }
+  return (label)
+}
 
+GetNodeShape <- function(node) switch(node$type, decision = "box", chance = "circle", terminal = "none")
+
+
+SetEdgeStyle(jl, fontname = 'helvetica', label = GetEdgeLabel)
+SetNodeStyle(jl, fontname = 'helvetica', label = GetNodeLabel, shape = GetNodeShape)
+``` 
+
+Note that the `fontname` is inherited as is by all children, whereas e.g. the `label` argument is a function, it's called
+on each inheriting child node.
+
+Another alternative is to set the style per node:
+
+```{r}
+jl$Do(function(x) SetEdgeStyle(x, color = "red", inherit = FALSE), 
+      filterFun = function(x) !x$isRoot && x$parent$type == "decision" && x$parent$decision == x$name)
+
+
+```
+
+Finally, we direct our plot from left-to-right, and use the plot function to display:
+
+```{r}
 SetGraphStyle(jl, rankdir = "LR")
 plot(jl)
-
-```
-
-
-
-### Plot with the ape package
-
-The ape package was built to manage and plot phylogenetic trees. However, its infrastructure can also be used to plot our decision tree.
-
-First, we revert the order of the nodes in the tree (so it's displayed from top to bottom, as ape does it the other way around). Then we convert the data.tree structure to a phylo object:
-
-
-```{r}
-
-library(ape)
-jl$Revert()
-jlp <- as.phylo(jl)
-
-
-```
-
-Now we are ready to plot.
-
-
-Here's the plotting:
-
-```{r}
-
-par(mar=c(1,1,1,1))
-plot(jlp, show.tip.label = FALSE, type = "cladogram")
-
-#We set arrow heads to the leaf-edges:
-
-Do(jl$leaves, function(node) edges(GetPhyloNr(node$parent, "node"), 
-                                   GetPhyloNr(node, "node"), 
-                                   arrows = 2, 
-                                   type = "triangle", 
-                                   angle = 60)
-                                   )
-
-#Finally, we iterate over all the nodes and print the labels. Note that the `GetPhyloNr`
-#methods lets us map a `Node` in the data.tree to its counterpart in the phylo object.
-
-
-Do(Traverse(jl),
-   function(node) {
-      if(node$type == 'decision') {
-        nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.3, -0.5))
-      } else if(node$type == 'chance') {
-        if (node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), 
-                                                     GetPhyloNr(node, "node"), col = "red")
-        nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle")
-        nodelabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
-        edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "white")
-      } else if(node$type == 'terminal') {
-        tiplabels(Nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
-        edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "white")
-      }
-   }
-)
-
-nodelabels("   ", GetPhyloNr(jl, "node"), frame = "rect")
 
 ```
 

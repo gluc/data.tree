@@ -698,12 +698,7 @@ test_that("print", {
 })
 
 
-test_that("ClimbByAttribute", {
-  data(acme)
-  acme$Do(function(x) x$cost <- Aggregate(x, "cost", max))
-  n <- ClimbByAttribute(acme, cost = function(x) x$parent$cost, recursive = TRUE)
-  expect_equal(n$name, "New Product Line")
-})
+
 
 test_that("Cumulate", {
   data(acme)
