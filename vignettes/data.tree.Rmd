@@ -286,21 +286,21 @@ acme$children[[1]]$children[[2]]$name
 
 ### Navigation by fields
 
-Furthermore, we can not only navigate by name, but also by other fields. This is achieved with the `Climb` method:
+Furthermore, we can not only navigate by name, but also by other fields. This is achieved with the `Climb` method. The name of each `...` argument designates the field, and the value matches against `Nodes`. Each argument refers to the subsequent level to climb. In this example, `Climb` takes acme's child at position 1 (i.e. `Accounting`), then it takes `Accounting's` child called `New Software`:
 
 ```{r}
-acme$Climb(position = 1, name = "New Software")$name
+acme$Climb(position = 1, name = "New Software")$path
 
 ```
 
-As a shortcut, you can also specify the name of the field only once, like this:
+As a shortcut, you can climb multiple levels with a single argument:
 
 ```{r}
 tree <- CreateRegularTree(5, 5)
 tree$Climb(position = c(2, 3, 4))$path
 ```
 
-Finally, you can even combine. The following example starts on the root, then looks for child at position 2, then for child at position 3. Next, we move to the child having name = "4", and finally its child having name "5".
+Finally, you can even combine. The following example starts on the root, then looks for child at position 2, then for its child at position 3. Next, we move to the child having name = "1.2.3.4", and finally its child having name "1.2.3.4.5":
 
 ```{r}
 tree$Climb(position = c(2, 3), name = c("1.2.3.4", "1.2.3.4.5"))$path
@@ -429,15 +429,17 @@ data.frame(cost = acme$Get("cost", format = function(x) FormatFixedDecimal(x, 2)
 `data.tree` is mainly a data structure. As it is easy to convert data.tree structures to other formats, you have access to a large number of tools to plot a data.tree structure. For example, you can plot a data.tree structure as a dendrogram, as an ape tree, as a treeview, etc. 
 Additionally, data.tree also provides its own plotting facility. It is built on GraphViz/DiagrammeR, and you can access these features via the `plot` and `ToGraphViz` functions. For example:
 
-```{r}
+```{r, eval = FALSE}
 plot(acme)
 ```
+
+![acme](assets/acme.png)
 
 ### Styling
 
 Similar to formatters for printing, you can style your tree and store the styling directly in the tree, for later use:
 
-```{r}
+```{r, eval = FALSE}
 SetGraphStyle(acme, rankdir = "TB")
 SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
 SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", 
@@ -446,23 +448,28 @@ SetNodeStyle(acme$IT, fillcolor = "LightBlue", penwidth = "5px")
 plot(acme)
 ```
 
+![acme](assets/acmestyle.png)
+
 For details on the styling attributes, see http://graphviz.org/Documentation.php .
 
 Note that, by default, most Node style attributes will be inherited. Though, for example, `label` will not be inherited. However, inheritance can be avoided for all style attributes, as for the Accounting node in the following example:
 
-```{r}
+```{r, eval = FALSE}
 SetNodeStyle(acme$Accounting, inherit = FALSE, fillcolor = "Thistle", 
              fontcolor = "Firebrick", tooltip = "This is the accounting department")
 plot(acme)
 ```
 
+![acme](assets/acmestyle2.png)
+
 Use `Do` to set style on specific nodes:
 
-```{r}
+```{r, eval = FALSE}
 Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
 plot(acme)
 ```
 
+![acme](assets/acmestyle3.png)
 
 However, there are also endless other possibilities to visualise data.tree structures.
 

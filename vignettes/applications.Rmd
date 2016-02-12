@@ -597,12 +597,13 @@ jl$Do(function(x) SetEdgeStyle(x, color = "red", inherit = FALSE),
 
 Finally, we direct our plot from left-to-right, and use the plot function to display:
 
-```{r}
+```{r, eval = FALSE}
 SetGraphStyle(jl, rankdir = "LR")
 plot(jl)
 
 ```
 
+![acme](assets/dtree.png)
 
 # Bubble Chart (visualisation)
 
