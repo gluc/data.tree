@@ -497,7 +497,6 @@ This demo calculates and plots a simple decision tree. It demonstrates the follo
 * how to read a yaml file into a data.tree structure
 * how to calculate a decision tree
 * how to plot a data.tree with the data.tree plotting facility
-* how to plot a data.tree with the ape package
 
 
 ## Load YAML file

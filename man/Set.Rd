@@ -4,10 +4,16 @@
 \alias{Set}
 \title{Traverse a Tree and Assign Values}
 \usage{
+#OO-style:
+# node$Set(..., 
+#          traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),  
+#          pruneFun = NULL, 
+#          filterFun = NULL)
+#traditional:
 Set(nodes, ...)
 }
 \arguments{
-\item{nodes}{The \code{Node}s to traverse}
+\item{nodes}{The nodes on which to perform the Get (typically obtained via \code{\link{Traverse}})}
 
 \item{...}{each argument can be a vector of values to be assigned. Recycled.}
 }
@@ -35,5 +41,9 @@ print(acme, "departmentId", "head")
 \code{\link{Node}}
 
 \code{\link{Get}}
+
+\code{\link{Do}}
+
+\code{\link{Traverse}}
 }
 

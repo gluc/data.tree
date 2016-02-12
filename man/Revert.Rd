@@ -4,6 +4,7 @@
 \alias{Revert}
 \title{Reverts the sort order of a \code{Node}'s children.}
 \usage{
+# node$Revert(recursive = TRUE)
 Revert(node, recursive = TRUE)
 }
 \arguments{
@@ -20,6 +21,8 @@ Reverts the sort order of a \code{Node}'s children.
 }
 \seealso{
 \code{\link{Node}}
+
+\code{\link{Sort}}
 }
 \keyword{internal}
 

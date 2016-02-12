@@ -30,7 +30,8 @@ http://graphviz.org/Documentation.php for details. For the plot.Node generic met
 
 \item{direction}{when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?}
 
-\item{pruneFun}{a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.}
+\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
 \item{engine}{string for the Graphviz layout engine; can be dot (default), 
 neato, circo, or twopi. For more information see https://github.com/mdaines/viz.js#usage.}

@@ -4,6 +4,7 @@
 \alias{Sort}
 \title{Sort children of a \code{Node} or an entire \code{data.tree} structure}
 \usage{
+# node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE) 
 Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
 }
 \arguments{
@@ -11,9 +12,9 @@ Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
 
 \item{attribute}{determines what is collected. The \code{attribute} can be
 \itemize{
-  \item a.) the name of a \bold{field} of each \code{Node} in the tree 
-  \item b.) the name of a \bold{method} of each \code{Node} in the tree
-  \item c.) a \bold{function}, whose first argument must be a \code{Node}
+  \item a.) the name of a \bold{field} or a \bold{property/active} of each \code{Node} in the tree, e.g. \code{acme$Get("p")} or \code{acme$Get("position")}
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree, e.g. \code{acme$Get("levelZeroBased")}, where e.g. \code{acme$levelZeroBased <- function() acme$level - 1}
+  \item c.) a \bold{function}, whose first argument must be a \code{Node} e.g. \code{acme$Get(function(node) node$cost * node$p)}
  }}
 
 \item{...}{any parameters to be passed on the the attribute (in case it's a method or a 
@@ -28,7 +29,8 @@ This allows sorting an entire tree.}
 Returns the node on which Sort is called, invisibly. This can be useful to chain Node methods.
 }
 \description{
-You can sort with respect to any argument of the tree.
+You can sort with respect to any argument of the tree. But note that sorting has
+side-effects, meaning that you modify the underlying, original data.tree object structure.
 }
 \examples{
 data(acme)
@@ -39,6 +41,8 @@ print(acme, "totalCost")
 }
 \seealso{
 \code{\link{Node}}
+
+\code{\link{Revert}}
 }
 \keyword{internal}
 

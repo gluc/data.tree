@@ -192,6 +192,10 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 #' This method lets you climb the tree, from crutch to crutch. On each \code{Node}, the 
 #' \code{Climb} finds the first child having attribute value equal to the the provided argument.
 #' 
+#' @usage #node$Climb(...)
+#' Climb(node, ...)
+#' 
+#' 
 #' @param node The root node of the tree or subtree to climb
 #' @param ... an attribute name to searched value pairlist. For brevity, you can also provide a character vector.
 #' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
@@ -277,13 +281,13 @@ Climb <- function(node, ...) {
 GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
   if (is.function(attribute)) {
     #function
-    
     v <- attribute(node, ...)
   } else if(is.character(attribute) && length(attribute) == 1) {
     #property
     v <- node[[attribute]]
     if (is.function(v)) {
-      if (names(formals(v))[[1]] == "self") v <- v(self = node, ...) #allow storing functions whose first arg is self
+      if (is.null(formals(v))) v <- v()
+      else if (names(formals(v))[[1]] == "self") v <- v(self = node, ...) #allow storing functions whose first arg is self
       else v <- v(...)
     }
   } else {

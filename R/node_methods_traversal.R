@@ -2,12 +2,18 @@
 #' 
 #' @param node the root of a tree or a sub-tree that should be traversed
 #' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'
-#' @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
-#' If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.
 #' @param filterFun allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
 #' Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).
 #'
 #' @return a list of \code{Node}s
+#' 
+#' @seealso \code{\link{Node}}
+#' @seealso \code{\link{Get}}
+#' @seealso \code{\link{Set}}
+#' @seealso \code{\link{Do}}
+#' 
+#' @inheritParams Prune
+#' 
 #' @export
 Traverse = function(node, 
                     traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
@@ -77,12 +83,31 @@ Traverse = function(node,
 #' The \code{Get} method is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
 #' and collect values along the way. Alternatively, you can call a method or a function on each \code{\link{Node}}.
 #' 
-#' @param nodes The nodes on which to perform the Get (e.g. obtained via \code{\link{Traverse}}
+#' @usage 
+#' # OO-style:
+#' #node$Get(attribute, 
+#' #        ..., 
+#' #        traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
+#' #        pruneFun = NULL, 
+#' #        filterFun = NULL, 
+#' #        format = NULL, 
+#' #        inheritFromAncestors = FALSE)
+#'          
+#' # traditional:
+#' Get(nodes, 
+#'     attribute, 
+#'     ..., 
+#'     format = NULL, 
+#'     inheritFromAncestors = FALSE, 
+#'     simplify = c(TRUE, FALSE, "array", "regular"))
+#' 
+#' 
+#' @param nodes The nodes on which to perform the Get (typically obtained via \code{\link{Traverse}})
 #' @param attribute determines what is collected. The \code{attribute} can be
 #'       \itemize{
-#'         \item a.) the name of a \bold{field} of each \code{Node} in the tree 
-#'         \item b.) the name of a \bold{method} of each \code{Node} in the tree
-#'         \item c.) a \bold{function}, whose first argument must be a \code{Node}
+#'         \item a.) the name of a \bold{field} or a \bold{property/active} of each \code{Node} in the tree, e.g. \code{acme$Get("p")} or \code{acme$Get("position")}
+#'         \item b.) the name of a \bold{method} of each \code{Node} in the tree, e.g. \code{acme$Get("levelZeroBased")}, where e.g. \code{acme$levelZeroBased <- function() acme$level - 1}
+#'         \item c.) a \bold{function}, whose first argument must be a \code{Node} e.g. \code{acme$Get(function(node) node$cost * node$p)}
 #'        }
 #' @param ... in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
 #' @param format can be a function that transforms the collected values, e.g. for printing
@@ -106,12 +131,14 @@ Traverse = function(node,
 #' #This is equivalent:
 #' nodes <- Traverse(acme, filterFun = isLeaf)
 #' Get(nodes, function(node) node$cost * node$p)
+#' 
 #'    
 #' #simplify = "regular" will preserve names
 #' acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
 #'  
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Set}}
+#' @seealso \code{\link{Do}}
 #' @seealso \code{\link{Traverse}}
 #'  
 #' @import methods
@@ -153,10 +180,33 @@ Get = function(nodes,
 }
 
 #' Executes a function on a set of nodes
-#' @param nodes a set of nodes, usually obtained via \code{\link{Traverse}}
+#' 
+#' @usage 
+#' # OO-style:
+#' # node$Do(fun, 
+#' #         ..., 
+#' #         traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
+#' #         pruneFun = NULL, 
+#' #         filterFun = NULL)
+#'          
+#' # traditional:
+#' Do(nodes, fun, ...)
+#' 
 #' @param fun the function to execute. The function is expected to be either a Method, or to take a 
 #' Node as its first argument
 #' @param ... any additional parameters to be passed on to fun
+#' 
+#' @seealso \code{\link{Node}}
+#' @seealso \code{\link{Get}}
+#' @seealso \code{\link{Set}}
+#' @seealso \code{\link{Traverse}}
+#' 
+#' @inheritParams Get
+#' 
+#' @examples 
+#' data(acme)
+#' acme$Do(function(node) node$expectedCost <- node$p * node$cost)
+#' print(acme, "expectedCost")
 #' 
 #' @export
 Do <- function(nodes,
@@ -178,7 +228,16 @@ Do <- function(nodes,
 #' The method takes one or more vectors as an argument. It traverses the tree, whereby the values are picked
 #' from the vector. Also available as OO-style method on \code{\link{Node}}.
 #' 
-#' @param nodes The \code{Node}s to traverse
+#' @usage 
+#' #OO-style:
+#' # node$Set(..., 
+#' #          traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),  
+#' #          pruneFun = NULL, 
+#' #          filterFun = NULL)
+#' #traditional:
+#' Set(nodes, ...)
+#' 
+#' 
 #' @param ... each argument can be a vector of values to be assigned. Recycled.
 #'
 #' @return invisibly returns the nodes (useful for chaining)  
@@ -197,6 +256,10 @@ Do <- function(nodes,
 #'  
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Get}}
+#' @seealso \code{\link{Do}}
+#' @seealso \code{\link{Traverse}}
+#'  
+#' @inheritParams Get
 #'  
 #' @export
 Set <- function(nodes, 

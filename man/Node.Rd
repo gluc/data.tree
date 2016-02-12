@@ -6,11 +6,23 @@
 \title{Create a \code{data.tree} Structure With \code{Nodes}}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
-Node
+# n1 <- Node$new("Node 1")
 }
 \description{
 \code{Node} is at the very heart of the \code{data.tree} package. All trees are constructed
 by tying toghether \code{Node} objects.
+}
+\details{
+Assemble \code{Node} objects into a \code{data.tree}
+structure and use the traversal methods to set, get, and perform operations on it. Typically, you construct larger tree 
+structures by converting from \code{data.frame}, \code{list}, or other formats.
+As \code{Node} is object oriented, there are always two variations of methods:
+\itemize{
+  \item a.) OO style: \code{acme$Sort()}
+  \item b.) traditional: \code{Sort(acme)}
+}
+This is only syntactical sugar, and the result of both variations is exactly the same. Other examples where this apply are \code{Set},
+\code{Get}, \code{Do}, \code{Prune}, \code{Climb}, \code{Sort}, etc.
 }
 \section{Fields}{
 
@@ -31,7 +43,7 @@ by tying toghether \code{Node} objects.
   \item{\code{RemoveChild(name)}}{Remove the child \code{Node} called \code{name} from a \code{Node} and returns it.}
   \item{\code{RemoveAttribute(name, stopIfNotAvailable)}}{Removes attribute called \code{name} from this \code{Node}. Gives an error if \code{stopIfNotAvailable} and the attribute doesn't exist.}
   \item{\code{\link{Climb}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s, or other field values.}
-  \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE)}}{Traverses the tree and collects values along the way.}
+  \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE, simplify = c(TRUE, FALSE, "array", "regular"))}}{Traverses the tree and collects values along the way.}
   \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}
   \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE}}{Sort children of a node with respect to an attribute (field, method, active, function)}

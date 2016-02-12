@@ -56,19 +56,29 @@ Tree-like structures are already used in R. For example, environments can be see
 As a result, people often try to resolve hierarchical problems in a tabular fashion, for instance with data.frames. But often, hierarchies don't marry with tables, and various workarounds are usually required. 
 
 
-## Trees in data.tree
+## Trees in `data.tree`
 
-This package offers an alternative. The data.tree package lets you create hierarchies, called `data.tree` structures. The building block of theses structures are `Node` objects. The package provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Nodes` with your own fields and methods, so as to extend the package to your needs. 
+This package offers an alternative. The `data.tree` package lets you create hierarchies, called `data.tree` **structures**. The building block of theses structures are `Node` objects. The package provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Nodes` with your own fields and methods, so as to extend the package to your needs. 
 
-The package also provides convenience methods for neatly printing trees. It supports conversion from and to `data.frames`, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
+The package also provides convenience methods for neatly printing and plotting trees. It supports conversion from and to `data.frames`, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
 
 Technically, `data.tree` structures are bi-directional, ordered trees. Bi-directional means that you can navigate from parent to chidren and vice versa. Ordered means that the sort order of the children of a parent node is well-defined.
 
-# data.tree basics
+# `data.tree` basics
+
+## Definitions
+
+* __`data.tree` structure__: a _tree_, consisting of multiple `Node` objects. Often, the entry point to a `data.tree` structure is the _root Node_
+* __`Node`__: both a class and the basic building block of `data.tree` structures
+* __attribute__: an active, a field, or a method. **Not to be confused with standard R attributes, c.f. `?attr`, which have a different meaning. Many methods and functions have an `attribute` arg, which can refer to a an active, a field or a method. For example, see `?Get`
+* __active__ (sometimes called property): a field on a `Node` that can be called like an attribute, but behaves like a function without arguments. For example: `node$position`
+* __field__: a named value on a `Node`, e.g. `node$cost <- 2500`
+* __method__: a function acting on an object (on a `Node` in this context). Many methods are available in OO style (e.g. `node$Revert()`) or in traditional style (`Revert(node)`)
+* __inheritance__: in this context, inheritance refers to a situation in which a child `Node` inherits e.g. an attribute from one of its ancestors. For example, see `?Get`, `?SetNodeStyle`
 
 ## Tree creation
 
-You can create a tree programmatically, by conversion from other R objects, or from a file.
+There are different ways to create a `data.tree` structure. For example, you can create a tree **programmatically**, by **conversion** from other R objects, or from a **file**.
 
 ### Create a tree programmatically
 
@@ -260,7 +270,7 @@ ToDataFrameNetwork(acme)
 
 ## Climbing a tree (tree navigation)
 
-To *climb* a tree means to navigate to a specific `Node` in the data.tree structure. 
+To *climb* a tree means to navigate to a specific `Node` in the `data.tree` structure. 
 
 ### Navigation by path
 
@@ -309,7 +319,7 @@ tree$Climb(position = c(2, 3), name = c("1.2.3.4", "1.2.3.4.5"))$path
 
 ## Custom fields
 
-Just as with, say, a `list`, we can add any custom field to any `Node` in a data.tree structure. Let's go back to our acme company: 
+Just as with, say, a `list`, we can add any custom field to any `Node` in a `data.tree` structure. Let's go back to our acme company: 
 
 ```{r}
 acme
@@ -369,7 +379,7 @@ print(birds, "species")
 ```
 data.tree maps the `self` argument to the `Node` at hand. Thus, you must name the argument `self`.
 
-Now, let's assume we discovered a new species:
+Now, let's assume we discover a new species. Then, the species on the root adjusts dynamically:
 
 ```{r}
 birds$Palaeognathae$species <- 61
@@ -426,8 +436,8 @@ data.frame(cost = acme$Get("cost", format = function(x) FormatFixedDecimal(x, 2)
 
 ### `plot`
 
-`data.tree` is mainly a data structure. As it is easy to convert data.tree structures to other formats, you have access to a large number of tools to plot a data.tree structure. For example, you can plot a data.tree structure as a dendrogram, as an ape tree, as a treeview, etc. 
-Additionally, data.tree also provides its own plotting facility. It is built on GraphViz/DiagrammeR, and you can access these features via the `plot` and `ToGraphViz` functions. For example:
+`data.tree` is mainly a data structure. As it is easy to convert `data.tree` structures to other formats, you have access to a large number of tools to plot a `data.tree` structure. For example, you can plot a `data.tree` structure as a dendrogram, as an ape tree, as a treeview, etc. 
+Additionally, `data.tree` also provides its own plotting facility. It is built on GraphViz/DiagrammeR, and you can access these features via the `plot` and `ToGraphViz` functions. For example:
 
 ```{r, eval = FALSE}
 plot(acme)
@@ -471,13 +481,19 @@ plot(acme)
 
 ![acme](assets/acmestyle3.png)
 
-However, there are also endless other possibilities to visualise data.tree structures.
+### Other Visualisations
+
+However, there are also endless other possibilities to visualise `data.tree` structures. There are more examples in the applications vignette. Type `vignette('application', package = "data.tree")`.
+
+#### Dendrogram
 
 For example, using dendrogram:
 
 ```{r}
 plot(as.dendrogram(CreateRandomTree(nodes = 20)), center = TRUE)
 ```
+
+#### igraph
 
 Or, using igraph: 
 
@@ -489,6 +505,8 @@ library(igraph, quietly = TRUE, warn.conflicts = FALSE, verbose = FALSE)
 library(igraph)
 plot(as.igraph(acme, directed = TRUE, direction = "climb"))
 ```
+
+#### networkD3
 
 Or, using networkD3:
 (you can actually touch these thingies and drag them around, don't be shy!)
@@ -516,18 +534,15 @@ radialNetwork( useRtreeList)
 
 ```
 
-
-There are more examples in the applications vignette. Type `vignette('application', package = "data.tree")`.
-
 ## Tree Conversion
 
-In order to take advantage of the R eco-system, you can convert your data.tree structure to other oft-used data types. The general rule is that, for each target type, there is a one-does-it-all generics, and a few more specialised conversion functions. For example, in order to convert a data.tree to a data.frame, you can either use `as.data.frame.Node`, or `ToDataFrameTree`, `ToDataFrameTable`, or `ToDataFrameNetwork`. The documentation for all of these variations is accessible via `?as.data.frame.Node`.
+In order to take advantage of the R eco-system, you can convert your `data.tree` structure to other oft-used data types. The general rule is that, for each target type, there is a one-does-it-all generics, and a few more specialised conversion functions. For example, in order to convert a `data.tree` to a data.frame, you can either use `as.data.frame.Node`, or `ToDataFrameTree`, `ToDataFrameTable`, or `ToDataFrameNetwork`. The documentation for all of these variations is accessible via `?as.data.frame.Node`.
 
 ### Converting to `data.frame`
 
 As you saw just above, creating a `data.frame` is easy. 
 
-Again, note that we always call such methods on the root `Node` of a data.tree structure, or on the root `Node` of a subtree:
+Again, note that we always call such methods on the root `Node` of a `data.tree` structure, or on the root `Node` of a subtree:
 
 ```{r}
 acmedf <- as.data.frame(acme)
@@ -597,7 +612,7 @@ List of lists are useful for various use cases:
 
 * as an intermediate step in converting to JSON, XML, YAML
 * for functions that take a lol as an input. This is especially the case for visualisations and charts, e.g with many html widgets
-* to save a data.tree structure as an R object (see performance considerations below)
+* to save a `data.tree` structure as an R object (see performance considerations below)
 
 
 ```{r}
@@ -884,7 +899,7 @@ print(acme, "cost", "cumCost")
 
 ## `Clone`
 
-As stated above, `Nodes` exhibit reference semantics. If you call, say, `Set`, then this changes the `Nodes` in the tree. The changes will be visible for all variables having a reference on the data.tree structure. As a consequence, you might want to "save away" the current state of a structure. To do this, you can `Clone` an entire tree:
+As stated above, `Nodes` exhibit reference semantics. If you call, say, `Set`, then this changes the `Nodes` in the tree. The changes will be visible for all variables having a reference on the `data.tree` structure. As a consequence, you might want to "save away" the current state of a structure. To do this, you can `Clone` an entire tree:
 
 ```{r}
 acmeClone <- Clone(acme)
@@ -909,7 +924,7 @@ print(acme, "cost", aggCost = acme$Get(Aggregate, "cost", sum))
 
 You can prune sub-trees out of a tree, by that removing an entire sub-tree from a tree. There are two variations of this:
 * *temporary* pruning, e.g. just for printing: This is the `pruneFun` parameter, e.g. in `Get`
-* *side effect* or *permanent* pruning, meaning that you modify your data.tree structure for good. This is achieved with the `Prune` method.
+* *side effect* or *permanent* pruning, meaning that you modify your `data.tree` structure for good. This is achieved with the `Prune` method.
 
 Consider the following example of permanent pruning:
 
@@ -924,15 +939,15 @@ print(acme, "cost")
 
 ## CPU
 
-The data.tree package has been built to work with hierarchical data, to support visualization, to foster rapid prototyping, and for other applications where development time saved is more important than computing time lost. Having said this, it becomes clear that big data and data.tree do not marry particularly well. Don't expect R to build your data.tree structure with a few million `Nodes` during your cigarette break. Do not try to convert a gigabyte JSON document to a data.tree structure in a testthat test case.
+The `data.tree` package has been built to work with hierarchical data, to support visualization, to foster rapid prototyping, and for other applications where development time saved is more important than computing time lost. Having said this, it becomes clear that big data and `data.tree` do not marry particularly well. Don't expect R to build your `data.tree` structure with a few million `Nodes` during your cigarette break. Do not try to convert a gigabyte JSON document to a `data.tree` structure in a testthat test case.
 
 However, if you are respecting the following guidelines, I promise that you and your `Nodes` will have a lot of fun together. So here it goes:
 
-1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a data.tree structure with 9331 `Nodes`. On an AWS c4.large instance, this takes about 2.5 seconds.
+1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a `data.tree` structure with 9331 `Nodes`. On an AWS c4.large instance, this takes about 2.5 seconds.
 2. `Clone` is similar to `Node` creation, with an extra penalty of about 50%.
 3. Traversing (`Traverse`, `Get`, `Set` and `Do`) is realtively cheap. 
 
-This is really what you would expect. data.tree builds on R6, i.e. reference objects. There is an overhead in creating them, as your computer needs to manage the references they hold. However, performing operations that change your tree (e.g. `Prune` or `Set`) are often faster than value semantics, as your computer does not need to copy the entire object in memory.
+This is really what you would expect. `data.tree` builds on R6, i.e. reference objects. There is an overhead in creating them, as your computer needs to manage the references they hold. However, performing operations that change your tree (e.g. `Prune` or `Set`) are often faster than value semantics, as your computer does not need to copy the entire object in memory.
 
 Just to give you an order of magnitude: The following times are achieved on an AWS c4.large instance:
 
@@ -1000,7 +1015,7 @@ c(user = 0.69, system = 0.00, elapsed = 0.69)
 
 ## Memory
 
-data.tree structures have a relatively large memory footprint. However, for every-day applications using modern computers, this will not normally have an impact on your work **except when saving a data.tree structure to disk**. 
+data.tree structures have a relatively large memory footprint. However, for every-day applications using modern computers, this will not normally have an impact on your work **except when saving a `data.tree` structure to disk**. 
 
 For an explanation why that is the case, you might want to read this answer on [Stack Overflow](http://stackoverflow.com/questions/13912867/empty-r-environment-becomes-large-file-when-saved).
 

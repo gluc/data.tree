@@ -4,10 +4,18 @@
 \alias{Do}
 \title{Executes a function on a set of nodes}
 \usage{
+# OO-style:
+# node$Do(fun, 
+#         ..., 
+#         traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
+#         pruneFun = NULL, 
+#         filterFun = NULL)
+         
+# traditional:
 Do(nodes, fun, ...)
 }
 \arguments{
-\item{nodes}{a set of nodes, usually obtained via \code{\link{Traverse}}}
+\item{nodes}{The nodes on which to perform the Get (typically obtained via \code{\link{Traverse}})}
 
 \item{fun}{the function to execute. The function is expected to be either a Method, or to take a 
 Node as its first argument}
@@ -16,5 +24,20 @@ Node as its first argument}
 }
 \description{
 Executes a function on a set of nodes
+}
+\examples{
+data(acme)
+acme$Do(function(node) node$expectedCost <- node$p * node$cost)
+print(acme, "expectedCost")
+
+}
+\seealso{
+\code{\link{Node}}
+
+\code{\link{Get}}
+
+\code{\link{Set}}
+
+\code{\link{Traverse}}
 }
 

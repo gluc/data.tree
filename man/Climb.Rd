@@ -4,6 +4,7 @@
 \alias{Climb}
 \title{Find a \code{Node} by provided criteria.}
 \usage{
+#node$Climb(...)
 Climb(node, ...)
 }
 \arguments{

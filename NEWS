@@ -6,7 +6,9 @@
 - ADD: ToDataFrameTypeCol to export e.g. the path to columns by level in columns: ToDataFrameTypeCol(acme)
 - ADD: Node$AddSibling
 - ADD: Node$RemoveAttribute now contains a mandatory parameter so that it can be used if the node does not have the attribute to be removed.
+- ADD: Get works on methods without args
 - IMPROVE: FormatFixedDecimal and FormatPercent work for NULL values
+- IMPROVE: Documentation
 - FIX: Aggregate will not return attribute from callee anymore, but *always* aggregate children attributes
 - FIX: Removed ... parameter from ToListExplicit and ToListSimple 
 - FIX: Clone was adding empty children list, which caused a series of problems (#44)

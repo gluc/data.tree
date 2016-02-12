@@ -13,7 +13,7 @@ Traverse(node, traversal = c("pre-order", "post-order", "in-order", "level",
 \item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'}
 
 \item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
-If the pruneFun returns FALSE for a Node, then the Node and all its sub-tree will not be considered.}
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
 \item{filterFun}{allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
 Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).}
@@ -23,5 +23,14 @@ a list of \code{Node}s
 }
 \description{
 Traverse a tree or a sub-tree
+}
+\seealso{
+\code{\link{Node}}
+
+\code{\link{Get}}
+
+\code{\link{Set}}
+
+\code{\link{Do}}
 }
 

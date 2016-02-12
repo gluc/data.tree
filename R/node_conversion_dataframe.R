@@ -8,7 +8,6 @@
 #' @param direction when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?
 #' @param type when converting type columns, the \code{type} is the discriminator, i.e. an attribute (e.g. field name) of each node
 #' @param prefix when converting type columns, the prefix used for the column names. Can be NULL to omit prefixes.
-#' @param pruneFun a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.
 #' @param filterFun a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.
 #' @param inheritFromAncestors if FALSE, and if the attribute is a field or a method, then only a \code{Node} itself is
 #' searched for the field/method. If TRUE, and if the \code{Node} does not contain the attribute, then ancestors are also searched.
@@ -53,6 +52,8 @@
 #'         )
 #' print(acme, 'type')
 #' ToDataFrameTypeCol(acme, type = 'type')
+#'       
+#' @inheritParams Prune
 #'       
 #' @export
 as.data.frame.Node <- function(x, 
@@ -134,7 +135,6 @@ ToDataFrameTable <- function(x, ..., pruneFun = NULL) {
 #' second is called 'to', describing the parent to child edge (for direction "climb") or the child to parent edge (for direction "descend").
 #' If \code{\link{AreNamesUnique}} is TRUE, then the Network is
 #' based on the \code{Node$name}, otherwise on the \code{Node$pathString}
-
 #' 
 #' 
 #' @export

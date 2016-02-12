@@ -21,7 +21,12 @@
 
 #' Sort children of a \code{Node} or an entire \code{data.tree} structure
 #' 
-#' You can sort with respect to any argument of the tree.
+#' You can sort with respect to any argument of the tree. But note that sorting has
+#' side-effects, meaning that you modify the underlying, original data.tree object structure.
+#' 
+#' @usage # node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE) 
+#' Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
+#' 
 #' @param node The node whose children are to be sorted 
 #' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
 #' function)
@@ -40,6 +45,7 @@
 #' print(acme, "totalCost")
 #' 
 #' @seealso \code{\link{Node}}
+#' @seealso \code{\link{Revert}}
 #' @keywords internal
 Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
   if (node$isLeaf) return()
@@ -53,6 +59,9 @@ Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
 
 #' Reverts the sort order of a \code{Node}'s children.
 #' 
+#' @usage # node$Revert(recursive = TRUE)
+#' Revert(node, recursive = TRUE)
+#' 
 #' @param node the Node whose children's sort order is to be reverted
 #' @param recursive If \code{TRUE}, then revert is called recursively on
 #' all children.
@@ -60,6 +69,7 @@ Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
 #' @return returns the Nodel invisibly (for chaining)
 #'
 #' @seealso \code{\link{Node}}
+#' @seealso \code{\link{Sort}}
 #' @keywords internal
 Revert <- function(node, recursive = TRUE) {
   
@@ -77,11 +87,16 @@ Revert <- function(node, recursive = TRUE) {
 }
 
 
-#' Prunes a tree. This function has side-effects, it modifies your data.tree structure!
+#' Prunes a tree. 
+#' 
+#' Pruning refers to removing entire subtrees. This function has side-effects, it modifies your data.tree structure!
+#' 
+#' @usage # node$Prune(pruneFun)
+#' Prune(node, pruneFun)
 #' 
 #' @param node The root of the sub-tree to be pruned
-#' @param pruneFun a function taking a \code{\link{Node}} as an argument, and returning TRUE if the Node
-#' and its descendants should be kept, FALSE otherwise.
+#' @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+#' If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.
 #' @return the number of nodes removed
 #' 
 #' @examples
@@ -90,6 +105,7 @@ Revert <- function(node, recursive = TRUE) {
 #' acme$Prune(function(x) x$cost > 700000)
 #' print(acme, "cost")
 #' 
+#' @seealso \code{\link{Node}}
 #' 
 #' @keywords internal
 Prune <- function(node, pruneFun) { 

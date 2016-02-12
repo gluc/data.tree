@@ -12,9 +12,9 @@ GetAttribute(node, attribute, ..., format = NULL,
 
 \item{attribute}{determines what is collected. The \code{attribute} can be
 \itemize{
-  \item a.) the name of a \bold{field} of each \code{Node} in the tree 
-  \item b.) the name of a \bold{method} of each \code{Node} in the tree
-  \item c.) a \bold{function}, whose first argument must be a \code{Node}
+  \item a.) the name of a \bold{field} or a \bold{property/active} of each \code{Node} in the tree, e.g. \code{acme$Get("p")} or \code{acme$Get("position")}
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree, e.g. \code{acme$Get("levelZeroBased")}, where e.g. \code{acme$levelZeroBased <- function() acme$level - 1}
+  \item c.) a \bold{function}, whose first argument must be a \code{Node} e.g. \code{acme$Get(function(node) node$cost * node$p)}
  }}
 
 \item{...}{in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}

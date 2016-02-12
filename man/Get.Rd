@@ -4,17 +4,31 @@
 \alias{Get}
 \title{Traverse a Tree and Collect Values}
 \usage{
-Get(nodes, attribute, ..., format = NULL, inheritFromAncestors = FALSE,
-  simplify = c(TRUE, FALSE, "array", "regular"))
+# OO-style:
+#node$Get(attribute, 
+#        ..., 
+#        traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
+#        pruneFun = NULL, 
+#        filterFun = NULL, 
+#        format = NULL, 
+#        inheritFromAncestors = FALSE)
+         
+# traditional:
+Get(nodes, 
+    attribute, 
+    ..., 
+    format = NULL, 
+    inheritFromAncestors = FALSE, 
+    simplify = c(TRUE, FALSE, "array", "regular"))
 }
 \arguments{
-\item{nodes}{The nodes on which to perform the Get (e.g. obtained via \code{\link{Traverse}}}
+\item{nodes}{The nodes on which to perform the Get (typically obtained via \code{\link{Traverse}})}
 
 \item{attribute}{determines what is collected. The \code{attribute} can be
 \itemize{
-  \item a.) the name of a \bold{field} of each \code{Node} in the tree 
-  \item b.) the name of a \bold{method} of each \code{Node} in the tree
-  \item c.) a \bold{function}, whose first argument must be a \code{Node}
+  \item a.) the name of a \bold{field} or a \bold{property/active} of each \code{Node} in the tree, e.g. \code{acme$Get("p")} or \code{acme$Get("position")}
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree, e.g. \code{acme$Get("levelZeroBased")}, where e.g. \code{acme$levelZeroBased <- function() acme$level - 1}
+  \item c.) a \bold{function}, whose first argument must be a \code{Node} e.g. \code{acme$Get(function(node) node$cost * node$p)}
  }}
 
 \item{...}{in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
@@ -46,6 +60,7 @@ acme$Get(function(node) node$cost * node$p,
 #This is equivalent:
 nodes <- Traverse(acme, filterFun = isLeaf)
 Get(nodes, function(node) node$cost * node$p)
+
    
 #simplify = "regular" will preserve names
 acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
@@ -55,6 +70,8 @@ acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regu
 \code{\link{Node}}
 
 \code{\link{Set}}
+
+\code{\link{Do}}
 
 \code{\link{Traverse}}
 }
