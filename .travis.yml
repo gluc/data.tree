@@ -10,7 +10,6 @@ r_check_args: --as-cran
 r_packages:
   - rmarkdown
 
-stopped working because it said devtools couldn't be found. Need to investigate...
 r_github_packages:
   - jimhester/covr
 
