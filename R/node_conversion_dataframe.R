@@ -194,9 +194,10 @@ ToDataFrameTypeCol <- function(x,
 
 
 GetPathArg <- function(n, type) {
+  lvl <- force(n)
   f <- function(leaf) {
     path <- leaf$Get(type, traversal = 'ancestor')
-    name <- names(path[path == n])
+    name <- names(path[path == lvl])
     if (length(name) == 0) name <- NA
     return (name)
   }

@@ -2,5 +2,6 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 data_gen
-cran_comments.md
+cran-comments.md
+cheat-sheet.md
 appveyor.yml
