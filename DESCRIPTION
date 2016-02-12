@@ -14,6 +14,7 @@ Imports:
 Suggests:
     graphics,
     testthat,
+    devtools,
     knitr,
     ape,
     yaml,
