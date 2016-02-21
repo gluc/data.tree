@@ -20,7 +20,8 @@ FromListSimple(simpleList, nameName = "name", nodeName = NULL)
 \item{mode}{How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit" 
 assumes that children are in a nested list called \code{childrenName}}
 
-\item{nameName}{The name of the element in the list that should be used as the name, can be NULL if the children lists are named}
+\item{nameName}{The name of the element in the list that should be used as the name, can be NULL if the children lists are named
+or if an automatic name (running number) should be assigned}
 
 \item{childrenName}{The name of the element that contains the child list (applies to mode 'explicit' only).}
 

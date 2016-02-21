@@ -121,7 +121,7 @@ test_that("as.list.Node unname", {
   
 })
 
-test_that("as.Node.list unname", {
+test_that("as.Node.list unname with mode = simple", {
   
   l <- as.list(acme, unname = TRUE, nameName = 'id', childrenName = 'sub')
   n <- as.Node(l, nameName = 'id', childrenName = 'sub')
@@ -130,6 +130,18 @@ test_that("as.Node.list unname", {
   expect_equal(3, n$count)
   expect_equal(11, n$totalCount)
   expect_equal(0.05, n$Climb("IT", "Go agile")$p)
+  
+})
+
+
+test_that("as.Node.list auto", {
+  
+  lol <- list(type = "Root", list(type = "Rule", value = 1), list(type = "Rule", value = 2))
+  tree <- FromListSimple(lol, nameName = NULL, nodeName = 1)
+  
+  expect_equal(tree$totalCount, 3)
+  expect_equal(unname(tree$Get("name")), as.character(c(1, 1, 2)))
+  expect_equal(tree$children[[1]]$type, "Rule")
   
 })
 

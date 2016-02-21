@@ -4,6 +4,7 @@
 #' @param mode How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit" 
 #' assumes that children are in a nested list called \code{childrenName}
 #' @param nameName The name of the element in the list that should be used as the name, can be NULL if the children lists are named
+#' or if an automatic name (running number) should be assigned
 #' @param childrenName The name of the element that contains the child list (applies to mode 'explicit' only).
 #' @param nodeName The name x will get (only applies if no nameName is available, this is useful for some conversions where th
 #' name is not given explicitly)
@@ -59,15 +60,20 @@
 as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, ...) {
   mode <- mode[1]
   if (is.null(nameName) || !(nameName %in% names(x))) {
-    if (length(nodeName)==0) myName <- tempfile(pattern = '', tmpdir = '')
+    if (length(nodeName)==0) myName <- "root"
     else myName <- nodeName
   } else {
     myName <- x[[nameName]]
   }
-  if (myName %in% NODE_RESERVED_NAMES_CONST) myName <- paste0(myName, "2")
+  
   n <- Node$new(as.character(myName))
   
+  rnms <- names(x)[(names(x) %in% NODE_RESERVED_NAMES_CONST) && !(names(x) %in% c(nameName, childrenName))]
+  if (length(rnms) > 0) warning(paste0("The following names are data.tree reserved words and will not be imported: ", paste(rnms, sep = ", "), "." ))
+  
   fields <- names(x)[!(names(x) %in% NODE_RESERVED_NAMES_CONST)]
+  fields <- fields[!(fields %in% nameName)]
+  fields <- fields[!(fields %in% childrenName)]
   if (length(nameName) > 0) fields <- fields[fields != nameName]
   fields <- fields[nchar(fields) > 0]
   for (field in fields) {
@@ -78,16 +84,18 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   
   #children
   if(mode == 'simple') children <- x[sapply(x, is.list)]
-  else if(mode == 'explicit') {
-    children <- x[[childrenName]]
-  }
+  else if(mode == 'explicit') children <- x[[childrenName]]
+  
   if (length(children) == 0) return (n)
   for (i in 1:length(children)) {
-    if (!is.null(names(children))) {
+    if (any(duplicated(names(children)))) {
+      childName <- ""
+    } else if (!is.null(names(children))) {
       childName <- names(children)[i]
     } else {
       childName <- ""
     }
+    if (nchar(childName) == 0) childName <- i
     child <- children[[i]]
     childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, ...)
     n$AddChildNode(childNode)
@@ -129,7 +137,7 @@ FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL) {
 #' @param x The Node to convert
 #' @param mode How the list is structured. "simple" (the default) will add children directly as nested lists.
 #' "explicit" puts children in a separate nested list called \code{childrenName}
-#' @param unname If TRUE, then the nested children list will not have named arguments. This
+#' @param unname If TRUE, and if \code{mode} is "explicit", then the nested children list will not have named arguments. This
 #' can be useful e.g. in the context of conversion to JSON, if you prefer the children to be
 #' an array rather than named objects.
 #' @param nameName The name that should be given to the name element
@@ -172,7 +180,7 @@ as.list.Node <- function(x,
   fields <- fields[!is.function(fields) && !is.environment(fields)]
   
   for (fieldName in fields) res[[fieldName]] <- self[[fieldName]]
-    
+  
   if(!self$isLeaf) {
     kids <- lapply(self$children, FUN = function(x) as.list.Node(x, mode, unname, nameName, childrenName, ...))
     if(mode == "explicit") {

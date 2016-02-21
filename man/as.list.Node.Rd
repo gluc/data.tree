@@ -21,7 +21,7 @@ ToListExplicit(x, unname = FALSE, nameName = ifelse(unname, "name", ""),
 \item{mode}{How the list is structured. "simple" (the default) will add children directly as nested lists.
 "explicit" puts children in a separate nested list called \code{childrenName}}
 
-\item{unname}{If TRUE, then the nested children list will not have named arguments. This
+\item{unname}{If TRUE, and if \code{mode} is "explicit", then the nested children list will not have named arguments. This
 can be useful e.g. in the context of conversion to JSON, if you prefer the children to be
 an array rather than named objects.}
 
