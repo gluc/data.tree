@@ -1,5 +1,11 @@
 # All changes to data.tree are documented here.
 
+## Version 0.3.1
+- IMPROVE: as.list.Node 
+  - now generates auto name if unique name is not available (#54)
+  - now has warn arg, warning if source data contains reserved names
+  - now also imports fiels with names equal to reserved names (e.g. count), they will be renamed (to e.g. count2)
+
 ## Version 0.3.0
 - REMOVE: Removed the cacheAttribute parameter from Aggregate and Cumulate (they were confusing, even to me. Use Do instead to manually store aggregate values in the tree)
 - ADD: plot function (see ?plot.Node)
