@@ -7,7 +7,7 @@
 \title{Convert a nested \code{list} structure to a \code{data.tree} structure}
 \usage{
 \method{as.Node}{list}(x, mode = c("simple", "explicit"), nameName = "name",
-  childrenName = "children", nodeName = NULL, ...)
+  childrenName = "children", nodeName = NULL, warnings = TRUE, ...)
 
 FromListExplicit(explicitList, nameName = "name", childrenName = "children",
   nodeName = NULL)
@@ -20,13 +20,15 @@ FromListSimple(simpleList, nameName = "name", nodeName = NULL)
 \item{mode}{How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit" 
 assumes that children are in a nested list called \code{childrenName}}
 
-\item{nameName}{The name of the element in the list that should be used as the name, can be NULL if the children lists are named
-or if an automatic name (running number) should be assigned}
+\item{nameName}{The name of the element in the list that should be used as the name, can be NULL if mode = explicit and
+the children lists are named, or if an automatic name (running number) should be assigned}
 
 \item{childrenName}{The name of the element that contains the child list (applies to mode 'explicit' only).}
 
-\item{nodeName}{The name x will get (only applies if no nameName is available, this is useful for some conversions where th
-name is not given explicitly)}
+\item{nodeName}{A name suggestion for x, if the name cannot be deferred otherwise. This is for example the case for
+the root with mode explicit and named lists.}
+
+\item{warnings}{If TRUE, then warnings are printed}
 
 \item{...}{Any other argument to be passed to generic sub implementations}
 

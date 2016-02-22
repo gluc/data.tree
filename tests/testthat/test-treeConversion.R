@@ -146,3 +146,20 @@ test_that("as.Node.list auto", {
 })
 
 
+test_that("as.Node.list warning", {
+  
+  lol <- list(type = "Root", list(type = "Rule", count = 1), list(type = "Rule", count = 2))
+  #tree <- FromListSimple(lol, nameName = NULL, nodeName = 1)
+  tree <- NULL
+  expect_that(FromListSimple(lol, nameName = NULL, nodeName = 1, warn = FALSE), not(gives_warning()))
+  expect_that(tree <- FromListSimple(lol, nameName = NULL, nodeName = 1), gives_warning())
+  
+  expect_equal(tree$totalCount, 3)
+  expect_equal(unname(tree$Get("name")), as.character(c(1, 1, 2)))
+  
+  expect_equal(unname(tree$Get("count")), c(2,0,0))
+  expect_equal(unname(tree$Get("count2")), c(NA, 1, 2))
+  
+})
+
+

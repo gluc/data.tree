@@ -3,11 +3,12 @@
 #' @param x The \code{list} to be converted.
 #' @param mode How the list is structured. "simple" (the default) will interpret any list to be a child. "explicit" 
 #' assumes that children are in a nested list called \code{childrenName}
-#' @param nameName The name of the element in the list that should be used as the name, can be NULL if the children lists are named
-#' or if an automatic name (running number) should be assigned
+#' @param nameName The name of the element in the list that should be used as the name, can be NULL if mode = explicit and
+#' the children lists are named, or if an automatic name (running number) should be assigned
 #' @param childrenName The name of the element that contains the child list (applies to mode 'explicit' only).
-#' @param nodeName The name x will get (only applies if no nameName is available, this is useful for some conversions where th
-#' name is not given explicitly)
+#' @param nodeName A name suggestion for x, if the name cannot be deferred otherwise. This is for example the case for
+#' the root with mode explicit and named lists.
+#' @param warn If TRUE, then warnings are printed
 #' @param ... Any other argument to be passed to generic sub implementations
 #' 
 #' @examples
@@ -57,29 +58,50 @@
 #' @family as.Node
 #' 
 #' @export
-as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, ...) {
+as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, warn = TRUE, ...) {
   mode <- mode[1]
+  
+  #find my name
   if (is.null(nameName) || !(nameName %in% names(x))) {
-    if (length(nodeName)==0) myName <- "root"
+    if (length(nodeName)==0) myName <- "Root"
     else myName <- nodeName
   } else {
     myName <- x[[nameName]]
   }
   
+  if (myName %in% NODE_RESERVED_NAMES_CONST) {
+    if (warn) warning(paste0("'", myName, "' is a reserved word and cannot be used as name for a node. Using '", myName, "2' instead!"))
+    myName <- paste0(myName, "2")
+  }
+  
   n <- Node$new(as.character(myName))
   
-  rnms <- names(x)[(names(x) %in% NODE_RESERVED_NAMES_CONST) && !(names(x) %in% c(nameName, childrenName))]
-  if (length(rnms) > 0) warning(paste0("The following names are data.tree reserved words and will not be imported: ", paste(rnms, sep = ", "), "." ))
+  #set fields
   
-  fields <- names(x)[!(names(x) %in% NODE_RESERVED_NAMES_CONST)]
-  fields <- fields[!(fields %in% nameName)]
-  fields <- fields[!(fields %in% childrenName)]
-  if (length(nameName) > 0) fields <- fields[fields != nameName]
+  #find fields that need importing
+  fields <- names(x)
+  #exclude nameName
   fields <- fields[nchar(fields) > 0]
+  if(!is.null(nameName)) fields <- fields[fields != nameName]
+  #exclude childrenName if explicit
+  if (mode == "explicit") fields <- fields[fields != childrenName]
+  #
+  
+  if (warn) {
+    fieldNameIsReserved <- (fields %in% NODE_RESERVED_NAMES_CONST) & !(fields %in% c(nameName, childrenName))
+    if (any(fieldNameIsReserved)) warning(paste0("The following names are data.tree reserved words and will be appended with 2: ", paste(fields[fieldNameIsReserved], sep = ", "), "." ))
+  }
+  
   for (field in fields) {
     v <- x[[field]]
+    
     if(mode == 'simple' && class(v) == "list") {
-    } else n[[field]] <- v
+      #any list is interpreted as child, so don't store
+    } else {
+      fieldNm <- field
+      if (field %in% NODE_RESERVED_NAMES_CONST) fieldNm <- paste0(field, "2")
+      n[[fieldNm]] <- v
+    }
   }
   
   #children
@@ -87,6 +109,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   else if(mode == 'explicit') children <- x[[childrenName]]
   
   if (length(children) == 0) return (n)
+  
   for (i in 1:length(children)) {
     if (any(duplicated(names(children)))) {
       childName <- ""
@@ -97,7 +120,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
     }
     if (nchar(childName) == 0) childName <- i
     child <- children[[i]]
-    childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, ...)
+    childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, warn = warn, ...)
     n$AddChildNode(childNode)
     
   }
@@ -112,8 +135,8 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
 #' @param explicitList A \code{list} in which children are in a separate nested list called \code{childrenName}.
 #' 
 #' @export
-FromListExplicit <- function(explicitList, nameName = "name", childrenName = "children", nodeName = NULL) {
-  as.Node.list(explicitList, mode = "explicit", nameName = nameName, childrenName = childrenName, nodeName = nodeName)
+FromListExplicit <- function(explicitList, nameName = "name", childrenName = "children", nodeName = NULL, warn = TRUE) {
+  as.Node.list(explicitList, mode = "explicit", nameName = nameName, childrenName = childrenName, nodeName = nodeName, warn = warn)
 }
 
 
@@ -123,8 +146,8 @@ FromListExplicit <- function(explicitList, nameName = "name", childrenName = "ch
 #' interpreted as a child \code{Node}
 #' 
 #' @export
-FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL) {
-  as.Node.list(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName)
+FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, warn = TRUE) {
+  as.Node.list(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName, warn = warn)
 }
 
 
