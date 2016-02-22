@@ -9,6 +9,9 @@ init:
 install:
   ps: Bootstrap
 
+environment:
+  R_VERSION: stable
+
 # Adapt as necessary starting from here
 
 build_script:
