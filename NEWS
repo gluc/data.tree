@@ -6,7 +6,7 @@
   - now has warn arg, warning if source data contains reserved names
   - now also imports fiels with names equal to reserved names (e.g. count), they will be renamed (to e.g. count2)
 
-## Version 0.3.0
+## Version 0.3.0 Pine Tree
 - REMOVE: Removed the cacheAttribute parameter from Aggregate and Cumulate (they were confusing, even to me. Use Do instead to manually store aggregate values in the tree)
 - ADD: plot function (see ?plot.Node)
 - ADD: ToDataFrameTypeCol to export e.g. the path to columns by level in columns: ToDataFrameTypeCol(acme)
