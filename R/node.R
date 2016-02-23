@@ -340,7 +340,7 @@ Node <- R6Class("Node",
                       
                       leaves = function() {
                         if (self$isLeaf) {
-                          return (self)
+                          return (list(self))
                         } else {
                           unlist(sapply(self$children, function(x) x$leaves))
                         }

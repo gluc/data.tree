@@ -721,3 +721,22 @@ test_that("siblings", {
   expect_equal(c("Accounting", "Research"), nms)
   
 })
+
+
+test_that("leaves", {
+  data(acme)
+  l <- acme$leaves
+  expect_equal(7, length(l))
+  expect_equal(unname(sapply(l, function(x) x$name)), c("New Software",
+                                                        "New Accounting Standards",
+                                                        "New Product Line",
+                                                        "New Labs",         
+                                                        "Outsource",
+                                                        "Go agile",
+                                                        "Switch to R"))            
+
+  l <- acme$IT$Outsource$leaves
+  expect_equal(typeof(l), "list")
+  expect_equal(length(l), 1)
+  
+})
