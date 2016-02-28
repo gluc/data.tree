@@ -6,6 +6,7 @@
   - now has warn arg, warning if source data contains reserved names
   - now also imports fiels with names equal to reserved names (e.g. count), they will be renamed (to e.g. count2)
 - CHANGE: node$leaves now returns a list even when called on a leaf itself
+- ADD: Find method to find a single Node in a (sub-)tree (#52)
 
 ## Version 0.3.0 Pine Tree
 - REMOVE: Removed the cacheAttribute parameter from Aggregate and Cumulate (they were confusing, even to me. Use Do instead to manually store aggregate values in the tree)

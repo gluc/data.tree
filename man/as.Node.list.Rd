@@ -7,12 +7,13 @@
 \title{Convert a nested \code{list} structure to a \code{data.tree} structure}
 \usage{
 \method{as.Node}{list}(x, mode = c("simple", "explicit"), nameName = "name",
-  childrenName = "children", nodeName = NULL, warnings = TRUE, ...)
+  childrenName = "children", nodeName = NULL, warn = TRUE, ...)
 
 FromListExplicit(explicitList, nameName = "name", childrenName = "children",
-  nodeName = NULL)
+  nodeName = NULL, warn = TRUE)
 
-FromListSimple(simpleList, nameName = "name", nodeName = NULL)
+FromListSimple(simpleList, nameName = "name", nodeName = NULL,
+  warn = TRUE)
 }
 \arguments{
 \item{x}{The \code{list} to be converted.}
@@ -28,7 +29,7 @@ the children lists are named, or if an automatic name (running number) should be
 \item{nodeName}{A name suggestion for x, if the name cannot be deferred otherwise. This is for example the case for
 the root with mode explicit and named lists.}
 
-\item{warnings}{If TRUE, then warnings are printed}
+\item{warn}{If TRUE, then warnings are printed}
 
 \item{...}{Any other argument to be passed to generic sub implementations}
 

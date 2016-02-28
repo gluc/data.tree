@@ -39,6 +39,23 @@ test_that("Climb non-name", {
 
 
 
+
+test_that("Find", {
+  
+  data(acme)
+  os <- acme$Find("Outsource")
+  expect_equal(os$name, "Outsource")
+  
+  os <- acme$Find("XYZ")
+  expect_null(os)
+  
+  acme$Accounting$AddChild("Outsource")
+  os <- acme$Find("Outsource")
+  expect_equal(class(os), c("Node", "R6"))
+  expect_equal(os$name, "Outsource")
+
+})
+
 test_that("Get prune", {
   data(acme)
   acme$Set(myvalue = c(1.3, 1.5, 0.9, 1, 2, 1.1, 0.8, -1, 0.7, 1.0, 1.01))
