@@ -105,14 +105,17 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   }
   
   #children
-  if(mode == 'simple') children <- x[sapply(x, is.list)]
-  else if(mode == 'explicit') children <- x[[childrenName]]
+  if (is.character(x)) return (n)
+  if (mode == 'simple') children <- x[sapply(x, is.list)]
+  else if (mode == 'explicit') children <- x[[childrenName]]
   
   if (length(children) == 0) return (n)
   
   for (i in 1:length(children)) {
     if (any(duplicated(names(children)))) {
       childName <- ""
+    } else if (is.character(children)) {
+      childName <- children[i]
     } else if (!is.null(names(children))) {
       childName <- names(children)[i]
     } else {

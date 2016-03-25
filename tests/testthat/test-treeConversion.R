@@ -163,3 +163,66 @@ test_that("as.Node.list warning", {
 })
 
 
+
+test_that("as.Node.list string", {
+  
+  
+  
+  
+  yaml <- "
+children:
+  CR:
+    description: Currencies
+    type: Currency
+    children:
+      CR_CHF: market
+      CR_EUR: market
+      CR_USD: market
+"
+  
+  lol <- yaml::yaml.load(yaml)
+  
+  tree <- FromListExplicit(lol)
+  expect_equal(tree$totalCount, 5)
+  expect_equal(tree$height, 3)
+  expect_equal(tree$CR$CR_CHF$name, "CR_CHF")
+  
+  #market is lost:
+  expect_equal(tree$fieldsAll, c("description", "type"))
+  
+  
+  
+})
+
+
+
+test_that("as.Node.list string 2", {
+  
+
+  yaml <- "
+children:
+  CR:
+    description: Currencies
+    type: Currency
+    children:
+      - CR_CHF
+      - CR_EUR
+      - CR_USD
+"
+  
+  lol <- yaml::yaml.load(yaml)
+  
+  tree <- FromListExplicit(lol)
+  expect_equal(tree$totalCount, 5)
+  expect_equal(tree$height, 3)
+  expect_equal(tree$CR$CR_CHF$name, "CR_CHF")
+  
+  
+  
+})
+
+
+
+
+
+

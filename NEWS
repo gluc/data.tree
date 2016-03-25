@@ -1,5 +1,9 @@
 # All changes to data.tree are documented here.
 
+## Version 0.3.2
+- ADD: FromListExplicit now interprets character vectors as a list of nodes (#58)
+
+
 ## Version 0.3.1
 - IMPROVE: as.list.Node 
   - now generates auto name if unique name is not available (#54)
