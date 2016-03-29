@@ -115,21 +115,21 @@ As you can see from the previous example, each `Node` is identified by its *name
 
 Creating a tree programmatically is useful especially in the context of algorithms. However, most times you will create a tree by conversion. This could be by conversion from a nested list-of-lists, by conversion from another R tree-structure (e.g. an ape `phylo`), or by conversion from a `data.frame`. For more details on all the options, type `?as.Node` and refer to the *See Also* section.
 
-One of the most common conversions is the one from a `data.frame` in table format. The following code illustrates this. We load the GNI2010 data from the treemap package. This `data.frame` is in table format, meaning that each row will represent a *leaf* in the `data.tree` structure:
+One of the most common conversions is the one from a `data.frame` in table format. The following code illustrates this. We load the GNI2014 data from the treemap package. This `data.frame` is in table format, meaning that each row will represent a *leaf* in the `data.tree` structure:
 
 ```{r}
 library(treemap)
-data(GNI2010)
-head(GNI2010)
+data(GNI2014)
+head(GNI2014)
 ```
 
 Let's convert that into a `data.tree` structure! We start by defining a *pathString*. The pathString describes the hierarchy by defining a path from the root to each leaf. In this example, the hierarchy comes very naturally:
 
 
 ```{r}
-GNI2010$pathString <- paste("world", 
-                            GNI2010$continent, 
-                            GNI2010$country, 
+GNI2014$pathString <- paste("world", 
+                            GNI2014$continent, 
+                            GNI2014$country, 
                             sep = "/")
 
 ```
@@ -137,7 +137,7 @@ GNI2010$pathString <- paste("world",
 Once our pathString is defined, conversion to Node is very easy:
 
 ```{r}
-population <- as.Node(GNI2010)
+population <- as.Node(GNI2014)
 print(population, "iso3", "population", "GNI", limit = 20)
 ```
 

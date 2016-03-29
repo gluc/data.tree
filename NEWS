@@ -1,5 +1,10 @@
 # All changes to data.tree are documented here.
 
+## Version 0.3.3
+- FIX: upgrade to latest version of treemap package
+- FIX: a few typos in documentation
+
+
 ## Version 0.3.2
 - ADD: FromListExplicit now interprets character vectors as a list of nodes (#58)
 

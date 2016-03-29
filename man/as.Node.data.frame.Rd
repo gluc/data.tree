@@ -30,7 +30,7 @@ FromDataFrameNetwork(network)
 
 \item{na.rm}{If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes}
 
-\item{table}{a \code{data.frame} in *table* or *tree* format, i.e. having a row for each leaf (and optionally
+\item{table}{a \code{data.frame} in table or tree format, i.e. having a row for each leaf (and optionally
 for additional nodes). There should be a column called \code{pathName}, separated by \code{pathDelimiter}, 
 describing the path of each row.}
 

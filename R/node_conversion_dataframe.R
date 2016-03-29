@@ -173,7 +173,7 @@ ToDataFrameNetwork <- function(x,
 #' @rdname as.data.frame.Node
 #' 
 #' @return ToDataFrameTypeCol: a \code{data.frame} in table format (i.e. where each row represents a leaf in the tree or sub-tree 
-#' spanned by \code{x}), possibly pruned according to \code{pruneFun}. In addition to \code{...}, each distinc
+#' spanned by \code{x}), possibly pruned according to \code{pruneFun}. In addition to \code{...}, each distinct
 #' \code{type} is output to a column.
 #' 
 #' 
@@ -267,7 +267,7 @@ as.Node.data.frame <- function(x,
 
 #' @rdname as.Node.data.frame
 #' 
-#' @param table a \code{data.frame} in *table* or *tree* format, i.e. having a row for each leaf (and optionally
+#' @param table a \code{data.frame} in table or tree format, i.e. having a row for each leaf (and optionally
 #' for additional nodes). There should be a column called \code{pathName}, separated by \code{pathDelimiter}, 
 #' describing the path of each row. 
 #' @param pathName The name of the column in x containing the path of the row

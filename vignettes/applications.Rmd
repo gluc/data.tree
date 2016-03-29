@@ -55,8 +55,8 @@ The original example visualises the world population as a tree map.
 
 ```{r}
 library(treemap)
-data(GNI2010)
-treemap(GNI2010,
+data(GNI2014)
+treemap(GNI2014,
        index=c("continent", "iso3"),
        vSize="population",
        vColor="GNI",
@@ -75,16 +75,17 @@ First, let's convert the population data into a data.tree structure:
 
 ```{r}
 library(data.tree)
-GNI2010$pathString <- paste("world", GNI2010$continent, GNI2010$country, sep = "/")
-n <- as.Node(GNI2010[,])
-print(n, pruneMethod = "dist", limit = 20)
+GNI2014$continent <- as.character(GNI2014$continent)
+GNI2014$pathString <- paste("world", GNI2014$continent, GNI2014$country, sep = "/")
+tree <- as.Node(GNI2014[,])
+print(tree, pruneMethod = "dist", limit = 20)
 ```
 
 We can also navigate the tree to find the population of a specific country. Luckily, RStudio is quite helpful with its code completion (use `CTRL + SPACE`):
 
 ```{r}
 
-n$Europe$Switzerland$population
+tree$Europe$Switzerland$population
 
 ```
 
@@ -92,7 +93,7 @@ n$Europe$Switzerland$population
 Or, we can look at a sub-tree:
 
 ```{r}
-northAm <- n$`North America`
+northAm <- tree$`North America`
 northAm$Sort("GNI", decreasing = TRUE)
 print(northAm, "iso3", "population", "GNI", limit = 12)
 ```
@@ -100,20 +101,20 @@ print(northAm, "iso3", "population", "GNI", limit = 12)
 Or, we can find out what is the country with the largest GNI:
 
 ```{r}
-maxGNI <- Aggregate(n, "GNI", max)
+maxGNI <- Aggregate(tree, "GNI", max)
 #same thing, in a more traditional way:
-maxGNI <- max(sapply(n$leaves, function(x) x$GNI))
+maxGNI <- max(sapply(tree$leaves, function(x) x$GNI))
 
-n$Get("name", filterFun = function(x) x$isLeaf && x$GNI == maxGNI)
+tree$Get("name", filterFun = function(x) x$isLeaf && x$GNI == maxGNI)
 ```
 
 
 ## Aggregate and Cumulate
 
-We aggregate the population. For non-leaves, this will recurse through children, and cache the result in the `population` field. 
+We aggregate the population. For non-leaves, this will recursively iterate through children, and cache the result in the `population` field. 
 
 ```{r}
-n$Do(function(x) {
+tree$Do(function(x) {
         x$population <- Aggregate(node = x,
         attribute = "population",
         aggFun = sum)
@@ -124,27 +125,40 @@ n$Do(function(x) {
 Next, we sort each node by population:
 
 ```{r}
-n$Sort(attribute = "population", decreasing = TRUE, recursive = TRUE)
+tree$Sort(attribute = "population", decreasing = TRUE, recursive = TRUE)
 
 ```
 
 Finally, we cumulate among siblings, and store the running sum in an attribute called `cumPop`:
 
 ```{r}
-n$Do(function(x) x$cumPop <- Cumulate(x, "population", sum))
+tree$Do(function(x) x$cumPop <- Cumulate(x, "population", sum))
 
 ```
 
+
+
 The tree now looks like this:
 
+
 ```{r}
-print(n, "population", "cumPop", pruneMethod = "dist", limit = 20)
+print(tree, "population", "cumPop", pruneMethod = "dist", limit = 20)
 ```
 
 
 ## Prune
 
-The previous steps were done to define our threshold: big countries should be displayed, while small ones should be grouped together. This lets us define a pruning function that will allow a maximum of 7 countries per continent, and that will prune all countries making up less than 90% of a continent's population:
+The previous steps were done to define our threshold: big countries should be displayed, while small ones should be grouped together. This lets us define a pruning function that will allow a maximum of 7 countries per continent, and that will prune all countries making up less than 90% of a continent's population.
+
+We would like to store the original number of countries for further use:
+
+```{r}
+
+tree$Do(function(x) x$origCount <- x$count)
+
+```
+
+We are now ready to prune. This is done by defining a pruning function, returning 'FALSE' for all countries that should be combined:
 
 ```{r}
 
@@ -159,18 +173,18 @@ myPruneFun <- function(x, cutoff = 0.9, maxCountries = 7) {
 We clone the tree, because we might want to play around with different parameters:
 
 ```{r}
-n2 <- Clone(n, pruneFun = myPruneFun)
-print(n2$Oceania, "population", pruneMethod = "simple", limit = 20)
+treeClone <- Clone(tree, pruneFun = myPruneFun)
+print(treeClone$Oceania, "population", pruneMethod = "simple", limit = 20)
 ```
 
 Finally, we need to sum countries that we pruned away into a new "Other" node:
 
 ```{r}
 
-n2$Do(function(x) {
+treeClone$Do(function(x) {
   missing <- x$population - sum(sapply(x$children, function(x) x$population))
   other <- x$AddChild("Other")
-  other$iso3 <- "OTH"
+  other$iso3 <- paste0("OTH(", x$origCount, ")")
   other$country <- "Other"
   other$continent <- x$name
   other$GNI <- 0
@@ -178,6 +192,9 @@ n2$Do(function(x) {
 },
 filterFun = function(x) x$level == 2
 )
+
+
+print(treeClone$Oceania, "population", pruneMethod = "simple", limit = 20)
 
 ```
 
@@ -189,7 +206,7 @@ filterFun = function(x) x$level == 2
 In order to plot the treemap, we need to convert the data.tree structure back to a data.frame:
 
 ```{r}
-df <- ToDataFrameTable(n2, "iso3", "country", "continent", "population", "GNI")
+df <- ToDataFrameTable(treeClone, "iso3", "country", "continent", "population", "GNI")
 
 treemap(df,
         index=c("continent", "iso3"),
@@ -205,13 +222,13 @@ treemap(df,
 Just for fun, and for no reason other than to demonstrate conversion to dendrogram, we can plot this in a very unusual way:
 
 ```{r}
-plot(as.dendrogram(n2, heightAttribute = "population"))
+plot(as.dendrogram(treeClone, heightAttribute = "population"))
 
 ```
 
 ## Further developments
 
-Obviously, we should also aggregate the GNI as a weighted average. Namely, we should do this for the *Other* catch-all country that we add to the tree.
+Obviously, we should also aggregate the GNI as a weighted average. Namely, we should do this for the *OTH* catch-all countries that we add to the tree.
 
 # Portfolio Breakdown (finance)
 

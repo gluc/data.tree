@@ -63,7 +63,7 @@ If \code{\link{AreNamesUnique}} is TRUE, then the Network is
 based on the \code{Node$name}, otherwise on the \code{Node$pathString}
 
 ToDataFrameTypeCol: a \code{data.frame} in table format (i.e. where each row represents a leaf in the tree or sub-tree 
-spanned by \code{x}), possibly pruned according to \code{pruneFun}. In addition to \code{...}, each distinc
+spanned by \code{x}), possibly pruned according to \code{pruneFun}. In addition to \code{...}, each distinct
 \code{type} is output to a column.
 }
 \description{
