@@ -1,7 +1,7 @@
 ## Test environments
 * ubuntu R 3.2.3 -> ok
 * ubuntu R 3.2.4 -> ok
-* win R 3.1.3 -> 
+* win R 3.1.3 -> ok
 * win-builder (devel) -> ok
 
 ## R CMD check results
