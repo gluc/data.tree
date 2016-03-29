@@ -1,6 +1,7 @@
 # All changes to data.tree are documented here.
 
 ## Version 0.3.3
+- CHANGE: Renamed Find method to FindNode, in order to avoid masking from base
 - FIX: upgrade to latest version of treemap package
 - FIX: a few typos in documentation
 

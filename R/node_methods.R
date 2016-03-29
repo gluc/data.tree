@@ -186,7 +186,7 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 
 
 
-#' Find a \code{Node} by provided criteria.
+#' Climb a tree from parent to children, by provided criteria.
 #' 
 #' 
 #' This method lets you climb the tree, from crutch to crutch. On each \code{Node}, the 
@@ -279,7 +279,7 @@ Climb <- function(node, ...) {
 #' 
 #' @examples
 #' data(acme)
-#' acme$Find("Outsource")
+#' acme$FindNode("Outsource")
 #' 
 #' #re-usable hashed index for multiple searches:
 #' if(!AreNamesUnique(acme)) stop("Hashed index works for unique names only!")
@@ -295,7 +295,7 @@ Climb <- function(node, ...) {
 #' @seealso AreNamesUnique, Traverse
 #' 
 #' @export
-Find <- function(node, name) {
+FindNode <- function(node, name) {
   trav <- Traverse(node, filterFun = function(x) x$name == name)
   if (length(trav) == 0) return(NULL)
   return(trav[[1]])

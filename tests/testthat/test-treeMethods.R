@@ -43,14 +43,14 @@ test_that("Climb non-name", {
 test_that("Find", {
   
   data(acme)
-  os <- acme$Find("Outsource")
+  os <- acme$FindNode("Outsource")
   expect_equal(os$name, "Outsource")
   
-  os <- acme$Find("XYZ")
+  os <- acme$FindNode("XYZ")
   expect_null(os)
   
   acme$Accounting$AddChild("Outsource")
-  os <- acme$Find("Outsource")
+  os <- acme$FindNode("Outsource")
   expect_equal(class(os), c("Node", "R6"))
   expect_equal(os$name, "Outsource")
 

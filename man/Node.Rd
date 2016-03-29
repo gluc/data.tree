@@ -43,7 +43,7 @@ This is only syntactical sugar, and the result of both variations is exactly the
   \item{\code{RemoveChild(name)}}{Remove the child \code{Node} called \code{name} from a \code{Node} and returns it.}
   \item{\code{RemoveAttribute(name, stopIfNotAvailable)}}{Removes attribute called \code{name} from this \code{Node}. Gives an error if \code{stopIfNotAvailable} and the attribute doesn't exist.}
   \item{\code{\link{Climb}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s, or other field values.}
-  \item{\code{\link{Find}(name)}}{Find a node with name \code{name}. Especially useful if \code{\link{AreNamesUnique}} is \code{TRUE}}
+  \item{\code{\link{FindNode}(name)}}{Find a node with name \code{name}. Especially useful if \code{\link{AreNamesUnique}} is \code{TRUE}}
   \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE, simplify = c(TRUE, FALSE, "array", "regular"))}}{Traverses the tree and collects values along the way.}
   \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
   \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_methods.R
 \name{Climb}
 \alias{Climb}
-\title{Find a \code{Node} by provided criteria.}
+\title{Climb a tree from parent to children, by provided criteria.}
 \usage{
 #node$Climb(...)
 Climb(node, ...)
