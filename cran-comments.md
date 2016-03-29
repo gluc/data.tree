@@ -16,6 +16,10 @@ Possibly mis-spelled words in DESCRIPTION:
   
 Both are not misspelled.
 
+## General Comments
+
+This update was requested by Uwe because build failed after a treemap update.
+
 ## Downstream dependencies
 
 * ahp : I ran CMD CHECK on ubuntu 14.04 with R 3.2.3
