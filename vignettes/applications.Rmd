@@ -630,7 +630,7 @@ You'll learn how to convert a complex JSON into a data.frame, and how to use thi
 
 ## Load JSON file
 
-The data represents the [Flare](http://flare.prefuse.org/) class hierarchy, which is a code library for creating visualizations. The JSON is long, deeply nested, and complicated.
+The data represents the Flare class hierarchy, which is a code library for creating visualizations. The JSON is long, deeply nested, and complicated.
 
 ```{r}
 fileName <- system.file("extdata", "flare.json", package="data.tree")

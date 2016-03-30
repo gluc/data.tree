@@ -5,7 +5,7 @@
 [![Build Status master](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree)
 [![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=master&svg=true)](https://ci.appveyor.com/project/gluc/data.tree)
 [![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=master)](http://codecov.io/github/gluc/data.tree?branch=master)
-[![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](https://cran.rstudio.com/web/packages/data.tree)
+[![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](https://cran.r-project.org/web/packages/data.tree/)
 
 ## Dev
 
