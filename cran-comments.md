@@ -1,3 +1,7 @@
+## General Comments
+
+As requested by Uwe, because of wrong links.
+
 ## Test environments
 * ubuntu R 3.2.3 -> ok
 * ubuntu R 3.2.4 -> ok
@@ -17,10 +21,6 @@ Possibly mis-spelled words in DESCRIPTION:
 ´´´
   
 Both are not misspelled.
-
-## General Comments
-
-This update was requested by Uwe because build failed after a treemap update.
 
 ## Downstream dependencies
 
