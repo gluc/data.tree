@@ -1,6 +1,6 @@
 ## General Comments
 
-As requested by Uwe, because of wrong links.
+As requested by Kurz, because of wrong links. Sorry about that :(
 
 ## Test environments
 * ubuntu R 3.2.3 -> ok
