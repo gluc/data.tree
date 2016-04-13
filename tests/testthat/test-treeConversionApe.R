@@ -95,7 +95,7 @@ test_that("GetPhyloNumber node", {
 
 test_that("GetPhyloNumber edge", {
   data(acme)
-  acme$Do(function(x) x$phyloNr <- GetPhyloNr(x, "edge"))
+  acme$Do(function(x) x$phyloNr <- GetPhyloNr(x, "edge"), filterFun = isNotRoot)
   expect_equal(as.vector(acme$Get("phyloNr")), c(NA, 1:10))
 })
 

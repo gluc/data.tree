@@ -2,7 +2,7 @@
 
 ## Version 0.3.6
 - FIX: GetDefaultTooltip now also works for attributes which are functions
-
+- FIX: GetAttribute now returns attributes with length 0 (e.g. an empty list)
 
 ## Version 0.3.5
 - FIX: minor correction in documentation
