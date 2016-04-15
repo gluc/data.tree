@@ -1,0 +1,6 @@
+{
+  "name": "data.tree",
+  "tagline": "General Purpose Hierarchical Data Structure for R",
+  "body": "# data.tree\r\ndata.tree is an R package to manage hierarchical data and tree structures\r\n\r\nHierarchical data is ubiquitous in statistics and programming (XML, search trees, family trees, classification, file system, etc.). However, no general-use *tree data structure* is available in R. \r\nWhere tabular data has data.frame, hierarchical data is often modeled in lists of lists or similar makeshifts. These\r\nstructures are often difficult to manage.\r\nThis is where the data.tree package steps in. It lets you build trees of hierarchical\r\ndata for various uses: to print, to generate breakdowns, to integrate with html widgets, to rapid prototype search algorithms, to test out new classification ideas, and much more.\r\n\r\nThe package provides functionality to convert from and to various formats such as data.frames, list of lists, dendrograms, ape phylo, igraph, JSON, YAML, and more.\r\n\r\nFor more information and a few data.tree articles, see my [blog](http://ipub.com/tag/data-tree/).\r\n\r\nThe package is published on [CRAN](https://cran.r-project.org/package=data.tree).\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
