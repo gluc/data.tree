@@ -106,7 +106,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   
   #children
   if (is.character(x)) return (n)
-  if (mode == 'simple') children <- x[sapply(x, is.list)]
+  if (mode == 'simple') children <- x[vapply(x, is.list, logical(1))]
   else if (mode == 'explicit') children <- x[[childrenName]]
   
   if (length(children) == 0) return (n)

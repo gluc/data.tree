@@ -222,6 +222,14 @@ children:
 })
 
 
+test_that("as.Node.list empty list()", {
+  lol = list(a = list(aa=1), b="hello", c = list())
+  tree = FromListSimple(lol)
+  expect_equal(tree$totalCount, 3)
+  expect_equal(tree$height, 2)
+  expect_equal(tree$c$count, 0)
+  expect_equal(tree$c$fields, character(0))
+})
 
 
 
