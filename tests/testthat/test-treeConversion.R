@@ -232,5 +232,14 @@ test_that("as.Node.list empty list()", {
 })
 
 
+test_that("as.Node.list with empty fields", {
+  lol = list(a = list(aa=1), "hello", c = list(), 1, d=2, list(e=4))
+  tree = FromListSimple(lol)
+  expect_equal(length(tree$fields), 3)
+  expect_equal(tree$count, 3)
+  expect_true(all(c(1, 2) %in% tree$fields))
+})
+
+
 
 

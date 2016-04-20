@@ -80,26 +80,44 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   
   #find fields that need importing
   fields <- names(x)
+  
+  #capture fields without names
+  if (is.null(fields) && length(fields) !=0) {
+    fields <- rep("", length(x))
+  }
+  field_nums <- seq_along(x)
+  unnamed_fields <- fields == "" & !vapply(x, is.list, logical(1))
+  
   #exclude nameName
-  fields <- fields[nchar(fields) > 0]
-  if(!is.null(nameName)) fields <- fields[fields != nameName]
+  if(!is.null(nameName)) {
+    field_nums <- field_nums[fields != nameName]
+    unnamed_fields <- unnamed_fields[fields != nameName]
+    fields <- fields[fields != nameName]
+    
+  }
   #exclude childrenName if explicit
-  if (mode == "explicit") fields <- fields[fields != childrenName]
-  #
+  if (mode == "explicit") {
+    field_nums <- field_nums[fields != childrenName]
+    unnamed_fields <- unnamed_fields[fields != childrenName]
+    fields <- fields[fields != childrenName]
+    
+  }
+  
+  fields[unnamed_fields] <- seq_along(which(unnamed_fields))
   
   if (warn) {
     fieldNameIsReserved <- (fields %in% NODE_RESERVED_NAMES_CONST) & !(fields %in% c(nameName, childrenName))
     if (any(fieldNameIsReserved)) warning(paste0("The following names are data.tree reserved words and will be appended with 2: ", paste(fields[fieldNameIsReserved], sep = ", "), "." ))
   }
   
-  for (field in fields) {
-    v <- x[[field]]
+  for (i in seq_along(field_nums)) {
+    v <- x[[field_nums[i]]]
     
     if(mode == 'simple' && class(v) == "list") {
       #any list is interpreted as child, so don't store
     } else {
-      fieldNm <- field
-      if (field %in% NODE_RESERVED_NAMES_CONST) fieldNm <- paste0(field, "2")
+      fieldNm <- fields[i]
+      if (fieldNm %in% NODE_RESERVED_NAMES_CONST) fieldNm <- paste0(fieldNm, "2")
       n[[fieldNm]] <- v
     }
   }
