@@ -187,8 +187,8 @@ children:
   expect_equal(tree$height, 3)
   expect_equal(tree$CR$CR_CHF$name, "CR_CHF")
   
-  #market is lost:
-  expect_equal(tree$fieldsAll, c("description", "type"))
+  #market is numbered (1) instead of lost:
+  expect_equal(tree$fieldsAll, c("description", "type", "1"))
   
   
   

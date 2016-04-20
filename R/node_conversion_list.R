@@ -82,7 +82,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   fields <- names(x)
   
   #capture fields without names
-  if (is.null(fields) && length(fields) !=0) {
+  if (is.null(fields) && length(x) !=0) {
     fields <- rep("", length(x))
   }
   field_nums <- seq_along(x)
