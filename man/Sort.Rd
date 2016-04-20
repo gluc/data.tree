@@ -44,5 +44,4 @@ print(acme, "totalCost")
 
 \code{\link{Revert}}
 }
-\keyword{internal}
 

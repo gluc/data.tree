@@ -11,14 +11,14 @@
 \item{x}{The Node}
 
 \item{...}{Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
-a Node method, or a function taking a Node as a single argument. See \code{Get} for details on 
+a Node method, or a function taking a Node as a single argument. See \code{Get} for details on
 the meaning of \code{attribute}.}
 
 \item{pruneMethod}{The method used to prune for printing. If NULL, the entire tree is displayed. If
 "simple", then only the first \code{limit} nodes are displayed. If "dist", then Nodes are removed
 everywhere in the tree, according to their level.}
 
-\item{limit}{The maximum number of nodes to print. Can be \code{NULL} if the 
+\item{limit}{The maximum number of nodes to print. Can be \code{NULL} if the
 entire tree should be printed.}
 }
 \description{

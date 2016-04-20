@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_methods.R
 \name{Aggregate}
 \alias{Aggregate}
-\title{Aggregate child values of a \code{Node}, standalone or in traversal.}
+\title{Aggregate child values of a \code{Node}, recursively.}
 \usage{
 Aggregate(node, attribute, aggFun, ...)
 }
@@ -21,15 +21,13 @@ Aggregate(node, attribute, aggFun, ...)
 \item{...}{any arguments to be passed on to attribute (in case it's a function)}
 }
 \description{
-The \code{Aggregate} method lets you fetch an attribute from a \code{Node}'s children, and then aggregate it.
-For example, you can aggregate cost by summing costs of child \code{Nodes}. This is especially useful in the 
+The \code{Aggregate} method lets you fetch an attribute from a \code{Node}'s children, and then aggregate them
+using \code{aggFun}. For example, you can aggregate cost by summing costs of child \code{Nodes}. This is especially useful in the
 context of tree traversal, when using post-order traversal mode.
 }
 \details{
-As with \code{\link{Get}}, the attribute can be a field, a method or a function. If it is a field, and if
-the node contains the attribute, its value is returned. 
-Otherwise, \code{aggFun(Aggregate(children, ...))} is called. In that case, 
-the attribute must be set on the leaf.
+As with \code{\link{Get}}, the attribute can be a field, a method or a function. If the attribute on a child 
+is \code{NULL}, \code{Aggregate} is called recursively on its children.
 }
 \examples{
 data(acme)
@@ -37,15 +35,25 @@ data(acme)
 #Aggregate on a field
 Aggregate(acme, "cost", sum)
 
+#This is the same as:
+HomeRolledAggregate <- function(node) {
+  sum(sapply(node$children, function(child) {
+    if (!is.null(child$cost)) child$cost
+    else HomeRolledAggregate(child)
+  }))
+}
+HomeRolledAggregate(acme)
+
 #Aggregate using Get
 print(acme, "cost", minCost = acme$Get(Aggregate, "cost", min))
 
 #use Aggregate with a function:
-acme$Do(function(x) x$expectedCost <- Aggregate(x, 
-                                                function(x) x$cost * x$p, 
-                                                sum)
-       , traversal = "post-order")
-  
+Aggregate(acme, function(x) x$cost * x$p, sum)
+
+#cache values along the way
+acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum), traversal = "post-order")
+acme$IT$cost
+
 }
 \seealso{
 \code{\link{Node}}

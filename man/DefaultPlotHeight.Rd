@@ -13,14 +13,14 @@ DefaultPlotHeight(node, rootHeight = 100)
 }
 \description{
 This function puts leafs at the bottom (not hanging), and makes edges equally long.
-Useful for easy plotting with third-party packages, e.g. if you have no specific height 
-attribute, e.g. with \code{\link{as.dendrogram.Node}}, \code{\link{ToNewick}}, 
+Useful for easy plotting with third-party packages, e.g. if you have no specific height
+attribute, e.g. with \code{\link{as.dendrogram.Node}}, \code{\link{ToNewick}},
 and \code{\link{as.phylo.Node}}
 }
 \examples{
 data(acme)
 dacme <- as.dendrogram(acme, heightAttribute = function(x) DefaultPlotHeight(x, 200))
 plot(dacme, center = TRUE)
-  
+
 }
 

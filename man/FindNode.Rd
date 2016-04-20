@@ -19,8 +19,8 @@ found.
 Scans the entire sub-tree spanned by \code{node} and returns the first \code{\link{Node}}
 having the \code{name} specified. This is mainly useful for trees whose name is unique.
 If \code{\link{AreNamesUnique}} is \code{FALSE}, i.e. if there is more than one \code{Node}
-called \code{name} in the tree, then it is undefined which one will be returned. 
-Also note that this method is not particularly fast. See examples for a faster way to 
+called \code{name} in the tree, then it is undefined which one will be returned.
+Also note that this method is not particularly fast. See examples for a faster way to
 index large trees, if you need to do multiple searches. See \code{\link{Traverse}} if
 you need to find multiple \code{Nodes}.
 }

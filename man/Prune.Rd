@@ -29,5 +29,4 @@ print(acme, "cost")
 \seealso{
 \code{\link{Node}}
 }
-\keyword{internal}
 

@@ -12,7 +12,7 @@ Clone(node, pruneFun = NULL, attributes = FALSE)
 \item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
-\item{attributes}{if FALSE, then R class attributes (e.g. formatters and grViz styles) 
+\item{attributes}{if FALSE, then R class attributes (e.g. formatters and grViz styles)
 are not cloned. This makes the method faster.}
 }
 \value{

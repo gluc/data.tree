@@ -46,7 +46,7 @@
 #' 
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Revert}}
-#' @keywords internal
+#' @export
 Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
   if (node$isLeaf) return()
   ChildL <- sapply(node$children, function(x) GetAttribute(x, attribute, ...))
@@ -70,7 +70,7 @@ Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
 #'
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Sort}}
-#' @keywords internal
+#' @export
 Revert <- function(node, recursive = TRUE) {
   
   pf <- function(x) {
@@ -107,7 +107,7 @@ Revert <- function(node, recursive = TRUE) {
 #' 
 #' @seealso \code{\link{Node}}
 #' 
-#' @keywords internal
+#' @export
 Prune <- function(node, pruneFun) { 
   return (.Prune(node, pruneFun, TRUE))
 }
