@@ -4,8 +4,11 @@
 - FIX: GetDefaultTooltip now also works for attributes which are functions
 - FIX: GetAttribute now returns attributes with length 0 (e.g. an empty list)
 - ADD: Sort, Revert and Prune are now also available in traditional format (e.g. Prune(node, pruneFun))
-- FIX: Empty lists now become empty nodes (#59)
+- FIX: FromListSimple: Empty lists now become empty nodes (#59)
+- IMPROVE: FromListSimple: Unnamed list elements are now also converted (#61)
 - IMPROVE: documentation of Aggregate
+- IMPROVE: Check type when setting Node$parent and Node$children (#63)
+
 
 ## Version 0.3.5
 - FIX: minor correction in documentation

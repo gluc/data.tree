@@ -2,9 +2,9 @@ context("tree conversion ape")
 
 
 test_that("as.Node.phylo owls", {
-  t <- "owls(((Strix_aluco:4.2,Asio_otus:4.2):3.1,Athene_noctua:7.3):6.3,Tyto_alba:13.5);"
+  txt <- "owls(((Strix_aluco:4.2,Asio_otus:4.2):3.1,Athene_noctua:7.3):6.3,Tyto_alba:13.5);"
 
-  p <- ape::read.tree(text = t)
+  p <- ape::read.tree(text = txt)
   n <- as.Node(p, replaceUnderscore = F)
   expect_equal(n$totalCount, 7)
   expect_equal(as.vector(n$Get("name")), c("5", "6", "7", "Strix_aluco", "Asio_otus", "Athene_noctua", "Tyto_alba"))
@@ -13,9 +13,9 @@ test_that("as.Node.phylo owls", {
 })
 
 test_that("as.Node.phylo height", {
-  t <- "(A:5,B:5,(C:10,D:10)E:5):0;"
+  txt <- "(A:5,B:5,(C:10,D:10)E:5):0;"
   
-  p <- ape::read.tree(text = t)
+  p <- ape::read.tree(text = txt)
   n <- as.Node(p)
   expect_equal(n$totalCount, 6)
   expect_equal(as.vector(n$Get("name")), c("", "A", "B", "E", "C", "D"))
@@ -24,9 +24,9 @@ test_that("as.Node.phylo height", {
 })
 
 test_that("as.Node.phylo no height", {
-  t <- "(A,B,(C,D)E)F;"
+  txt <- "(A,B,(C,D)E)F;"
   
-  p <- ape::read.tree(text = t)
+  p <- ape::read.tree(text = txt)
   n <- as.Node(p)
   expect_equal(n$totalCount, 6)
   expect_equal(as.vector(n$Get("name")), c("F", "A", "B", "E", "C", "D"))
@@ -37,9 +37,9 @@ test_that("as.Node.phylo no height", {
 
 
 test_that("as.Node.phylo height non standard", {
-  t <- "(A:5,B:5,(C:10,D:10):5):0;"
+  txt <- "(A:5,B:5,(C:10,D:10):5):0;"
   
-  p <- ape::read.tree(text = t)
+  p <- ape::read.tree(text = txt)
   n <- as.Node(p, heightName = "edge")
   expect_equal(n$totalCount, 6)
   expect_equal(as.vector(n$Get("name")), c("5", "A", "B", "6", "C", "D"))

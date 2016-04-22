@@ -59,6 +59,9 @@ This is only syntactical sugar, and the result of both variations is exactly the
   
 \describe{
  \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
+ \item{\code{parent}}{Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
+ \item{\code{children}}{Gets or sets the children \code{list} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
+ \item{\code{siblings}}{Returns a list of the siblings of this \code{Node}}
  \item{\code{fields}}{Gets the names of the set properties of a \code{Node}}
  \item{\code{fieldsAll}}{Gets the names of the set properties of a \code{Node} or any of its sub-Nodes}
  \item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
@@ -74,7 +77,6 @@ This is only syntactical sugar, and the result of both variations is exactly the
  \item{\code{height}}{Returns max(level) of any of the \code{Nodes} of the tree}
  \item{\code{averageBranchingFactor}}{Returns the average number of crotches below this \code{Node}}
  \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
- \item{\code{siblings}}{Returns a list of the siblings of this \code{Node}}
  
 }
 }
