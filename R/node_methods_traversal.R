@@ -1,11 +1,28 @@
 #' Traverse a tree or a sub-tree
 #' 
+#' Traverse takes the root of a tree or a sub-tree, and "walks" the tree in a specific order. It returns a list of
+#' \code{\link{Node}} objects, filtered and pruned by \code{filterFun} and \code{pruneFun}.
+#' 
 #' @param node the root of a tree or a sub-tree that should be traversed
-#' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'
+#' @param traversal any of 'pre-order' (the default), 'post-order', 'in-order', 'level', 'ancestor', or a custom function (see details)
 #' @param filterFun allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
 #' Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).
 #'
 #' @return a list of \code{Node}s
+#' 
+#' @details
+#' The traversal order is as follows. (Note that these descriptions are not precise and complete. They are meant
+#' for quick reference only. See the data.tree vignette for a more detailed description). 
+#' \describe{
+#'    \item{pre-order}{Go to first child, then to its first child, etc.}
+#'    \item{post-order}{Go to the first branche's leaf, then to its siblings, and work your way back to the root}
+#'    \item{in-order}{Go to the first branche's leaf, then to its parent, and only then to the leaf's sibling}
+#'    \item{level}{Collect root, then level 2, then level 3, etc.}
+#'    \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
+#'    \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The
+#'    function is expected to return the node's next node. This traversal mode ignores the \code{pruneFun} argument.}
+#' }
+#' 
 #' 
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Get}}
@@ -20,8 +37,25 @@ Traverse = function(node,
                     pruneFun = NULL,
                     filterFun = NULL) {
   #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
-  traversal = traversal[1]
+  
   nodes <- list()
+  if (is.function(traversal)) {
+    
+    nextNode <- traversal(node)
+    if (!is.null(nextNode)) {
+      nodes <- Traverse(nextNode, traversal = traversal, filterFun = filterFun, pruneFun = pruneFun)
+    }
+    if(length(filterFun) == 0 || filterFun(node)) {
+      nodes <- c(node, nodes)
+    }
+    return (nodes)
+  }
+  
+  traversal = traversal[1]
+  
+  
+  
+  
   if(traversal == "pre-order" || traversal == "post-order") {
     
     if(length(pruneFun) == 0 || pruneFun(node)) {
@@ -66,6 +100,7 @@ Traverse = function(node,
     
     nodes <- Traverse(node, filterFun = filterFun, pruneFun = pruneFun)
     if (length(nodes) > 0) nodes <- nodes[order(Get(nodes, function(x) x$level))]
+    
     
   } else {
     stop("traversal must be pre-order, post-order, in-order, ancestor, or level")

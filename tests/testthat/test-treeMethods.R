@@ -253,6 +253,21 @@ test_that("Traverse empty filter level", {
 })
 
 
+
+test_that("Traverse custom method", {
+  CustomTraversalFunction <- function(node) {
+    if (node$isLeaf) return (NULL)
+    return (node$children[[1]])
+  }
+  data(acme)
+  tr <- Traverse(acme, traversal = CustomTraversalFunction, filterFun = function(x) x$name != "Accounting")
+  nms <- sapply(tr, function(x) x$name)
+  exp <- c("Acme Inc.", "New Software")
+  expect_equal(nms, exp)
+  
+})
+
+
 test_that("Do", {
   
   data(acme)
