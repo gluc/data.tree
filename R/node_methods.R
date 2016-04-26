@@ -192,6 +192,43 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 }
 
 
+#' Navigate to another node by relative path.
+#' 
+#' @usage #node$Navigate(path)
+#' Navigate(node, path)
+#' 
+#' @param node The starting \code{\link{Node}} to navigate
+#' @param path A string or a character vector describing the path to navigate
+#' 
+#' @details The \code{path} is always relative to the \code{node}. Navigation
+#' to the parent is defined by \code{..}, whereas navigation to a child
+#' is defined via the child's name.
+#' If path is provided as a string, then the navigation steps are separated
+#' by '/'.
+#'
+#' @examples 
+#' data(acme)
+#' acme$Research$Navigate("../IT/Outsource")
+#' acme$Research$Navigate(c("..", "IT", "Outsource"))
+#'
+#' @seealso \code{\link{Climb}}
+#'
+#' @export
+Navigate <- function(node, path) {
+  if (length(path) == 1) path <- strsplit(path, "/", fixed = TRUE)[[1]]
+  for (nxt in path) {
+    if (identical("..", nxt)) {
+      node <- node$parent
+    } else if (identical(".", nxt)) {
+      #don't do anything
+    } else {
+      node <- node[[nxt]]
+    }
+  }
+  return (node)
+}
+
+
 
 
 #' Climb a tree from parent to children, by provided criteria.
@@ -204,14 +241,18 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 #' Climb(node, ...)
 #'
 #'
-#' @param node The root node of the tree or subtree to climb
+#' @param node The root \code{\link{Node}} of the tree or subtree to climb
 #' @param ... an attribute name to searched value pairlist. For brevity, you can also provide a character vector.
 #' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 #'
 #' @examples
 #' data(acme)
-#' acme$Climb('IT', 'Outsource')$name
-#' acme$Climb('IT')$Climb('Outsource')$name
+#' 
+#' #the following are all equivalent
+#' acme$Climb('IT', 'Outsource')
+#' acme$Climb(name = 'IT', name = 'Outsource')
+#' acme$Climb('IT')$Climb('Outsource')
+#' acme$Navigate(path = "IT/Outsource")
 #'
 #' acme$Climb(name = 'IT')
 #'
@@ -224,6 +265,7 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 #' tree$Climb(c("1", "1"), position = c(2, 2))$path
 #'
 #' @seealso \code{\link{Node}}
+#' @seealso \code{\link{Navigate}}
 #'
 #' @export
 Climb <- function(node, ...) {

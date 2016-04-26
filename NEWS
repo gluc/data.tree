@@ -2,6 +2,7 @@
 
 ## Version 0.3.7
 - ADD: Traverse can now also take custom function as a traversal argument
+- ADD: Navigate method
 
 ## Version 0.3.6
 - FIX: GetDefaultTooltip now also works for attributes which are functions
