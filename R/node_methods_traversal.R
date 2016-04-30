@@ -20,7 +20,7 @@
 #'    \item{level}{Collect root, then level 2, then level 3, etc.}
 #'    \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
 #'    \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The
-#'    function is expected to return the node's next node. This traversal mode ignores the \code{pruneFun} argument.}
+#'    function is expected to return the node's next node, a list of the node's next nodes, or NULL.}
 #' }
 #' 
 #' 
@@ -39,32 +39,23 @@ Traverse = function(node,
   #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
   
   nodes <- list()
-  if (is.function(traversal)) {
+
+  
+  if(is.function(traversal) || traversal == "pre-order" || traversal == "post-order") {
     
-    nextNode <- traversal(node)
-    if (!is.null(nextNode)) {
-      nodes <- Traverse(nextNode, traversal = traversal, filterFun = filterFun, pruneFun = pruneFun)
-    }
-    if(length(filterFun) == 0 || filterFun(node)) {
-      nodes <- c(node, nodes)
-    }
-    return (nodes)
-  }
-  
-  traversal = traversal[1]
-  
-  
-  
-  
-  if(traversal == "pre-order" || traversal == "post-order") {
-    
-    if(length(pruneFun) == 0 || pruneFun(node)) {
+    if (length(pruneFun) == 0 || pruneFun(node)) {
       
-      for(child in node$children) {
+      if (is.function(traversal)) {
+        children <- traversal(node)
+        if (is(children, "Node")) children <- list(children)
+        if (is.null(children)) children <- list()
+      } else children <- node$children
+      
+      for(child in children) {
         nodes <- c(nodes, Traverse(child, traversal = traversal, pruneFun = pruneFun, filterFun = filterFun))
       }
       if(length(filterFun) == 0 || filterFun(node)) {
-        if(traversal == "pre-order") nodes <- c(node, nodes)
+        if(is.function(traversal) || traversal == "pre-order") nodes <- c(node, nodes)
         else nodes <- c(nodes, node)
       }
     }

@@ -267,6 +267,36 @@ test_that("Traverse custom method", {
   
 })
 
+test_that("Traverse custom method multi", {
+  CustomTraversalFunction <- function(node) {
+    if (node$isLeaf) return (NULL)
+    return (node$children)
+  }
+  data(acme)
+  tr <- Traverse(acme, traversal = CustomTraversalFunction)
+  tr2 <- Traverse(acme, traversal = "pre-order")
+  nms <- sapply(tr, function(x) x$name)
+  nms2 <- sapply(tr2, function(node) node$name)
+  
+  expect_equal(nms, nms2)
+  
+})
+
+test_that("Traverse custom method multi prune", {
+  CustomTraversalFunction <- function(node) {
+    if (node$isLeaf) return (NULL)
+    return (node$children)
+  }
+  data(acme)
+  tr <- Traverse(acme, traversal = CustomTraversalFunction, pruneFun = function(node) node$name != "IT")
+  tr2 <- Traverse(acme, traversal = "pre-order", pruneFun = function(node) node$name != "IT")
+  nms <- sapply(tr, function(x) x$name)
+  nms2 <- sapply(tr2, function(node) node$name)
+  
+  expect_equal(nms, nms2)
+  
+})
+
 
 test_that("Do", {
   
