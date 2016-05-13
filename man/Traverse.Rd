@@ -35,7 +35,7 @@ for quick reference only. See the data.tree vignette for a more detailed descrip
    \item{level}{Collect root, then level 2, then level 3, etc.}
    \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
    \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The
-   function is expected to return the node's next node. This traversal mode ignores the \code{pruneFun} argument.}
+   function is expected to return the node's next node, a list of the node's next nodes, or NULL.}
 }
 }
 \seealso{

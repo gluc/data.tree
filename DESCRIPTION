@@ -22,6 +22,7 @@ Suggests:
     igraph,
     treemap,
     doParallel,
+    party,
     foreach,
     htmlwidgets
 Enhances: 

@@ -8,7 +8,7 @@
 Climb(node, ...)
 }
 \arguments{
-\item{node}{The root node of the tree or subtree to climb}
+\item{node}{The root \code{\link{Node}} of the tree or subtree to climb}
 
 \item{...}{an attribute name to searched value pairlist. For brevity, you can also provide a character vector.}
 }
@@ -21,8 +21,12 @@ This method lets you climb the tree, from crutch to crutch. On each \code{Node},
 }
 \examples{
 data(acme)
-acme$Climb('IT', 'Outsource')$name
-acme$Climb('IT')$Climb('Outsource')$name
+
+#the following are all equivalent
+acme$Climb('IT', 'Outsource')
+acme$Climb(name = 'IT', name = 'Outsource')
+acme$Climb('IT')$Climb('Outsource')
+acme$Navigate(path = "IT/Outsource")
 
 acme$Climb(name = 'IT')
 
@@ -37,5 +41,7 @@ tree$Climb(c("1", "1"), position = c(2, 2))$path
 }
 \seealso{
 \code{\link{Node}}
+
+\code{\link{Navigate}}
 }
 
