@@ -1,8 +1,12 @@
 # All changes to data.tree are documented here.
 
+
+
+
 ## Version 0.3.7
 - ADD: Traverse can now also take custom function as a traversal argument
 - ADD: Navigate method
+- ADD: Convert SplittingNode from party package to data.tree (#6)
 
 ## Version 0.3.6
 - FIX: GetDefaultTooltip now also works for attributes which are functions
