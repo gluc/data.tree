@@ -12,6 +12,7 @@ Imports:
     methods,
     DiagrammeR
 Suggests:
+    Formula,
     graphics,
     testthat,
     knitr,
