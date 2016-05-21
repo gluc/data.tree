@@ -7,7 +7,7 @@ test_that("party on", {
   airct <- party::ctree(Ozone ~ ., data = airq, 
                         controls = party::ctree_control(maxsurrogate = 3))
   
-  tree <- CreateNodeFromParty(airct@tree)
+  tree <- as.Node(airct)
   
   res <- as.numeric(unname(tree$Get("name")))
   

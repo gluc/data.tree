@@ -23,6 +23,7 @@ Suggests:
     treemap,
     doParallel,
     party,
+    partykit,
     foreach,
     htmlwidgets
 Enhances: 

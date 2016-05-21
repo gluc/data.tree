@@ -1,8 +1,8 @@
 
-
 #' Convert a a \code{SplitNode} from the party package to a \code{data.tree} structure.
 #' 
-#' @param splittingNode a SplittingNode object
+#' @param x The BinaryTree
+#' @param ... additional arguments (unused)
 #' 
 #' @examples 
 #' library(party)
@@ -10,7 +10,7 @@
 #' airct <- ctree(Ozone ~ ., data = airq, 
 #'                controls = ctree_control(maxsurrogate = 3))
 #'                
-#' tree <- CreateNodeFromParty(airct@tree)
+#' tree <- as.Node(airct)
 #' tree
 #' 
 #' print(tree, 
@@ -24,7 +24,17 @@
 #' 
 #' @export
 #'  
-CreateNodeFromParty <- function(splittingNode, left = TRUE) {
+as.Node.BinaryTree <- function(x, ...) {
+  CreateNodeFromSplittingNode(x@tree)
+}
+
+
+
+
+
+
+
+CreateNodeFromSplittingNode <- function(splittingNode, left = TRUE) {
   node <- Node$new(splittingNode$nodeID,
                    weights = splittingNode$weights,
                    criterion = splittingNode$criterion,
@@ -33,8 +43,8 @@ CreateNodeFromParty <- function(splittingNode, left = TRUE) {
                    label = GetSplittingNodeLabel(splittingNode, left))
   
   if (!splittingNode$terminal) {
-    node$AddChildNode( CreateNodeFromParty(splittingNode$left) )
-    node$AddChildNode( CreateNodeFromParty(splittingNode$right, left = FALSE) )
+    node$AddChildNode( CreateNodeFromSplittingNode(splittingNode$left) )
+    node$AddChildNode( CreateNodeFromSplittingNode(splittingNode$right, left = FALSE) )
   }
   
   return (node)
@@ -68,4 +78,112 @@ as.character.orderedSplit <- function(x, left = TRUE, ...)
     res <- paste0(x$variableName, " > ", sp)
   }
   return (res)
+}
+
+
+
+
+
+#' Convert a a \code{party} from the partykit package to a \code{data.tree} structure.
+#' 
+#' @param x The party object
+#' @param ... other arguments (unused)
+#' 
+#' @examples 
+#' library(partykit)
+#' data("WeatherPlay", package = "partykit")
+#' ### splits ###
+#' # split in overcast, humidity, and windy
+#' sp_o <- partysplit(1L, index = 1:3)
+#' sp_h <- partysplit(3L, breaks = 75)
+#' sp_w <- partysplit(4L, index = 1:2)
+#' 
+#' ## query labels
+#' character_split(sp_o)
+#' 
+#' ### nodes ###
+#' ## set up partynode structure
+#' pn <- partynode(1L, split = sp_o, kids = list(
+#'   partynode(2L, split = sp_h, kids = list(
+#'       partynode(3L, info = "yes"),
+#'       partynode(4L, info = "no"))),
+#'   partynode(5L, info = "yes"),
+#'   partynode(6L, split = sp_w, kids = list(
+#'       partynode(7L, info = "yes"),
+#'       partynode(8L, info = "no")))))
+#' pn
+#' ### tree ###
+#' ## party: associate recursive partynode structure with data
+#' py <- party(pn, WeatherPlay)
+#' tree <- as.Node(py)
+#' 
+#' print(tree, 
+#'       "id",
+#'       count = function(node) nrow(node$data), 
+#'       "splitLevel",
+#'       "nodeinfo")
+#' 
+#' SetNodeStyle(tree, 
+#'              label = function(node) paste0(node$id, ": ", node$name), 
+#'              tooltip = function(node) paste0(nrow(node$data), " observations"),
+#'              fontname = "helvetica")
+#' SetEdgeStyle(tree, 
+#'              arrowhead = "none", 
+#'              label = function(node) node$splitLevel,
+#'              fontname = "helvetica",
+#'              penwidth = function(node) 12 * nrow(node$data)/nrow(node$root$data),
+#'              color = function(node) {
+#'                paste0("grey", 
+#'                       100 - as.integer( 100 * nrow(node$data)/nrow(node$root$data))
+#'                       )
+#'              }
+#'              )
+#' Do(tree$leaves, 
+#'    function(node) {
+#'      SetNodeStyle(node, 
+#'                   shape = "box", 
+#'                   color = ifelse(node$name == "yes", "darkolivegreen4", "lightsalmon4"),
+#'                   fillcolor = ifelse(node$name == "yes", "darkolivegreen1", "lightsalmon"),
+#'                   style = "filled,rounded",
+#'                   penwidth = 2
+#'                   )
+#'    }
+#'    )
+#' 
+#' plot(tree)
+#' 
+#' 
+#' @export
+as.Node.party <- function(x, ...) {
+  
+  tree <- FromParty(x, x$node)
+  tree$Do(function(node) node$splitLevel <- node$parent$splitlevels[node$position], filterFun = isNotRoot)
+  return (tree)
+}
+
+
+
+FromParty <- function(party, partynode) {
+  stopifnot(inherits(party, "party"))
+  if (length(partynode) > 0) {
+    csplit <- partykit::character_split(partynode$split, party$data)
+    node <- Node$new(csplit$name, id = partynode$id)
+  } else {
+    csplit <- NULL
+    node <- Node$new(partykit::formatinfo_node(partynode), id = partynode$id)
+  }
+  for (childnode in partynode$kids) {
+    childid <- childnode$id
+    childparty <- party[[as.character(childid)]]
+    node$AddChildNode(FromParty(childparty, childnode))
+  }
+  node$data <- party$data
+  node$fitted <- party$fitted
+  node$partyinfo <- party$info
+  node$nodeinfo <- partynode$info
+  node$terms <- party$terms
+  node$split <- partynode$split
+  if (length(csplit) > 0) node$splitlevels <- csplit$levels
+  
+  return (node)
 }
