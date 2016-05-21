@@ -28,3 +28,46 @@ test_that("party on", {
   expect_equal(res, exp)
 
 })
+
+
+
+test_that("partykid", {
+  
+  airq <- subset(airquality, !is.na(Ozone))
+  airct <- partykit::ctree(Ozone ~ ., data = airq)
+  
+  tree <- as.Node(airct)
+  
+  res <- as.numeric(unname(tree$Get("name")))
+  
+  expect_equal(res, 1:9)
+  
+  res <- tree$Get("splitname")
+  
+  exp <- c(`1` = "Temp",
+           `2` = "Wind",
+           `3` = NA,
+           `4` = "Temp",
+           `5` = NA,
+           `6` = NA,
+           `7` = "Wind",
+           `8` = NA,
+           `9` = NA )
+  
+  expect_equal(res, exp)
+  
+  res <- tree$Get("splitLevel")
+  
+  exp <- c(`1` = NA,
+           `2` = "<= 82",
+           `3` = "<= 6.9",
+           `4` = "> 6.9",
+           `5` = "<= 77",
+           `6` = "> 77",
+           `7` = "> 82",
+           `8` = "<= 10.3",
+           `9` = "> 10.3")
+  
+  expect_equal(res, exp)
+  
+})

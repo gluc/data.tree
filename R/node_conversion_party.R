@@ -118,13 +118,12 @@ as.character.orderedSplit <- function(x, left = TRUE, ...)
 #' tree <- as.Node(py)
 #' 
 #' print(tree, 
-#'       "id",
+#'       "splitname",
 #'       count = function(node) nrow(node$data), 
-#'       "splitLevel",
-#'       "nodeinfo")
+#'       "splitLevel")
 #' 
 #' SetNodeStyle(tree, 
-#'              label = function(node) paste0(node$id, ": ", node$name), 
+#'              label = function(node) paste0(node$name, ": ", node$splitname), 
 #'              tooltip = function(node) paste0(nrow(node$data), " observations"),
 #'              fontname = "helvetica")
 #' SetEdgeStyle(tree, 
@@ -142,8 +141,8 @@ as.character.orderedSplit <- function(x, left = TRUE, ...)
 #'    function(node) {
 #'      SetNodeStyle(node, 
 #'                   shape = "box", 
-#'                   color = ifelse(node$name == "yes", "darkolivegreen4", "lightsalmon4"),
-#'                   fillcolor = ifelse(node$name == "yes", "darkolivegreen1", "lightsalmon"),
+#'                   color = ifelse(node$splitname == "yes", "darkolivegreen4", "lightsalmon4"),
+#'                   fillcolor = ifelse(node$splitname == "yes", "darkolivegreen1", "lightsalmon"),
 #'                   style = "filled,rounded",
 #'                   penwidth = 2
 #'                   )
@@ -165,13 +164,7 @@ as.Node.party <- function(x, ...) {
 
 FromParty <- function(party, partynode) {
   stopifnot(inherits(party, "party"))
-  if (length(partynode) > 0) {
-    csplit <- partykit::character_split(partynode$split, party$data)
-    node <- Node$new(csplit$name, id = partynode$id)
-  } else {
-    csplit <- NULL
-    node <- Node$new(partykit::formatinfo_node(partynode), id = partynode$id)
-  }
+  node <- Node$new(partynode$id)
   for (childnode in partynode$kids) {
     childid <- childnode$id
     childparty <- party[[as.character(childid)]]
@@ -183,7 +176,15 @@ FromParty <- function(party, partynode) {
   node$nodeinfo <- partynode$info
   node$terms <- party$terms
   node$split <- partynode$split
-  if (length(csplit) > 0) node$splitlevels <- csplit$levels
+  formatInfo <- partykit::formatinfo_node(partynode)
+  if (length(partynode) > 0) {
+    csplit <- partykit::character_split(partynode$split, party$data)
+    node$splitlevels <- csplit$levels
+    node$splitname <- csplit$name
+  } else if (identical(nchar(formatInfo) > 0, TRUE)) {
+    node$splitname <- formatInfo
+  }
+  
   
   return (node)
 }
