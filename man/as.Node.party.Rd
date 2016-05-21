@@ -43,13 +43,12 @@ py <- party(pn, WeatherPlay)
 tree <- as.Node(py)
 
 print(tree, 
-      "id",
+      "splitname",
       count = function(node) nrow(node$data), 
-      "splitLevel",
-      "nodeinfo")
+      "splitLevel")
 
 SetNodeStyle(tree, 
-             label = function(node) paste0(node$id, ": ", node$name), 
+             label = function(node) paste0(node$name, ": ", node$splitname), 
              tooltip = function(node) paste0(nrow(node$data), " observations"),
              fontname = "helvetica")
 SetEdgeStyle(tree, 
@@ -67,8 +66,8 @@ Do(tree$leaves,
    function(node) {
      SetNodeStyle(node, 
                   shape = "box", 
-                  color = ifelse(node$name == "yes", "darkolivegreen4", "lightsalmon4"),
-                  fillcolor = ifelse(node$name == "yes", "darkolivegreen1", "lightsalmon"),
+                  color = ifelse(node$splitname == "yes", "darkolivegreen4", "lightsalmon4"),
+                  fillcolor = ifelse(node$splitname == "yes", "darkolivegreen1", "lightsalmon"),
                   style = "filled,rounded",
                   penwidth = 2
                   )
