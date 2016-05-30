@@ -19,6 +19,36 @@ test_that("as.Node.data.frame", {
 })
 
 
+
+test_that("FromDataFrameTable reserved words", {
+
+  pathString <- c("a/b/c/d", "a/b/c/e", "a/f")
+  value <- c("d", "e", "f")
+  
+  df <- data.frame(pathString, value, stringsAsFactors = FALSE)
+
+  #no warn
+  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE), not(gives_warning()))
+  expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
+  
+  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE, warn = FALSE), not(gives_warning()))
+  expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
+
+  #reserved words
+  pathString <- c("name/path/height/count", "name/path/height/e", "name/leaves")
+  value <- c("d", "e", "f")
+  df <- data.frame(pathString, value, stringsAsFactors = FALSE)
+  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE), gives_warning())
+  expect_equal(Get(tree$leaves, "value"), c(count2 = "d", e = "e", leaves2 = "f"))
+  
+  df <- data.frame(pathString, value, stringsAsFactors = FALSE)
+  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE, warn = FALSE), not(gives_warning()))
+  expect_equal(Get(tree$leaves, "value"), c(count2 = "d", e = "e", leaves2 = "f"))
+  
+
+})
+
+
 test_that("as.data.frame.Node", {
   data(acme)
   acmedf <- as.data.frame(acme, 

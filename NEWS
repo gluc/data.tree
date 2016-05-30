@@ -1,6 +1,8 @@
 # All changes to data.tree are documented here.
 
 
+## Version 0.3.8
+- IMPROVE: as.Node.data.frame and FromDataFrameTable now support paths containing reserved words (#65)
 
 
 ## Version 0.3.7

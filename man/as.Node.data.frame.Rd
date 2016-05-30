@@ -11,7 +11,7 @@
   na.rm = TRUE)
 
 FromDataFrameTable(table, pathName = "pathString", pathDelimiter = "/",
-  colLevels = NULL, na.rm = TRUE)
+  colLevels = NULL, na.rm = TRUE, warn = TRUE)
 
 FromDataFrameNetwork(network)
 }
@@ -31,8 +31,10 @@ FromDataFrameNetwork(network)
 \item{na.rm}{If \code{TRUE}, then NA's are treated as NULL and values will not be set on nodes}
 
 \item{table}{a \code{data.frame} in table or tree format, i.e. having a row for each leaf (and optionally
-for additional nodes). There should be a column called \code{pathName}, separated by \code{pathDelimiter}, 
+for additional nodes). There should be a column called \code{pathName}, separated by \code{pathDelimiter},
 describing the path of each row.}
+
+\item{warn}{If TRUE, then warnings are printed}
 
 \item{network}{A \code{data.frame} in network format, i.e.
 it must adhere to the following requirements:
@@ -67,11 +69,11 @@ print(xN, "p", "cost")
 
 #More complex Table structure, using colLevels
 acme$Set(floor = c(1, 2, 3),  filterFun = function(x) x$level == 2)
-x <- ToDataFrameTable(acme, "pathString", "floor", "p", "cost") 
+x <- ToDataFrameTable(acme, "pathString", "floor", "p", "cost")
 x
 xN <- FromDataFrameTable(x, colLevels = list(NULL, "floor", c("p", "cost")), na.rm = TRUE)
 print(xN, "floor", "p", "cost")
- 
+
 #Network
 x <- ToDataFrameNetwork(acme, "p", "cost", direction = "climb")
 x

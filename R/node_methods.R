@@ -48,6 +48,9 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
 }
 
 
+
+
+
 #' Aggregate child values of a \code{Node}, recursively.
 #'
 #' The \code{Aggregate} method lets you fetch an attribute from a \code{Node}'s children, and then aggregate them

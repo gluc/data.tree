@@ -24,10 +24,10 @@ ToDataFrameTypeCol(x, ..., type = "level", prefix = type, pruneFun = NULL)
 \arguments{
 \item{x}{The root \code{Node} of the tree or sub-tree to be convert to a data.frame}
 
-\item{row.names}{\code{NULL} or a character vector giving the row names for the data frame. 
+\item{row.names}{\code{NULL} or a character vector giving the row names for the data frame.
 Missing values are not allowed.}
 
-\item{optional}{logical. If \code{TRUE}, setting row names and converting column names 
+\item{optional}{logical. If \code{TRUE}, setting row names and converting column names
 (to syntactic names: see make.names) is optional.}
 
 \item{...}{the attributes to be added as columns of the data.frame. See \code{\link{Get}} for details.
@@ -50,19 +50,19 @@ searched for the field/method. If TRUE, and if the \code{Node} does not contain 
 \item{prefix}{when converting type columns, the prefix used for the column names. Can be NULL to omit prefixes.}
 }
 \value{
-ToDataFrameTree: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree 
+ToDataFrameTree: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree
 spanned by \code{x}, possibly pruned according to \code{pruneFun}.
 
 ToDataFrameTable: a \code{data.frame}, where each row represents a leaf \code{Node} in the tree or sub-tree
 spanned by \code{x}, possibly pruned according to \code{pruneFun}.
 
-ToDataFrameNetwork: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree 
+ToDataFrameNetwork: a \code{data.frame}, where each row represents a \code{Node} in the tree or sub-tree
 spanned by \code{x}, possibly pruned according to \code{pruneFun}. The first column is called 'from', while the
 second is called 'to', describing the parent to child edge (for direction "climb") or the child to parent edge (for direction "descend").
 If \code{\link{AreNamesUnique}} is TRUE, then the Network is
 based on the \code{Node$name}, otherwise on the \code{Node$pathString}
 
-ToDataFrameTypeCol: a \code{data.frame} in table format (i.e. where each row represents a leaf in the tree or sub-tree 
+ToDataFrameTypeCol: a \code{data.frame} in table format (i.e. where each row represents a leaf in the tree or sub-tree
 spanned by \code{x}), possibly pruned according to \code{pruneFun}. In addition to \code{...}, each distinct
 \code{type} is output to a column.
 }
@@ -72,7 +72,7 @@ Convert a \code{data.tree} structure to a \code{data.frame}
 \examples{
 data(acme)
 acme$fieldsAll
-as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p") 
+as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p")
 
 ToDataFrameTree(acme, "cost", "p")
 ToDataFrameNetwork(acme, "cost", "p", direction = "climb")
@@ -85,25 +85,25 @@ ToDataFrameTree(acme, "totalCost", pruneFun = function(x) x$totalCost > 300000)
 
 #inherit
 acme$Set(floor = c(1, 2, 3), filterFun = function(x) x$level == 2)
-as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAncestors = FALSE)  
-as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAncestors = TRUE)  
+as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAncestors = FALSE)
+as.data.frame(acme, row.names = NULL, optional = FALSE, "floor", inheritFromAncestors = TRUE)
 
 #using a function as an attribute:
 acme$Accounting$Head <- "Mrs. Numright"
 acme$Research$Head <- "Mr. Stein"
 acme$IT$Head <- "Mr. Squarehead"
 ToDataFrameTable(acme, department = function(x) x$parent$name, "name", "Head", "cost")
-  
+
 #complex TypeCol
 acme$IT$Outsource$AddChild("India")
 acme$IT$Outsource$AddChild("Poland")
-acme$Set(type = c('company', 'department', 'project', 'project', 'department', 
-                  'project', 'project', 'department', 'program', 'project', 
+acme$Set(type = c('company', 'department', 'project', 'project', 'department',
+                  'project', 'project', 'department', 'program', 'project',
                   'project', 'project', 'project'
                   )
         )
 print(acme, 'type')
 ToDataFrameTypeCol(acme, type = 'type')
-      
+
 }
 
