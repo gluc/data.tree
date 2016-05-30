@@ -183,6 +183,10 @@ test_that("FromDataFrameNetwork order", {
   xN <- FromDataFrameNetwork(x)
   expect_equal(xN$Get("name"), acme$Get("name"))
 
+  x <- x[, c('to', 'from', 'p', 'cost')]
+  xN <- FromDataFrameNetwork(x)
+  expect_equal(xN$Get("name"), acme$Get("name"))
+  
 })
 
 
