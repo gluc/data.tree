@@ -75,7 +75,7 @@ DefaultPlotHeight <- function(node, rootHeight = 100) {
 CreateRegularTree <- function(height = 5, branchingFactor = 3, parent = Node$new("1")) {
   if (height <= 1) return()
   for (i in 1:branchingFactor) {
-    child <- parent$AddChild(paste(parent$name, i, sep = "."))
+    child <- parent$AddChild(paste(parent$name, i, sep = "."), check = FALSE)
     CreateRegularTree(height - 1, branchingFactor, child)
   }
   return (parent)
@@ -98,7 +98,7 @@ CreateRandomTree <- function(nodes = 100, root = Node$new("1"), id = 1) {
   lvl <- sample(1:dpth, 1, rep(1/dpth))
   t <- Traverse(root, filterFun = function(x) x$level == lvl)
   parent <- sample(t, 1)[[1]]
-  parent$AddChild(as.character(id + 1))
+  parent$AddChild(as.character(id + 1), check = FALSE)
   CreateRandomTree(nodes - 1, root = root, id = id + 1)
   return (root)
 }
@@ -224,3 +224,30 @@ GetDefaultTooltip <- function(node) {
 
   return (tt)
 }
+
+
+#' Checks whether \code{name} is a reserved word, as defined in \code{NODE_RESERVED_NAMES_CONST}.
+#' 
+#' @param name the name to check
+#' @param check Either
+#' \itemize{
+#'  \item{\code{"check"}: if the name conformance should be checked and warnings should be printed in case of non-conformance (the default)}
+#'  \item{\code{"no-warn"}: if the name conformance should be checked, but no warnings should be printed in case of non-conformance (if you expect non-conformance)}
+#'  \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
+#' }
+CheckNameReservedWord <- function(name, check = c("check", "no-warn", "no-check")) {
+  check <- check[1]
+  if (!(check == FALSE || check == "no-check")) {
+    if (name %in% NODE_RESERVED_NAMES_CONST) {
+      
+      name2 <- paste0(name, "2")
+      if (check != "no-warn") {
+        warning(paste0("Name '", name, "' is a reserved word as defined in NODE_RESERVED_NAMES_CONST. Using '", name2, "' instead."))
+      }
+      name <- name2
+      
+    }
+  }
+  return (name)
+}
+    

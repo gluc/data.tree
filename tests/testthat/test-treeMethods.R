@@ -1,6 +1,43 @@
 context("tree methods")
 
+test_that("Node instantiation", {
+  
+  n <- Node$new("bla")
+  expect_equal(n$name, "bla")
 
+  n <- Node$new("bla", check = "check")
+  expect_equal(n$name, "bla")
+
+  n <- Node$new("bla", check = "no-check")
+  expect_equal(n$name, "bla")
+  
+  n <- Node$new("bla", check = "no-warn")
+  expect_equal(n$name, "bla")
+  
+  n <- Node$new("bla", check = "whatever")
+  expect_equal(n$name, "bla")
+  
+  expect_that(n <- Node$new("name"), gives_warning())
+  expect_equal(n$name, "name2")
+  
+  expect_that(n <- Node$new("name", check = "check"), gives_warning())
+  expect_equal(n$name, "name2")
+
+  expect_that(n <- Node$new("name", check = "no-check"), not(gives_warning()))
+  expect_equal(n$name, "name")
+
+  expect_that(n <- Node$new("name", check = FALSE), not(gives_warning()))
+  expect_equal(n$name, "name")
+  
+  
+  expect_that(n <- Node$new("name", check = "no-warn"), not(gives_warning()))
+  expect_equal(n$name, "name2")
+  
+  expect_that(n <- Node$new("name", check = "whatever"), gives_warning())
+  expect_equal(n$name, "name2")
+  
+      
+})
 
 test_that("Climb NULL", {
   data(acme)

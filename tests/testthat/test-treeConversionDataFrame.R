@@ -31,7 +31,7 @@ test_that("FromDataFrameTable reserved words", {
   expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE), not(gives_warning()))
   expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
   
-  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE, warn = FALSE), not(gives_warning()))
+  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE, check = "no-warn"), not(gives_warning()))
   expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
 
   #reserved words
@@ -42,7 +42,7 @@ test_that("FromDataFrameTable reserved words", {
   expect_equal(Get(tree$leaves, "value"), c(count2 = "d", e = "e", leaves2 = "f"))
   
   df <- data.frame(pathString, value, stringsAsFactors = FALSE)
-  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE, warn = FALSE), not(gives_warning()))
+  expect_that(tree <- FromDataFrameTable(df, na.rm = TRUE, check = "no-warn"), not(gives_warning()))
   expect_equal(Get(tree$leaves, "value"), c(count2 = "d", e = "e", leaves2 = "f"))
   
 

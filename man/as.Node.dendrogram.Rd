@@ -4,8 +4,8 @@
 \alias{as.Node.dendrogram}
 \title{Convert a \code{\link{dendrogram}} to a data.tree \code{Node}}
 \usage{
-\method{as.Node}{dendrogram}(x, name = "root", heightName = "plotHeight",
-  ...)
+\method{as.Node}{dendrogram}(x, name = "Root", heightName = "plotHeight",
+  check = c("check", "no-warn", "no-check"), ...)
 }
 \arguments{
 \item{x}{The dendrogram}
@@ -13,6 +13,13 @@
 \item{name}{The name of the root Node}
 
 \item{heightName}{The name under which the dendrogram's height is stored}
+
+\item{check}{Either
+\itemize{
+ \item{\code{"check"}: if the name conformance should be checked and warnings should be printed in case of non-conformance (the default)}
+ \item{\code{"no-warn"}: if the name conformance should be checked, but no warnings should be printed in case of non-conformance (if you expect non-conformance)}
+ \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
+}}
 
 \item{...}{Additional parameters}
 }

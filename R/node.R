@@ -137,8 +137,11 @@ Node <- R6Class("Node",
                     public = list(
                       
                       
-                      initialize=function(name, ...) {
-                        if (!missing(name)) private$p_name <- as.character(name)
+                      initialize=function(name, check = c("check", "no-warn", "no-check"), ...) {
+                        if (!missing(name)) {
+                          name <- CheckNameReservedWord(name, check)
+                          private$p_name <- as.character(name)
+                        }
                         args <- list(...)
                         mapply(FUN = function(arg, nme) self[[nme]] <- arg, args, names(args))
                         invisible (self)
@@ -149,8 +152,8 @@ Node <- R6Class("Node",
                       ####################
                       # Tree creation
                       
-                      AddChild = function(name, ...) {
-                        child <- Node$new(as.character(name), ...)
+                      AddChild = function(name, check = c("check", "no-warn", "no-check"), ...) {
+                        child <- Node$new(as.character(name), check, ...)
                         invisible (self$AddChildNode(child))
                       },
                       
@@ -162,8 +165,8 @@ Node <- R6Class("Node",
                       },
                       
                       
-                      AddSibling = function(name, ...) {
-                        sibling <- Node$new(as.character(name), ...)
+                      AddSibling = function(name, check = c("check", "no-warn", "no-check"), ...) {
+                        sibling <- Node$new(as.character(name), check, ...)
                         invisible (self$AddSiblingNode(sibling))
                       },
                       

@@ -273,7 +273,8 @@ as.Node.data.frame <- function(x,
 #' @param pathName The name of the column in x containing the path of the row
 #' @param pathDelimiter The delimiter used
 #' @param colLevels Nested list of column names, determining on what node levels the attributes are written to.
-#' @param warn If TRUE, then warnings are printed
+#'
+#' @inheritParams CheckNameReservedWord
 #'
 #' @export
 FromDataFrameTable <- function(table,
@@ -281,7 +282,7 @@ FromDataFrameTable <- function(table,
                                pathDelimiter = '/',
                                colLevels = NULL,
                                na.rm = TRUE,
-                               warn = TRUE
+                               check = c("check", "no-warn", "no-check")
                                ) {
   root <- NULL
   mycols <- names(table)[ !(names(table) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
@@ -293,16 +294,14 @@ FromDataFrameTable <- function(table,
     #create node and ancestors if necessary (might already have been created)
     paths <- strsplit(mypath, pathDelimiter, fixed = TRUE)[[1]]
     paths <- paths[paths!=""]
-    if (is.null(root)) root <- Node$new(paths[1])
+    if (is.null(root)) root <- Node$new(paths[1], check)
     mynode <- root
     colsToSet <- mycols
     colsToSetForLeaf <- mycols
     for (path in paths[-1]) {
 
-      if (path %in% NODE_RESERVED_NAMES_CONST) {
-        if (warn) warning(paste0("'", path, "' is a reserved word and cannot be used as name for a node. Using '", path, "2' instead!"))
-        path <- paste0(path, "2")
-      }
+      
+      path <- CheckNameReservedWord(path, check)
 
       child <- Climb(mynode, path)
 
@@ -353,9 +352,11 @@ FromDataFrameTable <- function(table,
 #' }
 #'
 #' @import methods
+#' 
+#' @inheritParams CheckNameReservedWord
 #'
 #' @export
-FromDataFrameNetwork <- function(network) {
+FromDataFrameNetwork <- function(network, check = c("check", "no-warn", "no-check")) {
 
   if (!is(network, "data.frame")) stop("network must be a data.frame")
   if (dim(network)[2] < 2) stop("network must hold the relationships in the first two columns")
@@ -371,7 +372,7 @@ FromDataFrameNetwork <- function(network) {
   rootName <- unique(parents[!(parents %in% children)])
   if (length(rootName) != 1) stop("Cannot find root name. network is not a tree!")
 
-  root <- Node$new(rootName)
+  root <- Node$new(rootName, check)
   AddChildren <- function(node) {
     childrenIdxs <- which(parents == node$name)
     for (idx in childrenIdxs) {

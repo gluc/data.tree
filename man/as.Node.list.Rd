@@ -7,13 +7,14 @@
 \title{Convert a nested \code{list} structure to a \code{data.tree} structure}
 \usage{
 \method{as.Node}{list}(x, mode = c("simple", "explicit"), nameName = "name",
-  childrenName = "children", nodeName = NULL, warn = TRUE, ...)
+  childrenName = "children", nodeName = NULL, check = c("check",
+  "no-warn", "no-check"), ...)
 
 FromListExplicit(explicitList, nameName = "name", childrenName = "children",
-  nodeName = NULL, warn = TRUE)
+  nodeName = NULL, check = c("check", "no-warn", "no-check"))
 
 FromListSimple(simpleList, nameName = "name", nodeName = NULL,
-  warn = TRUE)
+  check = c("check", "no-warn", "no-check"))
 }
 \arguments{
 \item{x}{The \code{list} to be converted.}
@@ -29,7 +30,12 @@ the children lists are named, or if an automatic name (running number) should be
 \item{nodeName}{A name suggestion for x, if the name cannot be deferred otherwise. This is for example the case for
 the root with mode explicit and named lists.}
 
-\item{warn}{If TRUE, then warnings are printed}
+\item{check}{Either
+\itemize{
+ \item{\code{"check"}: if the name conformance should be checked and warnings should be printed in case of non-conformance (the default)}
+ \item{\code{"no-warn"}: if the name conformance should be checked, but no warnings should be printed in case of non-conformance (if you expect non-conformance)}
+ \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
+}}
 
 \item{...}{Any other argument to be passed to generic sub implementations}
 
@@ -84,7 +90,6 @@ kingJosephs <- list(spouse = "Mary",
                    )
 FromListSimple(kingJosephs, nodeName = "Joseph I")
   
-
 }
 \seealso{
 Other as.Node: \code{\link{as.Node.data.frame}},

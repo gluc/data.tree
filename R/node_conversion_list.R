@@ -8,7 +8,6 @@
 #' @param childrenName The name of the element that contains the child list (applies to mode 'explicit' only).
 #' @param nodeName A name suggestion for x, if the name cannot be deferred otherwise. This is for example the case for
 #' the root with mode explicit and named lists.
-#' @param warn If TRUE, then warnings are printed
 #' @param ... Any other argument to be passed to generic sub implementations
 #' 
 #' @examples
@@ -54,12 +53,13 @@
 #'                    )
 #' FromListSimple(kingJosephs, nodeName = "Joseph I")
 #'   
-#' 
+#' @inheritParams CheckNameReservedWord
 #' @family as.Node
 #' 
 #' @export
-as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, warn = TRUE, ...) {
+as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, check = c("check", "no-warn", "no-check"), ...) {
   mode <- mode[1]
+  check <- check[1]
   
   #find my name
   if (is.null(nameName) || !(nameName %in% names(x))) {
@@ -69,12 +69,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
     myName <- x[[nameName]]
   }
   
-  if (myName %in% NODE_RESERVED_NAMES_CONST) {
-    if (warn) warning(paste0("'", myName, "' is a reserved word and cannot be used as name for a node. Using '", myName, "2' instead!"))
-    myName <- paste0(myName, "2")
-  }
-  
-  n <- Node$new(as.character(myName))
+  n <- Node$new(as.character(myName), check = check)
   
   #set fields
   
@@ -105,9 +100,10 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   
   fields[unnamed_fields] <- seq_along(which(unnamed_fields))
   
-  if (warn) {
+  
+  if (check != "no-check") {
     fieldNameIsReserved <- (fields %in% NODE_RESERVED_NAMES_CONST) & !(fields %in% c(nameName, childrenName))
-    if (any(fieldNameIsReserved)) warning(paste0("The following names are data.tree reserved words and will be appended with 2: ", paste(fields[fieldNameIsReserved], sep = ", "), "." ))
+    if (any(fieldNameIsReserved) && (check != "no-warn")) warning(paste0("The following names are data.tree reserved words and will be appended with 2: ", paste(fields[fieldNameIsReserved], sep = ", "), "." ))
   }
   
   for (i in seq_along(field_nums)) {
@@ -141,7 +137,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
     }
     if (nchar(childName) == 0) childName <- i
     child <- children[[i]]
-    childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, warn = warn, ...)
+    childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, check = check, ...)
     n$AddChildNode(childNode)
     
   }
@@ -156,8 +152,8 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
 #' @param explicitList A \code{list} in which children are in a separate nested list called \code{childrenName}.
 #' 
 #' @export
-FromListExplicit <- function(explicitList, nameName = "name", childrenName = "children", nodeName = NULL, warn = TRUE) {
-  as.Node.list(explicitList, mode = "explicit", nameName = nameName, childrenName = childrenName, nodeName = nodeName, warn = warn)
+FromListExplicit <- function(explicitList, nameName = "name", childrenName = "children", nodeName = NULL, check = c("check", "no-warn", "no-check")) {
+  as.Node.list(explicitList, mode = "explicit", nameName = nameName, childrenName = childrenName, nodeName = nodeName, check = check)
 }
 
 
@@ -167,8 +163,8 @@ FromListExplicit <- function(explicitList, nameName = "name", childrenName = "ch
 #' interpreted as a child \code{Node}
 #' 
 #' @export
-FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, warn = TRUE) {
-  as.Node.list(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName, warn = warn)
+FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, check = c("check", "no-warn", "no-check")) {
+  as.Node.list(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName, check = check)
 }
 
 

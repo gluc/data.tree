@@ -20,8 +20,10 @@
 #'   
 #' @family as.Node
 #' 
+#' @inheritParams CheckNameReservedWord
+#' 
 #' @export
-as.Node.dendrogram <- function(x, name = "root", heightName = "plotHeight", ...) {
+as.Node.dendrogram <- function(x, name = "Root", heightName = "plotHeight", check = c("check", "no-warn", "no-check"),  ...) {
   #str(unclass(dend1))
   if (is.leaf(x)) {
     name <- attr(x, 'label')
@@ -31,7 +33,7 @@ as.Node.dendrogram <- function(x, name = "root", heightName = "plotHeight", ...)
     name <- attr(x, "edgetext")
   }
   
-  n <- Node$new(name)
+  n <- Node$new(name, check)
   reserved <- c('label', 'class', 'comment', 'dim', 'dimnames', 'names', 'row.names', 'tsp', NODE_RESERVED_NAMES_CONST)
   ats <- names(attributes(x))
   for (a in ats[!(ats %in% reserved)]) {

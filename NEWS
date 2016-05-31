@@ -3,6 +3,7 @@
 
 ## Version 0.3.8
 - IMPROVE: as.Node.data.frame and FromDataFrameTable now support paths containing reserved words (#65)
+- CHANGE: Node$new now checks that names are not reserved names. As a consequence, many conversions to Node now contain a check parameter.
 
 
 ## Version 0.3.7

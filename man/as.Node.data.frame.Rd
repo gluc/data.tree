@@ -11,9 +11,10 @@
   na.rm = TRUE)
 
 FromDataFrameTable(table, pathName = "pathString", pathDelimiter = "/",
-  colLevels = NULL, na.rm = TRUE, warn = TRUE)
+  colLevels = NULL, na.rm = TRUE, check = c("check", "no-warn",
+  "no-check"))
 
-FromDataFrameNetwork(network)
+FromDataFrameNetwork(network, check = c("check", "no-warn", "no-check"))
 }
 \arguments{
 \item{x}{The data.frame in the required format.}
@@ -34,7 +35,12 @@ FromDataFrameNetwork(network)
 for additional nodes). There should be a column called \code{pathName}, separated by \code{pathDelimiter},
 describing the path of each row.}
 
-\item{warn}{If TRUE, then warnings are printed}
+\item{check}{Either
+\itemize{
+ \item{\code{"check"}: if the name conformance should be checked and warnings should be printed in case of non-conformance (the default)}
+ \item{\code{"no-warn"}: if the name conformance should be checked, but no warnings should be printed in case of non-conformance (if you expect non-conformance)}
+ \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
+}}
 
 \item{network}{A \code{data.frame} in network format, i.e.
 it must adhere to the following requirements:
