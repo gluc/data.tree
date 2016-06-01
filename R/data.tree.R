@@ -39,7 +39,7 @@
 #' The entry point to the package is \code{\link{Node}}. Each tree is composed of a number of \code{Node}s, referencing each other.
 #' 
 #' One of most important things to note about \code{data.tree} is that it exhibits \bold{reference semantics}. In a nutshell, this means that you can modify 
-#' your tree along the way, without having to reassing it to a variable after each modification. By and large, this is a rather exceptional behaviour
+#' your tree along the way, without having to reassign it to a variable after each modification. By and large, this is a rather exceptional behaviour
 #' in R, where value-semantics is king most of the time.
 #' 
 #' @section Applications:
