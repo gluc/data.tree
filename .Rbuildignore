@@ -5,3 +5,4 @@ data_gen
 cran-comments.md
 cheat-sheet.md
 appveyor.yml
+Rprof.out

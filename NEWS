@@ -1,7 +1,7 @@
 # All changes to data.tree are documented here.
 
 
-## Version 0.3.8
+## Version 0.4.0
 - IMPROVE: as.Node.data.frame and FromDataFrameTable now support paths containing reserved words (#65)
 - CHANGE: Node$new now checks that names are not reserved names. As a consequence, many conversions to Node now contain a check parameter.
 - IMPROVE: Climb is now much faster when climbing by name (#71)
