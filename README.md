@@ -1,22 +1,13 @@
-# Badges
+CRAN: [![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](https://cran.r-project.org/package=data.tree/) [![CRAN downloads](http://cranlogs.r-pkg.org/badges/data.tree)](https://cran.r-project.org/web/packages/data.tree/index.html)
 
-## Master
+Master: [![Build Status master](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree) [![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=master&svg=true)](https://ci.appveyor.com/project/gluc/data.tree) [![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=master)](http://codecov.io/github/gluc/data.tree?branch=master)
 
-[![Build Status master](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree)
-[![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=master&svg=true)](https://ci.appveyor.com/project/gluc/data.tree)
-[![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=master)](http://codecov.io/github/gluc/data.tree?branch=master)
-[![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](https://cran.r-project.org/package=data.tree/)
-
-## Dev
-
-[![Build Status dev](https://travis-ci.org/gluc/data.tree.svg?branch=dev)](https://travis-ci.org/gluc/data.tree)
-[![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=dev&svg=true)](https://ci.appveyor.com/project/gluc/data.tree)
-[![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=dev)](http://codecov.io/github/gluc/data.tree?branch=dev)
+Dev: [![Build Status dev](https://travis-ci.org/gluc/data.tree.svg?branch=dev)](https://travis-ci.org/gluc/data.tree) [![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=dev&svg=true)](https://ci.appveyor.com/project/gluc/data.tree) [![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=dev)](http://codecov.io/github/gluc/data.tree?branch=dev)
 
 # data.tree
 An R package to manage hierarchical data and tree structures
 
-Hierarchical data is ubiquitous in statistics and programming (XML, search trees, family trees, classification, file system, etc.). However, no general-use *tree data structure* is available in R. 
+Hierarchical data is ubiquitous in statistics and programming (XML, search trees, family trees, classification, file system, etc.). However, no general-use *tree data structure* is available in base R. 
 Where tabular data has data.frame, hierarchical data is often modeled in lists of lists or similar makeshifts. These
 structures are often difficult to manage.
 This is where the data.tree package steps in. It lets you build trees of hierarchical
