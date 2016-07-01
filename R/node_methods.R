@@ -294,12 +294,13 @@ Climb <- function(node, ...) {
 
 
     value <- mpath[[1]]
-
-    getA <- Get(node$children, attribute)
-    child <- node$children[getA == value]
-    if(length(child) == 0) return (NULL)
-
-    child <- child[[1]]
+    
+    if (attribute == "name") child <- node[[value]]
+    else {
+      getA <- Get(node$children, attribute)
+      child <- node$children[getA == value][[1]]
+    }
+    
 
     if (is.null(child)) {
       return (NULL)
