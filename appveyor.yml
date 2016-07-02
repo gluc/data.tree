@@ -3,16 +3,43 @@
 # Download script file from GitHub
 init:
   ps: |
+        Get-Date
         $ErrorActionPreference = "Stop"
-        Invoke-WebRequest https://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
-        Import-Module '..\appveyor-tool.ps1'
 install:
-  ps: Bootstrap
-
-environment:
-  R_VERSION: stable
+  ps: |
+        Import-Module '.\scripts\appveyor-tool.ps1'
+        Bootstrap
+cache:
+  - C:\RLibrary
 
 # Adapt as necessary starting from here
+
+environment:
+  global:
+    WARNINGS_ARE_ERRORS: 1
+
+  matrix:
+  - R_VERSION: devel
+    GCC_PATH: mingw_32
+
+  - R_VERSION: devel
+    R_ARCH: x64
+    GCC_PATH: mingw_64
+
+  - R_VERSION: release
+    R_ARCH: x64
+
+  - R_VERSION: stable
+
+  - R_VERSION: patched
+
+  - R_VERSION: oldrel
+    RTOOLS_VERSION: 32
+    CRAN: http://cran.rstudio.com
+
+  - R_VERSION: 3.0.3
+    RTOOLS_VERSION: 31
+    CRAN: http://cran.rstudio.com
 
 build_script:
   - travis-tool.sh install_deps
@@ -21,7 +48,8 @@ test_script:
   - travis-tool.sh run_tests
 
 on_failure:
-  - travis-tool.sh dump_logs
+  - 7z a failure.zip *.Rcheck\*
+  - appveyor PushArtifact failure.zip
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
@@ -41,3 +69,13 @@ artifacts:
 
   - path: '\*_*.zip'
     name: Bits
+
+notifications:
+ - provider: Email
+   to:
+     - appveyor@ipub.com
+   subject: 'r-appveyor build {{status}}'                  # optional
+   message: "https://ci.appveyor.com/project/gluc/data.tree"    # optional
+   on_build_success: false
+   on_build_failure: true
+   on_build_status_changed: true
