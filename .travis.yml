@@ -26,6 +26,3 @@ notifications:
   email:
     on_success: change
     on_failure: change
-
-env:
-  before_install: echo "options(repos = c(CRAN='http://cran.rstudio.com'))" > ~/.Rprofile
