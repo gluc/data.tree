@@ -12,6 +12,9 @@ install:
 
 # Adapt as necessary starting from here
 
+cache:
+  - C:\RLibrary
+
 environment:
   global:
     WARNINGS_ARE_ERRORS: 1
@@ -31,13 +34,6 @@ environment:
 
   - R_VERSION: patched
 
-  - R_VERSION: oldrel
-    RTOOLS_VERSION: 32
-    CRAN: http://cran.rstudio.com
-
-  - R_VERSION: 3.0.3
-    RTOOLS_VERSION: 31
-    CRAN: http://cran.rstudio.com
 
 build_script:
   - travis-tool.sh install_deps

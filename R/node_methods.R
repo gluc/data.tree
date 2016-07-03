@@ -5,7 +5,6 @@
 # The first argument of all these methods is node
 
 
-
 #' Print a \code{Node} in a human-readable fashion.
 #'
 #' @param x The Node
