@@ -89,7 +89,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'
 #' }
 #' 
-#' @section Properties:
+#' @section Actives (aka Properties):
 #'   
 #' \describe{
 #'  \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}

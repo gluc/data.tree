@@ -198,7 +198,7 @@ There are different types of methods:
     + debugging: OO-style methods are difficult to debug. So, in this packge, they just re-direct to their classical R counterpart, which is very easy to debug.
 
 
-### Actives Examples
+### Actives Examples (aka Properties)
 
 Actives look and feel like fields, but they are dynamically evaluated. They are documented in the `Node` documentation, which is accessed by typing `?Node`. 
 

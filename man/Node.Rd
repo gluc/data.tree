@@ -55,7 +55,7 @@ This is only syntactical sugar, and the result of both variations is exactly the
 }
 }
 
-\section{Properties}{
+\section{Actives (aka Properties)}{
 
   
 \describe{
