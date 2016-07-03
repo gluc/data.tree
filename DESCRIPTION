@@ -27,7 +27,8 @@ Suggests:
     partykit,
     foreach,
     htmlwidgets,
-    htmltools
+    htmltools,
+    Rcpp
 Enhances: 
 Description: Create tree structures from hierarchical data, and traverse
     the tree in various orders. Aggregate, cumulate, print, plot, convert to and from
