@@ -133,17 +133,22 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #' @export
 #' @format An \code{\link{R6Class}} generator object
 Node <- R6Class("Node",
-                lock_objects = FALSE,
+                lock_object = FALSE,
+                lock_class = TRUE,
+                cloneable = TRUE,
                     public = list(
                       
                       
                       initialize=function(name, check = c("check", "no-warn", "no-check"), ...) {
                         if (!missing(name)) {
+                          name <- as.character(name)
                           name <- CheckNameReservedWord(name, check)
-                          private$p_name <- as.character(name)
+                          private$p_name <- name
                         }
-                        args <- list(...)
-                        mapply(FUN = function(arg, nme) self[[nme]] <- arg, args, names(args))
+                        if (!missing(...)) {
+                          args <- list(...)
+                          mapply(FUN = function(arg, nme) self[[nme]] <- arg, args, names(args))
+                        }
                         invisible (self)
                       },
                       

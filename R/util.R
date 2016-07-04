@@ -237,6 +237,8 @@ GetDefaultTooltip <- function(node) {
 #' }
 CheckNameReservedWord <- function(name, check = c("check", "no-warn", "no-check")) {
   check <- check[1]
+  if (check == FALSE) return (name)
+  if (check == "no-check") return (name)
   if (!(check == FALSE || check == "no-check")) {
     if (name %in% NODE_RESERVED_NAMES_CONST) {
       
