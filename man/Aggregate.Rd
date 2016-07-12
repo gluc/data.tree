@@ -26,7 +26,7 @@ using \code{aggFun}. For example, you can aggregate cost by summing costs of chi
 context of tree traversal, when using post-order traversal mode.
 }
 \details{
-As with \code{\link{Get}}, the attribute can be a field, a method or a function. If the attribute on a child 
+As with \code{\link{Get}}, the attribute can be a field, a method or a function. If the attribute on a child
 is \code{NULL}, \code{Aggregate} is called recursively on its children.
 }
 \examples{

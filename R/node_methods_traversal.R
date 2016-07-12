@@ -79,7 +79,7 @@ Traverse = function(node,
   } else if (traversal == "ancestor") {
     
     
-    if (!node$isRoot) {
+    if (!isRoot(node)) {
       nodes <- Traverse(node$parent, traversal = traversal, pruneFun = pruneFun, filterFun = filterFun)
     }
     
@@ -116,14 +116,14 @@ Traverse = function(node,
 #' #        traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
 #' #        pruneFun = NULL, 
 #' #        filterFun = NULL, 
-#' #        format = NULL, 
+#' #        format = FALSE, 
 #' #        inheritFromAncestors = FALSE)
 #'          
 #' # traditional:
 #' Get(nodes, 
 #'     attribute, 
 #'     ..., 
-#'     format = NULL, 
+#'     format = FALSE, 
 #'     inheritFromAncestors = FALSE, 
 #'     simplify = c(TRUE, FALSE, "array", "regular"))
 #' 
@@ -136,7 +136,8 @@ Traverse = function(node,
 #'         \item c.) a \bold{function}, whose first argument must be a \code{Node} e.g. \code{acme$Get(function(node) node$cost * node$p)}
 #'        }
 #' @param ... in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.
-#' @param format can be a function that transforms the collected values, e.g. for printing
+#' @param format if \code{FALSE} (the default), no formatting is being used. If \code{TRUE}, then the first formatter (if any) found along the ancestor path is being used for formatting 
+#' (see \code{\link{SetFormat}}). If \code{format} is a function, then the collected value is passed to that function, and the result is returned.
 #' @param inheritFromAncestors if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.
 #' @param simplify same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can sepcify "regular" if
 #' each returned value is of length > 1, and equally named. See below for an example.
@@ -173,7 +174,7 @@ Traverse = function(node,
 Get = function(nodes, 
                attribute, 
                ..., 
-               format = NULL,
+               format = FALSE,
                inheritFromAncestors = FALSE, 
                simplify = c(TRUE, FALSE, "array", "regular")) {
   if (length(nodes) == 0) return(NULL)

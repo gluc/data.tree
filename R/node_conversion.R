@@ -45,7 +45,7 @@ ToNewick <- function(node, heightAttribute = DefaultPlotHeight, ...) {
   deparse <- function(x) {
     name <- str_replace_all(x$name, " ", "_")
     name <- str_replace_all(name, ",", "")
-    if(!x$isRoot && length(heightAttribute) > 0) {
+    if(!isRoot(x) && length(heightAttribute) > 0) {
       edge <- GetAttribute(x$parent, heightAttribute, ...) - GetAttribute(x, heightAttribute, ...) 
       me <- paste0(name, ":", edge)
     } else {

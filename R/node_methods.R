@@ -36,13 +36,13 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
     } else {
       stop (paste0("Unknown pruneMethod ", pruneMethod, "!"))
     }
-  } else if(!x$isRoot) {
+  } else if(!isRoot(x)) {
       #clone s.t. x is root (for pretty level names)
       x <- Clone(x, attributes = TRUE)
       x$parent <- NULL
   }
 
-  df <- ToDataFrameTree(x, ...)
+  df <- ToDataFrameTree(x, format = TRUE, ...)
   print(df, na.print = "")
 }
 
@@ -56,8 +56,8 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
 #' using \code{aggFun}. For example, you can aggregate cost by summing costs of child \code{Nodes}. This is especially useful in the
 #' context of tree traversal, when using post-order traversal mode.
 #'
-#' As with \code{\link{Get}}, the attribute can be a field, a method or a function. If the attribute on a child 
-#' is \code{NULL}, \code{Aggregate} is called recursively on its children. 
+#' As with \code{\link{Get}}, the attribute can be a field, a method or a function. If the attribute on a child
+#' is \code{NULL}, \code{Aggregate} is called recursively on its children.
 #'
 #' @param node the \code{Node} on which to aggregate
 #' @param aggFun the aggregation function to be applied to the children's \code{attributes}
@@ -70,7 +70,7 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
 #'
 #' #Aggregate on a field
 #' Aggregate(acme, "cost", sum)
-#' 
+#'
 #' #This is the same as:
 #' HomeRolledAggregate <- function(node) {
 #'   sum(sapply(node$children, function(child) {
@@ -131,10 +131,10 @@ Aggregate = function(node,
 #' @export
 Cumulate = function(node, attribute, aggFun, ...) {
   if ("cacheAttribute" %in% names(list(...))) stop("cacheAttribute not supported anymore! Please use Do instead.")
-  if (node$isRoot) return (GetAttribute(node, attribute, format = identity))
+  if (isRoot(node)) return (GetAttribute(node, attribute))
   pos <- node$position
   nodes <- node$parent$children[1:pos]
-  res <- aggFun(Get(nodes, attribute, format = identity))
+  res <- aggFun(Get(nodes, attribute))
 
   return (res)
 }
@@ -195,20 +195,20 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 
 
 #' Navigate to another node by relative path.
-#' 
+#'
 #' @usage #node$Navigate(path)
 #' Navigate(node, path)
-#' 
+#'
 #' @param node The starting \code{\link{Node}} to navigate
 #' @param path A string or a character vector describing the path to navigate
-#' 
+#'
 #' @details The \code{path} is always relative to the \code{node}. Navigation
 #' to the parent is defined by \code{..}, whereas navigation to a child
 #' is defined via the child's name.
 #' If path is provided as a string, then the navigation steps are separated
 #' by '/'.
 #'
-#' @examples 
+#' @examples
 #' data(acme)
 #' acme$Research$Navigate("../IT/Outsource")
 #' acme$Research$Navigate(c("..", "IT", "Outsource"))
@@ -249,7 +249,7 @@ Navigate <- function(node, path) {
 #'
 #' @examples
 #' data(acme)
-#' 
+#'
 #' #the following are all equivalent
 #' acme$Climb('IT', 'Outsource')
 #' acme$Climb(name = 'IT', name = 'Outsource')
@@ -293,13 +293,13 @@ Climb <- function(node, ...) {
 
 
     value <- mpath[[1]]
-    
+
     if (attribute == "name") child <- node[[value]]
     else {
       getA <- Get(node$children, attribute)
       child <- node$children[getA == value][[1]]
     }
-    
+
 
     if (is.null(child)) {
       return (NULL)
@@ -370,7 +370,10 @@ FindNode <- function(node, name) {
 #' GetAttribute(acme$IT$Outsource, "cost")
 #'
 #' @export
-GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
+GetAttribute <- function(node, attribute, ..., format = FALSE, inheritFromAncestors = FALSE, nullAsNa = TRUE) {
+  # for backwards compatibility:
+  if (is.null(format)) format <- TRUE
+  
   if (is.function(attribute)) {
     #function
     v <- attribute(node, ...)
@@ -386,9 +389,10 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
     stop("attribute must be a function, the name of a public property, or the name of method")
   }
 
-  if (is.null(v) && inheritFromAncestors && !node$isRoot) {
+  if (is.null(v) && inheritFromAncestors && !isRoot(node)) {
     v <- GetAttribute(node$parent, attribute,
                       ...,
+                      format = format,
                       inheritFromAncestors = TRUE,
                       nullAsNa = FALSE)
   }
@@ -396,14 +400,13 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
   if (!nullAsNa && is.null(v)) return (NULL)
   if (is.null(v)) v <- NA
 
+  if(is.logical(format) && format == TRUE && !is.function(attribute)) {
 
-  if (is.null(format) && !is.function(attribute)) {
     #get default formatter
     format <- GetObjectAttribute(node, "formatters")[[attribute]]
-  }
 
-  if (!is.null(format)) {
-    if (!is.function(format)) stop("format must be a function!")
+  }
+  if (is.function(format)) {
     v <- format(v)
   }
 
@@ -412,8 +415,10 @@ GetAttribute <- function(node, attribute, ..., format = NULL, inheritFromAncesto
 
 GetObjectAttribute <- function(node, name) {
   a <- attr(node, name)
-  if (length(a) > 0 || node$isRoot) return (a)
-  return ( GetObjectAttribute(node$parent, name))
+  ##try to speed up by avoiding isRoot call
+  prnt <- node$parent
+  if (length(a) > 0 || is.null(prnt)) return (a)
+  return ( GetObjectAttribute(prnt, name))
 }
 
 #' Set a formatter function on a specific node

@@ -10,14 +10,14 @@
 #        traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
 #        pruneFun = NULL, 
 #        filterFun = NULL, 
-#        format = NULL, 
+#        format = FALSE, 
 #        inheritFromAncestors = FALSE)
          
 # traditional:
 Get(nodes, 
     attribute, 
     ..., 
-    format = NULL, 
+    format = FALSE, 
     inheritFromAncestors = FALSE, 
     simplify = c(TRUE, FALSE, "array", "regular"))
 }
@@ -33,7 +33,8 @@ Get(nodes,
 
 \item{...}{in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
 
-\item{format}{can be a function that transforms the collected values, e.g. for printing}
+\item{format}{if \code{FALSE} (the default), no formatting is being used. If \code{TRUE}, then the first formatter (if any) found along the ancestor path is being used for formatting 
+(see \code{\link{SetFormat}}). If \code{format} is a function, then the collected value is passed to that function, and the result is returned.}
 
 \item{inheritFromAncestors}{if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.}
 

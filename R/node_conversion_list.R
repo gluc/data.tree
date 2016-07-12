@@ -210,7 +210,7 @@ as.list.Node <- function(x,
   if (nchar(rootName) != 0) myname <- rootName
   else myname <- x$name
   
-  if (nchar(nameName) != 0 || nchar(rootName) != 0 || x$isRoot) {
+  if (nchar(nameName) != 0 || nchar(rootName) != 0 || isRoot(x)) {
     l_nameName <- nameName
     if(nchar(nameName) == 0) l_nameName <- "name"
     res[l_nameName] <- myname

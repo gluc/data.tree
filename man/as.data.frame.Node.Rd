@@ -10,14 +10,15 @@
 \usage{
 \method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
   traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
-  pruneFun = NULL, filterFun = NULL, inheritFromAncestors = FALSE)
+  pruneFun = NULL, filterFun = NULL, format = FALSE,
+  inheritFromAncestors = FALSE)
 
 ToDataFrameTree(x, ..., pruneFun = NULL)
 
 ToDataFrameTable(x, ..., pruneFun = NULL)
 
 ToDataFrameNetwork(x, ..., direction = c("climb", "descend"),
-  pruneFun = NULL, inheritFromAncestors = FALSE)
+  pruneFun = NULL, format = FALSE, inheritFromAncestors = FALSE)
 
 ToDataFrameTypeCol(x, ..., type = "level", prefix = type, pruneFun = NULL)
 }
@@ -39,6 +40,9 @@ If a specific Node does not contain the attribute, \code{NA} is added to the dat
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
 \item{filterFun}{a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.}
+
+\item{format}{if \code{FALSE} (the default), then no formatting will be applied. If \code{TRUE}, then the first formatter (if any) along the ancestor
+path is used for formatting.}
 
 \item{inheritFromAncestors}{if FALSE, and if the attribute is a field or a method, then only a \code{Node} itself is
 searched for the field/method. If TRUE, and if the \code{Node} does not contain the attribute, then ancestors are also searched.}

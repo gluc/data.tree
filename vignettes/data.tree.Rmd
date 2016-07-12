@@ -814,7 +814,7 @@ Earlier, we saw that we can add a function dynamically to a `Node`. We can, of c
 
 ```{r}
 acme$Set(cost = c(function(self) sum(sapply(self$children, 
-                                            function(child) GetAttribute(child, "cost", format = identity)))), 
+                                            function(child) GetAttribute(child, "cost")))), 
          filterFun = isNotLeaf)
 print(acme, "cost")
 acme$IT$AddChild("Paperless", cost = 240000)

@@ -591,7 +591,7 @@ test_that("Aggregate function", {
 test_that("Formatter Get", {
   data(acme)
   SetFormat(acme, "p", FormatPercent)
-  p <- acme$Get("p")
+  p <- acme$Get("p", format = TRUE)
   expect_equal(p[["Go agile"]], "5.00 %")
 })
 
@@ -601,7 +601,7 @@ test_that("Formatter Get Hierarchy", {
   acme$p <- 1
   n <- acme$Climb("IT")
   SetFormat(n, "p", FormatFixedDecimal)
-  p <- acme$Get("p")
+  p <- acme$Get("p", format = TRUE)
   expect_equal(p[["Acme Inc."]], "100.00 %")
   expect_equal(p[["Outsource"]], "0.200")
   
@@ -748,7 +748,7 @@ test_that("attribute function with formatter", {
   data(acme)
   SetFormat(acme, "cost", FormatFixedDecimal)
   acme$IT$cost <- function(self) sum(sapply(self$children, function(x) x$cost))
-  mycost <- acme$Get("cost")
+  mycost <- acme$Get("cost", format = TRUE)
   expect_equal(mycost[[8]], "700000.000")
   
 })

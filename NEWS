@@ -1,5 +1,9 @@
 # All changes to data.tree are documented here.
 
+## Version 0.5.0
+- IMPROVE: Performance improvement for many functions. For example, as.Node roughly by factor 4 for large dataset (#74)
+- CHANGE: by default, as.data.frame.Node (and derivatives) do not format anymore (use the format parameter)
+
 
 ## Version 0.4.0
 - IMPROVE: as.Node.data.frame and FromDataFrameTable now support paths containing reserved words (#65)

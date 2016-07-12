@@ -109,7 +109,7 @@ PrintPruneSimple <- function(x, limit) {
   tc <- x$totalCount
   toBeCropped <- tc - limit
   if (toBeCropped < 1) {
-    if(!x$isRoot) {
+    if(!isRoot(x)) {
       #clone s.t. x is root (for pretty level names)
       x <- Clone(x, attributes = TRUE)
       x$parent <- NULL
@@ -150,7 +150,7 @@ PrintPruneDist <- function(x, limit) {
   tc <- x$totalCount
   toBeCropped <- tc - limit
   if (toBeCropped < 1) {
-    if(!x$isRoot) {
+    if(!isRoot(x)) {
       #clone s.t. x is root (for pretty level names)
       x <- Clone(x, attributes = TRUE)
       x$parent <- NULL
@@ -173,8 +173,8 @@ PrintPruneDist <- function(x, limit) {
   Set(t, .id = 1:tc)
   x$.level <- 1
   Do(t, function(x) {
-    x$.originalCount <- x$count
-    x$.level <- ifelse(x$isRoot, 1, x$parent$.level + 1)
+    x$.originalCount <- length(x$children)
+    x$.level <- ifelse(isRoot(x), 1, x$parent$.level + 1)
   })
 
 

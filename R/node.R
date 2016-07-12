@@ -176,7 +176,7 @@ Node <- R6Class("Node",
                       },
                       
                       AddSiblingNode = function(sibling) {
-                        if(self$isRoot) stop("Cannot insert sibling to root!")
+                        if(isRoot(self)) stop("Cannot insert sibling to root!")
                         private$p_parent[[sibling$name]] <- sibling
                         private$p_parent$children <- append(private$p_parent$children, sibling, after = self$position)
                         names(private$p_parent$children)[self$position + 1] <- sibling$name
@@ -250,7 +250,7 @@ Node <- R6Class("Node",
                                      traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),  
                                      pruneFun = NULL,
                                      filterFun = NULL, 
-                                     format = NULL,
+                                     format = FALSE,
                                      inheritFromAncestors = FALSE,
                                      simplify = c(TRUE, FALSE, "array", "regular")) {
                         
@@ -347,7 +347,7 @@ Node <- R6Class("Node",
                       },
                       
                       position = function() {
-                        if (self$isRoot) return (1)
+                        if (isRoot(self)) return (1)
                         
                         result <- which(names(private$p_parent$children) == self$name)
                         # match(self$name, names(private$p_parent$children))
@@ -385,7 +385,7 @@ Node <- R6Class("Node",
                       },
                       
                       level = function() {
-                        if (self$isRoot) {
+                        if (isRoot(self)) {
                           return (1)
                         } else {
                           return (1 + private$p_parent$level)
@@ -402,7 +402,7 @@ Node <- R6Class("Node",
                       },
                       
                       root = function() {
-                        if (self$isRoot) {
+                        if (isRoot(self)) {
                           invisible (self)
                         } else {
                           invisible (private$p_parent$root)
@@ -410,7 +410,7 @@ Node <- R6Class("Node",
                       },
                       
                       siblings = function() {
-                        if (self$isRoot) {
+                        if (isRoot(self)) {
                           return (list())
                         } else {
                           private$p_parent$children[names(private$p_parent$children) != self$name]

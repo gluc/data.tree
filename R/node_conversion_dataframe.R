@@ -9,6 +9,8 @@
 #' @param type when converting type columns, the \code{type} is the discriminator, i.e. an attribute (e.g. field name) of each node
 #' @param prefix when converting type columns, the prefix used for the column names. Can be NULL to omit prefixes.
 #' @param filterFun a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.
+#' @param format if \code{FALSE} (the default), then no formatting will be applied. If \code{TRUE}, then the first formatter (if any) along the ancestor
+#' path is used for formatting. 
 #' @param inheritFromAncestors if FALSE, and if the attribute is a field or a method, then only a \code{Node} itself is
 #' searched for the field/method. If TRUE, and if the \code{Node} does not contain the attribute, then ancestors are also searched.
 #' @param row.names \code{NULL} or a character vector giving the row names for the data frame.
@@ -63,12 +65,13 @@ as.data.frame.Node <- function(x,
                                traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
                                pruneFun = NULL,
                                filterFun = NULL,
+                               format = FALSE,
                                inheritFromAncestors = FALSE
 ) {
 
   traversal <- traversal[1]
 
-  if(!x$isRoot || length(pruneFun) > 0) {
+  if(!isRoot(x) || length(pruneFun) > 0) {
     #clone s.t. x is root (for pretty level names)
     x <- Clone(x, attributes = TRUE)
     if (length(pruneFun) > 0) x$Prune(pruneFun)
@@ -92,7 +95,7 @@ as.data.frame.Node <- function(x,
     if (length(col) > 1) {
       it <- col
     } else {
-      it <- Get(t, col, inheritFromAncestors = inheritFromAncestors)
+      it <- Get(t, col, format = format, inheritFromAncestors = inheritFromAncestors)
     }
     df[colName] <- it
 
@@ -142,6 +145,7 @@ ToDataFrameNetwork <- function(x,
                                ...,
                                direction = c("climb", "descend"),
                                pruneFun = NULL,
+                               format = FALSE,
                                inheritFromAncestors = FALSE) {
   direction <- direction[1]
   if(!AreNamesUnique(x)) GetName <- function(x) x$pathString
@@ -160,7 +164,7 @@ ToDataFrameNetwork <- function(x,
 
   else stop(paste0("direction ", direction, " unknown. Must be either climb or descen."))
 
-  df2 <- ToDataFrameTree(x, ..., traversal = "level", pruneFun = pruneFun, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
+  df2 <- ToDataFrameTree(x, ..., traversal = "level", pruneFun = pruneFun, format = format, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
 
   df <- cbind(df, df2)
   df <- df[-1,]

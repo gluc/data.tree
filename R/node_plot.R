@@ -226,7 +226,7 @@ GetStyle <- function(node, styleName, type = c("node", "edge"), origNode = node)
   inh <- attr(node, paste0(type, "StyleInherit"))
   res <- attr(node, paste0(type, "Style"))[[styleName]]
   if (!is.null(res)) {
-    if (!node$isRoot) {
+    if (!isRoot(node)) {
       if (identical(node, origNode) || (inh && !styleName %in% c("label", "tooltip"))) {# either on myself or inheritable
         if (is.function(res)) res <- res(origNode)
         return (res)
@@ -249,7 +249,7 @@ GetStyle <- function(node, styleName, type = c("node", "edge"), origNode = node)
     }
   }
   #recursion exit criteria
-  if (node$isRoot) return (NULL)
+  if (isRoot(node)) return (NULL)
 
     #recursion
   GetStyle(node$parent, styleName, type, origNode = origNode)
