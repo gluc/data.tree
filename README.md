@@ -22,10 +22,10 @@ The latest from github dev branch may have some breaking changes compared to CRA
 
 # Conventions:
 
-Coding Conventions: Google Style Guide, see https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml
+Coding Conventions: Google Style Guide, see https://google.github.io/styleguide/Rguide.xml
 
 Versioning Conventions: SemanticVersioning. See http://semver.org/ for details
 
 Branching Conventions: GitFlow. See https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
 
-Pull Requests: Very welcome. Please branch from the dev branch if possible.
+Pull Requests: Very welcome. Please branch from the dev branch.

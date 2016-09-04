@@ -25,7 +25,7 @@ FromDataFrameNetwork(network, check = c("check", "no-warn", "no-check"))
 
 \item{pathName}{The name of the column in x containing the path of the row}
 
-\item{pathDelimiter}{The delimiter used}
+\item{pathDelimiter}{The delimiter used to separate nodes in \code{pathName}}
 
 \item{colLevels}{Nested list of column names, determining on what node levels the attributes are written to.}
 

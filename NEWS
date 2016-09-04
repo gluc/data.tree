@@ -2,7 +2,11 @@
 
 ## Version 0.5.0
 - IMPROVE: Performance improvement for many functions. For example, as.Node roughly by factor 4 for large dataset (#74)
-- CHANGE: by default, as.data.frame.Node (and derivatives) do not format anymore (use the format parameter)
+- CHANGE: by default, as.data.frame.Node (and derivatives) do not format anymore (use the format parameter if you want to format)
+- IMPROVE: Allow the possibility to keep only some fields when converting to list using as.list.Node (#76)
+- FromDataFrameTable (#77)
+  - FIX: now also works if there is only the pathString column
+  - IMPROVE: pathString can now also be a factor (or any other type convertible to character)
 
 
 ## Version 0.4.0

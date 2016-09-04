@@ -275,7 +275,7 @@ as.Node.data.frame <- function(x,
 #' for additional nodes). There should be a column called \code{pathName}, separated by \code{pathDelimiter},
 #' describing the path of each row.
 #' @param pathName The name of the column in x containing the path of the row
-#' @param pathDelimiter The delimiter used
+#' @param pathDelimiter The delimiter used to separate nodes in \code{pathName}
 #' @param colLevels Nested list of column names, determining on what node levels the attributes are written to.
 #'
 #' @inheritParams CheckNameReservedWord
@@ -288,10 +288,11 @@ FromDataFrameTable <- function(table,
                                na.rm = TRUE,
                                check = c("check", "no-warn", "no-check")
                                ) {
+  table[ , pathName] <- as.character(table[ , pathName])
   root <- NULL
   mycols <- names(table)[ !(names(table) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
   for (i in 1:nrow(table)) {
-    myrow <- table[ i, ]
+    myrow <- table[ i, , drop = FALSE]
     mypath <- myrow[[pathName]]
     myvalues <- myrow[!colnames(myrow) == pathName]
 
