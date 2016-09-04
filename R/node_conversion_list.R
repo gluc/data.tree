@@ -183,12 +183,14 @@ FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, check
 #' @param nameName The name that should be given to the name element
 #' @param childrenName The name that should be given to the children nested list
 #' @param rootName The name of the node. If provided, this overrides \code{Node$name}
-#' @param ... Additional parameters (ignored)
+#' @param keepOnly A character vector of fields to include in the result. If \code{NULL} (the default), all fields are kept.
+#' @param ... Additional parameters passed to \code{as.list.Node}
 #' 
 #' @examples
 #' data(acme)
 #' 
 #' str(ToListSimple(acme))
+#' str(ToListSimple(acme, keepOnly = "cost"))
 #' 
 #' str(ToListExplicit(acme))
 #' str(ToListExplicit(acme, unname = TRUE))
@@ -202,37 +204,39 @@ as.list.Node <- function(x,
                          nameName = ifelse(unname, "name", ""), 
                          childrenName = 'children',
                          rootName = '',
+                         keepOnly = NULL,
                          ...) {
   mode <- mode[1]
   self <- x
   res <- list()
   
-  if (nchar(rootName) != 0) myname <- rootName
-  else myname <- x$name
+  myname <- if (nchar(rootName) != 0) rootName else x$name
   
   if (nchar(nameName) != 0 || nchar(rootName) != 0 || isRoot(x)) {
     l_nameName <- nameName
-    if(nchar(nameName) == 0) l_nameName <- "name"
+    if (nchar(nameName) == 0) l_nameName <- "name"
     res[l_nameName] <- myname
   }
   
   fields <- self$fields
   fields <- fields[!is.function(fields) && !is.environment(fields)]
   
+  if (!is.null(keepOnly) & !all(is.na(fields))) fields <- fields[fields %in% keepOnly]
+  
   for (fieldName in fields) res[[fieldName]] <- self[[fieldName]]
   
-  if(!self$isLeaf) {
-    kids <- lapply(self$children, FUN = function(x) as.list.Node(x, mode, unname, nameName, childrenName, ...))
-    if(mode == "explicit") {
+  if (!self$isLeaf) {
+    kids <- lapply(self$children, FUN = function(x) as.list.Node(x, mode, unname, nameName, childrenName, keepOnly = keepOnly, ...))
+    if (mode == "explicit") {
       res[[childrenName]] <- kids
       if (unname) res[[childrenName]] <- unname(res[[childrenName]])
-    } else if(mode == "simple") {
+    } else if (mode == "simple") {
       res <- c(res, kids)
     } else {
       stop(paste0("Mode ", mode, " unknown"))
     }
   }
-  return (res)
+  return(res)
   
 }
 
@@ -240,8 +244,8 @@ as.list.Node <- function(x,
 #' @rdname as.list.Node
 #' 
 #' @export
-ToListSimple <- function(x, nameName = "name") {
-  as.list.Node(x, mode = "simple", nameName = nameName)
+ToListSimple <- function(x, nameName = "name", ...) {
+  as.list.Node(x, mode = "simple", nameName = nameName, ...)
 }
 
 
@@ -249,6 +253,6 @@ ToListSimple <- function(x, nameName = "name") {
 #'  
 #'
 #' @export 
-ToListExplicit <- function(x, unname = FALSE, nameName = ifelse(unname, "name", ""), childrenName = 'children') {
-  as.list.Node(x, mode = "explicit", unname = unname, nameName = nameName, childrenName = childrenName) 
+ToListExplicit <- function(x, unname = FALSE, nameName = ifelse(unname, "name", ""), childrenName = 'children', ...) {
+  as.list.Node(x, mode = "explicit", unname = unname, nameName = nameName, childrenName = childrenName, ...) 
 }

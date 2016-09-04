@@ -8,12 +8,12 @@
 \usage{
 \method{as.list}{Node}(x, mode = c("simple", "explicit"), unname = FALSE,
   nameName = ifelse(unname, "name", ""), childrenName = "children",
-  rootName = "", ...)
+  rootName = "", keepOnly = NULL, ...)
 
-ToListSimple(x, nameName = "name")
+ToListSimple(x, nameName = "name", ...)
 
 ToListExplicit(x, unname = FALSE, nameName = ifelse(unname, "name", ""),
-  childrenName = "children")
+  childrenName = "children", ...)
 }
 \arguments{
 \item{x}{The Node to convert}
@@ -31,7 +31,9 @@ an array rather than named objects.}
 
 \item{rootName}{The name of the node. If provided, this overrides \code{Node$name}}
 
-\item{...}{Additional parameters (ignored)}
+\item{keepOnly}{A character vector of fields to include in the result. If \code{NULL} (the default), all fields are kept.}
+
+\item{...}{Additional parameters passed to \code{as.list.Node}}
 }
 \description{
 Convert a \code{data.tree} structure to a list-of-list structure
@@ -40,6 +42,7 @@ Convert a \code{data.tree} structure to a list-of-list structure
 data(acme)
 
 str(ToListSimple(acme))
+str(ToListSimple(acme, keepOnly = "cost"))
 
 str(ToListExplicit(acme))
 str(ToListExplicit(acme, unname = TRUE))
