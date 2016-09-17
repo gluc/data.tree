@@ -16,13 +16,6 @@ by tying toghether \code{Node} objects.
 Assemble \code{Node} objects into a \code{data.tree}
 structure and use the traversal methods to set, get, and perform operations on it. Typically, you construct larger tree 
 structures by converting from \code{data.frame}, \code{list}, or other formats.
-As \code{Node} is object oriented, there are always two variations of methods:
-\itemize{
-  \item a.) OO style: \code{acme$Sort()}
-  \item b.) traditional: \code{Sort(acme)}
-}
-This is only syntactical sugar, and the result of both variations is exactly the same. Other examples where this apply are \code{Set},
-\code{Get}, \code{Do}, \code{Prune}, \code{Climb}, \code{Sort}, etc.
 }
 \section{Fields}{
 

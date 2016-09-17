@@ -23,17 +23,17 @@ This method lets you climb the tree, from crutch to crutch. On each \code{Node},
 data(acme)
 
 #the following are all equivalent
-acme$Climb('IT', 'Outsource')
-acme$Climb(name = 'IT', name = 'Outsource')
-acme$Climb('IT')$Climb('Outsource')
-acme$Navigate(path = "IT/Outsource")
+Climb(acme, 'IT', 'Outsource')
+Climb(acme, name = 'IT', name = 'Outsource')
+Climb(acme, 'IT')$Climb('Outsource')
+Navigate(acme, path = "IT/Outsource")
 
-acme$Climb(name = 'IT')
+Climb(acme, name = 'IT')
 
-acme$Climb(position = c(2, 1))
+Climb(acme, position = c(2, 1))
 #or, equivalent:
-acme$Climb(position = 2, position = 1)
-acme$Climb(name = "IT", cost = 250000)
+Climb(acme, position = 2, position = 1)
+Climb(acme, name = "IT", cost = 250000)
 
 tree <- CreateRegularTree(5, 2)
 tree$Climb(c("1", "1"), position = c(2, 2))$path

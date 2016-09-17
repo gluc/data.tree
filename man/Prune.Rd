@@ -4,7 +4,6 @@
 \alias{Prune}
 \title{Prunes a tree.}
 \usage{
-# node$Prune(pruneFun)
 Prune(node, pruneFun)
 }
 \arguments{
@@ -22,7 +21,7 @@ Pruning refers to removing entire subtrees. This function has side-effects, it m
 \examples{
 data(acme)
 acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum))
-acme$Prune(function(x) x$cost > 700000)
+Prune(acme, function(x) x$cost > 700000)
 print(acme, "cost")
 
 }

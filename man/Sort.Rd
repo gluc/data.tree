@@ -4,7 +4,6 @@
 \alias{Sort}
 \title{Sort children of a \code{Node} or an entire \code{data.tree} structure}
 \usage{
-# node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE) 
 Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
 }
 \arguments{
@@ -35,7 +34,7 @@ side-effects, meaning that you modify the underlying, original data.tree object 
 \examples{
 data(acme)
 acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
-acme$Sort("totalCost", decreasing = FALSE)
+Sort(acme, "totalCost", decreasing = FALSE)
 print(acme, "totalCost")
 
 }

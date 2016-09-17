@@ -4,7 +4,6 @@
 \alias{Navigate}
 \title{Navigate to another node by relative path.}
 \usage{
-#node$Navigate(path)
 Navigate(node, path)
 }
 \arguments{
@@ -24,8 +23,8 @@ by '/'.
 }
 \examples{
 data(acme)
-acme$Research$Navigate("../IT/Outsource")
-acme$Research$Navigate(c("..", "IT", "Outsource"))
+Navigate(acme$Research, "../IT/Outsource")
+Navigate(acme$Research, c("..", "IT", "Outsource"))
 
 }
 \seealso{

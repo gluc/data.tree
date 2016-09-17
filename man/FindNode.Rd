@@ -26,7 +26,7 @@ you need to find multiple \code{Nodes}.
 }
 \examples{
 data(acme)
-acme$FindNode("Outsource")
+FindNode(acme, "Outsource")
 
 #re-usable hashed index for multiple searches:
 if(!AreNamesUnique(acme)) stop("Hashed index works for unique names only!")

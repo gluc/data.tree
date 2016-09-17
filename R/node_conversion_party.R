@@ -19,7 +19,7 @@
 #'       statistic = function(x) round(max(x$criterion$statistic), 3)
 #'       )
 #' 
-#' tree$FindNode(6)$path
+#' FindNode(tree, 6)$path
 #' 
 #' 
 #' @export

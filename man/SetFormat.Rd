@@ -24,7 +24,7 @@ on any of its ancestors whether a formatter is set.
 data(acme)
 acme$Set(id = 1:(acme$totalCount))
 SetFormat(acme, "id", function(x) FormatPercent(x, digits = 0))
-SetFormat(acme$Climb("IT"), "id", FormatFixedDecimal)
+SetFormat(Climb(acme, "IT"), "id", FormatFixedDecimal)
 print(acme, "id")
 # Calling Get with an explicit formatter will overwrite the default set on the Node:
 print(acme, id = acme$Get("id", format = function(x) paste0("id:", x)))

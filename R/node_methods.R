@@ -196,8 +196,7 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 
 #' Navigate to another node by relative path.
 #'
-#' @usage #node$Navigate(path)
-#' Navigate(node, path)
+#' @usage Navigate(node, path)
 #'
 #' @param node The starting \code{\link{Node}} to navigate
 #' @param path A string or a character vector describing the path to navigate
@@ -210,8 +209,8 @@ Clone <- function(node, pruneFun = NULL, attributes = FALSE) {
 #'
 #' @examples
 #' data(acme)
-#' acme$Research$Navigate("../IT/Outsource")
-#' acme$Research$Navigate(c("..", "IT", "Outsource"))
+#' Navigate(acme$Research, "../IT/Outsource")
+#' Navigate(acme$Research, c("..", "IT", "Outsource"))
 #'
 #' @seealso \code{\link{Climb}}
 #'
@@ -254,7 +253,7 @@ Navigate <- function(node, path) {
 #' Climb(acme, 'IT', 'Outsource')
 #' Climb(acme, name = 'IT', name = 'Outsource')
 #' Climb(acme, 'IT')$Climb('Outsource')
-#' acme$Navigate(path = "IT/Outsource")
+#' Navigate(acme, path = "IT/Outsource")
 #'
 #' Climb(acme, name = 'IT')
 #'
