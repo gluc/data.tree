@@ -55,13 +55,6 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #' @details Assemble \code{Node} objects into a \code{data.tree}
 #' structure and use the traversal methods to set, get, and perform operations on it. Typically, you construct larger tree 
 #' structures by converting from \code{data.frame}, \code{list}, or other formats.
-#' As \code{Node} is object oriented, there are always two variations of methods:
-#' \itemize{
-#'   \item a.) OO style: \code{acme$Sort()}
-#'   \item b.) traditional: \code{Sort(acme)}
-#' }
-#' This is only syntactical sugar, and the result of both variations is exactly the same. Other examples where this apply are \code{Set},
-#' \code{Get}, \code{Do}, \code{Prune}, \code{Climb}, \code{Sort}, etc.
 #' 
 #' @docType class
 #' @importFrom R6 R6Class
@@ -135,6 +128,8 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 Node <- R6Class("Node",
                 lock_object = FALSE,
                 lock_class = TRUE,
+                portable = TRUE,
+                class = TRUE,
                 cloneable = TRUE,
                     public = list(
                       
@@ -212,14 +207,17 @@ Node <- R6Class("Node",
                       ## Side Effects
                       
                       Sort = function(attribute, ..., decreasing = FALSE, recursive = TRUE) {
+                        .Deprecated("Sort(node, ...)")
                         Sort(self, attribute, ..., decreasing = decreasing, recursive = recursive)  
                       },
                       
                       Revert = function(recursive = TRUE) {
+                        .Deprecated("Revert(node, ...)")
                         Revert(self, recursive)
                       },
                       
                       Prune = function(pruneFun) {
+                        .Deprecated("Prune(node, ...)")
                         Prune(self, pruneFun = pruneFun)
                       },
                       
@@ -234,10 +232,12 @@ Node <- R6Class("Node",
                       },
                       
                       Navigate = function(path) {
+                        .Deprecated("Navigate(node, ...)")
                         Navigate(self, path)
                       },
                       
                       FindNode = function(name) {
+                        .Deprecated("FindNode(node, ...)")
                         FindNode(self, name)
                       },
                       
@@ -253,7 +253,6 @@ Node <- R6Class("Node",
                                      format = FALSE,
                                      inheritFromAncestors = FALSE,
                                      simplify = c(TRUE, FALSE, "array", "regular")) {
-                        
                         t <- Traverse(self, 
                                       traversal = traversal, 
                                       pruneFun = pruneFun,
@@ -363,7 +362,7 @@ Node <- R6Class("Node",
                       },
                       
                       fieldsAll = function() {
-                        as.vector(na.omit(unique(unlist(self$Get("fields")))))
+                        as.vector(na.omit(unique(unlist(Get(Traverse(self), "fields")))))
                       },
                       
                       levelName = function() {
@@ -394,11 +393,11 @@ Node <- R6Class("Node",
                       
                       height = function() {
                         if (isLeaf(self)) return (1)
-                        max(self$Get("level", filterFun = function(x) isLeaf(x) && x$position == 1)) - self$level + 1
+                        max(Get(Traverse(self, filterFun = function(x) isLeaf(x) && x$position == 1), "level")) - self$level + 1
                       },
                       
                       isBinary = function() {
-                        all(2 == self$Get("count", filterFun = function(x) !x$isLeaf))
+                        all(2 == Get(Traverse(self, filterFun = function(x) !x$isLeaf), "count"))
                       },
                       
                       root = function() {

@@ -2,8 +2,7 @@
 
 ## Test environments
 * linux / travis (oldrel, release, devel) -> ok
-* win R 3.1.3 -> ok
-* win-builder (release) -> ok
+* Win / appveyor (devel 32, devel 64, release 64, stable, patched) -> ok
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 

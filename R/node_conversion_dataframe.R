@@ -74,7 +74,7 @@ as.data.frame.Node <- function(x,
   if(!isRoot(x) || length(pruneFun) > 0) {
     #clone s.t. x is root (for pretty level names)
     x <- Clone(x, attributes = TRUE)
-    if (length(pruneFun) > 0) x$Prune(pruneFun)
+    if (length(pruneFun) > 0) Prune(x, pruneFun)
     x$parent <- NULL
   }
 

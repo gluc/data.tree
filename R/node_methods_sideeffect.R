@@ -24,8 +24,7 @@
 #' You can sort with respect to any argument of the tree. But note that sorting has
 #' side-effects, meaning that you modify the underlying, original data.tree object structure.
 #' 
-#' @usage # node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE) 
-#' Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
+#' @usage Sort(node, attribute, ..., decreasing = FALSE, recursive = TRUE)
 #' 
 #' @param node The node whose children are to be sorted 
 #' @param ... any parameters to be passed on the the attribute (in case it's a method or a 
@@ -41,7 +40,7 @@
 #' @examples
 #' data(acme)
 #' acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
-#' acme$Sort("totalCost", decreasing = FALSE)
+#' Sort(acme, "totalCost", decreasing = FALSE)
 #' print(acme, "totalCost")
 #' 
 #' @seealso \code{\link{Node}}
@@ -59,8 +58,7 @@ Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
 
 #' Reverts the sort order of a \code{Node}'s children.
 #' 
-#' @usage # node$Revert(recursive = TRUE)
-#' Revert(node, recursive = TRUE)
+#' @usage Revert(node, recursive = TRUE)
 #' 
 #' @param node the Node whose children's sort order is to be reverted
 #' @param recursive If \code{TRUE}, then revert is called recursively on
@@ -91,8 +89,7 @@ Revert <- function(node, recursive = TRUE) {
 #' 
 #' Pruning refers to removing entire subtrees. This function has side-effects, it modifies your data.tree structure!
 #' 
-#' @usage # node$Prune(pruneFun)
-#' Prune(node, pruneFun)
+#' @usage Prune(node, pruneFun)
 #' 
 #' @param node The root of the sub-tree to be pruned
 #' @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
@@ -102,7 +99,7 @@ Revert <- function(node, recursive = TRUE) {
 #' @examples
 #' data(acme)
 #' acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum))
-#' acme$Prune(function(x) x$cost > 700000)
+#' Prune(acme, function(x) x$cost > 700000)
 #' print(acme, "cost")
 #' 
 #' @seealso \code{\link{Node}}

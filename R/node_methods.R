@@ -251,17 +251,17 @@ Navigate <- function(node, path) {
 #' data(acme)
 #'
 #' #the following are all equivalent
-#' acme$Climb('IT', 'Outsource')
-#' acme$Climb(name = 'IT', name = 'Outsource')
-#' acme$Climb('IT')$Climb('Outsource')
+#' Climb(acme, 'IT', 'Outsource')
+#' Climb(acme, name = 'IT', name = 'Outsource')
+#' Climb(acme, 'IT')$Climb('Outsource')
 #' acme$Navigate(path = "IT/Outsource")
 #'
-#' acme$Climb(name = 'IT')
+#' Climb(acme, name = 'IT')
 #'
-#' acme$Climb(position = c(2, 1))
+#' Climb(acme, position = c(2, 1))
 #' #or, equivalent:
-#' acme$Climb(position = 2, position = 1)
-#' acme$Climb(name = "IT", cost = 250000)
+#' Climb(acme, position = 2, position = 1)
+#' Climb(acme, name = "IT", cost = 250000)
 #'
 #' tree <- CreateRegularTree(5, 2)
 #' tree$Climb(c("1", "1"), position = c(2, 2))$path
@@ -332,7 +332,7 @@ Climb <- function(node, ...) {
 #'
 #' @examples
 #' data(acme)
-#' acme$FindNode("Outsource")
+#' FindNode(acme, "Outsource")
 #'
 #' #re-usable hashed index for multiple searches:
 #' if(!AreNamesUnique(acme)) stop("Hashed index works for unique names only!")
@@ -437,7 +437,7 @@ GetObjectAttribute <- function(node, name) {
 #' data(acme)
 #' acme$Set(id = 1:(acme$totalCount))
 #' SetFormat(acme, "id", function(x) FormatPercent(x, digits = 0))
-#' SetFormat(acme$Climb("IT"), "id", FormatFixedDecimal)
+#' SetFormat(Climb(acme, "IT"), "id", FormatFixedDecimal)
 #' print(acme, "id")
 #' # Calling Get with an explicit formatter will overwrite the default set on the Node:
 #' print(acme, id = acme$Get("id", format = function(x) paste0("id:", x)))

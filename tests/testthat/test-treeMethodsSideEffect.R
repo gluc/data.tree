@@ -36,7 +36,7 @@ test_that("Sort", {
 test_that("Prune leaves", {
   data(acme)
   
-  acme$Prune(function(x) is.null(x$cost) || x$cost < 1000000)
+  Prune(acme, function(x) is.null(x$cost) || x$cost < 1000000)
   expect_equal(acme$leafCount, 5)
   expect_equal(acme$totalCount, 9)
   expect_true(all(acme$Get("cost", filterFun = isLeaf) < 1000000))
@@ -47,11 +47,11 @@ test_that("Prune leaves", {
 test_that("Prune name", {
   data(acme)
   
-  acme$Prune(function(x) x$name != "IT")
+  Prune(acme, function(x) x$name != "IT")
   expect_equal(acme$leafCount, 4)
   expect_equal(acme$totalCount, 7)
   
-  expect_true(is.null(acme$Climb("IT")))
+  expect_true(is.null(Climb(acme, "IT")))
   
 })
 

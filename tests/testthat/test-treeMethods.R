@@ -41,16 +41,16 @@ test_that("Node instantiation", {
 
 test_that("Climb NULL", {
   data(acme)
-  expect_equal(acme$Climb('X'), NULL)
-  expect_equal(acme$Climb('X', 'Y', 'Z'), NULL)
-  expect_equal(acme$Climb('IT', 'X'), NULL)
+  expect_equal(Climb(acme, 'X'), NULL)
+  expect_equal(Climb(acme, 'X', 'Y', 'Z'), NULL)
+  expect_equal(Climb(acme, 'IT', 'X'), NULL)
  
 })
 
 
 test_that("Climb Equivalent", {
   data(acme)
-  expect_equal(acme$Climb('IT', 'Go agile'), acme$Climb('IT')$Climb('Go agile'))
+  expect_equal(Climb(acme, 'IT', 'Go agile'), Climb(acme, 'IT')$Climb('Go agile'))
   
 })
 
@@ -58,10 +58,10 @@ test_that("Climb Equivalent", {
 
 test_that("Climb 3rd Level", {
   data(acme)
-  acme$Climb('IT', 'Go agile')$AddChild('MyTest')$AddChild('MyTest2')
-  expect_equal("MyTest2", acme$Climb('IT', 'Go agile', 'MyTest', 'MyTest2')$name )
-  expect_equal("MyTest2", acme$Climb(c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
-  expect_equal("MyTest2", acme$Climb(name = c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
+  Climb(acme, 'IT', 'Go agile')$AddChild('MyTest')$AddChild('MyTest2')
+  expect_equal("MyTest2", Climb(acme, 'IT', 'Go agile', 'MyTest', 'MyTest2')$name )
+  expect_equal("MyTest2", Climb(acme, c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
+  expect_equal("MyTest2", Climb(acme, name = c('IT', 'Go agile', 'MyTest', 'MyTest2'))$name )
   
 })
 
@@ -80,14 +80,14 @@ test_that("Climb non-name", {
 test_that("Find", {
   
   data(acme)
-  os <- acme$FindNode("Outsource")
+  os <- FindNode(acme, "Outsource")
   expect_equal(os$name, "Outsource")
   
-  os <- acme$FindNode("XYZ")
+  os <- FindNode(acme, "XYZ")
   expect_null(os)
   
   acme$Accounting$AddChild("Outsource")
-  os <- acme$FindNode("Outsource")
+  os <- FindNode(acme, "Outsource")
   expect_equal(class(os), c("Node", "R6"))
   expect_equal(os$name, "Outsource")
 
@@ -180,7 +180,7 @@ test_that("Get post-order", {
 
 test_that("Get ancestor", {
   data(acme)
-  get <- acme$Climb('Research', 'New Labs')$Get("name", traversal = "ancestor")
+  get <- Climb(acme, 'Research', 'New Labs')$Get("name", traversal = "ancestor")
   
   exp <- c('New Labs', 
            'Research', 
@@ -366,7 +366,7 @@ test_that("post-order", {
   acme$Set(myval = 1:acme$totalCount, traversal = "post-order")
   
   expect_equal(acme$myval, 11)
-  expect_equal(acme$Climb("Research")$myval, 6)
+  expect_equal(Climb(acme, "Research")$myval, 6)
   
 })
 
@@ -378,8 +378,8 @@ test_that("level", {
   acme$Set(myval = 1:acme$totalCount, traversal = "level")
   
   expect_equal(acme$myval, 1)
-  expect_equal(acme$Climb("Research")$myval, 3)
-  expect_equal(acme$Climb("IT", "Go agile")$myval, 10)
+  expect_equal(Climb(acme, "Research")$myval, 3)
+  expect_equal(Climb(acme, "IT", "Go agile")$myval, 10)
   
 })
 
@@ -388,7 +388,7 @@ test_that("level", {
 test_that("level subtree", {
   
   data(acme)
-  it <- acme$Climb("IT")
+  it <- Climb(acme, "IT")
   
   it$Set(myval = 1:it$totalCount, traversal = "level")
   
@@ -407,9 +407,9 @@ test_that("prune", {
   acme$Set(myval = 1:8, pruneFun = function(x) x$name != "Research")
   
   expect_equal(acme$myval, 1)
-  expect_true(is.null(acme$Climb("Research")$myval))
-  expect_true(is.null(acme$Climb("Research", "New Labs")$myval))
-  expect_equal(acme$Climb("IT", "Go agile")$myval, 7)
+  expect_true(is.null(Climb(acme, "Research")$myval))
+  expect_true(is.null(Climb(acme, "Research", "New Labs")$myval))
+  expect_equal(Climb(acme, "IT", "Go agile")$myval, 7)
   
 })
 
@@ -421,9 +421,9 @@ test_that("filter", {
   acme$Set(myval = 1:10, filterFun = function(x) x$name != "Research")
   
   expect_equal(acme$myval, 1)
-  expect_true(is.null(acme$Climb("Research")$myval))
-  expect_equal(acme$Climb("Research", "New Labs")$myval, 6)
-  expect_equal(acme$Climb("IT", "Go agile")$myval, 9)
+  expect_true(is.null(Climb(acme, "Research")$myval))
+  expect_equal(Climb(acme, "Research", "New Labs")$myval, 6)
+  expect_equal(Climb(acme, "IT", "Go agile")$myval, 9)
   
 })
 
@@ -493,11 +493,11 @@ test_that("Set recycling", {
   
   
     data(acme)
-    acme$Climb("Accounting", "New Accounting Standards")$AddChild("ICI 320")
+    Climb(acme, "Accounting", "New Accounting Standards")$AddChild("ICI 320")
     acme$Set(myval = 1:6)
     expect_equal(acme$myval, 1)
-    expect_equal(acme$Climb("Research", "New Labs")$myval, 2)
-    expect_equal(acme$Climb("IT", "Go agile")$myval, 5)
+    expect_equal(Climb(acme, "Research", "New Labs")$myval, 2)
+    expect_equal(Climb(acme, "IT", "Go agile")$myval, 5)
        
 })
 
@@ -522,7 +522,7 @@ test_that("Clone", {
   expect_equal(n$name, acme$name)
   expect_equal(n$count, acme$count)
   expect_equal(n$totalCount, acme$totalCount)
-  expect_equal(n$Climb("IT", "Go agile")$p, acme$Climb("IT", "Go agile")$p)
+  expect_equal(n$Climb("IT", "Go agile")$p, Climb(acme, "IT", "Go agile")$p)
   
   expect_equal(as.list(n), as.list(acme))
   acme2 <- acme
@@ -537,7 +537,7 @@ test_that("Clone", {
 test_that("Clone formatter", {
   data(acme)
   SetFormat(acme, "count", FormatFixedDecimal)
-  SetFormat(acme$Climb("IT", "Outsource"), "p", FormatPercent)
+  SetFormat(Climb(acme, "IT", "Outsource"), "p", FormatPercent)
   
   n <- Clone(acme, attributes = TRUE)
   
@@ -553,7 +553,7 @@ test_that("Clone formatter", {
 
 test_that("Clone subtree", {
   data(acme)
-  it <- acme$Climb("IT")
+  it <- Climb(acme, "IT")
   itcl <- Clone(it)
   
   expect_equal(class(itcl), class(it))
@@ -599,7 +599,7 @@ test_that("Formatter Get Hierarchy", {
   data(acme)
   SetFormat(acme, "p", FormatPercent)
   acme$p <- 1
-  n <- acme$Climb("IT")
+  n <- Climb(acme, "IT")
   SetFormat(n, "p", FormatFixedDecimal)
   p <- acme$Get("p", format = TRUE)
   expect_equal(p[["Acme Inc."]], "100.00 %")
@@ -633,14 +633,14 @@ test_that("Set matrix", {
 test_that("Set pre-order", {
   data(acme)
   acme$Set(mycnt = 1:acme$totalCount)
-  expect_equal( acme$Climb("IT")$mycnt, 8)
+  expect_equal( Climb(acme, "IT")$mycnt, 8)
 })
 
 
 test_that("Set post-order", {
   data(acme)
   acme$Set(mycnt = 1:acme$totalCount, traversal = "post-order")
-  expect_equal( acme$Climb("IT")$mycnt, 10)
+  expect_equal( Climb(acme, "IT")$mycnt, 10)
   expect_equal( acme$mycnt, 11)
 })
 
@@ -648,7 +648,7 @@ test_that("Set post-order", {
 test_that("Set filter", {
   data(acme)
   acme$Set(mycnt = 1:3, filterFun = function(x) x$level == 2)
-  expect_equal( acme$Climb("IT")$mycnt, 3)
+  expect_equal( Climb(acme, "IT")$mycnt, 3)
   expect_equal( acme$mycnt, NULL)
 })
 
@@ -676,8 +676,8 @@ test_that("fieldsAll", {
 test_that("height", {
   data(acme)
   expect_equal(acme$height, 3)
-  expect_equal(acme$Climb("IT")$height, 2)
-  acme$Climb("IT", "Outsource")$AddChild("New")
+  expect_equal(Climb(acme, "IT")$height, 2)
+  Climb(acme, "IT", "Outsource")$AddChild("New")
   
   expect_equal(acme$height, 4)
 })
@@ -686,8 +686,8 @@ test_that("height", {
 test_that("isRoot", {
   data(acme)
   expect_true(acme$isRoot)
-  expect_false(acme$Climb("IT")$isRoot)
-  expect_equal(acme$Climb("IT")$height, 2)
+  expect_false(Climb(acme, "IT")$isRoot)
+  expect_equal(Climb(acme, "IT")$height, 2)
   isRoot <- acme$Get("isRoot")
   expect_equal(sum(isRoot), 1)
   
@@ -697,7 +697,7 @@ test_that("isRoot", {
 test_that("isLeaf", {
   data(acme)
   expect_false(acme$isLeaf)
-  expect_true(acme$Climb("Research", "New Labs")$isLeaf)
+  expect_true(Climb(acme, "Research", "New Labs")$isLeaf)
   
   isLeaf <- acme$Get("isLeaf")
   leaves <- names(isLeaf)[isLeaf]
@@ -712,20 +712,20 @@ test_that("isLeaf", {
 test_that("level (active)", {
   data(acme)
   expect_equal(acme$level, 1)  
-  expect_equal(acme$Climb("Research")$level, 2)
-  expect_equal(acme$Climb("Research", "New Labs")$level, 3)
+  expect_equal(Climb(acme, "Research")$level, 2)
+  expect_equal(Climb(acme, "Research", "New Labs")$level, 3)
   
 })
 
 
 test_that("set name Climb", {
   data(acme)
-  rs <- acme$Climb("Research")
+  rs <- Climb(acme, "Research")
   rs$name <- "Research2"
   
-  rs2 <- acme$Climb("Research")
+  rs2 <- Climb(acme, "Research")
   expect_true(is.null(rs2))
-  rs2 <- acme$Climb("Research2")
+  rs2 <- Climb(acme, "Research2")
   expect_true(rs2$name == "Research2")
   expect_equal(names(rs$parent$children), c("Accounting", "Research2", "IT"))
 })

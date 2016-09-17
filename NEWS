@@ -1,5 +1,10 @@
 # All changes to data.tree are documented here.
 
+## Version 0.6.0
+- CHANGE: changed from GPL to Apache license
+- REMOVE: node$FindNode, and node$Navigate are now deprecated. Use FindNode(node, ...) and Naviate(node, ...) instead
+- REMOVE: node$Sort, node$Prune, and node$Revert are now deprecated. Use Sort(node, ...), Prune(node, ...) and Revert(node, ...) instead
+
 ## Version 0.5.0
 - IMPROVE: Performance improvement for many functions. For example, as.Node roughly by factor 4 for large dataset (#74)
 - CHANGE: by default, as.data.frame.Node (and derivatives) do not format anymore (use the format parameter if you want to format)
