@@ -3,8 +3,39 @@ Type: Package
 Title: General Purpose Hierarchical Data Structure
 Version: 0.5.0
 Date: 2016-07-12
-Author: Christoph Glur
-Maintainer: Christoph Glur <christoph.glur@ipub.com>
+Authors@R: c(
+      person(
+        "Markus", "Wamser"
+        , role = c("ctb")
+        , comment = "fixed some typos"
+      ),
+      person(
+        "Pierre", "Formont"
+        , role = c("ctb")
+        , comment = "additional features"
+      ),
+      person(
+        "Kent", "Russel"
+        , role = c("ctb")
+        , comment = "documentation"
+      ),
+      person(
+        "Noam", "Ross"
+        , role = c("ctb")
+        , comment = "fixes"
+      ),
+      person(
+        "Duncan", "Garmonsway"
+        , role = c("ctb")
+        , comment = "fixes"
+      ),
+      person(
+        "Christoph", "Glur"
+        , role = c("aut", "cre")
+        , comment = "R interface"
+        , email = "christoph.glur@ipub.com"
+      )
+    )
 VignetteBuilder: knitr
 Imports:
     R6,
@@ -25,7 +56,9 @@ Suggests:
     doParallel,
     party,
     partykit,
-    foreach
+    foreach,
+    shiny,
+    htmlwidgets
 Enhances: 
 Description: Create tree structures from hierarchical data, and traverse the
     tree in various orders. Aggregate, cumulate, print, plot, convert to and from
