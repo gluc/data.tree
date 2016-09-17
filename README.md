@@ -11,10 +11,17 @@ Hierarchical data is ubiquitous in statistics and programming (XML, search trees
 Where tabular data has data.frame, hierarchical data is often modeled in lists of lists or similar makeshifts. These
 structures are often difficult to manage.
 This is where the data.tree package steps in. It lets you build trees of hierarchical
-data for various uses: to print, to generate breakdowns, to integrate with html widgets, to rapid prototype search algorithms, to test out new classification ideas, and much more.
+data for various uses: to print, plot and visualize, to generate breakdowns, to integrate with html widgets, to rapid prototype search algorithms, to test out new classification ideas, and much more.
 
-The package provides functionality to convert from and to various formats such as data.frames, list of lists, dendrograms, ape phylo, igraph, JSON, YAML, and more.
+Tree structures can be created programmatically, or by conversion. The package provides functionality to convert from and to various formats such as data.frames, list of lists, dendrograms, partykit, ape phylo, igraph, JSON, YAML, and more.
 
+# Learn More
+
+To get started, you might want to read the [introduction vignette](https://cran.r-project.org/web/packages/data.tree/vignettes/data.tree.html). There is also a vignette containing some [examples and applications](https://cran.r-project.org/web/packages/data.tree/vignettes/data.tree.html).
+
+The manual is [here](https://cran.r-project.org/web/packages/data.tree/data.tree.pdf)
+
+Finally, you'll find more examples and background information on my [blog](http://ipub.com/data-tree).
 
 # NOTE:
 The latest from github dev branch may have some breaking changes compared to CRAN. See [NEWS](https://github.com/gluc/data.tree/blob/dev/NEWS) for details.
@@ -28,4 +35,4 @@ Versioning Conventions: SemanticVersioning. See http://semver.org/ for details
 
 Branching Conventions: GitFlow. See https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
 
-Pull Requests: Very welcome. Please branch from the dev branch.
+Pull Requests: Very welcome! Please branch from the dev branch.

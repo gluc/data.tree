@@ -53,11 +53,10 @@ Suggests:
     jsonlite,
     igraph,
     treemap,
-    doParallel,
     party,
     partykit,
+    doParallel,
     foreach,
-    shiny,
     htmlwidgets
 Enhances: 
 Description: Create tree structures from hierarchical data, and traverse the

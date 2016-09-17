@@ -12,6 +12,9 @@ warnings_are_errors: true
 r_packages:
   - rmarkdown
   - covr
+  - doParallel
+  - foreach
+  - shiny
 
 r_check_args: --as-cran
 
