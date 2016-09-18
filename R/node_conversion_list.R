@@ -109,7 +109,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   for (i in seq_along(field_nums)) {
     v <- x[[field_nums[i]]]
     
-    if(mode == 'simple' && class(v) == "list") {
+    if(mode == 'simple' && inherits(v, 'list')) {
       #any list is interpreted as child, so don't store
     } else {
       fieldNm <- fields[i]
