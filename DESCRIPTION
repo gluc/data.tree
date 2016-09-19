@@ -68,7 +68,7 @@ Description: Create tree structures from hierarchical data, and traverse the
     tree in various orders. Aggregate, cumulate, print, plot, convert to and from
     data.frame and more. Useful for decision trees, machine learning, finance,
     conversion from and to JSON, and many other applications.
-License: Apache License (== 2.0)
+License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
 Depends:

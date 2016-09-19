@@ -4,7 +4,6 @@
 - IMPROVE: FromListSimple now accepts subclasses of lists (#79)
 
 ## Version 0.6.0
-- CHANGE: changed from GPL to Apache license
 - REMOVE: node$FindNode, and node$Navigate are now deprecated. Use FindNode(node, ...) and Naviate(node, ...) instead
 - REMOVE: node$Sort, node$Prune, and node$Revert are now deprecated. Use Sort(node, ...), Prune(node, ...) and Revert(node, ...) instead
 
