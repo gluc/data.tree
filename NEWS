@@ -1,5 +1,8 @@
 # All changes to data.tree are documented here.
 
+## Version 0.6.1
+- IMPROVE: FromListSimple now accepts subclasses of lists (#79)
+
 ## Version 0.6.0
 - CHANGE: changed from GPL to Apache license
 - REMOVE: node$FindNode, and node$Navigate are now deprecated. Use FindNode(node, ...) and Naviate(node, ...) instead
