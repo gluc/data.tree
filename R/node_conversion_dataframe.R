@@ -101,7 +101,13 @@ as.data.frame.Node <- function(x,
                 col,
                 format = format, 
                 inheritFromAncestors = inheritFromAncestors)
-      it <- sapply(it, function(el) if (length(el) > 1) toString(el) else el)
+      it <- sapply(it, 
+                   function(el) {
+                          if (inherits(el, "Node")) return ("")
+                          else if (length(el) > 1) return (toString(el))
+                          else return (el)
+                   }
+                )
     }
     df[colName] <- it
 

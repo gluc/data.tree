@@ -798,7 +798,7 @@ test_that("print", {
 
 
 
-test_that("print non-character", {
+test_that("print list field", {
 
   lol = 
     list(a = list(
@@ -809,6 +809,19 @@ test_that("print non-character", {
   do.call("print", c(tree, tree$fieldsAll))
 })
 
+
+test_that("print list field combo", {
+
+  aNestedTree = 
+    list(a = list(
+      b = 5, 
+      a = 2
+    ))
+  
+  tree <- FromListSimple(aNestedTree)
+  print(tree, "a")
+
+})
 
 
 test_that("Cumulate", {

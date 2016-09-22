@@ -4,6 +4,7 @@
 - IMPROVE: FromListSimple now accepts subclasses of lists (#79)
 - IMPROVE: FromDataFrameTable now supports tibbles (#89)
 - IMPROVE: print.Node and as.data.frame.Node now also work for node fields with length > 1 (#81)
+- FIX: print.Node and as.data.frame.Node now also work if some Nodes have the same name as some fileds (#82)
 
 ## Version 0.6.0
 - REMOVE: node$FindNode, and node$Navigate are now deprecated. Use FindNode(node, ...) and Naviate(node, ...) instead
