@@ -294,7 +294,7 @@ FromDataFrameTable <- function(table,
                                na.rm = TRUE,
                                check = c("check", "no-warn", "no-check")
                                ) {
-  table[ , pathName] <- as.character(table[ , pathName])
+  table[[pathName]] <- as.character(table[[pathName]])
   root <- NULL
   mycols <- names(table)[ !(names(table) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
   for (i in 1:nrow(table)) {
