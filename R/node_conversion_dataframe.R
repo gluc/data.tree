@@ -1,5 +1,7 @@
 #' Convert a \code{data.tree} structure to a \code{data.frame}
 #'
+#' If a node field contains data of length > 1, then that is converted into a string in the
+#' data.frame. 
 #'
 #' @param x The root \code{Node} of the tree or sub-tree to be convert to a data.frame
 #' @param ... the attributes to be added as columns of the data.frame. See \code{\link{Get}} for details.
@@ -95,7 +97,11 @@ as.data.frame.Node <- function(x,
     if (length(col) > 1) {
       it <- col
     } else {
-      it <- Get(t, col, format = format, inheritFromAncestors = inheritFromAncestors)
+      it <- Get(t, 
+                col,
+                format = format, 
+                inheritFromAncestors = inheritFromAncestors)
+      it <- sapply(it, function(el) if (length(el) > 1) toString(el) else el)
     }
     df[colName] <- it
 

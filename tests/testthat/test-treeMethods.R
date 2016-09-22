@@ -798,6 +798,18 @@ test_that("print", {
 
 
 
+test_that("print non-character", {
+
+  lol = 
+    list(a = list(
+      c = list(1:5), 
+      b = 2
+    ))
+  tree <- FromListSimple(lol)
+  do.call("print", c(tree, tree$fieldsAll))
+})
+
+
 
 test_that("Cumulate", {
   data(acme)
