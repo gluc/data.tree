@@ -71,7 +71,8 @@ spanned by \code{x}), possibly pruned according to \code{pruneFun}. In addition 
 \code{type} is output to a column.
 }
 \description{
-Convert a \code{data.tree} structure to a \code{data.frame}
+If a node field contains data of length > 1, then that is converted into a string in the
+data.frame.
 }
 \examples{
 data(acme)

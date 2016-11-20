@@ -355,6 +355,30 @@ FindNode <- function(node, name) {
 
 
 
+#' Find the distance between two nodes of the same tree
+#' 
+#' The distance is measured as the number of edges that
+#' need to be traversed to reach node2 when starting 
+#' from node1.
+#' 
+#' @param node1 the first node in the tree
+#' @param node2 the second node in the same tree
+#' 
+#' @examples 
+#' data(acme)
+#' Distance(FindNode(acme, "Outsource"), FindNode(acme, "Research"))
+#' 
+#' @export
+Distance <- function(node1, node2) {
+  path1 <- node1$path
+  path2 <- node2$path
+  i <- 1
+  maxi <- min(node1$level, node2$level)
+  while (path1[i] == path2[i] && i <= maxi) i <- i + 1
+  distance <- length(path1) + length(path2) - 2 * (i - 1)
+  return (distance)
+}
+
 
 #' Get an attribute from a Node.
 #'

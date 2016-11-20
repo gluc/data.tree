@@ -23,14 +23,14 @@ test_that("Node instantiation", {
   expect_that(n <- Node$new("name", check = "check"), gives_warning())
   expect_equal(n$name, "name2")
 
-  expect_that(n <- Node$new("name", check = "no-check"), not(gives_warning()))
+  expect_warning((n <- Node$new("name", check = "no-check")), regexp = NA)
   expect_equal(n$name, "name")
 
-  expect_that(n <- Node$new("name", check = FALSE), not(gives_warning()))
+  expect_warning(n <- Node$new("name", check = FALSE), regexp = NA)
   expect_equal(n$name, "name")
   
   
-  expect_that(n <- Node$new("name", check = "no-warn"), not(gives_warning()))
+  expect_warning(n <- Node$new("name", check = "no-warn"), regexp = NA)
   expect_equal(n$name, "name2")
   
   expect_that(n <- Node$new("name", check = "whatever"), gives_warning())
@@ -843,6 +843,30 @@ test_that("siblings", {
   expect_equal(2, length(s))
   nms <- unname(Get(s, "name"))
   expect_equal(c("Accounting", "Research"), nms)
+  
+})
+
+
+test_that("Distance", {
+  data(acme)
+  d <- Distance(FindNode(acme, "Outsource"), FindNode(acme, "Research"))
+  expect_equal(d, 3)
+  d <- Distance(FindNode(acme, "Outsource"), acme)
+  expect_equal(d, 2)
+  d <- Distance(acme, FindNode(acme, "Outsource"))
+  expect_equal(d, 2)
+  d <- Distance(FindNode(acme, "Outsource"), FindNode(acme, "Outsource"))
+  expect_equal(d, 0)
+  d <- Distance(FindNode(acme, "Outsource"), FindNode(acme, "Go agile"))
+  expect_equal(d, 2)
+})
+
+test_that("Distance large tree", {
+  tree <- CreateRegularTree(6, 2)
+  d <- Distance(FindNode(tree, "1.2.1.2.2.2"), FindNode(tree, "1.2.2.2.2.2"))
+  expect_equal(d, 8)
+  d <- Distance(FindNode(tree, "1.2.1.2.2.2"), FindNode(tree, "1.1.1.1.1.1"))
+  expect_equal(d, 10)
   
 })
 
