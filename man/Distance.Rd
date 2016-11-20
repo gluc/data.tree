@@ -18,7 +18,7 @@ from node1.
 }
 \examples{
 data(acme)
-Distance(acme$Find("Outsource"), acme$Find("Research"))
+Distance(FindNode(acme, "Outsource"), FindNode(acme, "Research"))
 
 }
 
