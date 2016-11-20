@@ -370,6 +370,7 @@ FindNode <- function(node, name) {
 #' 
 #' @export
 Distance <- function(node1, node2) {
+  if(!identical(node1$root, node2$root)) stop("node1 and node2 must be in same tree!")
   path1 <- node1$path
   path2 <- node2$path
   i <- 1
