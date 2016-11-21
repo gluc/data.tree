@@ -1,13 +1,13 @@
 # All changes to data.tree are documented here.
 
+## Version 0.6.2
+- ADD: new Distance function to measure distance from one Node to another in the same tree
+
 ## Version 0.6.1
 - IMPROVE: FromListSimple now accepts subclasses of lists (#79)
 - IMPROVE: FromDataFrameTable now supports tibbles (#89)
 - IMPROVE: print.Node and as.data.frame.Node now also work for node fields with length > 1 (#81)
 - FIX: print.Node and as.data.frame.Node now also work if some Nodes have the same name as some fileds (#82)
-- ADD: new Distance function to measure distance from one Node to another in the same tree
-
-## Version 0.6.0
 - REMOVE: node$FindNode, and node$Navigate are now deprecated. Use FindNode(node, ...) and Naviate(node, ...) instead
 - REMOVE: node$Sort, node$Prune, and node$Revert are now deprecated. Use Sort(node, ...), Prune(node, ...) and Revert(node, ...) instead
 

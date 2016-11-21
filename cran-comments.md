@@ -1,7 +1,7 @@
 ## General Comments
 
 ## Test environments
-* linux / travis (oldrel, release, devel) -> ok
+* linux / travis (release, devel) -> ok
 * Win / appveyor (devel 32, devel 64, release 64, stable, patched) -> ok
 
 ## R CMD check results
@@ -20,5 +20,12 @@ Both are not misspelled.
 
 ## Downstream dependencies checked
 
-* ahp
+The following downstream dependencies were checked and had no problems:
+
+* hypoparsr
 * prof.tree
+* radiant.model
+
+The following downstream dependencies were check and produced warnings:
+
+* ahp: 1 WARN because of a deprecated method. I am the package maintainer and will send a new ahp version shortly.
