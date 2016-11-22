@@ -94,7 +94,7 @@ Or, we can look at a sub-tree:
 
 ```{r}
 northAm <- tree$`North America`
-northAm$Sort("GNI", decreasing = TRUE)
+Sort(northAm, "GNI", decreasing = TRUE)
 print(northAm, "iso3", "population", "GNI", limit = 12)
 ```
 
@@ -125,7 +125,7 @@ tree$Do(function(x) {
 Next, we sort each node by population:
 
 ```{r}
-tree$Sort(attribute = "population", decreasing = TRUE, recursive = TRUE)
+Sort(tree, attribute = "population", decreasing = TRUE, recursive = TRUE)
 
 ```
 
@@ -619,7 +619,7 @@ plot(jl)
 
 ```
 
-![acme](assets/dtree.png)
+![](assets/dtree.png)
 
 # Bubble Chart (visualisation)
 
@@ -647,7 +647,7 @@ flareLoL <- fromJSON(file(fileName),
                      simplifyDataFrame = FALSE
                      )
 
-flareTree <- as.Node(flareLoL, mode = "explicit")
+flareTree <- as.Node(flareLoL, mode = "explicit", check = "no-warn")
 flareTree$fieldsAll
 print(flareTree, "size", limit = 30)
 
@@ -694,7 +694,7 @@ bubbles(
 )
 ```
 
-![bubbles](assets/bubbles.jpg)
+![](assets/bubbles.jpg)
 
 
 # File Explorer (system utilities)
@@ -720,7 +720,7 @@ df <- data.frame(
       stringsAsFactors = FALSE
     )
  
-print(head(df)[-c(3,5,6)], row.names = FALSE)
+print(head(df)[c(1,2,3,4)], row.names = FALSE)
 
 ```
 
@@ -750,7 +750,7 @@ jsonedit(l)
 
 ```
 
-![listviewer](assets/listviewer.jpg)
+![](assets/listviewer.jpg)
 
 (Run the code yourself to see the widget in action)
 
