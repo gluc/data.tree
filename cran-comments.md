@@ -1,10 +1,15 @@
 ## General Comments
 
+Sorry about the problems in the first submission. Both should be fixed now.
+Best Regards, Christoph
+
 ## Test environments
+
 * linux / travis (release, devel) -> ok
-* Win / appveyor (devel 32, devel 64, release 64, stable, patched) -> ok
+* Win / appveyor (devel 32, devel 64, release 64, stable) -> ok
 
 ## R CMD check results
+
 There were no ERRORs or WARNINGs. 
 
 NOTE: On some environments, there was 
