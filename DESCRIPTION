@@ -5,7 +5,7 @@ Version: 0.6.2
 Date: 2016-11-24
 Authors@R: c(
       person(
-        "Facundo", "Muñoz",
+        "Facundo", "Munoz",
         role = c("ctb"),
         comment = "improve list conversion"
       ),

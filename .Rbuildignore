@@ -8,3 +8,4 @@ appveyor.yml
 Rprof.out
 ^appveyor\.yml$
 revdep
+README.md

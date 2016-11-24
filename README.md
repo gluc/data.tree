@@ -17,9 +17,9 @@ Tree structures can be created programmatically, or by conversion. The package p
 
 # Learn More
 
-To get started, you might want to read the [introduction vignette](https://cran.r-project.org/web/packages/data.tree/vignettes/data.tree.html). There is also a vignette containing some [examples and applications](https://cran.r-project.org/web/packages/data.tree/vignettes/data.tree.html).
+To get started, you might want to read the [introduction vignette](https://CRAN.R-project.org/package=data.tree/vignettes/data.tree.html). There is also a vignette containing some [examples and applications](https://CRAN.R-project.org/package=data.tree/vignettes/applications.html).
 
-The manual is [here](https://cran.r-project.org/web/packages/data.tree/data.tree.pdf)
+The manual is [here](https://CRAN.R-project.org/package=data.tree/data.tree.pdf)
 
 Finally, you'll find more examples and background information on my [blog](http://ipub.com/data-tree).
 
