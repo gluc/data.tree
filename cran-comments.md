@@ -22,10 +22,13 @@ Both are not misspelled.
 
 The following downstream dependencies were checked and had no problems:
 
-* hypoparsr
-* prof.tree
-* radiant.model
+Checked hypoparsr    : 0 errors | 0 warnings | 0 notes
+Checked prof.tree    : 0 errors | 0 warnings | 0 notes
+Checked radiant.model: 0 errors | 0 warnings | 0 notes
+Checked Rodam        : 0 errors | 0 warnings | 0 notes
+Checked SACCR        : 0 errors | 0 warnings | 0 notes
 
 The following downstream dependencies were check and produced warnings:
 
-* ahp: 1 WARN because of a deprecated method. I am the package maintainer and will send a new ahp version shortly.
+Checked ahp          : 0 errors | 1 warning  | 0 notes
+1 WARN because of a deprecated method. I am the package maintainer and will send a new ahp version shortly.
