@@ -26,7 +26,7 @@ an \code{igraph} object
 }
 \description{
 This requires the igraph package to be installed.
-Also, this requires the names of the \code{Nodes} to be unique withing
+Also, this requires the names of the \code{Nodes} to be unique within
 the \code{data.tree} structure.
 }
 \examples{
