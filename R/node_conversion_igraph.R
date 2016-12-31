@@ -4,7 +4,7 @@
 #' Convert a \code{data.tree} structure to an igraph network
 #' 
 #' This requires the igraph package to be installed.
-#' Also, this requires the names of the \code{Nodes} to be unique withing
+#' Also, this requires the names of the \code{Nodes} to be unique within
 #' the \code{data.tree} structure.
 #' 
 #' @param node The root \code{Node} to convert
@@ -29,7 +29,7 @@
 #' 
 #' @export
 as.igraph.Node <- function(node, vertexAttributes = character(), edgeAttributes = character(), directed = FALSE, direction = c("climb", "descend")) {
-  if (!AreNamesUnique(node)) stop("Node names must be unique withing the tree")
+  if (!AreNamesUnique(node)) stop("Node names must be unique within the tree")
   network <- do.call("ToDataFrameNetwork", c(node, "name", vertexAttributes, edgeAttributes, direction = direction)) 
   data <- network[,c("from", "to", edgeAttributes)]
   vert <- do.call("ToDataFrameTree", c(node, "name", vertexAttributes))[,-1]
