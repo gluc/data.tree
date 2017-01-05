@@ -81,7 +81,7 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' @examples
 #' data(acme)
 #' SetGraphStyle(acme, rankdir = "TB")
-#' SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
+#' SetEdgeStyle(acme, arrowhead = "vee", color = "blue", penwidth = 2)
 #' #per default, Node style attributes will be inherited:
 #' SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", 
 #'              fontname = "helvetica", tooltip = GetDefaultTooltip)
@@ -100,53 +100,61 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' 
 #' @export
 ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL) {
-  # get all node styles
-
-  ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "nodeStyle"), simplify = FALSE), names)))
-    
+  #get unique node styles defined on tree
+  
+  ns <- unique(unlist(sapply(root$Get(function(x) if(!(isRoot(x) && attr(x, "nodeStyleInherit"))) attr(x, "nodeStyle"), simplify = FALSE), names)))
+  
+  #create nodes df
+  
   tr <- Traverse(root, pruneFun = pruneFun)
-  anu <- AreNamesUnique(root)
-  myargs <- list(nodes = Get(tr, ifelse(anu, "name", "pathString")))
-  #need to add label if not all names are unique
-  if (!anu && !"label" %in% ns ) ns <- c(ns, "label")
+  Set(tr, `.id` = 1:length(tr))
+  #myargs <- list(id = Get(tr, ".id"))
+  myargs <- NULL
+  if(!"label" %in% ns) ns <- c(ns, "label")
   for (style in ns) {
     myargs[[style]] <- Get(tr, function(x) {
       myns <- GetStyle(x, style, "node")
-      if (style == "label" && !anu && length(myns) == 0) myns <- x$name
-      if (is.null(myns)) myns <- ""
+      if (style == "label" && length(myns) == 0) myns <- x$name
+      #if (is.null(myns)) myns <- ""
       myns
     })
   }
-  #names(myargs) <- c("nodes", ns)
   
-  nodes <- do.call(create_nodes, myargs)
-  if (!anu && !"label" %in% ns) nodes$label <- Get(tr, "name")
-  #nodes <- nodes[!names(nodes)=="tooltip"]
+  nodes <- do.call(create_node_df, c(n = length(tr), myargs))
   
-  ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "edgeStyle"), simplify = FALSE), names)))
+  # get unique edge styles
+  
+  es <- unique(unlist(sapply(root$Get(function(x) if(!(isRoot(x) && attr(x, "edgeStyleInherit"))) attr(x, "edgeStyle"), simplify = FALSE), names)))
   
   
   myargs <- list()
   #see http://stackoverflow.com/questions/19749923/function-factory-in-r
-  for (style in ns) {
+  for (style in es) {
     myargs[[style]] <- GetEdgeStyleFactory(style)
   }
-
-  #nodes <- do.call(create_nodes, myargs)
-
-  edges <- do.call("ToDataFrameNetwork", c(root, direction = direction, pruneFun = pruneFun, myargs)) 
   
-  graphStyle <- attr(root, "graphStyle")
-  if (!is.null(graphStyle)) graphAttributes <- paste(names(graphStyle), paste0("'", graphStyle, "'"), sep = " = ", collapse = ", ")
-  else graphAttributes <- ""
+  
+  
+  edges <- do.call("ToDataFrameNetwork", c(root, from = function(node) node$parent$`.id`, to = ".id", myargs, direction = list(direction), pruneFun = pruneFun))[,-(1:2)]
+  edges <- do.call(create_edge_df, as.list(edges))
+  
+  graph <- create_graph(nodes, edges, attr_theme = NULL)
+  
+  # global attributes
+  
+  graphAttributes <- attr(root, "graphStyle")
+  #if (is.null(graphAttributes)) graphAttributes <- ""
   nodeAttributes <- GetDefaultStyles(root, type = "node")
   edgeAttributes <- GetDefaultStyles(root, type = "edge")
-  graph <- create_graph(nodes, edges, graph_attrs = graphAttributes, node_attrs = nodeAttributes, edge_attrs = edgeAttributes)
   
-  #return (graph)
-  #render_graph(graph)
-  #cat(graph$dot_code)
-  return (graph$dot_code)
+  graph <- set_global_graph_attrs(graph, 
+                                  c(names(graphAttributes), names(nodeAttributes), names(edgeAttributes)), 
+                                  c(graphAttributes, nodeAttributes, edgeAttributes), 
+                                  c(rep('graph', length(graphAttributes)), rep('node', length(nodeAttributes)), rep('edge', length(edgeAttributes))))
+  
+  dot <- generate_dot(graph)
+
+  return (dot)
   
 }
 
@@ -155,9 +163,9 @@ ToGraphViz <- function(root, direction = c("climb", "descend"), pruneFun = NULL)
 GetEdgeStyleFactory <- function(style) {
   style <- force(style)
   function(node = node, origNode = node) {
-    myns <- GetStyle(node, style, "edge")
-    if (is.null(myns)) myns <- ""
-    myns
+    myes <- GetStyle(node, style, "edge")
+    #if (is.null(myes)) myes <- ""
+    myes
   }
 }
 
@@ -266,7 +274,7 @@ GetDefaultStyles <- function(node, type = c("node", "edge")) {
     isFun <- sapply(res, is.function)
     res <- res[!isFun]
     if (length(res) == 0) return (NULL)
-    res <- paste(names(res), paste0("'", res, "'"), sep = " = ", collapse = ", ")
+    #res <- paste(names(res), paste0("'", res, "'"), sep = " = ", collapse = ", ")
     return (res) 
   } else return (NULL)
 }
