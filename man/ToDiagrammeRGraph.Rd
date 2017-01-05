@@ -5,14 +5,14 @@
 \alias{SetEdgeStyle}
 \alias{SetGraphStyle}
 \alias{SetNodeStyle}
-\alias{ToGraphViz}
+\alias{ToDiagrammeRGraph}
 \alias{plot.Node}
 \title{Plot a graph, or get a graphviz dot representation of the tree}
 \usage{
 \method{plot}{Node}(x, ..., direction = c("climb", "descend"),
-  pruneFun = NULL, engine = "dot")
+  pruneFun = NULL, output = "graph")
 
-ToGraphViz(root, direction = c("climb", "descend"), pruneFun = NULL)
+ToDiagrammeRGraph(root, direction = c("climb", "descend"), pruneFun = NULL)
 
 SetNodeStyle(node, inherit = TRUE, keepExisting = FALSE, ...)
 
@@ -33,8 +33,12 @@ http://graphviz.org/Documentation.php for details. For the plot.Node generic met
 \item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
-\item{engine}{string for the Graphviz layout engine; can be dot (default), 
-neato, circo, or twopi. For more information see https://github.com/mdaines/viz.js#usage.}
+\item{output}{a string specifying the output type;
+\code{graph} (the default) renders the graph using
+the \code{grViz} function, \code{vivagraph}
+renders the graph using the \code{vivagraph}
+function, and \code{visNetwork} renders the graph
+using the \code{visnetwork} function.}
 
 \item{root}{The root \code{\link{Node}} of the data.tree structure to visualize.}
 
@@ -108,7 +112,7 @@ There are some more examples in the 'applications' vignette, see \code{vignette(
 \examples{
 data(acme)
 SetGraphStyle(acme, rankdir = "TB")
-SetEdgeStyle(acme, arrowhead = "vee", color = "grey35", penwidth = 2)
+SetEdgeStyle(acme, arrowhead = "vee", color = "blue", penwidth = 2)
 #per default, Node style attributes will be inherited:
 SetNodeStyle(acme, style = "filled,rounded", shape = "box", fillcolor = "GreenYellow", 
              fontname = "helvetica", tooltip = GetDefaultTooltip)

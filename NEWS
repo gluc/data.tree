@@ -1,5 +1,11 @@
 # All changes to data.tree are documented here.
 
+## Version 0.7.0
+- ADD: ToDiagrammeRGraph to convert to a DiagrammeR graph object
+- REMOVE: ToGraphViz (replaced with ToDiagrammeRGraph, to support the latest features in the DiagrammeR package). You can still get the dot representation by using DiagrammeR::generate_dot(ToDiagrammeRGraph(node))
+- CHANGE: plot.Node 's last parameter is now 'graph', and not 'engine' anymore.
+- FIX: minor typos fixed
+
 ## Version 0.6.2
 - ADD: new Distance function to measure distance from one Node to another in the same tree
 
