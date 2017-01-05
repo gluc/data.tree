@@ -1,6 +1,6 @@
 ## General Comments
 
-Sorry about the problems in the first submission. Both should be fixed now.
+Fixed changes due to DiagrammeR update
 Best Regards, Christoph
 
 ## Test environments
@@ -33,7 +33,8 @@ Checked radiant.model: 0 errors | 0 warnings | 0 notes
 Checked Rodam        : 0 errors | 0 warnings | 0 notes
 Checked SACCR        : 0 errors | 0 warnings | 0 notes
 
-The following downstream dependencies were check and produced warnings:
+The following downstream dependencies were checked and produced errors:
 
-Checked ahp          : 0 errors | 1 warning  | 0 notes
-1 WARN because of a deprecated method. I am the package maintainer and will send a new ahp version shortly.
+Checked ahp          : 1 errors | 0 warning  | 0 notes
+
+I am the package maintainer and will send a new ahp version shortly.
