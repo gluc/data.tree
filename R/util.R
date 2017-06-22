@@ -65,6 +65,14 @@ DefaultPlotHeight <- function(node, rootHeight = 100) {
 }
 
 
+SetHeight2 <- function(node, rootHeight = 100) {
+  Set(node$leaves, height2 = 1)
+  node$Do(function(x) x$height2 <- Aggregate(x, "height2", max) + 1, traversal = "post-order", filterFun = isNotLeaf)
+  node$plotHeight <- rootHeight
+  node$Do(function(x) x$plotHeight <- x$parent$plotHeight * (1 - 1 / x$height2), filterFun = isNotRoot)
+}
+
+
 #' Create a tree for demo and testing
 #'
 #' @param height the number of levels

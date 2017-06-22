@@ -174,7 +174,7 @@ ToDataFrameNetwork <- function(x,
                                                   to = children,
                                                   stringsAsFactors = FALSE)
 
-  else stop(paste0("direction ", direction, " unknown. Must be either climb or descen."))
+  else stop(paste0("direction ", direction, " unknown. Must be either climb or descend."))
 
   df2 <- ToDataFrameTree(x, ..., traversal = "level", pruneFun = pruneFun, format = format, inheritFromAncestors = inheritFromAncestors)[,-1, drop = FALSE]
 
