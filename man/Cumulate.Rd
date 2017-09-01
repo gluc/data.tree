@@ -31,4 +31,3 @@ acme$Do(function(x) x$cumCost <- Cumulate(x, "cost", sum))
 print(acme, "cost", "cumCost")
 
 }
-

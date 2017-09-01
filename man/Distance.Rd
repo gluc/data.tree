@@ -21,4 +21,3 @@ data(acme)
 Distance(FindNode(acme, "Outsource"), FindNode(acme, "Research"))
 
 }
-

@@ -47,4 +47,3 @@ for quick reference only. See the data.tree vignette for a more detailed descrip
 
 \code{\link{Do}}
 }
-

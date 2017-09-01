@@ -23,4 +23,3 @@ dacme <- as.dendrogram(acme, heightAttribute = function(x) DefaultPlotHeight(x, 
 plot(dacme, center = TRUE)
 
 }
-

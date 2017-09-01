@@ -16,4 +16,3 @@ CreateRegularTree(height = 5, branchingFactor = 3, parent = Node$new("1"))
 \description{
 Create a tree for demo and testing
 }
-

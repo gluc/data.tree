@@ -43,4 +43,3 @@ nameIndex$IT
 \seealso{
 AreNamesUnique, Traverse
 }
-

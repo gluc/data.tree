@@ -105,6 +105,7 @@ as.data.frame.Node <- function(x,
                    function(el) {
                           if (inherits(el, "Node")) return ("")
                           else if (length(el) > 1) return (toString(el))
+                          else if (length(el) == 0) return (NA)
                           else return (el)
                    }
                 )

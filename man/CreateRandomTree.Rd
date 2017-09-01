@@ -16,4 +16,3 @@ CreateRandomTree(nodes = 100, root = Node$new("1"), id = 1)
 \description{
 Create a tree for demo and testing
 }
-

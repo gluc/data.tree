@@ -76,4 +76,3 @@ acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regu
 
 \code{\link{Traverse}}
 }
-

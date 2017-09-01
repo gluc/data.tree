@@ -46,4 +46,3 @@ print(acme, "departmentId", "head")
 
 \code{\link{Traverse}}
 }
-

@@ -44,4 +44,3 @@ tree$Climb(c("1", "1"), position = c(2, 2))$path
 
 \code{\link{Navigate}}
 }
-

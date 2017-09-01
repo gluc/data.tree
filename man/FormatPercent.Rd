@@ -29,4 +29,3 @@ print(acme, prob = acme$Get("p", format = FormatPercent))
 \seealso{
 formatC
 }
-

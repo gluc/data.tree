@@ -22,4 +22,3 @@ The attributes available in the data set are:
 }
 }
 \keyword{datasets}
-

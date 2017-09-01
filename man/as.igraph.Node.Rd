@@ -39,4 +39,3 @@ plot(ig)
 \seealso{
 AreNamesUnique
 }
-

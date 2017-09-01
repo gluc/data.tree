@@ -15,4 +15,3 @@ TRUE if the Node is the root, FALSE otherwise
 \description{
 Check if a \code{Node} is the root
 }
-

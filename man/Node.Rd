@@ -24,6 +24,7 @@ structures by converting from \code{data.frame}, \code{list}, or other formats.
 
 \item{\code{parent}}{The node's parent \code{Node}}
 }}
+
 \section{Methods}{
 
 
@@ -74,6 +75,7 @@ structures by converting from \code{data.frame}, \code{list}, or other formats.
  
 }
 }
+
 \examples{
 library(data.tree)
 acme <- Node$new("Acme Inc.")
@@ -90,4 +92,3 @@ print(acme)
 For more details see the \code{\link{data.tree}} documentations, or the \code{data.tree} vignette: \code{vignette("data.tree")}
 }
 \keyword{datasets}
-

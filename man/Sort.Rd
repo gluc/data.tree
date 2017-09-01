@@ -43,4 +43,3 @@ print(acme, "totalCost")
 
 \code{\link{Revert}}
 }
-

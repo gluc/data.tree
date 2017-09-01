@@ -1,7 +1,12 @@
 # All changes to data.tree are documented here.
 
 ## Version 0.7.1
+Upgrade to R 3.4.x and newest package versions.
 - FIX: plot: global graph attributes now work (#88)
+- FIX: typo in vignette data.tree vignette('applications', package = "data.tree")
+- FIX: warnings in as.dendrogram
+- FIX: warnings in sample code for Do
+- FIX: as.data.frame created warnings for values that were of length 0
 
 ## Version 0.7.0
 - ADD: ToDiagrammeRGraph to convert to a DiagrammeR graph object

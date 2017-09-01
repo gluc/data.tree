@@ -28,4 +28,3 @@ plot(acmephylo)
 Other ape phylo conversions: \code{\link{GetPhyloNr}},
   \code{\link{as.Node.phylo}}
 }
-

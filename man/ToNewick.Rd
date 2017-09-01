@@ -29,4 +29,3 @@ ToNewick(acme, rootHeight = 200)
 Other Conversions from Node: \code{\link{as.dendrogram.Node}}
 }
 \keyword{Newick}
-

@@ -32,4 +32,3 @@ edgelabels("Good!", GetPhyloNr(Climb(acme, "IT", "Switch to R"), "edge"))
 Other ape phylo conversions: \code{\link{as.Node.phylo}},
   \code{\link{as.phylo.Node}}
 }
-

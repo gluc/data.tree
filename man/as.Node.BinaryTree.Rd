@@ -33,4 +33,3 @@ FindNode(tree, 6)$path
 
 
 }
-

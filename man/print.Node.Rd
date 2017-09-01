@@ -32,4 +32,3 @@ print(acme, expectedCost = function(x) x$cost * x$p)
 do.call(print, c(acme, acme$fieldsAll))
 
 }
-

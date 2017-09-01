@@ -12,4 +12,3 @@ averageBranchingFactor(node)
 \description{
 Calculate the average number of branches each non-leaf has
 }
-

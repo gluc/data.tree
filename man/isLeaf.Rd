@@ -15,4 +15,3 @@ TRUE if the Node is a leaf, FALSE otherwise
 \description{
 Check if a \code{Node} is a leaf
 }
-

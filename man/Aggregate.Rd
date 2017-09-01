@@ -58,4 +58,3 @@ acme$IT$cost
 \seealso{
 \code{\link{Node}}
 }
-

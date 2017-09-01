@@ -22,4 +22,3 @@ data(acme)
 print(acme, prob = acme$Get("p", format = function(x) FormatFixedDecimal(x, 4)))
 
 }
-

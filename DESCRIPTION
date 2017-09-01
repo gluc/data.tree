@@ -73,4 +73,4 @@ URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
 Depends:
     R (>= 3.0)
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

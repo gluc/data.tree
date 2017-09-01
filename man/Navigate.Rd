@@ -30,4 +30,3 @@ Navigate(acme$Research, c("..", "IT", "Outsource"))
 \seealso{
 \code{\link{Climb}}
 }
-

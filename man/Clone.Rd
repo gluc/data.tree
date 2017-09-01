@@ -40,4 +40,3 @@ itClone$isRoot
 \seealso{
 SetFormat
 }
-

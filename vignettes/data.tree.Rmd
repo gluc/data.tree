@@ -480,7 +480,7 @@ plot(acme)
 
 ### Other Visualisations
 
-However, there are also endless other possibilities to visualise `data.tree` structures. There are more examples in the applications vignette. Type `vignette('application', package = "data.tree")`.
+However, there are also endless other possibilities to visualise `data.tree` structures. There are more examples in the applications vignette. Type `vignette('applications', package = "data.tree")`.
 
 #### Dendrogram
 

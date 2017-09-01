@@ -34,4 +34,3 @@ data(acme)
 GetAttribute(acme$IT$Outsource, "cost")
 
 }
-

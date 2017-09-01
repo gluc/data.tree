@@ -25,4 +25,3 @@ AreNamesUnique(acme)
 \seealso{
 as.igraph.Node
 }
-

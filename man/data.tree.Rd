@@ -75,6 +75,7 @@ data.tree is always useful when
 For a quick overview of the features, read the \code{\link{data.tree}} vignette by running \code{vignette("data.tree")}. For stylized
 applications, see \code{vignette("applications", package='data.tree')}
 }
+
 \examples{
 data(acme)
 print(acme)
@@ -113,4 +114,3 @@ ToDataFrameNetwork(acme, "p", "cost")
 
 For more details, see the \code{data.tree} vignette by running: \code{vignette("data.tree")}
 }
-

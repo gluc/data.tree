@@ -95,7 +95,7 @@ as.dendrogram.Node <- function(object, heightAttribute = DefaultPlotHeight, edge
   # while ours won't?
   #
   # hc <- hclust(dist(USArrests), "ave")
-  # dend1 <- as.dendrogram(hc)
+  # dend1 <-d as.dendrogram(hc)
   # node <- as.Node(dend1)
   # dend2 <- as.dendrogram(node)
   # unclass(dend1)
@@ -105,6 +105,7 @@ as.dendrogram.Node <- function(object, heightAttribute = DefaultPlotHeight, edge
 
   if (node$isLeaf) {
     res <- node$value
+    if (is.null(res)) res <- 0
     res <- structure(res, 
                      label = node$name, 
                      members = 1,

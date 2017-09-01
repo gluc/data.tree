@@ -23,4 +23,3 @@ Reverts the sort order of a \code{Node}'s children.
 
 \code{\link{Sort}}
 }
-

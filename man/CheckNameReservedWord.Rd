@@ -19,4 +19,3 @@ CheckNameReservedWord(name, check = c("check", "no-warn", "no-check"))
 \description{
 Checks whether \code{name} is a reserved word, as defined in \code{NODE_RESERVED_NAMES_CONST}.
 }
-

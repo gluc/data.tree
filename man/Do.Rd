@@ -40,4 +40,3 @@ print(acme, "expectedCost")
 
 \code{\link{Traverse}}
 }
-
