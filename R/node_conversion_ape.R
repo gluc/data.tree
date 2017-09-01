@@ -109,9 +109,10 @@ as.Node.phylo <- function(x, heightName = "plotHeight", replaceUnderscores = TRU
 #' library(data.tree)
 #' data(acme)
 #' ap <- as.phylo(acme)
-#' nodelabels("IT Dep.", GetPhyloNr(Climb(acme, "IT")))
-#' edgelabels("Good!", GetPhyloNr(Climb(acme, "IT", "Switch to R"), "edge"))
 #' #plot(ap)
+#' #nodelabels("IT Dep.", GetPhyloNr(Climb(acme, "IT")))
+#' #edgelabels("Good!", GetPhyloNr(Climb(acme, "IT", "Switch to R"), "edge"))
+#' 
 #' 
 #' @family ape phylo conversions
 #' 

@@ -23,9 +23,10 @@ library(ape)
 library(data.tree)
 data(acme)
 ap <- as.phylo(acme)
-plot(ap)
-nodelabels("IT Dep.", GetPhyloNr(Climb(acme, "IT")))
-edgelabels("Good!", GetPhyloNr(Climb(acme, "IT", "Switch to R"), "edge"))
+#plot(ap)
+#nodelabels("IT Dep.", GetPhyloNr(Climb(acme, "IT")))
+#edgelabels("Good!", GetPhyloNr(Climb(acme, "IT", "Switch to R"), "edge"))
+
 
 }
 \seealso{
