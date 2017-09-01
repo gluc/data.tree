@@ -12,7 +12,7 @@
 #' library(ape)
 #' data(acme)
 #' acmephylo <- as.phylo(acme)
-#' plot(acmephylo)
+#' #plot(acmephylo)
 #' 
 #' 
 #' @family ape phylo conversions
