@@ -5,6 +5,7 @@ data_gen
 cran-comments.md
 cheat-sheet.md
 appveyor.yml
+travis-tool.sh.cmd
 Rprof.out
 ^appveyor\.yml$
 revdep
