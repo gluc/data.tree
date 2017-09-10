@@ -50,7 +50,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #' Create a \code{data.tree} Structure With \code{Nodes}
 #' 
 #' @description \code{Node} is at the very heart of the \code{data.tree} package. All trees are constructed
-#' by tying toghether \code{Node} objects.
+#' by tying together \code{Node} objects.
 #' 
 #' @details Assemble \code{Node} objects into a \code{data.tree}
 #' structure and use the traversal methods to set, get, and perform operations on it. Typically, you construct larger tree 
@@ -69,7 +69,7 @@ NODE_RESERVED_NAMES_CONST <- c( 'AddChild',
 #'   \item{\code{AddSibling(name)}}{Creates a new \code{Node} called \code{name} and adds it after this \code{Node} as a sibling.}
 #'   \item{\code{AddSiblingNode(sibling)}}{Adds a new \code{Node} after this \code{Node}, as a sibling.}      
 #'   \item{\code{RemoveChild(name)}}{Remove the child \code{Node} called \code{name} from a \code{Node} and returns it.}
-#'   \item{\code{RemoveAttribute(name, stopIfNotAvailable)}}{Removes attribute called \code{name} from this \code{Node}. Gives an error if \code{stopIfNotAvailable} and the attribute doesn't exist.}
+#'   \item{\code{RemoveAttribute(name, stopIfNotAvailable)}}{Removes attribute called \code{name} from this \code{Node}. Gives an error if \code{stopIfNotAvailable} and the attribute does not exist.}
 #'   \item{\code{\link{Climb}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s, or other field values.}
 #'   \item{\code{\link{Navigate}(path)}}{Find a node by relative \code{path}}
 #'   \item{\code{\link{FindNode}(name)}}{Find a node with name \code{name}. Especially useful if \code{\link{AreNamesUnique}} is \code{TRUE}}

@@ -38,7 +38,7 @@ Get(nodes,
 
 \item{inheritFromAncestors}{if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.}
 
-\item{simplify}{same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can sepcify "regular" if
+\item{simplify}{same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can specify "regular" if
 each returned value is of length > 1, and equally named. See below for an example.}
 }
 \value{

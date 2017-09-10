@@ -7,7 +7,7 @@
 #' 
 #' Hierarchical data is ubiquitous in statistics and programming (XML, search trees, family trees, classification, file system, etc.). However, no general-use \bold{tree data structure} is available in R. 
 #' Where tabular data has \code{data.frame}, hierarchical data is often modeled in lists of lists or similar makeshifts. These
-#' structures are often dificult to manage.
+#' structures are often difficult to manage.
 #' This is where the \code{data.tree} package steps in. It lets you build trees of hierarchical
 #' data for various uses: to print, to rapid prototype search algorithms, to test out new classification algorithms, and much more. 
 #' 
@@ -39,7 +39,7 @@
 #' The entry point to the package is \code{\link{Node}}. Each tree is composed of a number of \code{Node}s, referencing each other.
 #' 
 #' One of most important things to note about \code{data.tree} is that it exhibits \bold{reference semantics}. In a nutshell, this means that you can modify 
-#' your tree along the way, without having to reassign it to a variable after each modification. By and large, this is a rather exceptional behaviour
+#' your tree along the way, without having to reassign it to a variable after each modification. By and large, this is a rather exceptional behavior
 #' in R, where value-semantics is king most of the time.
 #' 
 #' @section Applications:

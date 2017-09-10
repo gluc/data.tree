@@ -15,8 +15,8 @@
 #' for quick reference only. See the data.tree vignette for a more detailed description). 
 #' \describe{
 #'    \item{pre-order}{Go to first child, then to its first child, etc.}
-#'    \item{post-order}{Go to the first branche's leaf, then to its siblings, and work your way back to the root}
-#'    \item{in-order}{Go to the first branche's leaf, then to its parent, and only then to the leaf's sibling}
+#'    \item{post-order}{Go to the first branch's leaf, then to its siblings, and work your way back to the root}
+#'    \item{in-order}{Go to the first branch's leaf, then to its parent, and only then to the leaf's sibling}
 #'    \item{level}{Collect root, then level 2, then level 3, etc.}
 #'    \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
 #'    \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The
@@ -139,7 +139,7 @@ Traverse = function(node,
 #' @param format if \code{FALSE} (the default), no formatting is being used. If \code{TRUE}, then the first formatter (if any) found along the ancestor path is being used for formatting 
 #' (see \code{\link{SetFormat}}). If \code{format} is a function, then the collected value is passed to that function, and the result is returned.
 #' @param inheritFromAncestors if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.
-#' @param simplify same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can sepcify "regular" if
+#' @param simplify same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can specify "regular" if
 #' each returned value is of length > 1, and equally named. See below for an example.
 #'        
 #' @return a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted

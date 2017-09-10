@@ -30,8 +30,8 @@ The traversal order is as follows. (Note that these descriptions are not precise
 for quick reference only. See the data.tree vignette for a more detailed description). 
 \describe{
    \item{pre-order}{Go to first child, then to its first child, etc.}
-   \item{post-order}{Go to the first branche's leaf, then to its siblings, and work your way back to the root}
-   \item{in-order}{Go to the first branche's leaf, then to its parent, and only then to the leaf's sibling}
+   \item{post-order}{Go to the first branch's leaf, then to its siblings, and work your way back to the root}
+   \item{in-order}{Go to the first branch's leaf, then to its parent, and only then to the leaf's sibling}
    \item{level}{Collect root, then level 2, then level 3, etc.}
    \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
    \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The
