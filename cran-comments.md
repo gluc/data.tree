@@ -10,7 +10,15 @@ Best Regards, Christoph
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs. 
+There were no ERRORs or WARNINGs.
+
+There was one NOTE:
+
+Possibly mis-spelled words in DESCRIPTION:
+  JSON (53:28)
+  cumulate (51:40)
+  
+Both are not misspelled.2
 
 
 ## Downstream dependencies checked
