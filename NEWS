@@ -1,5 +1,9 @@
 # All changes to data.tree are documented here.
 
+## Version 0.7.4
+
+## Version 0.7.3
+
 ## Version 0.7.2
 Upgrade to R 3.4.x and newest package versions.
 - FIX: plot: global graph attributes now work (#88)
