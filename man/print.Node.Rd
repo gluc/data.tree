@@ -5,7 +5,7 @@
 \title{Print a \code{Node} in a human-readable fashion.}
 \usage{
 \method{print}{Node}(x, ..., pruneMethod = c("simple", "dist", NULL),
-  limit = 100)
+  limit = 100, pruneFun = NULL)
 }
 \arguments{
 \item{x}{The Node}
@@ -14,12 +14,15 @@
 a Node method, or a function taking a Node as a single argument. See \code{Get} for details on
 the meaning of \code{attribute}.}
 
-\item{pruneMethod}{The method used to prune for printing. If NULL, the entire tree is displayed. If
+\item{pruneMethod}{The method can be used to prune for printing in a simple way. If NULL, the entire tree is displayed. If
 "simple", then only the first \code{limit} nodes are displayed. If "dist", then Nodes are removed
-everywhere in the tree, according to their level.}
+everywhere in the tree, according to their level. If pruneFun is provided, then pruneMethod is ignored.}
 
 \item{limit}{The maximum number of nodes to print. Can be \code{NULL} if the
 entire tree should be printed.}
+
+\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 }
 \description{
 Print a \code{Node} in a human-readable fashion.
@@ -30,5 +33,16 @@ print(acme, "cost", "p")
 print(acme, "cost", probability = "p")
 print(acme, expectedCost = function(x) x$cost * x$p)
 do.call(print, c(acme, acme$fieldsAll))
+
+tree <- CreateRegularTree(4, 5)
+# print entire tree:
+print(tree, pruneMethod = NULL)
+# print first 20 nodes:
+print(tree, pruneMethod = "simple", limit = 20)
+# print 20 nodes, removing leafs first:
+print(tree, pruneMethod = "dist", limit = 20)
+# provide your own pruning function:
+print(tree, pruneFun = function(node) node$position != 2)
+
 
 }

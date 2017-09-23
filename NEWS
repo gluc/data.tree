@@ -1,8 +1,10 @@
 # All changes to data.tree are documented here.
 
 ## Version 0.7.4
+- IMPROVE: print now has an explicit arg pruneFun
 
 ## Version 0.7.3
+- FIX: Various typos in documentation
 
 ## Version 0.7.2
 Upgrade to R 3.4.x and newest package versions.

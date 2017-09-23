@@ -11,12 +11,13 @@
 #' @param ... Node attributes to be printed. Can be either a character (i.e. the name of a Node field),
 #' a Node method, or a function taking a Node as a single argument. See \code{Get} for details on
 #' the meaning of \code{attribute}.
-#' @param pruneMethod The method used to prune for printing. If NULL, the entire tree is displayed. If
+#' @param pruneMethod The method can be used to prune for printing in a simple way. If NULL, the entire tree is displayed. If
 #' "simple", then only the first \code{limit} nodes are displayed. If "dist", then Nodes are removed
-#' everywhere in the tree, according to their level.
+#' everywhere in the tree, according to their level. If pruneFun is provided, then pruneMethod is ignored.
 #' @param limit The maximum number of nodes to print. Can be \code{NULL} if the
 #' entire tree should be printed.
 #'
+#' @inheritParams ToDataFrameTree
 #'
 #' @examples
 #' data(acme)
@@ -24,9 +25,21 @@
 #' print(acme, "cost", probability = "p")
 #' print(acme, expectedCost = function(x) x$cost * x$p)
 #' do.call(print, c(acme, acme$fieldsAll))
+#' 
+#' tree <- CreateRegularTree(4, 5)
+#' # print entire tree:
+#' print(tree, pruneMethod = NULL)
+#' # print first 20 nodes:
+#' print(tree, pruneMethod = "simple", limit = 20)
+#' # print 20 nodes, removing leafs first:
+#' print(tree, pruneMethod = "dist", limit = 20)
+#' # provide your own pruning function:
+#' print(tree, pruneFun = function(node) node$position != 2)
+#' 
 #'
 #' @export
-print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 100) {
+print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 100, pruneFun = NULL) {
+  if (length(pruneFun) > 0) pruneMethod <- NULL
   pruneMethod <- pruneMethod[1]
   if (length(pruneMethod) > 0 && length(limit) > 0) {
     if (pruneMethod == "simple") {
@@ -42,7 +55,7 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
       x$parent <- NULL
   }
 
-  df <- ToDataFrameTree(x, format = TRUE, ...)
+  df <- ToDataFrameTree(x, format = TRUE, ..., pruneFun = pruneFun)
   print(df, na.print = "")
 }
 
