@@ -806,7 +806,8 @@ test_that("print list field", {
       b = 2
     ))
   tree <- FromListSimple(lol)
-  do.call("print", c(tree, tree$fieldsAll))
+  #expect no error
+  expect_error(do.call("print", c(tree, tree$fieldsAll)), NA)
 })
 
 
@@ -819,7 +820,8 @@ test_that("print list field combo", {
     ))
   
   tree <- FromListSimple(aNestedTree)
-  print(tree, "a")
+  #expect no error
+  expect_error(print(tree, "a"), NA)
 
 })
 

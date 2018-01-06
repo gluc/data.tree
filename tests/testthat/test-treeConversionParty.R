@@ -32,7 +32,8 @@ test_that("party on", {
 
 
 test_that("partykid", {
-  
+  #hack but needed, otherwise extree_data cannot be found
+  library(partykit)
   airq <- subset(airquality, !is.na(Ozone))
   airct <- partykit::ctree(Ozone ~ ., data = airq)
   
