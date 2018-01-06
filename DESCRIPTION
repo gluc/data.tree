@@ -41,7 +41,9 @@ Authors@R: c(
         , email = "christoph.glur@ipub.com"
       )
     )
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr,
+    rmarkdown
 Imports:
     R6,
     stringr,
@@ -52,6 +54,7 @@ Suggests:
     graphics,
     testthat,
     knitr,
+    rmarkdown,
     ape,
     yaml,
     networkD3,

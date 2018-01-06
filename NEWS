@@ -2,6 +2,9 @@
 
 ## Version 0.7.4
 - IMPROVE: print now has an explicit arg pruneFun
+- FIX: partykit tests now pass
+- FIX: DESCRIPTION now in line with latest changes from CRAN (rmarkdown declared)
+- FIX: Skipped tests in testMethods included
 
 ## Version 0.7.3
 - FIX: Various typos in documentation
