@@ -1,6 +1,6 @@
 ## General Comments
 
-Fixed changes due to various package updates
+Added rmarkdown to DESCRIPTION as requested by Prof Ripley.
 Best Regards, Christoph
 
 ## Test environments
@@ -12,15 +12,6 @@ Best Regards, Christoph
 
 There were no ERRORs or WARNINGs.
 
-There was one NOTE:
-
-Possibly mis-spelled words in DESCRIPTION:
-  JSON (53:28)
-  cumulate (51:40)
-  
-Both are not misspelled.2
-
-
 ## Downstream dependencies checked
 
 The following downstream dependencies were checked and had no problems:
@@ -30,14 +21,13 @@ Checked collapsibleTree    : 0 errors | 0 warnings | 0 notes
 Checked hypoparsr          : 0 errors | 0 warnings | 0 notes
 Checked nonlinearICP       : 0 errors | 0 warnings | 0 notes
 Checked prof.tree          : 0 errors | 0 warnings | 0 notes
+Checked qlcData            : 0 errors | 0 warnings | 0 notes
 Checked radiant.model      : 0 errors | 0 warnings | 0 notes
+Checked rENA               : 0 errors | 0 warnings | 1 note 
+Checked Rodam              : 0 errors | 0 warnings | 0 notes
 Checked SACCR              : 0 errors | 0 warnings | 0 notes
 Checked stoRy              : 0 errors | 0 warnings | 0 notes
-
-The following downstream dependencies were checked and produced minor issues:
-
-Checked Rodam              : 0 errors | 1 warning  | 0 notes
+Checked styler             : 0 errors | 0 warnings | 0 notes
 Checked tidygraph          : 0 errors | 0 warnings | 1 note 
-
-
-I informed the package maintainers and gave them 2 weeks to look into it, but didn't get any response.
+Checked triversity         : 0 errors | 0 warnings | 0 notes
+Checked userfriendlyscience: 0 errors | 0 warnings | 0 notes
