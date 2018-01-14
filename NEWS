@@ -1,5 +1,8 @@
 # All changes to data.tree are documented here.
 
+## Version 0.7.5
+- IMPROVE: namesNotUnique parameter in as.Node.phylo (#106)
+
 ## Version 0.7.4
 - IMPROVE: print now has an explicit arg pruneFun
 - FIX: partykit tests now pass

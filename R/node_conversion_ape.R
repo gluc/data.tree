@@ -30,6 +30,8 @@ as.phylo.Node <- function(x, heightAttribute = DefaultPlotHeight, ...) {
 #' @param heightName If the phylo contains edge lengths, then they will be converted
 #' to a height and stored in a field named according to this parameter (the default is "height")
 #' @param replaceUnderscores if TRUE (the default), then underscores in names are replaced with spaces
+#' @param namesNotUnique if TRUE, then the \code{name} of the \code{Node}s will be prefixed with a unique id.
+#' This is useful if the children of a parent have non-unique names.
 #' @param ... any other parameter to be passed to sub-implementations
 #' 
 #' @examples
@@ -45,7 +47,7 @@ as.phylo.Node <- function(x, heightAttribute = DefaultPlotHeight, ...) {
 #' @family as.Node
 #' 
 #' @export
-as.Node.phylo <- function(x, heightName = "plotHeight", replaceUnderscores = TRUE, ...) {
+as.Node.phylo <- function(x, heightName = "plotHeight", replaceUnderscores = TRUE, namesNotUnique = FALSE, ...) {
   
   #find root node
   rootNr <- unique(x$edge[,1][!x$edge[,1] %in% x$edge[,2]])
@@ -82,9 +84,10 @@ as.Node.phylo <- function(x, heightName = "plotHeight", replaceUnderscores = TRU
   }
   
   setName <- function(x) {
-    if(replaceUnderscores) nm <- str_replace_all( nms[[x$name]], "_", " ")
+    if (replaceUnderscores) nm <- str_replace_all( nms[[x$name]], "_", " ")
     else nm <- nms[[x$name]]
-    x$name <- nm
+    if (namesNotUnique) x$name <- paste0(x$name, ": ", nm)
+    else x$name <- nm
   }
   root$Do(setName)
   

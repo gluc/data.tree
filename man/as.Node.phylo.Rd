@@ -5,7 +5,7 @@
 \title{Convert a \code{phylo} object from the ape package to a \code{Node}}
 \usage{
 \method{as.Node}{phylo}(x, heightName = "plotHeight",
-  replaceUnderscores = TRUE, ...)
+  replaceUnderscores = TRUE, namesNotUnique = FALSE, ...)
 }
 \arguments{
 \item{x}{The phylo object to be converted}
@@ -14,6 +14,9 @@
 to a height and stored in a field named according to this parameter (the default is "height")}
 
 \item{replaceUnderscores}{if TRUE (the default), then underscores in names are replaced with spaces}
+
+\item{namesNotUnique}{if TRUE, then the \code{name} of the \code{Node}s will be prefixed with a unique id.
+This is useful if the children of a parent have non-unique names.}
 
 \item{...}{any other parameter to be passed to sub-implementations}
 }
