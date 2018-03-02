@@ -2,6 +2,7 @@
 
 ## Version 0.7.5
 - IMPROVE: namesNotUnique parameter in as.Node.phylo (#106)
+- FIX: fixed incompatibility issue with DiagrammeR (#110)
 
 ## Version 0.7.4
 - IMPROVE: print now has an explicit arg pruneFun
