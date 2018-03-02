@@ -31,6 +31,9 @@ test_that("grViz single attribute", {
   
   exp <- "digraph {
 
+
+
+
   '1' [label = 'Acme Inc.'] 
   '2' [label = 'Mimi'] 
   '3' [label = 'New Software'] 
@@ -42,16 +45,16 @@ test_that("grViz single attribute", {
   '9' [label = 'Outsource'] 
   '10' [label = 'Go agile'] 
   '11' [label = 'Switch to R'] 
-'1'->'2' [id = '1'] 
-'1'->'5' [id = '2'] 
-'1'->'8' [id = '3'] 
-'2'->'3' [id = '4'] 
-'2'->'4' [id = '5'] 
-'5'->'6' [id = '6'] 
-'5'->'7' [id = '7'] 
-'8'->'9' [id = '8'] 
-'8'->'10' [id = '9'] 
-'8'->'11' [id = '10'] 
+  '1'->'2' 
+  '1'->'5' 
+  '1'->'8' 
+  '2'->'3' 
+  '2'->'4' 
+  '5'->'6' 
+  '5'->'7' 
+  '8'->'9' 
+  '8'->'10' 
+  '8'->'11' 
 }"
   
   expect_equal(gv, exp)
@@ -69,6 +72,9 @@ test_that("grViz single attribute names not uniuqe", {
   
   exp <- "digraph {
 
+
+
+
   '1' [label = 'Root', tooltip = ''] 
   '2' [label = 'Root', tooltip = 'L1'] 
   '3' [label = 'Root', tooltip = ''] 
@@ -82,18 +88,18 @@ test_that("grViz single attribute names not uniuqe", {
   '11' [label = 'Root', tooltip = ''] 
   '12' [label = 'Root', tooltip = ''] 
   '13' [label = 'Root', tooltip = ''] 
-'1'->'2' [id = '1'] 
-'1'->'6' [id = '2'] 
-'1'->'10' [id = '3'] 
-'2'->'3' [id = '4'] 
-'2'->'4' [id = '5'] 
-'2'->'5' [id = '6'] 
-'6'->'7' [id = '7'] 
-'6'->'8' [id = '8'] 
-'6'->'9' [id = '9'] 
-'10'->'11' [id = '10'] 
-'10'->'12' [id = '11'] 
-'10'->'13' [id = '12'] 
+  '1'->'2' 
+  '1'->'6' 
+  '1'->'10' 
+  '2'->'3' 
+  '2'->'4' 
+  '2'->'5' 
+  '6'->'7' 
+  '6'->'8' 
+  '6'->'9' 
+  '10'->'11' 
+  '10'->'12' 
+  '10'->'13' 
 }"
   
   expect_equal(gv, exp)

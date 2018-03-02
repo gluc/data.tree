@@ -152,10 +152,12 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
   nodeAttributes <- NULL
   edgeAttributes <- NULL
   
+  #graph <- set_global_graph_attrs(graph, "layout", "dot", "graph")
+  
   graph <- add_global_graph_attrs(graph, 
-                                  c("layout", names(graphAttributes), names(nodeAttributes), names(edgeAttributes)), 
-                                  c("dot", graphAttributes, nodeAttributes, edgeAttributes), 
-                                  c("graph", rep('graph', length(graphAttributes)), rep('node', length(nodeAttributes)), rep('edge', length(edgeAttributes))))
+                                  c(names(graphAttributes), names(nodeAttributes), names(edgeAttributes)), 
+                                  c(graphAttributes, nodeAttributes, edgeAttributes), 
+                                  c(rep('graph', length(graphAttributes)), rep('node', length(nodeAttributes)), rep('edge', length(edgeAttributes))))
   
   return (graph)
   
