@@ -1,6 +1,6 @@
 ## General Comments
 
-Added rmarkdown to DESCRIPTION as requested by Prof Ripley.
+Fixed problems that resulted from DiagrammeR changes.
 Best Regards, Christoph
 
 ## Test environments
@@ -14,10 +14,12 @@ There were no ERRORs or WARNINGs.
 
 ## Downstream dependencies checked
 
-The following downstream dependencies were checked and had no problems:
+The following downstream dependencies were checked:
 
-Checked ahp                : 0 errors | 0 warnings | 0 notes
+Checked ahp                : 2 errors | 0 warnings | 1 note 
+Checked Cluster.OBeu       : 0 errors | 0 warnings | 0 notes
 Checked collapsibleTree    : 0 errors | 0 warnings | 0 notes
+Checked hR                 : 0 errors | 0 warnings | 0 notes
 Checked hypoparsr          : 0 errors | 0 warnings | 0 notes
 Checked nonlinearICP       : 0 errors | 0 warnings | 0 notes
 Checked prof.tree          : 0 errors | 0 warnings | 0 notes
@@ -26,8 +28,10 @@ Checked radiant.model      : 0 errors | 0 warnings | 0 notes
 Checked rENA               : 0 errors | 0 warnings | 1 note 
 Checked Rodam              : 0 errors | 0 warnings | 0 notes
 Checked SACCR              : 0 errors | 0 warnings | 0 notes
-Checked stoRy              : 0 errors | 0 warnings | 0 notes
+Checked stoRy              : 0 errors | 0 warnings | 1 note 
 Checked styler             : 0 errors | 0 warnings | 0 notes
 Checked tidygraph          : 0 errors | 0 warnings | 1 note 
 Checked triversity         : 0 errors | 0 warnings | 0 notes
 Checked userfriendlyscience: 0 errors | 0 warnings | 0 notes
+
+ahp is my own package, and I will fix the problems right after data.tree submission.
