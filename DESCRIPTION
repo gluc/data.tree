@@ -48,7 +48,7 @@ Imports:
     R6,
     stringr,
     methods,
-    DiagrammeR
+    DiagrammeR (>= 1.0.0)
 Suggests:
     Formula,
     graphics,
