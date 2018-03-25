@@ -9,7 +9,7 @@
 #'@export
 plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL, output = "graph") {
   graph <- ToDiagrammeRGraph(x, direction, pruneFun)
-  render_graph(graph, output = output)
+  render_graph(graph, output = output, ...)
 }
 
 
