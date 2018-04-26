@@ -109,7 +109,7 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
   Set(tr, `.id` = 1:length(tr))
   
   #create nodes df
-  myargs <- NULL
+  myargs <- list()
   if(!"label" %in% ns) ns <- c(ns, "label")
   for (style in ns) {
     myargs[[style]] <- Get(tr, function(x) {
@@ -136,7 +136,9 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
   
   
   edges <- do.call("ToDataFrameNetwork", c(root, from = function(node) node$parent$`.id`, to = ".id", myargs, direction = list(direction), pruneFun = pruneFun))[,-(1:2)]
-  edges <- do.call(create_edge_df, as.list(edges))
+  if (nrow(edges) > 0) {
+    edges <- do.call(create_edge_df, as.list(edges))
+  }
   
   graph <- create_graph(nodes, edges, attr_theme = NULL)
   
