@@ -28,7 +28,7 @@ environment:
 
   - R_VERSION: stable
 
-  - R_VERSION: patched
+#  - R_VERSION: patched
 
 
 build_script:
