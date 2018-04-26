@@ -181,7 +181,7 @@ ToDataFrameNetwork <- function(x,
 
   df <- cbind(df, df2)
   df <- df[-1,]
-  rownames(df) <- 1:dim(df)[1]
+  rownames(df) <- seq_len(nrow(df))
   return (df)
 }
 
