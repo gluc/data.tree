@@ -303,7 +303,7 @@ FromDataFrameTable <- function(table,
                                ) {
   
   #make sure tibble etc. work (#115)
-  network <- as.data.frame(network)
+  table <- as.data.frame(table)
   
   table[[pathName]] <- as.character(table[[pathName]])
   root <- NULL

@@ -127,4 +127,8 @@ SetEdgeStyle(acme$Research$`New Labs`,
 Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
 plot(acme)
 
+#print p as label, where available:
+SetNodeStyle(acme, label = function(node) node$p)
+plot(acme)
+
 }
