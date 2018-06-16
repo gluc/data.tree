@@ -302,6 +302,7 @@ FromDataFrameTable <- function(table,
                                check = c("check", "no-warn", "no-check")
                                ) {
   
+  if (!is(table, "data.frame")) stop("table must be a data.frame")
   #make sure tibble etc. work (#115)
   table <- as.data.frame(table)
   
