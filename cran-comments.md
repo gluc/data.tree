@@ -6,7 +6,8 @@ Best Regards, Christoph
 ## Test environments
 
 * linux / travis (release, devel) -> ok
-* Win / appveyor (devel 32, devel 64, release 64, stable, patched) -> ok
+* Win / appveyor (devel 32, release 64, stable) -> ok
+* Winbuilder -> OK
 
 ## R CMD check results
 

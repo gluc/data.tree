@@ -5,7 +5,7 @@ Before a release, do the following:
 4. review documentation, especially Node
 5. review vignettes (especially if png need updating)
 6. Check build
-7. Commit to git, make sure travis and appveyor pass
+7. Commit to git, make sure travis and appveyor pass (in case it fails, you may want to clean cache)
 8. make sure we have adequate coverage
 9. Make sure devel passes, by running devtools::build_win(version = "R-devel")
 10. Make sure r-oldrel passes (easiest is to run it on local windows)

@@ -12,7 +12,7 @@ install:
 
 # Adapt as necessary starting from here
 
-# cache:
+#cache:
 #  - C:\RLibrary
 
 environment:
@@ -28,7 +28,7 @@ environment:
 
   - R_VERSION: stable
 
-#  - R_VERSION: patched
+  - R_VERSION: patched
 
 
 build_script:
