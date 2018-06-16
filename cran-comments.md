@@ -5,8 +5,8 @@ Best Regards, Christoph
 
 ## Test environments
 
-* linux / travis (release, devel) -> ok
-* Win / appveyor (devel 32, release 64, stable) -> ok
+* linux / travis (release, oldrel, devel) -> ok
+* Win / appveyor (devel 32, release 64, stable, patched) -> ok
 * Winbuilder -> OK
 
 ## R CMD check results
@@ -17,7 +17,7 @@ There were no ERRORs or WARNINGs.
 
 The following downstream dependencies were checked:
 
-Checked ahp                : 2 errors | 0 warnings | 1 note 
+Checked ahp                : 0 errors | 0 warnings | 0 notes
 Checked Cluster.OBeu       : 0 errors | 0 warnings | 0 notes
 Checked collapsibleTree    : 0 errors | 0 warnings | 0 notes
 Checked hR                 : 0 errors | 0 warnings | 0 notes
@@ -25,6 +25,7 @@ Checked hypoparsr          : 0 errors | 0 warnings | 0 notes
 Checked nonlinearICP       : 0 errors | 0 warnings | 0 notes
 Checked prof.tree          : 0 errors | 0 warnings | 0 notes
 Checked qlcData            : 0 errors | 0 warnings | 0 notes
+Checked qwraps2            : 0 errors | 0 warnings | 0 notes
 Checked radiant.model      : 0 errors | 0 warnings | 0 notes
 Checked rENA               : 0 errors | 0 warnings | 1 note 
 Checked Rodam              : 0 errors | 0 warnings | 0 notes
@@ -35,4 +36,3 @@ Checked tidygraph          : 0 errors | 0 warnings | 1 note
 Checked triversity         : 0 errors | 0 warnings | 0 notes
 Checked userfriendlyscience: 0 errors | 0 warnings | 0 notes
 
-ahp is my own package, and I will fix the problems right after data.tree submission.
