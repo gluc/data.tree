@@ -4,6 +4,7 @@
 - IMPROVE: plot now also works for trees with a single root node (thx to Pierre Neuvial)
 - IMPROVE: ellipsis parameters are not passed to DiagrammeR for plotting (#109)
 - FIX: Dependency on DiagrammeR (>= 1.0.0) explicitly stated (#111)
+- IMPROVE: Allow tibble in FromDataFrameNetwork and FromDataFrameTable (#115)
 
 ## Version 0.7.5
 - IMPROVE: namesNotUnique parameter in as.Node.phylo (#106)

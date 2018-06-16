@@ -97,6 +97,10 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
 #' plot(acme)
 #' 
+#' #print p as label, where available:
+#' SetNodeStyle(acme, label = function(node) node$p)
+#' plot(acme)
+#' 
 #' @export
 ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun = NULL) {
   #get unique node styles defined on tree
