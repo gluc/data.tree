@@ -1,6 +1,6 @@
 # All changes to data.tree are documented here.
 
-## Version 0.7.6 (NEXT)
+## Version 0.7.6
 - IMPROVE: plot now also works for trees with a single root node (thx to Pierre Neuvial)
 - IMPROVE: ellipsis parameters are not passed to DiagrammeR for plotting (#109)
 - FIX: Dependency on DiagrammeR (>= 1.0.0) explicitly stated (#111)

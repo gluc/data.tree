@@ -12,8 +12,8 @@ install:
 
 # Adapt as necessary starting from here
 
-cache:
-  - C:\RLibrary
+# cache:
+#  - C:\RLibrary
 
 environment:
   global:

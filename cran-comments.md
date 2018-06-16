@@ -1,6 +1,6 @@
 ## General Comments
 
-Fixed problems that resulted from DiagrammeR changes.
+Various minor improvements and fixes
 Best Regards, Christoph
 
 ## Test environments
