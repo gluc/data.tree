@@ -1,5 +1,8 @@
 # All changes to data.tree are documented here.
 
+## Version 0.7.7 (next)
+- IMPROVE: if an attribute of a node has n dimensions, then Get will return an array of dim n+1, with the names of the first dimension being equal to the node names (thanks to Chris Hammil)
+
 ## Version 0.7.6
 - IMPROVE: plot now also works for trees with a single root node (thx to Pierre Neuvial)
 - IMPROVE: ellipsis parameters are not passed to DiagrammeR for plotting (#109)
