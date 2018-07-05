@@ -197,7 +197,13 @@ Get = function(nodes,
   if (is.character(attribute) && attribute == "name") {
     names(res) <- res
   } else {
-    names(res) <- Get(nodes, "name")
+    if(is.null(dim(res))){
+      names(res) <- Get(nodes, "name")
+    } else {
+      if(is.null(dimnames(res)))
+        dimnames(res) <- list()
+      dimnames(res)[[length(dim(res))]] <- Get(nodes, "name")
+    } 
   }
   if (regular) {
     res <- do.call(cbind, res)
