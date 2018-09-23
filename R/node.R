@@ -362,7 +362,7 @@ Node <- R6Class("Node",
                       },
                       
                       fieldsAll = function() {
-                        as.vector(na.omit(unique(unlist(Get(Traverse(self), "fields")))))
+                        as.vector(na.omit(unique(unlist(Get(Traverse(self), "fields", simplify = FALSE)))))
                       },
                       
                       levelName = function() {
