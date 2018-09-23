@@ -19,3 +19,4 @@ Other as.Node: \code{\link{as.Node.data.frame}},
   \code{\link{as.Node.dendrogram}},
   \code{\link{as.Node.list}}, \code{\link{as.Node.phylo}}
 }
+\concept{as.Node}

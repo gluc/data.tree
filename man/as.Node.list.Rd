@@ -6,12 +6,13 @@
 \alias{FromListSimple}
 \title{Convert a nested \code{list} structure to a \code{data.tree} structure}
 \usage{
-\method{as.Node}{list}(x, mode = c("simple", "explicit"), nameName = "name",
-  childrenName = "children", nodeName = NULL, check = c("check",
-  "no-warn", "no-check"), ...)
+\method{as.Node}{list}(x, mode = c("simple", "explicit"),
+  nameName = "name", childrenName = "children", nodeName = NULL,
+  check = c("check", "no-warn", "no-check"), ...)
 
-FromListExplicit(explicitList, nameName = "name", childrenName = "children",
-  nodeName = NULL, check = c("check", "no-warn", "no-check"))
+FromListExplicit(explicitList, nameName = "name",
+  childrenName = "children", nodeName = NULL, check = c("check",
+  "no-warn", "no-check"))
 
 FromListSimple(simpleList, nameName = "name", nodeName = NULL,
   check = c("check", "no-warn", "no-check"))
@@ -96,3 +97,4 @@ Other as.Node: \code{\link{as.Node.data.frame}},
   \code{\link{as.Node.dendrogram}},
   \code{\link{as.Node.phylo}}, \code{\link{as.Node}}
 }
+\concept{as.Node}

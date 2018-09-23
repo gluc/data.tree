@@ -8,9 +8,9 @@
 \alias{ToDataFrameTypeCol}
 \title{Convert a \code{data.tree} structure to a \code{data.frame}}
 \usage{
-\method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE, ...,
-  traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
-  pruneFun = NULL, filterFun = NULL, format = FALSE,
+\method{as.data.frame}{Node}(x, row.names = NULL, optional = FALSE,
+  ..., traversal = c("pre-order", "post-order", "in-order", "level",
+  "ancestor"), pruneFun = NULL, filterFun = NULL, format = FALSE,
   inheritFromAncestors = FALSE)
 
 ToDataFrameTree(x, ..., pruneFun = NULL)
@@ -20,7 +20,8 @@ ToDataFrameTable(x, ..., pruneFun = NULL)
 ToDataFrameNetwork(x, ..., direction = c("climb", "descend"),
   pruneFun = NULL, format = FALSE, inheritFromAncestors = FALSE)
 
-ToDataFrameTypeCol(x, ..., type = "level", prefix = type, pruneFun = NULL)
+ToDataFrameTypeCol(x, ..., type = "level", prefix = type,
+  pruneFun = NULL)
 }
 \arguments{
 \item{x}{The root \code{Node} of the tree or sub-tree to be convert to a data.frame}

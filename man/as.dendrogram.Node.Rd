@@ -40,3 +40,4 @@ plot(acmed)
 \seealso{
 Other Conversions from Node: \code{\link{ToNewick}}
 }
+\concept{Conversions from Node}

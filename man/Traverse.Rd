@@ -4,8 +4,8 @@
 \alias{Traverse}
 \title{Traverse a tree or a sub-tree}
 \usage{
-Traverse(node, traversal = c("pre-order", "post-order", "in-order", "level",
-  "ancestor"), pruneFun = NULL, filterFun = NULL)
+Traverse(node, traversal = c("pre-order", "post-order", "in-order",
+  "level", "ancestor"), pruneFun = NULL, filterFun = NULL)
 }
 \arguments{
 \item{node}{the root of a tree or a sub-tree that should be traversed}

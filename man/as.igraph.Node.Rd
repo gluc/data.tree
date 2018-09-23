@@ -5,8 +5,8 @@
 \title{Convert a \code{data.tree} structure to an igraph network}
 \usage{
 as.igraph.Node(node, vertexAttributes = character(),
-  edgeAttributes = character(), directed = FALSE, direction = c("climb",
-  "descend"))
+  edgeAttributes = character(), directed = FALSE,
+  direction = c("climb", "descend"))
 }
 \arguments{
 \item{node}{The root \code{Node} to convert}

@@ -6,14 +6,14 @@
 \alias{ToListExplicit}
 \title{Convert a \code{data.tree} structure to a list-of-list structure}
 \usage{
-\method{as.list}{Node}(x, mode = c("simple", "explicit"), unname = FALSE,
-  nameName = ifelse(unname, "name", ""), childrenName = "children",
-  rootName = "", keepOnly = NULL, ...)
+\method{as.list}{Node}(x, mode = c("simple", "explicit"),
+  unname = FALSE, nameName = ifelse(unname, "name", ""),
+  childrenName = "children", rootName = "", keepOnly = NULL, ...)
 
 ToListSimple(x, nameName = "name", ...)
 
-ToListExplicit(x, unname = FALSE, nameName = ifelse(unname, "name", ""),
-  childrenName = "children", ...)
+ToListExplicit(x, unname = FALSE, nameName = ifelse(unname, "name",
+  ""), childrenName = "children", ...)
 }
 \arguments{
 \item{x}{The Node to convert}

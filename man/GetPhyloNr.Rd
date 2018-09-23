@@ -33,3 +33,4 @@ ap <- as.phylo(acme)
 Other ape phylo conversions: \code{\link{as.Node.phylo}},
   \code{\link{as.phylo.Node}}
 }
+\concept{ape phylo conversions}

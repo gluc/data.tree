@@ -12,7 +12,8 @@
 \method{plot}{Node}(x, ..., direction = c("climb", "descend"),
   pruneFun = NULL, output = "graph")
 
-ToDiagrammeRGraph(root, direction = c("climb", "descend"), pruneFun = NULL)
+ToDiagrammeRGraph(root, direction = c("climb", "descend"),
+  pruneFun = NULL)
 
 SetNodeStyle(node, inherit = TRUE, keepExisting = FALSE, ...)
 
