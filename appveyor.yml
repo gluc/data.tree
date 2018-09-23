@@ -15,7 +15,7 @@ install:
 #in case of problems, you might want to comment this out to clean the cache
 #See here: https://www.appveyor.com/docs/build-cache/
 cache:
-  #- C:\RLibrary
+  - C:\RLibrary
 
 environment:
   global:

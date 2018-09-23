@@ -1,6 +1,6 @@
 ## General Comments
 
-Various minor improvements and fixes
+Added conditional S3 for generics, as requested by Kurt.
 Best Regards, Christoph
 
 ## Test environments
