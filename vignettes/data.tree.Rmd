@@ -326,21 +326,21 @@ We now add costs and probabilities to the projects in each department:
 
 
 ```{r}
-software$cost <- 1000000
-standards$cost <- 500000
-newProductLine$cost <- 2000000
-newLabs$cost <- 750000
-outsource$cost <- 400000
-agile$cost <- 250000
-goToR$cost <- 50000
+acme$Accounting$`New Software`$cost <- 1000000
+acme$Accounting$`New Accounting Standards`$cost <- 500000
+acme$Research$`New Product Line`$cost <- 2000000
+acme$Research$`New Labs`$cost <- 750000
+acme$IT$Outsource$cost <- 400000
+acme$IT$`Go agile`$cost <- 250000
+acme$IT$`Switch to R`$cost <- 50000
 
-software$p <- 0.5
-standards$p <- 0.75
-newProductLine$p <- 0.25
-newLabs$p <- 0.9
-outsource$p <- 0.2
-agile$p <- 0.05
-goToR$p <- 1
+acme$Accounting$`New Software`$p <- 0.5
+acme$Accounting$`New Accounting Standards`$p <- 0.75
+acme$Research$`New Product Line`$p <- 0.25
+acme$Research$`New Labs`$p <- 0.9
+acme$IT$Outsource$p <- 0.2
+acme$IT$`Go agile`$p <- 0.05
+acme$IT$`Switch to R`$p <- 1
 print(acme, "cost", "p")
 
 ```
