@@ -4,7 +4,7 @@
 
 if(getRversion() >= "3.6.0") {
  S3method(igraph::as.igraph, Node)
- S3method(phylo::as.phylo, Node)
+ S3method(ape::as.phylo, Node)
 } 
 
 

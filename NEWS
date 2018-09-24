@@ -1,6 +1,9 @@
 # All changes to data.tree are documented here.
 
-## Version 0.7.7 (next)
+## Version 0.7.8
+- FIX: wrong export of S3
+
+## Version 0.7.7
 - IMPROVE: if an attribute of a node has n dimensions, then Get will return an array of dim n+1, with the names of the first dimension being equal to the node names (thanks to Chris Hammil)
 - FIX: fieldsAll now doesn't simplify (thanks to Vaclav Slimacek)
 
