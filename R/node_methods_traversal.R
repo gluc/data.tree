@@ -39,8 +39,10 @@ Traverse = function(node,
   #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
   
   nodes <- list()
-
-  
+ 
+  if(length(traversal) > 1L) {
+    traversal <- traversal[1L]
+  }
   if(is.function(traversal) || traversal == "pre-order" || traversal == "post-order") {
     
     if (length(pruneFun) == 0 || pruneFun(node)) {
