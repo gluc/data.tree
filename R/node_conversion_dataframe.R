@@ -110,7 +110,7 @@ as.data.frame.Node <- function(x,
                    }
                 )
     }
-    df[colName] <- it
+    df[colName] <- unlist(it)
 
   }
 
