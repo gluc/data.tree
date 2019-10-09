@@ -100,17 +100,18 @@ as.data.frame.Node <- function(x,
       it <- Get(t, 
                 col,
                 format = format, 
-                inheritFromAncestors = inheritFromAncestors)
-      it <- sapply(it, 
+                inheritFromAncestors = inheritFromAncestors,
+                simplify = FALSE)
+      it <- lapply(it, 
                    function(el) {
                           if (inherits(el, "Node")) return ("")
-                          else if (length(el) > 1) return (toString(el))
-                          else if (length(el) == 0) return (NA)
+                          else if (length(unlist(el)) > 1) return (toString(unlist(el)))
+                          else if (length(unlist(el)) == 0) return (NA)
                           else return (el)
                    }
                 )
     }
-    df[colName] <- it
+    df[colName] <- unlist(it)
 
   }
 

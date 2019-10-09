@@ -76,6 +76,16 @@ test_that("as.data.frame.Node", {
   expect_equal(acmedf$sg, acmedf$sg)
 })
 
+test_that("as.data.frame.Node list fields", {
+  data(acme)
+  acme$Set(data      = list(list(list(a = 1, b = "a"))), filterFun = isLeaf)
+  acme$Set(data      = list(list(list(b = "c"))), 
+           filterFun = function(n) isNotLeaf(n) && isNotRoot(n))
+  expect_identical(as.data.frame(acme, data = "data")$data,
+                   c(NA, "c", "1, a", "1, a", "c", "1, a", "1, a", "c", "1, a", 
+                     "1, a", "1, a"))
+})
+
 
 test_that("ToDataFrameTable", {
   data(acme)
