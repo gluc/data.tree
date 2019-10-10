@@ -38,7 +38,7 @@ This vignette gives you a quick introduction to data.tree applications. We took 
 
 If you are using data.tree for things not listed here, and if you believe this is of general interest, then please do drop us a note, so we can include your application in a future version of this vignette. 
 
-# World PopulationTreeMap (visualisation)
+# World PopulationTreeMap (visualization)
 
 This example is inspired by the examples of the treemap package. 
 
@@ -51,7 +51,7 @@ You'll learn how to
 
 ## Original Example, to be improved
 
-The original example visualises the world population as a tree map.
+The original example visualizes the world population as a tree map.
 
 ```{r}
 library(treemap)
@@ -334,7 +334,7 @@ This example shows you the following:
 
 Thanks a lot for all the helpful comments made by Holger von Jouanne-Diedrich.
 
-Classification trees are very popular these days. If you have never come accross them, you might be interested in [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edible or not. 
+Classification trees are very popular these days. If you have never come across them, you might be interested in [classification trees](http://en.wikipedia.org/wiki/Decision_tree_learning). These models let you *classify* observations (e.g. things, outcomes) according to the observations' qualities, called *features*. Essentially, all of these models consist of creating a *tree*, where each *node* acts as a *router*. You insert your mushroom *instance* at the *root* of the tree, and then, depending on the mushroom's *features* (size, points, color, etc.), you follow along a different *path*, until a *leaf* node spits out your mushroom's *class*, i.e. whether it's edible or not. 
 
 There are two different steps involved in using such a model: *training* (i.e. constructing the tree), and *predicting* (i.e. using the tree to predict whether a given mushroom is poisonous). This example provides code to do both, using one of the very early algorithms to classify data according to discrete features: [ID3](http://en.wikipedia.org/wiki/ID3_algorithm). It lends itself well for this example, but of course today there are much more elaborate and refined algorithms available.
 
@@ -574,7 +574,7 @@ jl$Do(decision, filterFun = function(x) x$type == 'decision')
 
 ### Plot with the data.tree plotting facility
 
-The data tree plotting facility uses GraphViz / Diagrammer. You can provide a function as a style:
+The data tree plotting facility uses GraphViz / DiagrammeR. You can provide a function as a style:
 
 
 ```{r}
@@ -621,12 +621,12 @@ plot(jl)
 
 ![](assets/dtree.png)
 
-# Bubble Chart (visualisation)
+# Bubble Chart (visualization)
 
 In this example, we will replicate Mike Bostock's bubble example. See here for details: http://bl.ocks.org/mbostock/4063269.  
 We use Joe Cheng's [bubbles](https://github.com/jcheng5/bubbles) package. All of this is inspired by [Timelyportfolio](https://github.com/timelyportfolio), the king of [htmlwidgets](http://www.htmlwidgets.org).
 
-You'll learn how to convert a complex JSON into a data.frame, and how to use this to plot hierarchic visualisations.
+You'll learn how to convert a complex JSON into a data.frame, and how to use this to plot hierarchic visualizations.
 
 ## Load JSON file
 
@@ -928,7 +928,7 @@ For the more complicated case where you want to parallelise operations on a sing
 
 In this example, we do a brute force solution of Tic-Tac-Toe, the well-known 3*3 game.
 
-You'll learn how data.tree can be used to build a tree of game history, and how the resulting data.tree structure can be used to analyse the game.
+You'll learn how data.tree can be used to build a tree of game history, and how the resulting data.tree structure can be used to analyze the game.
 
 In addition, this example shows you how parallelisation can speed up data.tree.
 
@@ -966,7 +966,7 @@ ttt$Set(player = 1, filterFun = isLeaf)
 
 ## Game play
 
-Now we recurse through the tree, and add possible moves to the leaves, growing it eventally to hold all possible games. To do this, we define a method which, based on a `Node's` path, adds possible moves as children.
+Now we recurse through the tree, and add possible moves to the leaves, growing it eventually to hold all possible games. To do this, we define a method which, based on a `Node's` path, adds possible moves as children.
 
 
 ```{r}

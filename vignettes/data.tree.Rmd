@@ -62,7 +62,7 @@ This package offers an alternative. The `data.tree` package lets you create hier
 
 The package also provides convenience methods for neatly printing and plotting trees. It supports conversion from and to `data.frames`, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
 
-Technically, `data.tree` structures are bi-directional, ordered trees. Bi-directional means that you can navigate from parent to chidren and vice versa. Ordered means that the sort order of the children of a parent node is well-defined.
+Technically, `data.tree` structures are bi-directional, ordered trees. Bi-directional means that you can navigate from parent to children and vice versa. Ordered means that the sort order of the children of a parent node is well-defined.
 
 # `data.tree` basics
 
@@ -279,7 +279,7 @@ acme$Research$`New Labs`
 ```
 
 
-### Naviation by position
+### Navigation by position
 
 However, there is a number of other ways to get to a specific `Node`. We can access the children of a `Node` directly through `Node$children`: 
 
@@ -365,7 +365,7 @@ print(birds, "vulgo", "species")
 
 ### Custom fields as function
 
-Nothin stops you from setting a function as a field. This calculates a value dynamically, i.e. whenever a field is accessed in tree traversal. For example, you can add a new `Node` to your structure, and the function will reflect this. Think of this as a hierarchical spreadsheet, in which you can set formulas into cells.
+Nothing stops you from setting a function as a field. This calculates a value dynamically, i.e. whenever a field is accessed in tree traversal. For example, you can add a new `Node` to your structure, and the function will reflect this. Think of this as a hierarchical spreadsheet, in which you can set formulas into cells.
 
 Consider the following example:
 
@@ -582,7 +582,7 @@ acme$IT$Outsource$AddChild("Poland")
 
 ```
 
-Now, with this slightly more complex tree structure, the level is not a usefuly discriminator anymore, because some projects are in level 3, while the new projects are in level 4. For this reason, we introduce a type field on our node objects: A node type can be a company (root only), a department (Accounting, Research, and IT), a program (Oursource), and a project (the rest, i.e. all the leaves):
+Now, with this slightly more complex tree structure, the level is not a usefully discriminator anymore, because some projects are in level 3, while the new projects are in level 4. For this reason, we introduce a type field on our node objects: A node type can be a company (root only), a department (Accounting, Research, and IT), a program (Oursource), and a project (the rest, i.e. all the leaves):
 
 ```{r}
 acme$Set(type = c('company', 'department', 'project', 'project', 'department', 'project', 'project', 'department', 'program', 'project', 'project', 'project', 'project'))
@@ -942,7 +942,7 @@ However, if you are respecting the following guidelines, I promise that you and 
 
 1. Creating a `Node` is relatively expensive. `CreateRegularTree(6, 6)` creates a `data.tree` structure with 9331 `Nodes`. On an AWS c4.large instance, this takes about 2.5 seconds.
 2. `Clone` is similar to `Node` creation, with an extra penalty of about 50%.
-3. Traversing (`Traverse`, `Get`, `Set` and `Do`) is realtively cheap. 
+3. Traversing (`Traverse`, `Get`, `Set` and `Do`) is relatively cheap. 
 
 This is really what you would expect. `data.tree` builds on R6, i.e. reference objects. There is an overhead in creating them, as your computer needs to manage the references they hold. However, performing operations that change your tree (e.g. `Prune` or `Set`) are often faster than value semantics, as your computer does not need to copy the entire object in memory.
 

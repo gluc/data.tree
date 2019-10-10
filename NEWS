@@ -1,5 +1,8 @@
 # All changes to data.tree are documented here.
 
+# Version 0.7.10
+- IMPROVE: various spell errors fixed in vignettes
+
 # Version 0.7.9
 - FIX: Bug in as.data.frame.Node: NA for certain lists slots (#135)
 - FIX: Get prints Null as NA by default (#128)
