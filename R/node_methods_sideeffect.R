@@ -114,7 +114,12 @@ Prune <- function(node, pruneFun) {
   if (isFirstCall) cnt <- node$totalCount
   if ( node$isLeaf) return (0)
   for( i in length(node$children):1 ) {
-    if ( !pruneFun(node$children[[i]]) ) {
+    if (length(pruneFun(node$children[[i]]))==0){
+      stop(paste("pruneFun evaluated on node",
+                 node$children[[i]]$name,
+                 "evaluated to logical(0).",
+                 "Perhaps you should read nullAsNa in GetAttribute's help." ))
+    } else if ( !pruneFun(node$children[[i]]) ) {
       rm(list = names(node$children)[i], envir = node)
       node$children <- node$children[-i]
     }
