@@ -106,3 +106,11 @@ test_that("grViz single attribute names not uniuqe", {
   
 })
 
+testthat("grViz names with quotes", {
+  mytree <- Node$new("my_root")
+  mytree$AddChild("A")$AddChild("\"B\"")$AddChild("\"C\"")$AddChild("D")
+  exp_lab <- c("my_root", "A", "\\\"B\\\"", "\\\"C\\\"", "D")
+  expect_equal(ToDiagrammeRGraph(behaveData)$nodes_df$label,
+               exp_lab)
+})
+

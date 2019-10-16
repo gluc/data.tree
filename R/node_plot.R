@@ -126,6 +126,9 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
   
   nodes <- do.call(create_node_df, c(n = length(tr), myargs))
   
+  ## escape quotes in names to avoid problems with the gviz
+  nodes$label <- gsub("\"", "\\\\\"", nodes$label)
+
   # get unique edge styles
   
   es <- unique(unlist(sapply(root$Get(function(x) attr(x, "edgeStyle"), simplify = FALSE), names)))
