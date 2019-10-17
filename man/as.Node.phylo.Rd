@@ -39,7 +39,8 @@ Other ape phylo conversions: \code{\link{GetPhyloNr}},
 
 Other as.Node: \code{\link{as.Node.data.frame}},
   \code{\link{as.Node.dendrogram}},
-  \code{\link{as.Node.list}}, \code{\link{as.Node}}
+  \code{\link{as.Node.list}}, \code{\link{as.Node.rpart}},
+  \code{\link{as.Node}}
 }
 \concept{ape phylo conversions}
 \concept{as.Node}

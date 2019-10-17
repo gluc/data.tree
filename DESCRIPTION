@@ -70,7 +70,8 @@ Suggests:
     partykit,
     doParallel,
     foreach,
-    htmlwidgets
+    htmlwidgets,
+    rpart
 Enhances: 
 Description: Create tree structures from hierarchical data, and traverse the
     tree in various orders. Aggregate, cumulate, print, plot, convert to and from
