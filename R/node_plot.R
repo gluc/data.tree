@@ -5,7 +5,6 @@
 #' @inheritParams ToDataFrameNetwork
 #' @inheritParams DiagrammeR::render_graph
 #'
-#' @importFrom   DiagrammeR   render_graph
 #' @export
 plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL, output = "graph") {
   if(!requireNamespace("DiagrammeR", quietly = TRUE)) {
@@ -107,7 +106,6 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' SetNodeStyle(acme, label = function(node) node$p)
 #' plot(acme)
 #' 
-#' @importFrom   DiagrammeR   add_global_graph_attrs   create_edge_df   create_node_df   create_graph
 #' @export
 ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun = NULL) {
   if(!requireNamespace("DiagrammeR", quietly = TRUE)) {

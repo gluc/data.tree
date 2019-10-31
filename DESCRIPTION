@@ -52,8 +52,7 @@ VignetteBuilder:
 Imports:
     R6,
     stringr,
-    methods,
-    DiagrammeR (>= 1.0.0)
+    methods
 Suggests:
     Formula,
     graphics,
@@ -70,7 +69,8 @@ Suggests:
     partykit,
     doParallel,
     foreach,
-    htmlwidgets
+    htmlwidgets,
+    DiagrammeR (>= 1.0.0)
 Enhances: 
 Description: Create tree structures from hierarchical data, and traverse the
     tree in various orders. Aggregate, cumulate, print, plot, convert to and from
