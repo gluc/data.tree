@@ -2,6 +2,8 @@ context("plot")
 
 
 test_that("grViz", {
+  testthat::skip_if_not_installed("DiagrammeR", minimum_version = "1.0.0")
+
   data(acme)  
   
   SetGraphStyle(acme, rankdir = "TB")
@@ -16,13 +18,15 @@ test_that("grViz", {
   #use Do to set style on specific nodes:
   Do(acme$leaves, function(node) SetNodeStyle(node, shape = "egg"))
   graph <- ToDiagrammeRGraph(acme, direction = "descend", pruneFun = function(x) x$level < 3)
-  gv <- generate_dot(graph)
+  gv <- DiagrammeR::generate_dot(graph)
   expect_equal(substr(gv, 1, 9), "digraph {")
 })
 
 
 
 test_that("grViz single attribute", {
+  testthat::skip_if_not_installed("DiagrammeR", minimum_version = "1.0.0")
+
   data(acme)
   SetNodeStyle(acme$Accounting, label = "Mimi")
   
@@ -63,6 +67,8 @@ test_that("grViz single attribute", {
 
 
 test_that("grViz single attribute names not uniuqe", {
+  testthat::skip_if_not_installed("DiagrammeR", minimum_version = "1.0.0")
+
   mytree <- CreateRegularTree(3, 3)
   mytree$Do(function(x) x$name <- x$position)
   SetNodeStyle(mytree, label = "Root")
