@@ -70,8 +70,8 @@ Suggests:
     doParallel,
     foreach,
     htmlwidgets,
-    DiagrammeR (>= 1.0.0)
-Enhances: 
+    DiagrammeR (>= 1.0.0),
+    mockery
 Description: Create tree structures from hierarchical data, and traverse the
     tree in various orders. Aggregate, cumulate, print, plot, convert to and from
     data.frame and more. Useful for decision trees, machine learning, finance,

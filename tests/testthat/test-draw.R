@@ -1,6 +1,30 @@
 context("plot")
 
 
+test_that("plot only works if DiagrammeR is installed", {
+
+  # Given
+  # - an object of class "Node"--"R6"
+  # - in an R session where DiagrammeR is not installed
+  # When
+  # - the user tries to construct a DiagrammeR-based graph or plot
+  # Then
+  # - an error is thrown
+
+  data(acme)
+  mockery::stub(ToDiagrammeRGraph, "requireNamespace", FALSE, 1)
+  mockery::stub(plot.Node, "requireNamespace", FALSE, 1)
+
+  expect_error(
+    ToDiagrammeRGraph(acme),
+    info = "ToDiagrammeRGraph should fail if DiagrammeR is not installed")
+
+  expect_error(
+    plot(acme),
+    info = "plot() should fail if DiagrammeR is not installed")
+})
+
+
 test_that("grViz", {
   testthat::skip_if_not_installed("DiagrammeR", minimum_version = "1.0.0")
 
