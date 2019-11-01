@@ -25,7 +25,6 @@
 #' 
 #' @seealso AreNamesUnique
 #' 
-#' @importFrom   igraph   as.igraph   graph_from_data_frame
 #' @export
 as.igraph.Node <- function(x, vertexAttributes = character(), edgeAttributes = character(), directed = FALSE, direction = c("climb", "descend"), ...) {
   if (!AreNamesUnique(x)) stop("Node names must be unique within the tree")
@@ -37,7 +36,3 @@ as.igraph.Node <- function(x, vertexAttributes = character(), edgeAttributes = c
                                       vertices = vert)
   return (ig)
 }
-
-#' Register the generic 'as.igraph' from package 'igraph'
-#' @export
-igraph::as.igraph

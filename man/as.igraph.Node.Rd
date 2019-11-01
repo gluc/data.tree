@@ -4,7 +4,7 @@
 \alias{as.igraph.Node}
 \title{Convert a \code{data.tree} structure to an igraph network}
 \usage{
-\method{as.igraph}{Node}(x, vertexAttributes = character(),
+as.igraph.Node(x, vertexAttributes = character(),
   edgeAttributes = character(), directed = FALSE,
   direction = c("climb", "descend"), ...)
 }

@@ -53,8 +53,7 @@ Imports:
     R6,
     stringr,
     methods,
-    DiagrammeR (>= 1.0.0),
-    igraph
+    DiagrammeR (>= 1.0.0)
 Suggests:
     Formula,
     graphics,
@@ -70,7 +69,8 @@ Suggests:
     partykit,
     doParallel,
     foreach,
-    htmlwidgets
+    htmlwidgets,
+    igraph
 Description: Create tree structures from hierarchical data, and traverse the
     tree in various orders. Aggregate, cumulate, print, plot, convert to and from
     data.frame and more. Useful for decision trees, machine learning, finance,

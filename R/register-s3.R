@@ -1,5 +1,8 @@
 #' Register a method for a suggested dependency
 #'
+#' Code copied into data.tree from `vctrs` (authors Wickham H, Henry L,
+#' Vaughan D; https://github.com/r-lib/vctrs)
+#'
 #' Generally, the recommend way to register an S3 method is to use the
 #' `S3Method()` namespace directive (often generated automatically be the
 #' `@export` roxygen2 tag). However, this technique requires that the generic

@@ -22,6 +22,10 @@ s3_register(generic, class, method = NULL)
   `.Call()` pointers.}
 }
 \description{
+Code copied into data.tree from `vctrs` (authors Wickham H, Henry L,
+Vaughan D; https://github.com/r-lib/vctrs)
+}
+\details{
 Generally, the recommend way to register an S3 method is to use the
 `S3Method()` namespace directive (often generated automatically be the
 `@export` roxygen2 tag). However, this technique requires that the generic
@@ -31,8 +35,7 @@ can be called from your package's `.onLoad()` to dynamically register
 a method only if the generic's package is loaded. (To avoid taking a
 dependency on vctrs for this one function, please feel free to copy
 and paste the function source into your own package.)
-}
-\details{
+
 For R 3.5.0 and later, `s3_register()` is also useful when demonstrating
 class creation in a vignette, since method lookup no longer always involves
 the lexical scope. For R 3.6.0 and later, you can achieve a similar effect
