@@ -68,7 +68,3 @@ import(stringr)
 importFrom(R6,R6Class)
 importFrom(igraph,as.igraph)
 importFrom(igraph,graph_from_data_frame)
-
-if(getRversion() >= "3.6.0") {
-  S3method(ape::as.phylo, Node)
-}
