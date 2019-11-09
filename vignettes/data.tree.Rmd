@@ -434,7 +434,7 @@ data.frame(cost = acme$Get("cost", format = function(x) FormatFixedDecimal(x, 2)
 ### `plot`
 
 `data.tree` is mainly a data structure. As it is easy to convert `data.tree` structures to other formats, you have access to a large number of tools to plot a `data.tree` structure. For example, you can plot a `data.tree` structure as a dendrogram, as an ape tree, as a treeview, etc. 
-Additionally, `data.tree` also provides its own plotting facility. It is built on GraphViz/DiagrammeR, and you can access these features via the `plot` and `ToGraphViz` functions. For example:
+Additionally, `data.tree` also provides its own plotting facility. It is built on GraphViz/DiagrammeR, and you can access these features via the `plot` and `ToGraphViz` functions. Note that DiagrammeR is not required to use data.tree, so `plot` only works if DiagrammeR is installed on your system. For example:
 
 ```{r, eval = FALSE}
 plot(acme)

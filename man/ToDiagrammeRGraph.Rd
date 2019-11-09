@@ -54,7 +54,8 @@ existing style attributes on the node.}
 \description{
 Use these methods to style your graph, and to plot it. The functionality is built around the
 DiagrammeR package, so for anything that goes beyond simple plotting, it is recommended to read its 
-documentation at http://rich-iannone.github.io/DiagrammeR/docs.html
+documentation at http://rich-iannone.github.io/DiagrammeR/docs.html. Note that DiagrammeR is only suggested
+by data.tree, so `plot` only works if you have installed it on your system.
 }
 \details{
 Use \code{SetNodeStyle} and \code{SetEdgeStyle} to define the style of your plot. Use \code{plot} to display a 

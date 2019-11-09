@@ -261,3 +261,23 @@ test_that("as.Node.list with empty fields", {
 
 
 
+test_that("as.list.Node prune", {
+  data(acme)
+  
+  l <- ToListExplicit(acme, pruneFun = function(node) node$name != 'Research')
+  
+  expect_equal("list", class(l))
+  expect_equal(2, length(l$children))
+  expect_equal(c('Accounting', 'IT'), names(l$children))
+
+})
+
+test_that("as.list.Node prune", {
+  data(acme)
+  
+  l <- as.list(acme, pruneFun = function(node) node$name != 'Outsource')
+  
+  expect_equal("list", class(l))
+  expect_equal(c('Go agile', 'Switch to R'), names(l$IT))
+  
+})

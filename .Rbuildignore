@@ -10,3 +10,4 @@ Rprof.out
 ^appveyor\.yml$
 revdep
 README.md
+^CRAN-RELEASE$
