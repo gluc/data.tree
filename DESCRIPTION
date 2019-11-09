@@ -1,9 +1,14 @@
 Package: data.tree
 Type: Package
 Title: General Purpose Hierarchical Data Structure
-Version: 0.7.10
-Date: 2019-10-10
+Version: 0.7.11
+Date: 2019-11-09
 Authors@R: c(
+      person(
+        "Russ", "Hyde",
+        role = c("ctb"),
+        comment = "improve dependencies"
+      ),
       person(
         "Chris", "Hammill",
         role = c("ctb"),
