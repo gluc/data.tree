@@ -498,6 +498,7 @@ Or, using igraph:
 library(igraph, quietly = TRUE, warn.conflicts = FALSE, verbose = FALSE)
 ```
 
+
 ```{r}
 library(igraph)
 plot(as.igraph(acme, directed = TRUE, direction = "climb"))

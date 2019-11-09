@@ -137,6 +137,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
     }
     if (nchar(childName) == 0) childName <- i
     child <- children[[i]]
+    
     childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, check = check, ...)
     n$AddChildNode(childNode)
     
@@ -196,6 +197,7 @@ FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, check
 #' str(ToListExplicit(acme, unname = TRUE))
 #' str(ToListExplicit(acme, unname = TRUE, nameName = "id", childrenName = "descendants"))
 #'
+#' @inheritParams Prune
 #' 
 #' @export
 as.list.Node <- function(x, 
@@ -205,6 +207,7 @@ as.list.Node <- function(x,
                          childrenName = 'children',
                          rootName = '',
                          keepOnly = NULL,
+                         pruneFun = NULL,
                          ...) {
   mode <- mode[1]
   self <- x
@@ -226,7 +229,12 @@ as.list.Node <- function(x,
   for (fieldName in fields) res[[fieldName]] <- self[[fieldName]]
   
   if (!self$isLeaf) {
-    kids <- lapply(self$children, FUN = function(x) as.list.Node(x, mode, unname, nameName, childrenName, keepOnly = keepOnly, ...))
+    children <- self$children
+    if (length(pruneFun) > 0) {
+      filter <- unlist(lapply(children, pruneFun))
+      children <- children[filter]
+    }
+    kids <- lapply(children, FUN = function(x) as.list.Node(x, mode, unname, nameName, childrenName, keepOnly = keepOnly, pruneFun = pruneFun, ...))
     if (mode == "explicit") {
       res[[childrenName]] <- kids
       if (unname) res[[childrenName]] <- unname(res[[childrenName]])
@@ -244,8 +252,8 @@ as.list.Node <- function(x,
 #' @rdname as.list.Node
 #' 
 #' @export
-ToListSimple <- function(x, nameName = "name", ...) {
-  as.list.Node(x, mode = "simple", nameName = nameName, ...)
+ToListSimple <- function(x, nameName = "name", pruneFun = NULL, ...) {
+  as.list.Node(x, mode = "simple", nameName = nameName, pruneFun = pruneFun, ...)
 }
 
 
@@ -253,6 +261,6 @@ ToListSimple <- function(x, nameName = "name", ...) {
 #'  
 #'
 #' @export 
-ToListExplicit <- function(x, unname = FALSE, nameName = ifelse(unname, "name", ""), childrenName = 'children', ...) {
-  as.list.Node(x, mode = "explicit", unname = unname, nameName = nameName, childrenName = childrenName, ...) 
+ToListExplicit <- function(x, unname = FALSE, nameName = ifelse(unname, "name", ""), childrenName = 'children', pruneFun = NULL, ...) {
+  as.list.Node(x, mode = "explicit", unname = unname, nameName = nameName, childrenName = childrenName, pruneFun = pruneFun, ...) 
 }

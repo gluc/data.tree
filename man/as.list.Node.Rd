@@ -8,12 +8,13 @@
 \usage{
 \method{as.list}{Node}(x, mode = c("simple", "explicit"),
   unname = FALSE, nameName = ifelse(unname, "name", ""),
-  childrenName = "children", rootName = "", keepOnly = NULL, ...)
+  childrenName = "children", rootName = "", keepOnly = NULL,
+  pruneFun = NULL, ...)
 
-ToListSimple(x, nameName = "name", ...)
+ToListSimple(x, nameName = "name", pruneFun = NULL, ...)
 
 ToListExplicit(x, unname = FALSE, nameName = ifelse(unname, "name",
-  ""), childrenName = "children", ...)
+  ""), childrenName = "children", pruneFun = NULL, ...)
 }
 \arguments{
 \item{x}{The Node to convert}
@@ -33,6 +34,9 @@ an array rather than named objects.}
 
 \item{keepOnly}{A character vector of fields to include in the result. If \code{NULL} (the default), all fields are kept.}
 
+\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
+
 \item{...}{Additional parameters passed to \code{as.list.Node}}
 }
 \description{
@@ -47,6 +51,5 @@ str(ToListSimple(acme, keepOnly = "cost"))
 str(ToListExplicit(acme))
 str(ToListExplicit(acme, unname = TRUE))
 str(ToListExplicit(acme, unname = TRUE, nameName = "id", childrenName = "descendants"))
-
 
 }
