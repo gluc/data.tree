@@ -1,15 +1,20 @@
 
-#'@rdname ToDiagrammeRGraph
-#'@import DiagrammeR
+#' @rdname ToDiagrammeRGraph
 #'
-#'@param x The root node of the data.tree structure to plot
-#'@inheritParams ToDataFrameNetwork
-#'@inheritParams DiagrammeR::render_graph
+#' @param x The root node of the data.tree structure to plot
+#' @inheritParams ToDataFrameNetwork
+#' @inheritParams DiagrammeR::render_graph
 #'
-#'@export
+#' @export
 plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL, output = "graph") {
+  if(!requireNamespace("DiagrammeR", quietly = TRUE)) {
+    stop(
+      "Package \"DiagrammeR\" is required to plot a `data.tree::Node`",
+      "object. Please install it."
+    )}
+
   graph <- ToDiagrammeRGraph(x, direction, pruneFun)
-  render_graph(graph, output = output, ...)
+  DiagrammeR::render_graph(graph, output = output, ...)
 }
 
 
@@ -103,11 +108,16 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' 
 #' @export
 ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun = NULL) {
+  if(!requireNamespace("DiagrammeR", quietly = TRUE)) {
+    stop(
+      "Package \"DiagrammeR\" is required to convert a `data.tree::Node`",
+      "to a DiagrammeR graph. Please install it."
+    )}
+
   #get unique node styles defined on tree
-  
+
   ns <- unique(unlist(sapply(root$Get(function(x) attr(x, "nodeStyle"), simplify = FALSE), names)))
-  
-  
+
   # set tmp .id
   tr <- Traverse(root, pruneFun = pruneFun)
   Set(tr, `.id` = 1:length(tr))
@@ -124,7 +134,7 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
     })
   }
   
-  nodes <- do.call(create_node_df, c(n = length(tr), myargs))
+  nodes <- do.call(DiagrammeR::create_node_df, c(n = length(tr), myargs))
   
   ## escape quotes in names to avoid problems with the gviz
   nodes$label <- gsub("\"", "\\\\\"", nodes$label)
@@ -144,10 +154,10 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
   
   edges <- do.call("ToDataFrameNetwork", c(root, from = function(node) node$parent$`.id`, to = ".id", myargs, direction = list(direction), pruneFun = pruneFun))[,-(1:2)]
   if (nrow(edges) > 0) {
-    edges <- do.call(create_edge_df, as.list(edges))
+    edges <- do.call(DiagrammeR::create_edge_df, as.list(edges))
   }
   
-  graph <- create_graph(nodes, edges, attr_theme = NULL)
+  graph <- DiagrammeR::create_graph(nodes, edges, attr_theme = NULL)
   
   # global attributes
   # (we'd prefer to set the default on the root as graphAttributes, but
@@ -163,10 +173,12 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
   
   #graph <- set_global_graph_attrs(graph, "layout", "dot", "graph")
   
-  graph <- add_global_graph_attrs(graph, 
-                                  c(names(graphAttributes), names(nodeAttributes), names(edgeAttributes)), 
-                                  c(graphAttributes, nodeAttributes, edgeAttributes), 
-                                  c(rep('graph', length(graphAttributes)), rep('node', length(nodeAttributes)), rep('edge', length(edgeAttributes))))
+  graph <- DiagrammeR::add_global_graph_attrs(
+    graph,
+    attr = c(names(graphAttributes), names(nodeAttributes), names(edgeAttributes)),
+    value = c(graphAttributes, nodeAttributes, edgeAttributes),
+    attr_type = c(rep('graph', length(graphAttributes)), rep('node', length(nodeAttributes)), rep('edge', length(edgeAttributes)))
+  )
   
   return (graph)
   

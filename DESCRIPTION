@@ -52,8 +52,7 @@ VignetteBuilder:
 Imports:
     R6,
     stringr,
-    methods,
-    DiagrammeR (>= 1.0.0)
+    methods
 Suggests:
     Formula,
     graphics,
@@ -70,6 +69,8 @@ Suggests:
     doParallel,
     foreach,
     htmlwidgets,
+    DiagrammeR (>= 1.0.0),
+    mockery,
     rpart
 Enhances: 
     igraph
