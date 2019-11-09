@@ -70,6 +70,8 @@ Suggests:
     doParallel,
     foreach,
     htmlwidgets,
+    rpart
+Enhances: 
     igraph
 Description: Create tree structures from hierarchical data, and traverse the
     tree in various orders. Aggregate, cumulate, print, plot, convert to and from
