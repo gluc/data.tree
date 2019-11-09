@@ -4,12 +4,12 @@
 \alias{as.igraph.Node}
 \title{Convert a \code{data.tree} structure to an igraph network}
 \usage{
-as.igraph.Node(node, vertexAttributes = character(),
+as.igraph.Node(x, vertexAttributes = character(),
   edgeAttributes = character(), directed = FALSE,
-  direction = c("climb", "descend"))
+  direction = c("climb", "descend"), ...)
 }
 \arguments{
-\item{node}{The root \code{Node} to convert}
+\item{x}{The root \code{Node} to convert}
 
 \item{vertexAttributes}{A vector of strings, representing the attributes 
 in the \code{data.tree} structure to add as attributes to the vertices of the igraph}
@@ -20,6 +20,8 @@ in the \code{data.tree} structure to add as edge attributes of the igraph}
 \item{directed}{Logical scalar, whether or not to create a directed graph.}
 
 \item{direction}{when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?}
+
+\item{...}{Currently unused.}
 }
 \value{
 an \code{igraph} object
