@@ -61,6 +61,34 @@ test_that("FromDataFrameTable reserved words", {
 })
 
 
+test_that("FromDataFrameTable reserved words", {
+  
+  parent <- c("a", "a", "b", "c", "c")
+  child <- c("b", "f", "c", "d", "e")
+  value <- c("b", "c", "d", "e", "f")
+  
+  network_df <- data.frame(parent, child, value, stringsAsFactors = FALSE)
+  
+  #no warn
+  expect_warning(tree <- FromDataFrameNetwork(network_df), NA)
+  expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
+  
+  expect_warning(tree <- FromDataFrameTable(df, na.rm = TRUE, check = "no-warn"), NA)
+  expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
+  
+  #reserved words
+  name <- c("a", "a", "b", "c", "c")
+  path <- c("b", "f", "c", "d", "e")
+  value <- c("b", "c", "d", "e", "f")
+  network_df <- data.frame(name, path, value, stringsAsFactors = FALSE)
+  expect_that(tree <- FromDataFrameNetwork(network_df), gives_warning())
+  expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
+  
+  expect_warning(tree <- FromDataFrameNetwork(network_df, check = "no-warn"), NA)
+  expect_equal(Get(tree$leaves, "value"), c(d = "d", e = "e", f = "f"))
+})
+
+
 test_that("as.data.frame.Node", {
   data(acme)
   acmedf <- as.data.frame(acme, 
