@@ -61,7 +61,7 @@ test_that("FromDataFrameTable reserved words", {
 })
 
 
-test_that("FromDataFrameTable reserved words", {
+test_that("FromDataFrameNetwork reserved words", {
   
   parent <- c("a", "a", "b", "c", "c")
   child <- c("b", "f", "c", "d", "e")
