@@ -25,7 +25,8 @@ acmephylo <- as.phylo(acme)
 
 }
 \seealso{
-Other ape phylo conversions: \code{\link{GetPhyloNr}},
-  \code{\link{as.Node.phylo}}
+Other ape phylo conversions: 
+\code{\link{GetPhyloNr}()},
+\code{\link{as.Node.phylo}()}
 }
 \concept{ape phylo conversions}

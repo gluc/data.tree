@@ -4,8 +4,13 @@
 \alias{print.Node}
 \title{Print a \code{Node} in a human-readable fashion.}
 \usage{
-\method{print}{Node}(x, ..., pruneMethod = c("simple", "dist", NULL),
-  limit = 100, pruneFun = NULL)
+\method{print}{Node}(
+  x,
+  ...,
+  pruneMethod = c("simple", "dist", NULL),
+  limit = 100,
+  pruneFun = NULL
+)
 }
 \arguments{
 \item{x}{The Node}

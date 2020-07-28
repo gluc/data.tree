@@ -4,8 +4,13 @@
 \alias{as.Node.phylo}
 \title{Convert a \code{phylo} object from the ape package to a \code{Node}}
 \usage{
-\method{as.Node}{phylo}(x, heightName = "plotHeight",
-  replaceUnderscores = TRUE, namesNotUnique = FALSE, ...)
+\method{as.Node}{phylo}(
+  x,
+  heightName = "plotHeight",
+  replaceUnderscores = TRUE,
+  namesNotUnique = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{The phylo object to be converted}
@@ -34,13 +39,16 @@ Get(t, "name")
 
 }
 \seealso{
-Other ape phylo conversions: \code{\link{GetPhyloNr}},
-  \code{\link{as.phylo.Node}}
+Other ape phylo conversions: 
+\code{\link{GetPhyloNr}()},
+\code{\link{as.phylo.Node}()}
 
-Other as.Node: \code{\link{as.Node.data.frame}},
-  \code{\link{as.Node.dendrogram}},
-  \code{\link{as.Node.list}}, \code{\link{as.Node.rpart}},
-  \code{\link{as.Node}}
+Other as.Node: 
+\code{\link{as.Node.data.frame}()},
+\code{\link{as.Node.dendrogram}()},
+\code{\link{as.Node.list}()},
+\code{\link{as.Node.rpart}()},
+\code{\link{as.Node}()}
 }
 \concept{ape phylo conversions}
 \concept{as.Node}

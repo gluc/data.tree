@@ -4,7 +4,9 @@
 \name{Node}
 \alias{Node}
 \title{Create a \code{data.tree} Structure With \code{Nodes}}
-\format{An \code{\link{R6Class}} generator object}
+\format{
+An \code{\link{R6Class}} generator object
+}
 \usage{
 # n1 <- Node$new("Node 1")
 }
@@ -17,14 +19,6 @@ Assemble \code{Node} objects into a \code{data.tree}
 structure and use the traversal methods to set, get, and perform operations on it. Typically, you construct larger tree 
 structures by converting from \code{data.frame}, \code{list}, or other formats.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{children}}{A list of child \code{Nodes}}
-
-\item{\code{parent}}{The node's parent \code{Node}}
-}}
-
 \section{Methods}{
 
 
@@ -91,4 +85,216 @@ print(acme)
 \seealso{
 For more details see the \code{\link{data.tree}} documentations, or the \code{data.tree} vignette: \code{vignette("data.tree")}
 }
-\keyword{datasets}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{children}}{A list of child \code{Nodes}}
+
+\item{\code{parent}}{The node's parent \code{Node}}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{Node$new()}}
+\item \href{#method-AddChild}{\code{Node$AddChild()}}
+\item \href{#method-AddChildNode}{\code{Node$AddChildNode()}}
+\item \href{#method-AddSibling}{\code{Node$AddSibling()}}
+\item \href{#method-AddSiblingNode}{\code{Node$AddSiblingNode()}}
+\item \href{#method-RemoveChild}{\code{Node$RemoveChild()}}
+\item \href{#method-RemoveAttribute}{\code{Node$RemoveAttribute()}}
+\item \href{#method-Sort}{\code{Node$Sort()}}
+\item \href{#method-Revert}{\code{Node$Revert()}}
+\item \href{#method-Prune}{\code{Node$Prune()}}
+\item \href{#method-Climb}{\code{Node$Climb()}}
+\item \href{#method-Navigate}{\code{Node$Navigate()}}
+\item \href{#method-FindNode}{\code{Node$FindNode()}}
+\item \href{#method-Get}{\code{Node$Get()}}
+\item \href{#method-Do}{\code{Node$Do()}}
+\item \href{#method-Set}{\code{Node$Set()}}
+\item \href{#method-clone}{\code{Node$clone()}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$new(name, check = c("check", "no-warn", "no-check"), ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AddChild"></a>}}
+\if{latex}{\out{\hypertarget{method-AddChild}{}}}
+\subsection{Method \code{AddChild()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$AddChild(name, check = c("check", "no-warn", "no-check"), ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AddChildNode"></a>}}
+\if{latex}{\out{\hypertarget{method-AddChildNode}{}}}
+\subsection{Method \code{AddChildNode()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$AddChildNode(child)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AddSibling"></a>}}
+\if{latex}{\out{\hypertarget{method-AddSibling}{}}}
+\subsection{Method \code{AddSibling()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$AddSibling(name, check = c("check", "no-warn", "no-check"), ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AddSiblingNode"></a>}}
+\if{latex}{\out{\hypertarget{method-AddSiblingNode}{}}}
+\subsection{Method \code{AddSiblingNode()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$AddSiblingNode(sibling)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RemoveChild"></a>}}
+\if{latex}{\out{\hypertarget{method-RemoveChild}{}}}
+\subsection{Method \code{RemoveChild()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$RemoveChild(name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RemoveAttribute"></a>}}
+\if{latex}{\out{\hypertarget{method-RemoveAttribute}{}}}
+\subsection{Method \code{RemoveAttribute()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$RemoveAttribute(name, stopIfNotAvailable = TRUE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Sort"></a>}}
+\if{latex}{\out{\hypertarget{method-Sort}{}}}
+\subsection{Method \code{Sort()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Revert"></a>}}
+\if{latex}{\out{\hypertarget{method-Revert}{}}}
+\subsection{Method \code{Revert()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Revert(recursive = TRUE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Prune"></a>}}
+\if{latex}{\out{\hypertarget{method-Prune}{}}}
+\subsection{Method \code{Prune()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Prune(pruneFun)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Climb"></a>}}
+\if{latex}{\out{\hypertarget{method-Climb}{}}}
+\subsection{Method \code{Climb()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Climb(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Navigate"></a>}}
+\if{latex}{\out{\hypertarget{method-Navigate}{}}}
+\subsection{Method \code{Navigate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Navigate(path)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FindNode"></a>}}
+\if{latex}{\out{\hypertarget{method-FindNode}{}}}
+\subsection{Method \code{FindNode()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$FindNode(name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Get"></a>}}
+\if{latex}{\out{\hypertarget{method-Get}{}}}
+\subsection{Method \code{Get()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Get(
+  attribute,
+  ...,
+  traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
+  pruneFun = NULL,
+  filterFun = NULL,
+  format = FALSE,
+  inheritFromAncestors = FALSE,
+  simplify = c(TRUE, FALSE, "array", "regular")
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Do"></a>}}
+\if{latex}{\out{\hypertarget{method-Do}{}}}
+\subsection{Method \code{Do()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Do(
+  fun,
+  ...,
+  traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
+  pruneFun = NULL,
+  filterFun = NULL
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Set"></a>}}
+\if{latex}{\out{\hypertarget{method-Set}{}}}
+\subsection{Method \code{Set()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$Set(
+  ...,
+  traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"),
+  pruneFun = NULL,
+  filterFun = NULL
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Node$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

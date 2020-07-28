@@ -3,7 +3,6 @@
 \docType{package}
 \name{data.tree}
 \alias{data.tree}
-\alias{data.tree-package}
 \title{data.tree: Hierarchical Data Structures}
 \description{
 \code{data.tree} is to hierarchical data what \code{data.frame} is to tabular data: An extensible, general purpose structure to store, manipulate, 

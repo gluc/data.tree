@@ -4,8 +4,7 @@
 \alias{as.Node.rpart}
 \title{Convert an \code{\link{rpart}} object to a \code{data.tree} structure}
 \usage{
-\method{as.Node}{rpart}(x, digits = getOption("digits") - 3,
-  use.n = FALSE, ...)
+\method{as.Node}{rpart}(x, digits = getOption("digits") - 3, use.n = FALSE, ...)
 }
 \arguments{
 \item{x}{the \code{rpart} object to be converted}
@@ -31,9 +30,11 @@ if (require(rpart)) {
 }
 }
 \seealso{
-Other as.Node: \code{\link{as.Node.data.frame}},
-  \code{\link{as.Node.dendrogram}},
-  \code{\link{as.Node.list}}, \code{\link{as.Node.phylo}},
-  \code{\link{as.Node}}
+Other as.Node: 
+\code{\link{as.Node.data.frame}()},
+\code{\link{as.Node.dendrogram}()},
+\code{\link{as.Node.list}()},
+\code{\link{as.Node.phylo}()},
+\code{\link{as.Node}()}
 }
 \concept{as.Node}

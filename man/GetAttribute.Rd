@@ -4,8 +4,14 @@
 \alias{GetAttribute}
 \title{Get an attribute from a Node.}
 \usage{
-GetAttribute(node, attribute, ..., format = FALSE,
-  inheritFromAncestors = FALSE, nullAsNa = TRUE)
+GetAttribute(
+  node,
+  attribute,
+  ...,
+  format = FALSE,
+  inheritFromAncestors = FALSE,
+  nullAsNa = TRUE
+)
 }
 \arguments{
 \item{node}{The \code{\link{Node}} from which the \code{attribute} should be fetched.}

@@ -1,5 +1,9 @@
 # All changes to data.tree are documented here.
 
+## Version 1.0.0
+- FIX: adjusted sample data that didn't support correct handling of active bindings
+- IMPROVE: Adding reserved word check to FromDataFrameNetwork (#147 thx to wkumler)
+
 ## Version 0.7.11
 - IMPROVE: diagrammeR is now only suggested, so data.tree is much more lightweight if plotting is not needed (#143 thx to Russ Hyde)
 - FIX: plot now also works with quotations in names (#137 thx to thotal)

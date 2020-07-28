@@ -4,7 +4,9 @@
 \name{mushroom}
 \alias{mushroom}
 \title{Sample Data: Data Used by the ID3 Vignette}
-\format{data.frame}
+\format{
+data.frame
+}
 \usage{
 data(mushroom)
 }

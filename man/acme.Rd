@@ -4,7 +4,9 @@
 \name{acme}
 \alias{acme}
 \title{Sample Data: A Simple Company with Departments}
-\format{A data.tree root Node}
+\format{
+A data.tree root Node
+}
 \usage{
 data(acme)
 }

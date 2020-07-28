@@ -4,9 +4,14 @@
 \alias{as.igraph.Node}
 \title{Convert a \code{data.tree} structure to an igraph network}
 \usage{
-as.igraph.Node(x, vertexAttributes = character(),
-  edgeAttributes = character(), directed = FALSE,
-  direction = c("climb", "descend"), ...)
+as.igraph.Node(
+  x,
+  vertexAttributes = character(),
+  edgeAttributes = character(),
+  directed = FALSE,
+  direction = c("climb", "descend"),
+  ...
+)
 }
 \arguments{
 \item{x}{The root \code{Node} to convert}

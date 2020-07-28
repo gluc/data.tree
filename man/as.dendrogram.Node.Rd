@@ -4,8 +4,12 @@
 \alias{as.dendrogram.Node}
 \title{Convert a \code{Node} to a \code{dendrogram}}
 \usage{
-\method{as.dendrogram}{Node}(object, heightAttribute = DefaultPlotHeight,
-  edgetext = FALSE, ...)
+\method{as.dendrogram}{Node}(
+  object,
+  heightAttribute = DefaultPlotHeight,
+  edgetext = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{The Node to convert}
@@ -38,6 +42,7 @@ plot(acmed)
 
 }
 \seealso{
-Other Conversions from Node: \code{\link{ToNewick}}
+Other Conversions from Node: 
+\code{\link{ToNewick}()}
 }
 \concept{Conversions from Node}

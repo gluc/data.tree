@@ -9,11 +9,15 @@
 \alias{GetDefaultTooltip}
 \title{Plot a graph, or get a graphviz dot representation of the tree}
 \usage{
-\method{plot}{Node}(x, ..., direction = c("climb", "descend"),
-  pruneFun = NULL, output = "graph")
+\method{plot}{Node}(
+  x,
+  ...,
+  direction = c("climb", "descend"),
+  pruneFun = NULL,
+  output = "graph"
+)
 
-ToDiagrammeRGraph(root, direction = c("climb", "descend"),
-  pruneFun = NULL)
+ToDiagrammeRGraph(root, direction = c("climb", "descend"), pruneFun = NULL)
 
 SetNodeStyle(node, inherit = TRUE, keepExisting = FALSE, ...)
 
@@ -34,10 +38,9 @@ http://graphviz.org/Documentation.php for details. For the plot.Node generic met
 \item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
-\item{output}{a string specifying the output type;
-\code{graph} (the default) renders the graph using
-the \code{grViz} function and \code{visNetwork}
-renders the graph using the \code{visnetwork} function.}
+\item{output}{A string specifying the output type; \code{graph} (the default)
+renders the graph using the \code{\link[DiagrammeR:grViz]{grViz()}} function and \code{visNetwork} renders the
+graph using the \code{\link[DiagrammeR:visnetwork]{visnetwork()}} function.}
 
 \item{root}{The root \code{\link{Node}} of the data.tree structure to visualize.}
 

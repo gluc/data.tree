@@ -1,8 +1,8 @@
 Package: data.tree
 Type: Package
 Title: General Purpose Hierarchical Data Structure
-Version: 0.7.11
-Date: 2019-11-09
+Version: 1.0.0
+Date: 2020-07-29
 Authors@R: c(
       person(
         "Russ", "Hyde",
@@ -88,5 +88,5 @@ URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
 Depends:
     R (>= 3.0)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Encoding: UTF-8

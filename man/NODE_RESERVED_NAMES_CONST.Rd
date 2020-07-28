@@ -4,7 +4,9 @@
 \name{NODE_RESERVED_NAMES_CONST}
 \alias{NODE_RESERVED_NAMES_CONST}
 \title{Names that are reserved by the Node class.}
-\format{An object of class \code{character} of length 40.}
+\format{
+An object of class \code{character} of length 40.
+}
 \usage{
 NODE_RESERVED_NAMES_CONST
 }
