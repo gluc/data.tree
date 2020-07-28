@@ -61,6 +61,27 @@ test_that("FromDataFrameTable reserved words", {
 })
 
 
+test_that("FromDataFrameNetwork reserved words", {
+  
+  parent <- c("a", "a", "b", "c", "c")
+  child <- c("b", "f", "c", "d", "e")
+  value <- c(0:4)
+  
+  network_df <- data.frame(parent, child, value, stringsAsFactors = FALSE)
+  
+  #no warn
+  expect_warning(tree <- FromDataFrameNetwork(network_df), regexp = NA)
+  
+  #reserved words
+  parent <- c("a", "a", "b", "c", "c")
+  child <- c("b", "f", "c", "d", "e")
+  name <- c(0:4)
+  network_df <- data.frame(parent, child, name, stringsAsFactors = FALSE)
+  expect_that(tree <- FromDataFrameNetwork(network_df), gives_warning())
+  expect_warning(tree <- FromDataFrameNetwork(network_df, check = "no-warn"), NA)
+})
+
+
 test_that("as.data.frame.Node", {
   data(acme)
   acmedf <- as.data.frame(acme, 

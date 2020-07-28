@@ -409,6 +409,7 @@ FromDataFrameNetwork <- function(network, check = c("check", "no-warn", "no-chec
           vlu <- network[idx, j]
           if (!is.na(vlu)) {
             nm <- names(network)[j]
+            nm <- CheckNameReservedWord(nm, check)
             if (!nm %in% NODE_RESERVED_NAMES_CONST) child[[nm]] <- network[idx, j]
           }
         }
