@@ -12,7 +12,7 @@ Before a release, do the following:
 11. Run devtools::check_rhub()
 12. Run rhub::check_for_cran()
 -> if any of these fail, go back to 6.!
-12. check reverse dependencies by running revdepcheck::revdep_check(num_workers = 4)
+12. check reverse dependencies by running revdepcheck::revdep_check(num_workers = 4) (from github if not yet published to CRAN devtools::install_github("r-lib/revdepcheck")
 13. update cran-comments.md
 14. merge into master and push
 15. create release on github in master, tag it as pre-release
