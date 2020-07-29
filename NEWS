@@ -1,6 +1,7 @@
 # All changes to data.tree are documented here.
 
 ## Version 1.0.0
+- CHANGE: data.tree now depends on R 3.5
 - FIX: adjusted sample data that didn't support correct handling of active bindings
 - IMPROVE: Adding reserved word check to FromDataFrameNetwork (#147 thx to wkumler)
 
