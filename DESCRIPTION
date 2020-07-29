@@ -87,6 +87,6 @@ License: GPL (>= 2)
 URL: http://github.com/gluc/data.tree
 BugReports: http://github.com/gluc/data.tree/issues
 Depends:
-    R (>= 3.0)
+    R (>= 3.5)
 RoxygenNote: 7.1.1
 Encoding: UTF-8
