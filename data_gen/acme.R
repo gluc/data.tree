@@ -30,4 +30,4 @@ outsource$p <- 0.2
 agile$p <- 0.05
 goToR$p <- 1
 
-save(acme, file = "data/acme.rda", compress = "gzip")
+save(acme, file = "data/acme.rda", compress = "xz")
