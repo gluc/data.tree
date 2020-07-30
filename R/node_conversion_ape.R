@@ -84,7 +84,7 @@ as.Node.phylo <- function(x, heightName = "plotHeight", replaceUnderscores = TRU
   }
   
   setName <- function(x) {
-    if (replaceUnderscores) nm <- str_replace_all( nms[[x$name]], "_", " ")
+    if (replaceUnderscores) nm <- stri_replace_all_fixed( nms[[x$name]], "_", " ")
     else nm <- nms[[x$name]]
     if (namesNotUnique) x$name <- paste0(x$name, ": ", nm)
     else x$name <- nm

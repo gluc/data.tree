@@ -16,7 +16,7 @@ Traverse(
 
 \item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', 'ancestor', or a custom function (see details)}
 
-\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+\item{pruneFun}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
 \item{filterFun}{allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.

@@ -71,39 +71,39 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   
   n <- Node$new(as.character(myName), check = check)
   
-  #set fields
+  #set attributes
   
-  #find fields that need importing
-  fields <- names(x)
+  #find attributes that need importing
+  attributes <- names(x)
   
-  #capture fields without names
-  if (is.null(fields) && length(x) !=0) {
-    fields <- rep("", length(x))
+  #capture attributes without names
+  if (is.null(attributes) && length(x) !=0) {
+    attributes <- rep("", length(x))
   }
   field_nums <- seq_along(x)
-  unnamed_fields <- fields == "" & !vapply(x, is.list, logical(1))
+  unnamed_attributes <- attributes == "" & !vapply(x, is.list, logical(1))
   
   #exclude nameName
   if(!is.null(nameName)) {
-    field_nums <- field_nums[fields != nameName]
-    unnamed_fields <- unnamed_fields[fields != nameName]
-    fields <- fields[fields != nameName]
+    field_nums <- field_nums[attributes != nameName]
+    unnamed_attributes <- unnamed_attributes[attributes != nameName]
+    attributes <- attributes[attributes != nameName]
     
   }
   #exclude childrenName if explicit
   if (mode == "explicit") {
-    field_nums <- field_nums[fields != childrenName]
-    unnamed_fields <- unnamed_fields[fields != childrenName]
-    fields <- fields[fields != childrenName]
+    field_nums <- field_nums[attributes != childrenName]
+    unnamed_attributes <- unnamed_attributes[attributes != childrenName]
+    attributes <- attributes[attributes != childrenName]
     
   }
   
-  fields[unnamed_fields] <- seq_along(which(unnamed_fields))
+  attributes[unnamed_attributes] <- seq_along(which(unnamed_attributes))
   
   
   if (check != "no-check") {
-    fieldNameIsReserved <- (fields %in% NODE_RESERVED_NAMES_CONST) & !(fields %in% c(nameName, childrenName))
-    if (any(fieldNameIsReserved) && (check != "no-warn")) warning(paste0("The following names are data.tree reserved words and will be appended with 2: ", paste(fields[fieldNameIsReserved], sep = ", "), "." ))
+    fieldNameIsReserved <- (attributes %in% NODE_RESERVED_NAMES_CONST) & !(attributes %in% c(nameName, childrenName))
+    if (any(fieldNameIsReserved) && (check != "no-warn")) warning(paste0("The following names are data.tree reserved words and will be appended with 2: ", paste(attributes[fieldNameIsReserved], sep = ", "), "." ))
   }
   
   for (i in seq_along(field_nums)) {
@@ -112,7 +112,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
     if(mode == 'simple' && inherits(v, 'list')) {
       #any list is interpreted as child, so don't store
     } else {
-      fieldNm <- fields[i]
+      fieldNm <- attributes[i]
       if (fieldNm %in% NODE_RESERVED_NAMES_CONST) fieldNm <- paste0(fieldNm, "2")
       n[[fieldNm]] <- v
     }
@@ -160,7 +160,7 @@ FromListExplicit <- function(explicitList, nameName = "name", childrenName = "ch
 
 #' @rdname as.Node.list
 #' 
-#' @param simpleList A \code{list} in which children are stored as nested list alongside other fields. Any list is
+#' @param simpleList A \code{list} in which children are stored as nested list alongside other attributes. Any list is
 #' interpreted as a child \code{Node}
 #' 
 #' @export
@@ -184,7 +184,7 @@ FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, check
 #' @param nameName The name that should be given to the name element
 #' @param childrenName The name that should be given to the children nested list
 #' @param rootName The name of the node. If provided, this overrides \code{Node$name}
-#' @param keepOnly A character vector of fields to include in the result. If \code{NULL} (the default), all fields are kept.
+#' @param keepOnly A character vector of attributes to include in the result. If \code{NULL} (the default), all attributes are kept.
 #' @param ... Additional parameters passed to \code{as.list.Node}
 #' 
 #' @examples
@@ -221,12 +221,12 @@ as.list.Node <- function(x,
     res[l_nameName] <- myname
   }
   
-  fields <- self$fields
-  fields <- fields[!is.function(fields) && !is.environment(fields)]
+  attributes <- self$attributes
+  attributes <- attributes[!is.function(attributes) && !is.environment(attributes)]
   
-  if (!is.null(keepOnly) & !all(is.na(fields))) fields <- fields[fields %in% keepOnly]
+  if (!is.null(keepOnly) & !all(is.na(attributes))) attributes <- attributes[attributes %in% keepOnly]
   
-  for (fieldName in fields) res[[fieldName]] <- self[[fieldName]]
+  for (attributeName in attributes) res[[attributeName]] <- self[[attributeName]]
   
   if (!self$isLeaf) {
     children <- self$children

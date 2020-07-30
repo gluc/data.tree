@@ -49,7 +49,7 @@ If a specific Node does not contain the attribute, \code{NA} is added to the dat
 
 \item{traversal}{any of 'pre-order' (the default), 'post-order', 'in-order', 'level', or 'ancestor'. See \code{\link{Traverse}} for details.}
 
-\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+\item{pruneFun}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
 \item{filterFun}{a function taking a \code{Node} as an argument. See \code{\link{Traverse}} for details.}
@@ -89,7 +89,7 @@ data.frame.
 }
 \examples{
 data(acme)
-acme$fieldsAll
+acme$attributesAll
 as.data.frame(acme, row.names = NULL, optional = FALSE, "cost", "p")
 
 ToDataFrameTree(acme, "cost", "p")

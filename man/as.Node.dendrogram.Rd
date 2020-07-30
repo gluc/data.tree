@@ -38,7 +38,7 @@ Convert a \code{\link{dendrogram}} to a data.tree \code{Node}
 hc <- hclust(dist(USArrests), "ave")
 dend1 <- as.dendrogram(hc)
 tree1 <- as.Node(dend1)
-tree1$fieldsAll
+tree1$attributesAll
 tree1$totalCount
 tree1$leafCount
 tree1$height

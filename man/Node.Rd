@@ -18,58 +18,9 @@ by tying together \code{Node} objects.
 Assemble \code{Node} objects into a \code{data.tree}
 structure and use the traversal methods to set, get, and perform operations on it. Typically, you construct larger tree 
 structures by converting from \code{data.frame}, \code{list}, or other formats.
+
+Most methods (e.g. \code{node$Sort()}) also have a functional form (e.g. \code{Sort(node)})
 }
-\section{Methods}{
-
-
-\describe{
-  \item{\code{Node$new(name)}}{Creates a new \code{Node} called \code{name}. Often used to construct the root when creating trees programmatically.}
-  \item{\code{AddChild(name)}}{Creates a new \code{Node} called \code{name} and adds it to this \code{Node} as a child.}
-  \item{\code{AddChildNode(node)}}{Adds a \code{Node} as a child.}
-  \item{\code{AddSibling(name)}}{Creates a new \code{Node} called \code{name} and adds it after this \code{Node} as a sibling.}
-  \item{\code{AddSiblingNode(sibling)}}{Adds a new \code{Node} after this \code{Node}, as a sibling.}      
-  \item{\code{RemoveChild(name)}}{Remove the child \code{Node} called \code{name} from a \code{Node} and returns it.}
-  \item{\code{RemoveAttribute(name, stopIfNotAvailable)}}{Removes attribute called \code{name} from this \code{Node}. Gives an error if \code{stopIfNotAvailable} and the attribute does not exist.}
-  \item{\code{\link{Climb}(...)}}{Find a node with path \code{...}, where the \code{...} arguments are the \code{name}s of the \code{Node}s, or other field values.}
-  \item{\code{\link{Navigate}(path)}}{Find a node by relative \code{path}}
-  \item{\code{\link{FindNode}(name)}}{Find a node with name \code{name}. Especially useful if \code{\link{AreNamesUnique}} is \code{TRUE}}
-  \item{\code{\link{Get}(attribute, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL, format = NULL, inheritFromAncestors = FALSE, simplify = c(TRUE, FALSE, "array", "regular"))}}{Traverses the tree and collects values along the way.}
-  \item{\code{\link{Do}(fun, ..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NUL)}}{Traverses the tree and call fun on each node.}
-  \item{\code{\link{Set}(..., traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), pruneFun = NULL, filterFun = NULL)}}{Traverses the tree and assigns the args along the way, recycling the args.}
-  \item{\code{\link{Sort}(attribute, ..., decreasing = FALSE, recursive = TRUE}}{Sort children of a node with respect to an attribute (field, method, active, function)}
-  \item{\code{\link{Revert}(recursive = TRUE)}}{Revert the sort order of a node}
-  \item{\code{\link{Prune}(pruneFun)}}{Prune a tree. The pruneFun takes a node as its first argument, and returns TRUE if the node should be kept, FALSE otherwise}
-
-}
-}
-
-\section{Actives (aka Properties)}{
-
-  
-\describe{
- \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}}
- \item{\code{parent}}{Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
- \item{\code{children}}{Gets or sets the children \code{list} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
- \item{\code{siblings}}{Returns a list of the siblings of this \code{Node}}
- \item{\code{fields}}{Gets the names of the set properties of a \code{Node}}
- \item{\code{fieldsAll}}{Gets the names of the set properties of a \code{Node} or any of its sub-Nodes}
- \item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
- \item{\code{isRoot}}{Returns \code{TRUE} if the \code{Node} is the root, \code{FALSE} otherwise}
- \item{\code{count}}{Returns the number of children of a \code{Node}}
- \item{\code{totalCount}}{Returns the total number of \code{Node}s in the tree}
- \item{\code{path}}{Returns a vector of mode \code{character} containing the names of the \code{Node}s in the path from the root to this \code{Node}}
- \item{\code{pathString}}{Returns a string representing the path to this \code{Node}, separated by backslash}
- \item{\code{levelName}}{Returns the name of the \code{Node}, preceded by level times '*'. Useful for printing.}
- \item{\code{leafCount}}{Returns the number of leaves are below a \code{Node} }
- \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s }
- \item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 1.}
- \item{\code{height}}{Returns max(level) of any of the \code{Nodes} of the tree}
- \item{\code{averageBranchingFactor}}{Returns the average number of crotches below this \code{Node}}
- \item{\code{root}}{Returns the root \code{Node} of a \code{Node}'s tree}
- 
-}
-}
-
 \examples{
 library(data.tree)
 acme <- Node$new("Acme Inc.")
@@ -81,16 +32,228 @@ accounting <- acme$AddChild("Accounting")$
               AddChild("Outsource")
 print(acme)
 
+
+
+## ------------------------------------------------
+## Method `Node$new`
+## ------------------------------------------------
+
+node <- Node$new("mynode", x = 2, y = "value of y")
+node$y
+
+
+## ------------------------------------------------
+## Method `Node$AddChild`
+## ------------------------------------------------
+
+root <- Node$new("myroot", myname = "I'm the root")
+root$AddChild("child1", myname = "I'm the favorite child")
+child2 <- root$AddChild("child2", myname = "I'm just another child")
+child3 <- child2$AddChild("child3", myname = "Grandson of a root!")
+print(root, "myname")
+
+
+## ------------------------------------------------
+## Method `Node$AddChildNode`
+## ------------------------------------------------
+
+root <- Node$new("myroot")
+child <- Node$new("mychild")
+root$AddChildNode(child)
+
+
+## ------------------------------------------------
+## Method `Node$AddSibling`
+## ------------------------------------------------
+
+#' root <- Node$new("myroot")
+child <- root$AddChild("child1")
+sibling <- child$AddSibling("sibling1")
+
+
+## ------------------------------------------------
+## Method `Node$AddSiblingNode`
+## ------------------------------------------------
+
+root <- Node$new("myroot")
+child <- Node$new("mychild")
+sibling <- Node$new("sibling")
+root$AddChildNode(child)$AddSiblingNode(sibling)
+
+
+## ------------------------------------------------
+## Method `Node$RemoveChild`
+## ------------------------------------------------
+
+node <- Node$new("myroot")$AddChild("mychild")$root
+node$RemoveChild("mychild")
+
+
+## ------------------------------------------------
+## Method `Node$RemoveAttribute`
+## ------------------------------------------------
+
+node <- Node$new("mynode")
+node$RemoveAttribute("age", stopIfNotAvailable = FALSE)
+node$age <- 27
+node$RemoveAttribute("age")
+node
+
+
+## ------------------------------------------------
+## Method `Node$Sort`
+## ------------------------------------------------
+
+data(acme)
+acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
+Sort(acme, "totalCost", decreasing = FALSE)
+print(acme, "totalCost")
+
+
+## ------------------------------------------------
+## Method `Node$Prune`
+## ------------------------------------------------
+
+data(acme)
+acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum))
+Prune(acme, function(x) x$cost > 700000)
+print(acme, "cost")
+
+
+## ------------------------------------------------
+## Method `Node$Climb`
+## ------------------------------------------------
+
+data(acme)
+
+#the following are all equivalent
+Climb(acme, 'IT', 'Outsource')
+Climb(acme, name = 'IT', name = 'Outsource')
+Climb(acme, 'IT')$Climb('Outsource')
+Navigate(acme, path = "IT/Outsource")
+
+Climb(acme, name = 'IT')
+
+Climb(acme, position = c(2, 1))
+#or, equivalent:
+Climb(acme, position = 2, position = 1)
+Climb(acme, name = "IT", cost = 250000)
+
+tree <- CreateRegularTree(5, 2)
+tree$Climb(c("1", "1"), position = c(2, 2))$path
+
+
+
+## ------------------------------------------------
+## Method `Node$Navigate`
+## ------------------------------------------------
+
+data(acme)
+Navigate(acme$Research, "../IT/Outsource")
+Navigate(acme$Research, c("..", "IT", "Outsource"))
+
+
+## ------------------------------------------------
+## Method `Node$Get`
+## ------------------------------------------------
+
+data(acme)
+acme$Get("level")
+acme$Get("totalCount")
+ 
+
+acme$Get(function(node) node$cost * node$p,
+         filterFun = isLeaf)
+
+#This is equivalent:
+nodes <- Traverse(acme, filterFun = isLeaf)
+Get(nodes, function(node) node$cost * node$p)
+
+   
+#simplify = "regular" will preserve names
+acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
+ 
+
+## ------------------------------------------------
+## Method `Node$Do`
+## ------------------------------------------------
+
+data(acme)
+acme$Do(function(node) node$expectedCost <- node$p * node$cost)
+print(acme, "expectedCost")
+
+
+## ------------------------------------------------
+## Method `Node$Set`
+## ------------------------------------------------
+
+data(acme)
+acme$Set(departmentId = 1:acme$totalCount, openingHours = NULL, traversal = "post-order")
+acme$Set(head = c("Jack Brown", 
+                  "Mona Moneyhead", 
+                  "Dr. Frank N. Stein", 
+                  "Eric Nerdahl"
+                  ),
+         filterFun = function(x) !x$isLeaf
+        )
+print(acme, "departmentId", "head")
+ 
 }
 \seealso{
 For more details see the \code{\link{data.tree}} documentations, or the \code{data.tree} vignette: \code{vignette("data.tree")}
+
+\code{\link{Node}}
+
+\code{\link{Sort}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{children}}{A list of child \code{Nodes}}
+\item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}.}
 
-\item{\code{parent}}{The node's parent \code{Node}}
+\item{\code{parent}}{Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
+
+\item{\code{children}}{Gets or sets the children \code{list} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
+
+\item{\code{isLeaf}}{Returns \code{TRUE} if the \code{Node} is a leaf, \code{FALSE} otherwise}
+
+\item{\code{isRoot}}{Returns \code{TRUE} if the \code{Node} is the root, \code{FALSE} otherwise}
+
+\item{\code{count}}{Returns the number of children of a \code{Node}}
+
+\item{\code{totalCount}}{Returns the total number of \code{Node}s in the tree}
+
+\item{\code{path}}{Returns a vector of mode \code{character} containing the names of the \code{Node}s in the path from the root to this \code{Node}}
+
+\item{\code{pathString}}{Returns a string representing the path to this \code{Node}, separated by backslash}
+
+\item{\code{position}}{The position of a \code{Node} within its siblings}
+
+\item{\code{fields}}{Deprecatd, use \code{attributes} instead}
+
+\item{\code{fieldsAll}}{Deprecated, use \code{attributesAll}}
+
+\item{\code{attributes}}{The attributes defined on this specific node}
+
+\item{\code{attributesAll}}{The distinct union of attributes defined on all the nodes in the tree spanned by this \code{Node}}
+
+\item{\code{levelName}}{Returns the name of the \code{Node}, preceded by level times '*'. Useful for printing and not typically called by package users.}
+
+\item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s}
+
+\item{\code{leafCount}}{Returns the number of leaves that are below a \code{Node}}
+
+\item{\code{level}}{Returns the number of leaves are below a \code{Node}}
+
+\item{\code{height}}{Returns the number of leaves are below a \code{Node}}
+
+\item{\code{isBinary}}{Returns \code{TRUE} if all \code{Node}s in the tree (except the leaves) have \code{count = 2}}
+
+\item{\code{root}}{Returns the number of leaves are below a \code{Node}}
+
+\item{\code{siblings}}{Returns a \code{list} containing all the siblings of this \code{Node}}
+
+\item{\code{averageBranchingFactor}}{Returns the number of leaves are below a \code{Node}}
 }
 \if{html}{\out{</div>}}
 }
@@ -109,7 +272,6 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \item \href{#method-Prune}{\code{Node$Prune()}}
 \item \href{#method-Climb}{\code{Node$Climb()}}
 \item \href{#method-Navigate}{\code{Node$Navigate()}}
-\item \href{#method-FindNode}{\code{Node$FindNode()}}
 \item \href{#method-Get}{\code{Node$Get()}}
 \item \href{#method-Do}{\code{Node$Do()}}
 \item \href{#method-Set}{\code{Node$Set()}}
@@ -120,8 +282,38 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new \code{Node} object. This is often used to create the root of a tree when creating a tree programmatically.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$new(name, check = c("check", "no-warn", "no-check"), ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{the name of the node to be created}
+
+\item{\code{check}}{Either
+\itemize{
+ \item{\code{"check"}: if the name conformance should be checked and warnings should be printed in case of non-conformance (the default)}
+ \item{\code{"no-warn"}: if the name conformance should be checked, but no warnings should be printed in case of non-conformance (if you expect non-conformance)}
+ \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
+}}
+
+\item{\code{...}}{A name-value mapping of node attributes}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A new `Node` object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{node <- Node$new("mynode", x = 2, y = "value of y")
+node$y
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -129,8 +321,41 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-AddChild"></a>}}
 \if{latex}{\out{\hypertarget{method-AddChild}{}}}
 \subsection{Method \code{AddChild()}}{
+Creates a \code{Node} and adds it as the last sibling as a child to the \code{Node} on which this is called.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$AddChild(name, check = c("check", "no-warn", "no-check"), ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{the name of the node to be created}
+
+\item{\code{check}}{Either
+\itemize{
+ \item{\code{"check"}: if the name conformance should be checked and warnings should be printed in case of non-conformance (the default)}
+ \item{\code{"no-warn"}: if the name conformance should be checked, but no warnings should be printed in case of non-conformance (if you expect non-conformance)}
+ \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
+}}
+
+\item{\code{...}}{A name-value mapping of node attributes}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The new \code{Node} (invisibly)
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{root <- Node$new("myroot", myname = "I'm the root")
+root$AddChild("child1", myname = "I'm the favorite child")
+child2 <- root$AddChild("child2", myname = "I'm just another child")
+child3 <- child2$AddChild("child3", myname = "Grandson of a root!")
+print(root, "myname")
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -138,8 +363,30 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-AddChildNode"></a>}}
 \if{latex}{\out{\hypertarget{method-AddChildNode}{}}}
 \subsection{Method \code{AddChildNode()}}{
+Adds a \code{Node} as a child to this node.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$AddChildNode(child)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{child}}{The child \code{"Node"} to add.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+the child node added (this lets you chain calls)
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{root <- Node$new("myroot")
+child <- Node$new("mychild")
+root$AddChildNode(child)
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -147,8 +394,39 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-AddSibling"></a>}}
 \if{latex}{\out{\hypertarget{method-AddSibling}{}}}
 \subsection{Method \code{AddSibling()}}{
+Creates a new \code{Node} called \code{name} and adds it after this \code{Node} as a sibling.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$AddSibling(name, check = c("check", "no-warn", "no-check"), ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{the name of the node to be created}
+
+\item{\code{check}}{Either
+\itemize{
+ \item{\code{"check"}: if the name conformance should be checked and warnings should be printed in case of non-conformance (the default)}
+ \item{\code{"no-warn"}: if the name conformance should be checked, but no warnings should be printed in case of non-conformance (if you expect non-conformance)}
+ \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
+}}
+
+\item{\code{...}}{A name-value mapping of node attributes}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+the sibling node (this lets you chain calls)
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{#' root <- Node$new("myroot")
+child <- root$AddChild("child1")
+sibling <- child$AddSibling("sibling1")
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -156,8 +434,31 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-AddSiblingNode"></a>}}
 \if{latex}{\out{\hypertarget{method-AddSiblingNode}{}}}
 \subsection{Method \code{AddSiblingNode()}}{
+Adds a \code{Node} after this \code{Node}, as a sibling.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$AddSiblingNode(sibling)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sibling}}{The \code{"Node"} to add as a sibling.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+the added sibling node (this lets you chain calls, as in the examples)
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{root <- Node$new("myroot")
+child <- Node$new("mychild")
+sibling <- Node$new("sibling")
+root$AddChildNode(child)$AddSiblingNode(sibling)
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -165,8 +466,29 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-RemoveChild"></a>}}
 \if{latex}{\out{\hypertarget{method-RemoveChild}{}}}
 \subsection{Method \code{RemoveChild()}}{
+Remove the child \code{Node} called \code{name} from a \code{Node} and returns it.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$RemoveChild(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{the name of the node to be created}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+the subtree spanned by the removed child.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{node <- Node$new("myroot")$AddChild("mychild")$root
+node$RemoveChild("mychild")
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -174,8 +496,31 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-RemoveAttribute"></a>}}
 \if{latex}{\out{\hypertarget{method-RemoveAttribute}{}}}
 \subsection{Method \code{RemoveAttribute()}}{
+Removes attribute called \code{name} from this \code{Node}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$RemoveAttribute(name, stopIfNotAvailable = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{the name of the node to be created}
+
+\item{\code{stopIfNotAvailable}}{Gives an error if \code{stopIfNotAvailable} and the attribute does not exist.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{node <- Node$new("mynode")
+node$RemoveAttribute("age", stopIfNotAvailable = FALSE)
+node$age <- 27
+node$RemoveAttribute("age")
+node
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -183,8 +528,50 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-Sort"></a>}}
 \if{latex}{\out{\hypertarget{method-Sort}{}}}
 \subsection{Method \code{Sort()}}{
+Sort children of a \code{Node} or an entire \code{data.tree} structure
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Sort(attribute, ..., decreasing = FALSE, recursive = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attribute}}{determines what is collected. The \code{attribute} can be
+\itemize{
+  \item a.) the name of a \bold{field} or a \bold{property/active} of each \code{Node} in the tree, e.g. \code{acme$Get("p")} or \code{acme$Get("position")}
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree, e.g. \code{acme$Get("levelZeroBased")}, where e.g. \code{acme$levelZeroBased <- function() acme$level - 1}
+  \item c.) a \bold{function}, whose first argument must be a \code{Node} e.g. \code{acme$Get(function(node) node$cost * node$p)}
+ }}
+
+\item{\code{...}}{any parameters to be passed on the the attribute (in case it's a method or a 
+function)}
+
+\item{\code{decreasing}}{sort order}
+
+\item{\code{recursive}}{if \code{TRUE}, the method will be called recursively on the \code{Node}'s children. This allows sorting an entire tree.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+You can sort with respect to any argument of the tree. But note that sorting has
+side-effects, meaning that you modify the underlying, original data.tree object structure.
+
+See also \code{\link{Sort}} for the equivalent function.
+}
+
+\subsection{Returns}{
+Returns the node on which Sort is called, invisibly. This can be useful to chain Node methods.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(acme)
+acme$Do(function(x) x$totalCost <- Aggregate(x, "cost", sum), traversal = "post-order")
+Sort(acme, "totalCost", decreasing = FALSE)
+print(acme, "totalCost")
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -192,17 +579,58 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-Revert"></a>}}
 \if{latex}{\out{\hypertarget{method-Revert}{}}}
 \subsection{Method \code{Revert()}}{
+Reverts the sort order of a \code{Node}'s children.
+
+See also \code{\link{Revert}} for the equivalent function.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Revert(recursive = TRUE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{recursive}}{if \code{TRUE}, the method will be called recursively on the \code{Node}'s children. This allows sorting an entire tree.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+returns the Node invisibly (for chaining)
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Prune"></a>}}
 \if{latex}{\out{\hypertarget{method-Prune}{}}}
 \subsection{Method \code{Prune()}}{
+Prunes a tree. 
+
+Pruning refers to removing entire subtrees. This function has side-effects, it modifies your data.tree structure!
+
+See also \code{\link{Prune}} for the equivalent function.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Prune(pruneFun)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{pruneFun}}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+the number of nodes removed
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(acme)
+acme$Do(function(x) x$cost <- Aggregate(x, "cost", sum))
+Prune(acme, function(x) x$cost > 700000)
+print(acme, "cost")
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -210,8 +638,56 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-Climb"></a>}}
 \if{latex}{\out{\hypertarget{method-Climb}{}}}
 \subsection{Method \code{Climb()}}{
+Climb a tree from parent to children, by provided criteria.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Climb(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{an attribute-value pairlist to be searched. For brevity, you can also provide a character vector to search for names.}
+
+\item{\code{node}}{The root \code{\link{Node}} of the tree or subtree to climb}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+This method lets you climb the tree, from crutch to crutch. On each \code{Node}, the
+\code{Climb} finds the first child having attribute value equal to the the provided argument.
+
+See also \code{\link{Climb}} and \code{\link{Navigate}}
+
+Climb(node, ...)
+}
+
+\subsection{Returns}{
+the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(acme)
+
+#the following are all equivalent
+Climb(acme, 'IT', 'Outsource')
+Climb(acme, name = 'IT', name = 'Outsource')
+Climb(acme, 'IT')$Climb('Outsource')
+Navigate(acme, path = "IT/Outsource")
+
+Climb(acme, name = 'IT')
+
+Climb(acme, position = c(2, 1))
+#or, equivalent:
+Climb(acme, position = 2, position = 1)
+Climb(acme, name = "IT", cost = 250000)
+
+tree <- CreateRegularTree(5, 2)
+tree$Climb(c("1", "1"), position = c(2, 2))$path
+
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -219,17 +695,39 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-Navigate"></a>}}
 \if{latex}{\out{\hypertarget{method-Navigate}{}}}
 \subsection{Method \code{Navigate()}}{
+Navigate to another node by relative path.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Navigate(path)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{path}}{A string or a character vector describing the path to navigate}
+
+\item{\code{node}}{The starting \code{\link{Node}} to navigate}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FindNode"></a>}}
-\if{latex}{\out{\hypertarget{method-FindNode}{}}}
-\subsection{Method \code{FindNode()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Node$FindNode(name)}\if{html}{\out{</div>}}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+The \code{path} is always relative to the \code{Node}. Navigation
+to the parent is defined by \code{..}, whereas navigation to a child
+is defined via the child's name.
+If path is provided as a string, then the navigation steps are separated
+by '/'.
+
+See also \code{\link{Navigate}} and \code{\link{Climb}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(acme)
+Navigate(acme$Research, "../IT/Outsource")
+Navigate(acme$Research, c("..", "IT", "Outsource"))
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -237,6 +735,7 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \if{html}{\out{<a id="method-Get"></a>}}
 \if{latex}{\out{\hypertarget{method-Get}{}}}
 \subsection{Method \code{Get()}}{
+Traverse a Tree and Collect Values
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Get(
   attribute,
@@ -250,11 +749,85 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attribute}}{determines what is collected. The \code{attribute} can be
+\itemize{
+  \item a.) the name of a \bold{field} or a \bold{property/active} of each \code{Node} in the tree, e.g. \code{acme$Get("p")} or \code{acme$Get("position")}
+  \item b.) the name of a \bold{method} of each \code{Node} in the tree, e.g. \code{acme$Get("levelZeroBased")}, where e.g. \code{acme$levelZeroBased <- function() acme$level - 1}
+  \item c.) a \bold{function}, whose first argument must be a \code{Node} e.g. \code{acme$Get(function(node) node$cost * node$p)}
+ }}
+
+\item{\code{...}}{in case the \code{attribute} is a function or a method, the ellipsis is passed to it as additional arguments.}
+
+\item{\code{traversal}}{defines the traversal order to be used. This can be
+\describe{
+  \item{pre-order}{Go to first child, then to its first child, etc.}
+  \item{post-order}{Go to the first branch's leaf, then to its siblings, and work your way back to the root}
+  \item{in-order}{Go to the first branch's leaf, then to its parent, and only then to the leaf's sibling}
+  \item{level}{Collect root, then level 2, then level 3, etc.}
+  \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
+  \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The function is expected to return the node's next node, a list of the node's next nodes, or NULL.}
+}
+Read the data.tree vignette for a detailed explanation of these traversal orders.}
+
+\item{\code{pruneFun}}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
+
+\item{\code{filterFun}}{allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
+Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).}
+
+\item{\code{format}}{if \code{FALSE} (the default), no formatting is being used. If \code{TRUE}, then the first formatter (if any) found along the ancestor path is being used for formatting 
+(see \code{\link{SetFormat}}). If \code{format} is a function, then the collected value is passed to that function, and the result is returned.}
+
+\item{\code{inheritFromAncestors}}{if \code{TRUE}, then the path above a \code{Node} is searched to get the \code{attribute} in case it is NULL.}
+
+\item{\code{simplify}}{same as \code{\link{sapply}}, i.e. TRUE, FALSE or "array". Additionally, you can specify "regular" if
+each returned value is of length > 1, and equally named. See below for an example.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+The \code{Get} method is one of the most important ones of the \code{data.tree} package. It lets you traverse a tree
+and collect values along the way. Alternatively, you can call a method or a function on each \code{\link{Node}}.
+
+See also \code{\link{Get}}, \code{\link{Node}}, \code{\link{Set}}, \code{\link{Do}}, \code{\link{Traverse}}
+}
+
+\subsection{Returns}{
+a vector containing the \code{atrributes} collected during traversal, in traversal order. \code{NULL} is converted
+to NA, such that \code{length(Node$Get) == Node$totalCount}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(acme)
+acme$Get("level")
+acme$Get("totalCount")
+ 
+
+acme$Get(function(node) node$cost * node$p,
+         filterFun = isLeaf)
+
+#This is equivalent:
+nodes <- Traverse(acme, filterFun = isLeaf)
+Get(nodes, function(node) node$cost * node$p)
+
+   
+#simplify = "regular" will preserve names
+acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regular")
+ 
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Do"></a>}}
 \if{latex}{\out{\hypertarget{method-Do}{}}}
 \subsection{Method \code{Do()}}{
+Executes a function on a set of nodes
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Do(
   fun,
@@ -265,11 +838,54 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{fun}}{the function to execute. The function is expected to be either a Method, or to take a 
+Node as its first argument}
+
+\item{\code{...}}{A name-value mapping of node attributes}
+
+\item{\code{traversal}}{defines the traversal order to be used. This can be
+\describe{
+  \item{pre-order}{Go to first child, then to its first child, etc.}
+  \item{post-order}{Go to the first branch's leaf, then to its siblings, and work your way back to the root}
+  \item{in-order}{Go to the first branch's leaf, then to its parent, and only then to the leaf's sibling}
+  \item{level}{Collect root, then level 2, then level 3, etc.}
+  \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
+  \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The function is expected to return the node's next node, a list of the node's next nodes, or NULL.}
+}
+Read the data.tree vignette for a detailed explanation of these traversal orders.}
+
+\item{\code{pruneFun}}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
+
+\item{\code{filterFun}}{allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
+Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+See also \code{\link{Node}}, \code{\link{Get}}, \code{\link{Set}}, \code{\link{Traverse}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(acme)
+acme$Do(function(node) node$expectedCost <- node$p * node$cost)
+print(acme, "expectedCost")
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Set"></a>}}
 \if{latex}{\out{\hypertarget{method-Set}{}}}
 \subsection{Method \code{Set()}}{
+Traverse a Tree and Assign Values
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Node$Set(
   ...,
@@ -277,6 +893,58 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
   pruneFun = NULL,
   filterFun = NULL
 )}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{each argument can be a vector of values to be assigned. Recycled.}
+
+\item{\code{traversal}}{defines the traversal order to be used. This can be
+\describe{
+  \item{pre-order}{Go to first child, then to its first child, etc.}
+  \item{post-order}{Go to the first branch's leaf, then to its siblings, and work your way back to the root}
+  \item{in-order}{Go to the first branch's leaf, then to its parent, and only then to the leaf's sibling}
+  \item{level}{Collect root, then level 2, then level 3, etc.}
+  \item{ancestor}{Take a node, then the node's parent, then that node's parent in turn, etc. This ignores the \code{pruneFun} }
+  \item{function}{You can also provide a function, whose sole parameter is a \code{\link{Node}} object. The function is expected to return the node's next node, a list of the node's next nodes, or NULL.}
+}
+Read the data.tree vignette for a detailed explanation of these traversal orders.}
+
+\item{\code{pruneFun}}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
+
+\item{\code{filterFun}}{allows providing a a filter, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}.
+Note that if filter returns \code{FALSE}, then the node will be excluded from the result (but not the entire subtree).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+The method takes one or more vectors as an argument. It traverses the tree, whereby the values are picked
+from the vector. Also available as OO-style method on \code{\link{Node}}.
+
+See also \code{\link{Node}}, \code{\link{Get}}, \code{\link{Do}}, \code{\link{Traverse}}
+}
+
+\subsection{Returns}{
+invisibly returns the nodes (useful for chaining)
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(acme)
+acme$Set(departmentId = 1:acme$totalCount, openingHours = NULL, traversal = "post-order")
+acme$Set(head = c("Jack Brown", 
+                  "Mona Moneyhead", 
+                  "Dr. Frank N. Stein", 
+                  "Eric Nerdahl"
+                  ),
+         filterFun = function(x) !x$isLeaf
+        )
+print(acme, "departmentId", "head")
+ 
+}
+\if{html}{\out{</div>}}
+
 }
 
 }

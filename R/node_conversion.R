@@ -26,7 +26,7 @@ as.Node <- function(x, ...) {
 #' @param heightAttribute The attribute (field name, method, or function) storing or calculating the height for each \code{Node}
 #' @param ... parameters that will be passed on the the heightAttributeName, in case it is a function
 #' 
-#' @import stringr
+#' @import stringi
 #' 
 #' @examples
 #' data(acme)
@@ -43,8 +43,8 @@ as.Node <- function(x, ...) {
 ToNewick <- function(node, heightAttribute = DefaultPlotHeight, ...) {
 
   deparse <- function(x) {
-    name <- str_replace_all(x$name, " ", "_")
-    name <- str_replace_all(name, ",", "")
+    name <- stri_replace_all_fixed(x$name, " ", "_")
+    name <- stri_replace_all_fixed(name, ",", "")
     if(!isRoot(x) && length(heightAttribute) > 0) {
       edge <- GetAttribute(x$parent, heightAttribute, ...) - GetAttribute(x, heightAttribute, ...) 
       me <- paste0(name, ":", edge)

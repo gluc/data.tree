@@ -78,7 +78,7 @@ applications, see \code{vignette("applications", package='data.tree')}
 \examples{
 data(acme)
 print(acme)
-acme$fieldsAll
+acme$attributesAll
 acme$count
 acme$totalCount
 acme$isRoot
@@ -88,7 +88,7 @@ print(acme, "p", "cost")
 outsource <- acme$IT$Outsource
 class(outsource)
 print(outsource)
-outsource$fields
+outsource$attributes
 outsource$isLeaf
 outsource$level
 outsource$path

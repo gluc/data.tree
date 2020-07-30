@@ -27,7 +27,8 @@ Executes a function on a set of nodes
 }
 \examples{
 data(acme)
-acme$Do(function(node) node$expectedCost <- node$p * node$cost)
+traversal <- Traverse(acme)
+Do(traversal, function(node) node$expectedCost <- node$p * node$cost)
 print(acme, "expectedCost")
 
 }

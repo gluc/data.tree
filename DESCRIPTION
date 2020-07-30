@@ -56,7 +56,7 @@ VignetteBuilder:
     rmarkdown
 Imports:
     R6,
-    stringr,
+    stringi,
     methods
 Suggests:
     Formula,

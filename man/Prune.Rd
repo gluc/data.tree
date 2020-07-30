@@ -9,7 +9,7 @@ Prune(node, pruneFun)
 \arguments{
 \item{node}{The root of the sub-tree to be pruned}
 
-\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+\item{pruneFun}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 }
 \value{

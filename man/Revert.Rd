@@ -7,13 +7,13 @@
 Revert(node, recursive = TRUE)
 }
 \arguments{
-\item{node}{the Node whose children's sort order is to be reverted}
+\item{node}{the Node whose childrens' sort order is to be reverted}
 
 \item{recursive}{If \code{TRUE}, then revert is called recursively on
 all children.}
 }
 \value{
-returns the Nodel invisibly (for chaining)
+returns the Node invisibly (for chaining)
 }
 \description{
 Reverts the sort order of a \code{Node}'s children.

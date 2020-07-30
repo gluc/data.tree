@@ -648,7 +648,7 @@ flareLoL <- fromJSON(file(fileName),
                      )
 
 flareTree <- as.Node(flareLoL, mode = "explicit", check = "no-warn")
-flareTree$fieldsAll
+flareTree$attributesAll
 print(flareTree, "size", limit = 30)
 
 ```
@@ -758,7 +758,7 @@ jsonedit(l)
 
 # Gene Defect (genetics, probabilities, multi-generation models)
 
-This is a simplistic example from the area of genetics. Similar models are found in many fields, namely wherever you have multi-generation models and probabilities.
+This is a simplistic example from the area of genetics. Similar models are found in many attributes, namely wherever you have multi-generation models and probabilities.
 
 The code generates 100 simulations of a 3 generation population. Individuals can inherit or develop a certain feature (e.g. colour blindness). The probability to develop the feature is based on sex. We then plot the probability distribution of the feature in the last generation.
 
@@ -934,12 +934,12 @@ In addition, this example shows you how parallelisation can speed up data.tree.
 
 We want to set up the problem in a way such that each `Node` is a move of a player, and each path describes the entire history of a game.
 
-We number the fields from 1 to 9. Additionally, for easy readability, we label the Nodes in an Excel-like manner, such that field 9, say, is 'c3':
+We number the attributes from 1 to 9. Additionally, for easy readability, we label the Nodes in an Excel-like manner, such that field 9, say, is 'c3':
 
 ```{r}
 
-fields <- expand.grid(letters[1:3], 1:3)
-fields
+attributes <- expand.grid(letters[1:3], 1:3)
+attributes
 
 ```
 
@@ -973,9 +973,9 @@ Now we recurse through the tree, and add possible moves to the leaves, growing i
 AddPossibleMoves <- function(node) {
   t <- Traverse(node, traversal = "ancestor", filterFun = isNotRoot)
   
-  available <- rownames(fields)[!rownames(fields) %in% Get(t, "f")]
+  available <- rownames(attributes)[!rownames(attributes) %in% Get(t, "f")]
   for (f in available) {
-    child <- node$AddChild(paste0(fields[f, 1], fields[f, 2]))
+    child <- node$AddChild(paste0(attributes[f, 1], attributes[f, 2]))
     child$f <- as.numeric(f)
     child$player <- ifelse(node$player == 1, 2, 1)
     hasWon <- HasWon(child)
@@ -999,7 +999,7 @@ Note that we store additional info along the way. For example, in the line `chil
 
 ## Exit Criteria
 
-Our algorithm stops whenever either player has won, or when all 9 fields are taken. Whether a player has won is determined by this function:
+Our algorithm stops whenever either player has won, or when all 9 attributes are taken. Whether a player has won is determined by this function:
 
 ```{r}
 HasWon <- function(node) {

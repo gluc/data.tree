@@ -218,12 +218,12 @@ PrintPruneDist <- function(x, limit) {
 GetDefaultTooltip <- function(node) {
 
 
-  if (length(node$fields) > 0) {
-    myfields <- node$fields
+  if (length(node$attributes) > 0) {
+    myattributes <- node$attributes
   } else {
-    myfields <- "name"
+    myattributes <- "name"
   }
-  tt <- paste(sapply(myfields, function(x) {
+  tt <- paste(sapply(myattributes, function(x) {
     v <- node[[x]]
     if (is.function(v)) v <- "function"
     else v <- GetAttribute(node, x)

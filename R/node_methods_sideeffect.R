@@ -60,11 +60,11 @@ Sort <- function(node, attribute, ..., decreasing = FALSE, recursive = TRUE) {
 #' 
 #' @usage Revert(node, recursive = TRUE)
 #' 
-#' @param node the Node whose children's sort order is to be reverted
+#' @param node the Node whose childrens' sort order is to be reverted
 #' @param recursive If \code{TRUE}, then revert is called recursively on
 #' all children.
 #' 
-#' @return returns the Nodel invisibly (for chaining)
+#' @return returns the Node invisibly (for chaining)
 #'
 #' @seealso \code{\link{Node}}
 #' @seealso \code{\link{Sort}}
@@ -92,7 +92,7 @@ Revert <- function(node, recursive = TRUE) {
 #' @usage Prune(node, pruneFun)
 #' 
 #' @param node The root of the sub-tree to be pruned
-#' @param pruneFun allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+#' @param pruneFun allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 #' If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.
 #' @return the number of nodes removed
 #' 

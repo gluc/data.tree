@@ -664,12 +664,12 @@ test_that("Revert", {
 })
 
 
-test_that("fieldsAll", {
+test_that("attributesAll", {
   data(acme)
-  fa <- acme$fieldsAll
+  fa <- acme$attributesAll
   expect_equal(fa, c("cost", "p"))
   acme$Set(tta = 1:acme$totalCount)
-  expect_equal(acme$fieldsAll, c("tta", "cost", "p"))
+  expect_equal(acme$attributesAll, c("tta", "cost", "p"))
 })
 
 
@@ -766,18 +766,18 @@ test_that("Remove Child", {
 test_that("Remove Attribute", {
   data(acme)
   acme$Research$floor <- 21
-  expect_true("floor" %in% acme$Research$fields)
+  expect_true("floor" %in% acme$Research$attributes)
   acme$Research$RemoveAttribute("floor")
-  expect_false("floor" %in% acme$Research$fields)
+  expect_false("floor" %in% acme$Research$attributes)
 })
 
 
 test_that("Remove Attribute stop", {
   data(acme)
   acme$Research$floor <- 21
-  expect_true("floor" %in% acme$Research$fields)
+  expect_true("floor" %in% acme$Research$attributes)
   expect_true(acme$Research$RemoveAttribute("floor", FALSE))
-  expect_false("floor" %in% acme$Research$fields)
+  expect_false("floor" %in% acme$Research$attributes)
   expect_false(acme$IT$RemoveAttribute("floor", FALSE))
   
 })
@@ -807,7 +807,7 @@ test_that("print list field", {
     ))
   tree <- FromListSimple(lol)
   #expect no error
-  expect_error(do.call("print", c(tree, tree$fieldsAll)), NA)
+  expect_error(do.call("print", c(tree, tree$attributesAll)), NA)
 })
 
 

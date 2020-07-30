@@ -72,7 +72,7 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' you can set a function (e.g. \code{SetNodeStyle(acme, label = function(x) x$name)}). The function must take a \code{\link{Node}}
 #' as its single argument. Together with inheritance, this becomes a very powerful tool.
 #'   
-#' The \code{GetDefaultTooltip} method is a utility method that can be used to print all fields of a \code{\link{Node}}.
+#' The \code{GetDefaultTooltip} method is a utility method that can be used to print all attributes of a \code{\link{Node}}.
 #' 
 #' There are some more examples in the 'applications' vignette, see \code{vignette('applications', package = "data.tree")}
 #' 

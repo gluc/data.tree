@@ -24,7 +24,7 @@
 #' print(acme, "cost", "p")
 #' print(acme, "cost", probability = "p")
 #' print(acme, expectedCost = function(x) x$cost * x$p)
-#' do.call(print, c(acme, acme$fieldsAll))
+#' do.call(print, c(acme, acme$attributesAll))
 #' 
 #' tree <- CreateRegularTree(4, 5)
 #' # print entire tree:
@@ -256,7 +256,7 @@ Navigate <- function(node, path) {
 #'
 #'
 #' @param node The root \code{\link{Node}} of the tree or subtree to climb
-#' @param ... an attribute name to searched value pairlist. For brevity, you can also provide a character vector.
+#' @param ... an attribute-value pairlist to be searched. For brevity, you can also provide a character vector to search for names.
 #' @return the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist
 #'
 #' @examples

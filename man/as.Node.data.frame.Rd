@@ -58,7 +58,7 @@ it must adhere to the following requirements:
 \itemize{
  \item{It must contain as many rows as there are nodes (excluding the root, there is no row for the root)}
  \item{Its first and second columns contain the network relationships. This can be either climbing (from parent to children) or descending (from child to parent)}
- \item{Its subsequent columns contain the attributes to be set as fields on the nodes}
+ \item{Its subsequent columns contain the attributes to be set on the nodes}
  \item{It must contain a single root}
  \item{There are no cycles in the network}
 }}

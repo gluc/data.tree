@@ -206,7 +206,7 @@ children:
   expect_equal(tree$CR$CR_CHF$name, "CR_CHF")
   
   #market is numbered (1) instead of lost:
-  expect_equal(tree$fieldsAll, c("description", "type", "1"))
+  expect_equal(tree$attributesAll, c("description", "type", "1"))
   
   
   
@@ -246,16 +246,16 @@ test_that("as.Node.list empty list()", {
   expect_equal(tree$totalCount, 3)
   expect_equal(tree$height, 2)
   expect_equal(tree$c$count, 0)
-  expect_equal(tree$c$fields, character(0))
+  expect_equal(tree$c$attributes, character(0))
 })
 
 
-test_that("as.Node.list with empty fields", {
+test_that("as.Node.list with empty attributes", {
   lol = list(a = list(aa=1), "hello", c = list(), 1, d=2, list(e=4))
   tree = FromListSimple(lol)
-  expect_equal(length(tree$fields), 3)
+  expect_equal(length(tree$attributes), 3)
   expect_equal(tree$count, 3)
-  expect_true(all(c(1, 2) %in% tree$fields))
+  expect_true(all(c(1, 2) %in% tree$attributes))
 })
 
 

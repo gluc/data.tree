@@ -26,7 +26,7 @@ everywhere in the tree, according to their level. If pruneFun is provided, then 
 \item{limit}{The maximum number of nodes to print. Can be \code{NULL} if the
 entire tree should be printed.}
 
-\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+\item{pruneFun}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 }
 \description{
@@ -37,7 +37,7 @@ data(acme)
 print(acme, "cost", "p")
 print(acme, "cost", probability = "p")
 print(acme, expectedCost = function(x) x$cost * x$p)
-do.call(print, c(acme, acme$fieldsAll))
+do.call(print, c(acme, acme$attributesAll))
 
 tree <- CreateRegularTree(4, 5)
 # print entire tree:

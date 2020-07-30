@@ -62,7 +62,7 @@
 #' @examples
 #' data(acme)
 #' print(acme)
-#' acme$fieldsAll
+#' acme$attributesAll
 #' acme$count
 #' acme$totalCount
 #' acme$isRoot
@@ -72,7 +72,7 @@
 #' outsource <- acme$IT$Outsource
 #' class(outsource)
 #' print(outsource)
-#' outsource$fields
+#' outsource$attributes
 #' outsource$isLeaf
 #' outsource$level
 #' outsource$path

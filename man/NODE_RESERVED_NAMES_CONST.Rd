@@ -5,7 +5,7 @@
 \alias{NODE_RESERVED_NAMES_CONST}
 \title{Names that are reserved by the Node class.}
 \format{
-An object of class \code{character} of length 40.
+An object of class \code{character} of length 42.
 }
 \usage{
 NODE_RESERVED_NAMES_CONST
@@ -13,6 +13,6 @@ NODE_RESERVED_NAMES_CONST
 \description{
 These are reserved by the Node class, you cannot use these as 
 attribute names.
-Note also that all fields starting with a . are reserved.
+Note also that all attributes starting with a . are reserved.
 }
 \keyword{datasets}

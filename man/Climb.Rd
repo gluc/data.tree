@@ -10,7 +10,7 @@ Climb(node, ...)
 \arguments{
 \item{node}{The root \code{\link{Node}} of the tree or subtree to climb}
 
-\item{...}{an attribute name to searched value pairlist. For brevity, you can also provide a character vector.}
+\item{...}{an attribute-value pairlist to be searched. For brevity, you can also provide a character vector to search for names.}
 }
 \value{
 the \code{Node} having path \code{...}, or \code{NULL} if such a path does not exist

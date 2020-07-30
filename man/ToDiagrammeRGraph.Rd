@@ -35,7 +35,7 @@ http://graphviz.org/Documentation.php for details. For the plot.Node generic met
 
 \item{direction}{when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?}
 
-\item{pruneFun}{allows providing a a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
+\item{pruneFun}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
 
 \item{output}{A string specifying the output type; \code{graph} (the default)
@@ -108,7 +108,7 @@ Another feature concerns functions: Instead of setting a fixed value (e.g. \code
 you can set a function (e.g. \code{SetNodeStyle(acme, label = function(x) x$name)}). The function must take a \code{\link{Node}}
 as its single argument. Together with inheritance, this becomes a very powerful tool.
   
-The \code{GetDefaultTooltip} method is a utility method that can be used to print all fields of a \code{\link{Node}}.
+The \code{GetDefaultTooltip} method is a utility method that can be used to print all attributes of a \code{\link{Node}}.
 
 There are some more examples in the 'applications' vignette, see \code{vignette('applications', package = "data.tree")}
 }

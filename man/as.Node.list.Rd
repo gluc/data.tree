@@ -56,7 +56,7 @@ the root with mode explicit and named lists.}
 
 \item{explicitList}{A \code{list} in which children are in a separate nested list called \code{childrenName}.}
 
-\item{simpleList}{A \code{list} in which children are stored as nested list alongside other fields. Any list is
+\item{simpleList}{A \code{list} in which children are stored as nested list alongside other attributes. Any list is
 interpreted as a child \code{Node}}
 }
 \description{

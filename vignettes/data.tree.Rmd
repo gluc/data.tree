@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
 
 ## Trees
 
-Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other fields. Trees are especially useful when we are facing *hierarchical data*. For example, trees are used:
+Trees are ubiquitous in mathematics, computer science, data sciences, finance, and in many other attributes. Trees are especially useful when we are facing *hierarchical data*. For example, trees are used:
 
 * in decision theory (cf. decision trees)
 * in machine learning (e.g. classification trees)
@@ -58,7 +58,7 @@ As a result, people often try to resolve hierarchical problems in a tabular fash
 
 ## Trees in `data.tree`
 
-This package offers an alternative. The `data.tree` package lets you create hierarchies, called `data.tree` **structures**. The building block of theses structures are `Node` objects. The package provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Nodes` with your own fields and methods, so as to extend the package to your needs. 
+This package offers an alternative. The `data.tree` package lets you create hierarchies, called `data.tree` **structures**. The building block of theses structures are `Node` objects. The package provides basic traversal, search, and sort operations, and an infrastructure for recursive tree programming. You can decorate `Nodes` with your own attributes and methods, so as to extend the package to your needs. 
 
 The package also provides convenience methods for neatly printing and plotting trees. It supports conversion from and to `data.frames`, `lists`, and other tree structures such as `dendrogram`, `phylo` objects from the ape package, `igraph`, and other packages.
 
@@ -197,7 +197,7 @@ There are different types of methods:
 
 ### Actives Examples (aka Properties)
 
-Actives look and feel like fields, but they are dynamically evaluated. They are documented in the `Node` documentation, which is accessed by typing `?Node`. 
+Actives look and feel like attributes, but they are dynamically evaluated. They are documented in the `Node` documentation, which is accessed by typing `?Node`. 
 
 Remember our population example:
 
@@ -207,13 +207,13 @@ population$isRoot
 population$height
 population$count
 population$totalCount
-population$fields
-population$fieldsAll
+population$attributes
+population$attributesAll
 population$averageBranchingFactor
 ```
 
-The naming convention of the package is that fields and actives are lower case, whereas methods are upper / CamelCase.
-RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available fields, actives and methods. 
+The naming convention of the package is that attributes and actives are lower case, whereas methods are upper / CamelCase.
+RStudio and other IDEs work well with `data.tree`. If you have a `Node`, simply type `myNode$ + SPACE` to get a list of available attributes, actives and methods. 
 
 ### OO-Style Methods Examples
 
@@ -291,9 +291,9 @@ acme$children[[1]]$children[[2]]$name
 ```
 
 
-### Navigation by fields
+### Navigation by attributes
 
-Furthermore, we can not only navigate by name, but also by other fields. This is achieved with the `Climb` method. The name of each `...` argument designates the field, and the value matches against `Nodes`. Each argument refers to the subsequent level to climb. In this example, `Climb` takes acme's child at position 1 (i.e. `Accounting`), then it takes `Accounting's` child called `New Software`:
+Furthermore, we can not only navigate by name, but also by other attributes. This is achieved with the `Climb` method. The name of each `...` argument designates the field, and the value matches against `Nodes`. Each argument refers to the subsequent level to climb. In this example, `Climb` takes acme's child at position 1 (i.e. `Accounting`), then it takes `Accounting's` child called `New Software`:
 
 ```{r}
 acme$Climb(position = 1, name = "New Software")$path
@@ -314,7 +314,7 @@ tree$Climb(position = c(2, 3), name = c("1.2.3.4", "1.2.3.4.5"))$path
 ```
 
 
-## Custom fields
+## Custom attributes
 
 Just as with, say, a `list`, we can add any custom field to any `Node` in a `data.tree` structure. Let's go back to our acme company: 
 
@@ -345,15 +345,15 @@ print(acme, "cost", "p")
 
 ```
 
-Note that there is a list of reserved names you cannot use as `Node` fields:
+Note that there is a list of reserved names you cannot use as `Node` attributes:
 
 
 ```{r}
 NODE_RESERVED_NAMES_CONST
 ```
-### Custom fields in constructor
+### Custom attributes in constructor
 
-An alternative, often convenient way to assign custom fields is in the constructor, or in the `Node$AddChild` method:
+An alternative, often convenient way to assign custom attributes is in the constructor, or in the `Node$AddChild` method:
 
 ```{r}
 birds <- Node$new("Aves", vulgo = "Bird")
@@ -363,7 +363,7 @@ print(birds, "vulgo", "species")
 
 ```
 
-### Custom fields as function
+### Custom attributes as function
 
 Nothing stops you from setting a function as a field. This calculates a value dynamically, i.e. whenever a field is accessed in tree traversal. For example, you can add a new `Node` to your structure, and the function will reflect this. Think of this as a hierarchical spreadsheet, in which you can set formulas into cells.
 
@@ -795,7 +795,7 @@ acme$Set(avgExpectedCost = NULL)
 
 However, note that setting a field to `NULL` will not make it gone for good. You will still see it:
 ```{r}
-acme$fieldsAll
+acme$attributesAll
 ```
 
 In order remove it completely, you can use the `RemoveAttribute` method:
