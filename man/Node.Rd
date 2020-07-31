@@ -229,9 +229,9 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 
 \item{\code{position}}{The position of a \code{Node} within its siblings}
 
-\item{\code{fields}}{Deprecatd, use \code{attributes} instead}
+\item{\code{fields}}{Will be deprecated, use \code{attributes} instead}
 
-\item{\code{fieldsAll}}{Deprecated, use \code{attributesAll}}
+\item{\code{fieldsAll}}{Will be deprecated, use \code{attributesAll} instead}
 
 \item{\code{attributes}}{The attributes defined on this specific node}
 
@@ -241,19 +241,19 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 
 \item{\code{leaves}}{Returns a list containing all the leaf \code{Node}s}
 
-\item{\code{leafCount}}{Returns the number of leaves that are below a \code{Node}}
+\item{\code{leafCount}}{Returns the number of leaves are below a \code{Node}}
 
-\item{\code{level}}{Returns the number of leaves are below a \code{Node}}
+\item{\code{level}}{Returns an integer representing the level of a \code{Node}. For example, the root has level 1.}
 
-\item{\code{height}}{Returns the number of leaves are below a \code{Node}}
+\item{\code{height}}{Returns max(level) of any of the \code{Nodes} of the tree}
 
 \item{\code{isBinary}}{Returns \code{TRUE} if all \code{Node}s in the tree (except the leaves) have \code{count = 2}}
 
-\item{\code{root}}{Returns the number of leaves are below a \code{Node}}
+\item{\code{root}}{Returns the root of a \code{Node} in a tree.}
 
 \item{\code{siblings}}{Returns a \code{list} containing all the siblings of this \code{Node}}
 
-\item{\code{averageBranchingFactor}}{Returns the number of leaves are below a \code{Node}}
+\item{\code{averageBranchingFactor}}{Returns the average number of crotches below this \code{Node}}
 }
 \if{html}{\out{</div>}}
 }

@@ -616,15 +616,17 @@ Node <- R6Class("Node",
                         return (result)
                       },
                                     
-                      #' @field fields Deprecatd, use \code{attributes} instead
+                      #' @field fields Will be deprecated, use \code{attributes} instead
                       fields = function() {
-                        .Deprecated("Node$attributes", old = "Node$fields")
+                        print("Node$fields will be deprecated in the next release. Please use Node$attributes instead.")
+                        # .Deprecated("Node$attributes", old = "Node$fields")
                         return(self$attributes)
                       },
                       
-                      #' @field fieldsAll Deprecated, use \code{attributesAll}
+                      #' @field fieldsAll Will be deprecated, use \code{attributesAll} instead
                       fieldsAll = function() {
-                        .Deprecated("Node$attributesAll", old = "Node$fieldsAll")
+                        print("Node$fieldsAll will be deprecated in the next release. Please use Node$attributesAll instead.")
+                        # .Deprecated("Node$attributesAll", old = "Node$fieldsAll")
                         return(self$attributesAll)
                       },
                       
@@ -657,12 +659,12 @@ Node <- R6Class("Node",
                         }
                       },
                       
-                      #' @field leafCount Returns the number of leaves that are below a \code{Node}
+                      #' @field leafCount Returns the number of leaves are below a \code{Node}
                       leafCount = function() {
                         length(Traverse(self, filterFun = isLeaf))
                       },
                       
-                      #' @field level Returns the number of leaves are below a \code{Node}
+                      #' @field level Returns an integer representing the level of a \code{Node}. For example, the root has level 1.
                       level = function() {
                         if (isRoot(self)) {
                           return (1)
@@ -671,7 +673,7 @@ Node <- R6Class("Node",
                         }
                       },
                       
-                      #' @field height Returns the number of leaves are below a \code{Node}
+                      #' @field height Returns max(level) of any of the \code{Nodes} of the tree
                       height = function() {
                         if (isLeaf(self)) return (1)
                         max(Get(Traverse(self, filterFun = function(x) isLeaf(x) && x$position == 1), "level")) - self$level + 1
@@ -682,7 +684,7 @@ Node <- R6Class("Node",
                         all(2 == Get(Traverse(self, filterFun = function(x) !x$isLeaf), "count"))
                       },
                       
-                      #' @field root Returns the number of leaves are below a \code{Node}
+                      #' @field root Returns the root of a \code{Node} in a tree.
                       root = function() {
                         if (isRoot(self)) {
                           invisible (self)
@@ -700,7 +702,7 @@ Node <- R6Class("Node",
                         }
                       },
                       
-                      #' @field averageBranchingFactor Returns the number of leaves are below a \code{Node}
+                      #' @field averageBranchingFactor Returns the average number of crotches below this \code{Node}
                       averageBranchingFactor = function() {
                         averageBranchingFactor(self)
                       }
