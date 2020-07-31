@@ -4,9 +4,9 @@
 - IMPROVE: Replaced dependency on stringr by dependency on stringi, which make data.tree even more light-weight
 - CHANGE: Node serialization changed. In many cases, you might still be able to load previously saved data.tree objects, but then they do not correspond to the latest version.
 - CHANGE: New reserved words for Node: attributes and attributesAll
-- REMOVE: Node$fields and Node$fieldsAll are now deprecated. Use Node$attributes and Node$attributesAll instead
+- NOTE: Node$fields and Node$fieldsAll will be deprecated in the next version. Use Node$attributes and Node$attributesAll instead
 - REMOVE: Deprecated Node$FindNode has been removed (use FindeNode(node, ...) instead)
-- IMPROVE: Node is now fully documented
+- IMPROVE: Node is now fully documented, (thx to roxygen2 for supporting R6)
 - CHANGE: data.tree now depends on R 3.5
 - FIX: adjusted sample data that didn't support correct handling of active bindings
 - IMPROVE: Adding reserved word check to FromDataFrameNetwork (#147 thx to wkumler)
