@@ -1,5 +1,9 @@
 # All changes to data.tree are documented here.
 
+## Version >1.0.0
+
+- IMPROVE: Node names may no longer be `NA`.  It was not fully supported, and now it is an error. (#152)
+
 ## Version 1.0.0
 - IMPROVE: Replaced dependency on stringr by dependency on stringi, which make data.tree even more light-weight
 - CHANGE: Node serialization changed. In many cases, you might still be able to load previously saved data.tree objects, but then they do not correspond to the latest version.

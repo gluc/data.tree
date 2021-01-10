@@ -138,6 +138,11 @@ Node <- R6Class("Node",
                       initialize=function(name, check = c("check", "no-warn", "no-check"), ...) {
                         if (!missing(name)) {
                           name <- as.character(name)
+                          if (length(name) != 1) {
+                            stop("Node name must be a scalar")
+                          } else if (is.na(name)) {
+                            stop("Node name must be a non-NA character scalar")
+                          }
                           name <- CheckNameReservedWord(name, check)
                           private$p_name <- name
                         }
