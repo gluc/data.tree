@@ -14,7 +14,7 @@ output:
 
 <!--
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Example applications of data.tre}
+  %\VignetteIndexEntry{Example applications of data.tree}
   %\SweaveUTF8
 -->
 
