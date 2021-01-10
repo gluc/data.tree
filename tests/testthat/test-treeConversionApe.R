@@ -2,6 +2,7 @@ context("tree conversion ape")
 
 
 test_that("as.Node.phylo owls", {
+  skip_if_not_installed("ape")
   txt <- "owls(((Strix_aluco:4.2,Asio_otus:4.2):3.1,Athene_noctua:7.3):6.3,Tyto_alba:13.5);"
 
   p <- ape::read.tree(text = txt)
@@ -13,6 +14,7 @@ test_that("as.Node.phylo owls", {
 })
 
 test_that("as.Node.phylo height", {
+  skip_if_not_installed("ape")
   txt <- "(A:5,B:5,(C:10,D:10)E:5):0;"
   
   p <- ape::read.tree(text = txt)
@@ -24,6 +26,7 @@ test_that("as.Node.phylo height", {
 })
 
 test_that("as.Node.phylo no height", {
+  skip_if_not_installed("ape")
   txt <- "(A,B,(C,D)E)F;"
   
   p <- ape::read.tree(text = txt)
@@ -37,6 +40,7 @@ test_that("as.Node.phylo no height", {
 
 
 test_that("as.Node.phylo height non standard", {
+  skip_if_not_installed("ape")
   txt <- "(A:5,B:5,(C:10,D:10):5):0;"
   
   p <- ape::read.tree(text = txt)
@@ -50,7 +54,8 @@ test_that("as.Node.phylo height non standard", {
 
 
 test_that("as.phylo.Node heightAttributeName", {
-  
+  skip_if_not_installed("ape")
+
   data(acme)
   #needs explicit generics as library ape is not loaded
   p <- as.phylo.Node(acme)
@@ -62,7 +67,8 @@ test_that("as.phylo.Node heightAttributeName", {
 
 
 test_that("as.phylo.Node heightAttributeName", {
-
+  skip_if_not_installed("ape")
+  
   data(acme)
   height <- function(x) x$edgeHeight <- DefaultPlotHeight(x) + 1
   acme$Do(height)
@@ -98,4 +104,3 @@ test_that("GetPhyloNumber edge", {
   acme$Do(function(x) x$phyloNr <- GetPhyloNr(x, "edge"), filterFun = isNotRoot)
   expect_equal(as.vector(acme$Get("phyloNr")), c(NA, 1:10))
 })
-
