@@ -2,6 +2,8 @@ context("tree conversion igraph")
 
 
 test_that("as.Node.igraph undirected", {
+  skip_if_not_installed("igraph")
+
   data(acme)
   ig <- as.igraph.Node(acme, "p", c("level", "isLeaf"), directed = FALSE)
   #expect_true(is_hierarchical(ig))
@@ -11,12 +13,10 @@ test_that("as.Node.igraph undirected", {
 
 
 test_that("as.Node.igraph directed", {
+  skip_if_not_installed("igraph")
   data(acme)
   ig <- as.igraph.Node(acme, "p", c("level", "isLeaf"), directed = TRUE)
   #expect_true(is_hierarchical(ig))
   expect_true(igraph::is_directed(ig))
   expect_equal(igraph::gsize(ig), acme$totalCount - 1)
 })
-
-
-

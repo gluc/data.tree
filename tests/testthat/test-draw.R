@@ -11,6 +11,7 @@ test_that("plot only works if DiagrammeR is installed", {
   # Then
   # - an error is thrown
 
+  skip_if_not_installed("mockery")
   data(acme)
   mockery::stub(ToDiagrammeRGraph, "requireNamespace", FALSE, 1)
   mockery::stub(plot.Node, "requireNamespace", FALSE, 1)

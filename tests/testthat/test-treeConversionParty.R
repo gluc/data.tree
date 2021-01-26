@@ -2,7 +2,8 @@ context("tree conversion party")
 
 
 test_that("party on", {
-  
+  skip_if_not_installed("party")
+
   airq <- subset(airquality, !is.na(Ozone))
   airct <- party::ctree(Ozone ~ ., data = airq, 
                         controls = party::ctree_control(maxsurrogate = 3))
@@ -32,6 +33,7 @@ test_that("party on", {
 
 
 test_that("partykid", {
+  skip_if_not_installed("party")
   #hack but needed, otherwise extree_data cannot be found
   library(partykit)
   airq <- subset(airquality, !is.na(Ozone))
