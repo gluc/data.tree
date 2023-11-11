@@ -50,15 +50,15 @@ changeName <- function(node, oldName, newName) {
 .separator <- function(self) {
   if (isRoot(self)) return("")
   if (self$position == self$parent$count) mySeparator <- paste0(" ", self$root$printFormatters$l, self$root$printFormatters$h)
-  else mySeparator <- paste0(" ", self$root$printFormatters$v, self$root$printFormatters$h)
+  else mySeparator <- paste0(" ", self$root$printFormatters$j, self$root$printFormatters$h)
   return (paste0(.parentSeparator(self$parent), mySeparator))
 }
 
 #' @export
 .parentSeparator <- function(self) {
   if (isRoot(self)) return("")
-  if (self$position == self$parent$count) mySeparator <- "    "
-  else mySeparator <- paste0(" ", self$root$printFormatters$v, "  ")
+  if (self$position == self$parent$count) mySeparator <- "  "
+  else mySeparator <- paste0(" ", self$root$printFormatters$v, " ")
   paste0(.parentSeparator(self$parent), mySeparator)
   
 }
