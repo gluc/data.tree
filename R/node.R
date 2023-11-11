@@ -652,15 +652,13 @@ Node <- R6Class("Node",
                                     
                       #' @field fields Will be deprecated, use \code{attributes} instead
                       fields = function() {
-                        print("Node$fields will be deprecated in the next release. Please use Node$attributes instead.")
-                        # .Deprecated("Node$attributes", old = "Node$fields")
+                        .Deprecated("Node$attributes", old = "Node$fields")
                         return(self$attributes)
                       },
                       
                       #' @field fieldsAll Will be deprecated, use \code{attributesAll} instead
                       fieldsAll = function() {
-                        print("Node$fieldsAll will be deprecated in the next release. Please use Node$attributesAll instead.")
-                        # .Deprecated("Node$attributesAll", old = "Node$fieldsAll")
+                        .Deprecated("Node$attributesAll", old = "Node$fieldsAll")
                         return(self$attributesAll)
                       },
                       

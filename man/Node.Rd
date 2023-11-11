@@ -213,9 +213,10 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 
 \item{\code{printFormatters}}{gets or sets the formatters used to print a \code{Node}.
 Set this as a list to a root node.
-The different formatters are h (horizontal), v (vertical), l (L), j (junction) s (separator) and r (space repetitions). 
-For example, you can set the formatters to \code{list(h = "\u2500" , v = "\u2502", l = "\u2514",  j = "\u251C", s = "\u0009", r = 1)}
-to get the same behaviour as in \code{fs::dir_tree()}.}
+The different formatters are h (horizontal), v (vertical), l (L), j (junction), and s (separator). 
+For example, you can set the formatters to \code{list(h = "\u2500" , v = "\u2502", l = "\u2514",  j = "\u251C", s = " ")}
+to get a similar behaviour as in \code{fs::dir_tree()}.
+The defaults are: \code{list(h = "--" , v = "\u00A6", l = "\u00B0", j = "\u00A6", s = " ")}}
 
 \item{\code{parent}}{Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
 
