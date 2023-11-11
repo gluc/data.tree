@@ -1,10 +1,10 @@
 Before a release, do the following:
 1. Set date in DESCRIPTION
 2. Make sure NEWS is up to date
-3. make sure tests pass
+3. make sure tests pass (by running devtools::test())
 4. review documentation, especially Node
 5. review vignettes (especially if png need updating). Run devtools::spell_check()
-6. Check build
+6. Check build by running devtools::check()
 7. Commit to git, make sure travis and appveyor pass (in case it fails, you may want to clean cache)
 8. make sure we have adequate coverage
 9. Make sure devel passes, by running devtools::check_win_devel

@@ -32,7 +32,17 @@
 #' For more specialized conversions, see \code{\link{as.dendrogram.Node}}, \code{\link{as.Node.dendrogram}}, 
 #' \code{\link{as.phylo.Node}} and \code{\link{as.Node.phylo}}
 #' 
-#' Finally, easy conversion options from and to JSON, YAML, igraph, and more exist.
+#' Finally, easy conversion options from and to list, dataframe, JSON, YAML, igraph, ape, rpart, party and more exist:
+#' 
+#' \itemize{
+#'  \item{list: both directions}
+#'  \item{dataframe: both directions}
+#'  \item{JSON, YAML: both directions, via lists}
+#'  \item{igraph: from igraph to data.tree}
+#'  \item{ape: both directions}
+#'  \item{rpart: from rpart to data.tree}
+#'  \item{party: from party to data.tree}
+#' }
 #'  
 #' @section Node and Reference Semantics:
 #'  
@@ -93,6 +103,7 @@
 #' 
 #' @seealso \code{\link{Node}}
 #' @seealso For more details, see the \code{data.tree} vignette by running: \code{vignette("data.tree")}
-#' @docType package
 #' @name data.tree
+#' @keywords internal
+"_PACKAGE"
 NULL

@@ -240,6 +240,38 @@ children:
 })
 
 
+test_that("as.Node.list string NULL", {
+  
+  
+  
+  
+  yaml <- "
+name: OS Students 2014/15
+OS X:
+  Yosemite:
+  Leopard:
+Linux:
+  Debian:
+    version: 9
+  Ubuntu:
+Windows:
+  W7:
+  W8:
+  W10:
+"
+  
+  lol <- yaml::yaml.load(yaml)
+  
+  tree <- FromListSimple(lol, interpretNullAsList = TRUE)
+  expect_equal(tree$totalCount, 11)
+  expect_equal(tree$height, 3)
+  expect_equal(tree$Linux$Debian$name, "Debian")
+  expect_equal(tree$Linux$Debian$version, 9)
+
+
+})
+
+
 test_that("as.Node.list empty list()", {
   lol = list(a = list(aa=1), b="hello", c = list())
   tree = FromListSimple(lol)

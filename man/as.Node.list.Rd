@@ -12,6 +12,7 @@
   nameName = "name",
   childrenName = "children",
   nodeName = NULL,
+  interpretNullAsList = FALSE,
   check = c("check", "no-warn", "no-check"),
   ...
 )
@@ -28,6 +29,7 @@ FromListSimple(
   simpleList,
   nameName = "name",
   nodeName = NULL,
+  interpretNullAsList = FALSE,
   check = c("check", "no-warn", "no-check")
 )
 }

@@ -8,6 +8,8 @@
 #' @param childrenName The name of the element that contains the child list (applies to mode 'explicit' only).
 #' @param nodeName A name suggestion for x, if the name cannot be deferred otherwise. This is for example the case for
 #' the root with mode explicit and named lists.
+#' @param interpretNullAsList If \code{TRUE}, then \code{NULL}-valued lists are interpreted as child nodes. Else, they are interpreted as attributes.
+#' This has only an effect if \code{mode} is "simple".
 #' @param ... Any other argument to be passed to generic sub implementations
 #' 
 #' @examples
@@ -57,7 +59,7 @@
 #' @family as.Node
 #' 
 #' @export
-as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, check = c("check", "no-warn", "no-check"), ...) {
+as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", childrenName = "children", nodeName = NULL, interpretNullAsList = FALSE, check = c("check", "no-warn", "no-check"), ...) {
   mode <- mode[1]
   check <- check[1]
   
@@ -120,7 +122,10 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
   
   #children
   if (is.character(x)) return (n)
-  if (mode == 'simple') children <- x[vapply(x, is.list, logical(1))]
+  if (mode == 'simple') {
+    if (interpretNullAsList) children <- x[vapply(x, function(y) is.list(y) || is.null(y), logical(1))]
+    else children <- x[vapply(x, is.list, logical(1))]
+  }
   else if (mode == 'explicit') children <- x[[childrenName]]
   
   if (length(children) == 0) return (n)
@@ -138,7 +143,7 @@ as.Node.list <- function(x, mode = c("simple", "explicit"), nameName = "name", c
     if (nchar(childName) == 0) childName <- i
     child <- children[[i]]
     
-    childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, check = check, ...)
+    childNode <- as.Node.list(child, mode, nameName, childrenName, nodeName = childName, interpretNullAsList = interpretNullAsList, check = check, ...)
     n$AddChildNode(childNode)
     
   }
@@ -164,8 +169,8 @@ FromListExplicit <- function(explicitList, nameName = "name", childrenName = "ch
 #' interpreted as a child \code{Node}
 #' 
 #' @export
-FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, check = c("check", "no-warn", "no-check")) {
-  as.Node.list(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName, check = check)
+FromListSimple <- function(simpleList, nameName = "name", nodeName = NULL, interpretNullAsList = FALSE, check = c("check", "no-warn", "no-check")) {
+  as.Node.list(simpleList, mode = "simple", nameName = nameName, nodeName = nodeName, interpretNullAsList = interpretNullAsList, check = check)
 }
 
 

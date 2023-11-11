@@ -1,8 +1,10 @@
 # All changes to data.tree are documented here.
 
-## Version 1.X.X
+## Version 1.1.0
 - IMPROVE: Node names may no longer be `NA`.  It was not fully supported, and now it is an error. (#152)
 - FIX: changed lock_object to lock_objects (#149 thx to Olly Beagly)
+- FIX: help('data.tree') works again
+- IMPROVE: FromListSimple and as.Node.list now have an additional parameter 'interpretNullAsList'. See #169 for details.
 
 ## Version 1.0.0
 - IMPROVE: Replaced dependency on stringr by dependency on stringi, which make data.tree even more light-weight
