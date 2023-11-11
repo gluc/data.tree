@@ -9,7 +9,8 @@
   ...,
   pruneMethod = c("simple", "dist", NULL),
   limit = 100,
-  pruneFun = NULL
+  pruneFun = NULL,
+  row.names = T
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ entire tree should be printed.}
 
 \item{pruneFun}{allows providing a prune criteria, i.e. a function taking a \code{Node} as an input, and returning \code{TRUE} or \code{FALSE}. 
 If the pruneFun returns FALSE for a Node, then the Node and its entire sub-tree will not be considered.}
+
+\item{row.names}{If \code{TRUE} (default), then the row names are printed out. Else, they are not.}
 }
 \description{
 Print a \code{Node} in a human-readable fashion.

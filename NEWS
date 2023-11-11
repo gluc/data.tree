@@ -5,6 +5,7 @@
 - FIX: changed lock_object to lock_objects (#149 thx to Olly Beagly)
 - FIX: help('data.tree') works again
 - IMPROVE: FromListSimple and as.Node.list now have an additional parameter 'interpretNullAsList'. See #169 for details.
+- IMPROVE: added parameter `row.names = FALSE`in `print.Node()` to hide row numbers when printing a data.tree.
 
 ## Version 1.0.0
 - IMPROVE: Replaced dependency on stringr by dependency on stringi, which make data.tree even more light-weight

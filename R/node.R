@@ -38,6 +38,7 @@ NODE_RESERVED_NAMES_CONST <- c(
                                 'path',
                                 'pathString',
                                 'position',
+                                'printFormatters',
                                 'Prune',
                                 'Revert',
                                 'RemoveAttribute',
@@ -150,6 +151,7 @@ Node <- R6Class("Node",
                           args <- list(...)
                           mapply(FUN = function(arg, nme) self[[nme]] <- arg, args, names(args))
                         }
+                        
                         invisible (self)
                       },
                       
@@ -555,7 +557,8 @@ Node <- R6Class("Node",
                                 
                       # End Traversal
                       #######################
-                                          
+                           
+                      
                       
                     ),
                 
@@ -568,6 +571,26 @@ Node <- R6Class("Node",
                         else private$p_name <- changeName(self, private$p_name, value)
                       },
                       
+            
+                      printFormatters = function(value) {
+                        if (missing(value)) {
+                          # if private$p_print_formatters is not set, return default
+                          if (is.null(private$p_print_formatters)) {
+                            pf <- list(h = "--" , 
+                                       v = "\u00A6", 
+                                       l = "\u00B0", 
+                                       j = "\u00A6"
+                                       )
+                          } else {
+                            pf <- private$p_print_formatters
+                          }
+                          
+                          return (pf)
+                        }
+                        private$p_print_formatters <- value
+                      },   
+                      
+
                       #' @field parent Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!
                       parent = function(value) {
                         if (missing(value)) return (private$p_parent)

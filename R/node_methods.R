@@ -16,6 +16,7 @@
 #' everywhere in the tree, according to their level. If pruneFun is provided, then pruneMethod is ignored.
 #' @param limit The maximum number of nodes to print. Can be \code{NULL} if the
 #' entire tree should be printed.
+#' @param row.names If \code{TRUE} (default), then the row names are printed out. Else, they are not.
 #'
 #' @inheritParams ToDataFrameTree
 #'
@@ -38,7 +39,7 @@
 #' 
 #'
 #' @export
-print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 100, pruneFun = NULL) {
+print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 100, pruneFun = NULL, row.names = T) {
   if (length(pruneFun) > 0) pruneMethod <- NULL
   pruneMethod <- pruneMethod[1]
   if (length(pruneMethod) > 0 && length(limit) > 0) {
@@ -56,7 +57,7 @@ print.Node <- function(x, ..., pruneMethod = c("simple", "dist", NULL), limit = 
   }
 
   df <- ToDataFrameTree(x, format = TRUE, ..., pruneFun = pruneFun)
-  print(df, na.print = "")
+  print(df, na.print = "", row.names = row.names)
 }
 
 
