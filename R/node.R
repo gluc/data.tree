@@ -571,7 +571,12 @@ Node <- R6Class("Node",
                         else private$p_name <- changeName(self, private$p_name, value)
                       },
                       
-            
+                      #' @field printFormatters gets or sets the formatters used to print a \code{Node}.
+                      #' Set this as a list to a root node.
+                      #' The different formatters are h (horizontal), v (vertical), l (L), j (junction), and s (separator). 
+                      #' For example, you can set the formatters to \code{list(h = "\u2500" , v = "\u2502", l = "\u2514",  j = "\u251C", s = " ")}
+                      #' to get a similar behaviour as in \code{fs::dir_tree()}.
+                      #' The defaults are: \code{list(h = "--" , v = "\u00A6", l = "\u00B0", j = "\u00A6", s = " ")}
                       printFormatters = function(value) {
                         if (missing(value)) {
                           # if private$p_print_formatters is not set, return default
@@ -579,7 +584,8 @@ Node <- R6Class("Node",
                             pf <- list(h = "--" , 
                                        v = "\u00A6", 
                                        l = "\u00B0", 
-                                       j = "\u00A6"
+                                       j = "\u00A6",
+                                       s = " "
                                        )
                           } else {
                             pf <- private$p_print_formatters

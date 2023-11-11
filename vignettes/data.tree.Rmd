@@ -183,6 +183,32 @@ osNode <- as.Node(osList)
 print(osNode, "users")
 ```
 
+In cases where your leaf elements have no attributes, you might want to interpret them as nodes, and not as attributes. In such cases, you can use
+`interpretNullAsList = TRUE` to convert these into `Nodes` (instead of attributes).
+
+For example:
+
+```{r}
+library(yaml)
+yaml <- "
+name: OS Students 2014/15
+OS X:
+  Yosemite:
+  Leopard:
+Linux:
+  Debian:
+  Ubuntu:
+Windows:
+  W7:
+  W8:
+  W10:
+"
+
+osList <- yaml.load(yaml)
+osNode <- as.Node(osList, interpretNullAsList = TRUE)
+osNode$printFormatters <- list(h = "\u2500" , v = "\u2502", l = "\u2514", j = "\u251C")
+print(osNode, "users")
+```
 
 ## Node methods
 

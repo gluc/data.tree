@@ -211,6 +211,12 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \describe{
 \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}.}
 
+\item{\code{printFormatters}}{gets or sets the formatters used to print a \code{Node}.
+Set this as a list to a root node.
+The different formatters are h (horizontal), v (vertical), l (L), j (junction) s (separator) and r (space repetitions). 
+For example, you can set the formatters to \code{list(h = "\u2500" , v = "\u2502", l = "\u2514",  j = "\u251C", s = "\u0009", r = 1)}
+to get the same behaviour as in \code{fs::dir_tree()}.}
+
 \item{\code{parent}}{Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
 
 \item{\code{children}}{Gets or sets the children \code{list} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
