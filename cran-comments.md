@@ -12,31 +12,54 @@ Best Regards, Christoph
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs.
+All finished with SUCCESS. There were no ERRORs or WARNINGs.
 
-I'm getting funny NOTES on rhub::check_for_cran:
+### Maintainer Changed
+
+On all environments, I'm getting:
 
 ```
-* checking CRAN incoming feasibility ... [11s] NOTE
-Maintainer: 'Christoph Glur <christoph.glur@powerpartners.pro>'
+Maintainer: ‘Christoph Glur <christoph.glur@powerpartners.pro>’
 
 New maintainer:
   Christoph Glur <christoph.glur@powerpartners.pro>
 Old maintainer(s):
   Christoph Glur <christoph.glur@ipub.com>
-* checking Rd files ... NOTE
-checkRd: (-1) s3_register.Rd:46-48: Lost braces
-    46 | if (getRversion() >= "3.6.0") {
-       |                               ^
-* checking for non-standard things in the check directory ... NOTE
+```
+
+This is expected.
+
+### Lunux: tiny NOTE on linux
+
+On both Ubuntu and Fedora, I'm getting:
+
+```
+* checking HTML version of manual ... NOTE
+Skipping checking HTML validation: no command 'tidy' found
+```
+
+I don't think that this is a problem at my end.
+
+### Windows: 'NULL' directory and 'lastMiKTeXException?
+
+I'm getting funny NOTES on rhub::check_for_cran for windows.
+
+```
 Found the following files/directories:
   ''NULL''
+```
+I couldn't reproduce this anywhere else, and I'm not sure if this is an issue with my code or with the check environment.
+This could be an rhub problem: https://github.com/r-hub/rhub/issues/560
+
+I'm also getting this NOTE on rhub::check_for_cran for Windows:
+
+```
 * checking for detritus in the temp directory ... NOTE
 Found the following files/directories:
   'lastMiKTeXException'
 ```
 
-I couldn't reproduce this anywhere else, and I'm not sure if this is an issue with my code or with the check environment.
+This could be related to : https://github.com/r-hub/rhub/issues/503
 
 Let me know if I was careless and there is anything for me to fix.
 
@@ -118,5 +141,5 @@ Issues with CRAN packages are summarised below.
 
 ### Problems Description
 
-All three problems are a result of the deprecated functions.
+All three problems are a result of the deprecated functions (`Node$fields`, `Node$fieldsAll` )
 I notified the maintainers of the packages.
