@@ -575,7 +575,7 @@ Node <- R6Class("Node",
                       #' Set this as a list to a root node.
                       #' The different formatters are h (horizontal), v (vertical), l (L), j (junction), and s (separator). 
                       #' For example, you can set the formatters to \code{list(h = "\u2500" , v = "\u2502", l = "\u2514",  j = "\u251C", s = " ")}
-                      #' to get a similar behaviour as in \code{fs::dir_tree()}.
+                      #' to get a similar behavior as in \code{fs::dir_tree()}.
                       #' The defaults are: \code{list(h = "--" , v = "\u00A6", l = "\u00B0", j = "\u00A6", s = " ")}
                       printFormatters = function(value) {
                         if (missing(value)) {
