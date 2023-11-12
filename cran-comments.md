@@ -8,11 +8,38 @@ Best Regards, Christoph
 ## Test environments
 
 * github -> (macos-latest release, windows-latest release, ubuntu-latest devel, ubuntu-latest release, ubuntu-latest oldrel-1) -> OK
-* rhub::check_for_cran -> 
+* rhub::check_for_cran -> NOTES
 
 ## R CMD check results
 
 There were no ERRORs or WARNINGs.
+
+I'm getting funny NOTES on rhub::check_for_cran:
+
+```
+* checking CRAN incoming feasibility ... [11s] NOTE
+Maintainer: 'Christoph Glur <christoph.glur@powerpartners.pro>'
+
+New maintainer:
+  Christoph Glur <christoph.glur@powerpartners.pro>
+Old maintainer(s):
+  Christoph Glur <christoph.glur@ipub.com>
+* checking Rd files ... NOTE
+checkRd: (-1) s3_register.Rd:46-48: Lost braces
+    46 | if (getRversion() >= "3.6.0") {
+       |                               ^
+* checking for non-standard things in the check directory ... NOTE
+Found the following files/directories:
+  ''NULL''
+* checking for detritus in the temp directory ... NOTE
+Found the following files/directories:
+  'lastMiKTeXException'
+```
+
+I couldn't reproduce this anywhere else, and I'm not sure if this is an issue with my code or with the check environment.
+
+Let me know if I was careless and there is anything for me to fix.
+
 
 ## revdepcheck results
 
