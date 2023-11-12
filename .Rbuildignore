@@ -13,3 +13,4 @@ revdep
 README.md
 ^CRAN-RELEASE$
 ^\.github$
+^CRAN-SUBMISSION$
