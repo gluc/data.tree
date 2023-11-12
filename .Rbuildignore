@@ -12,3 +12,4 @@ Rprof.out
 revdep
 README.md
 ^CRAN-RELEASE$
+^\.github$
