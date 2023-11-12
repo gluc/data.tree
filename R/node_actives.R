@@ -37,7 +37,6 @@ isNotLeaf <- function(node) {
 }
 
 
-
 changeName <- function(node, oldName, newName) {
   if(!isRoot(node)) {
     rm(list = oldName, envir = node$parent)
@@ -47,27 +46,27 @@ changeName <- function(node, oldName, newName) {
   return (newName)
 }
 
-
 #' @export
 .separator <- function(self) {
   if (isRoot(self)) return("")
-  if (self$position == self$parent$count) mySeparator <- paste0(" ", "\u00B0", "--")
-  else mySeparator <- paste0(" ", "\u00A6", "--")
+  if (self$position == self$parent$count) mySeparator <- paste0(self$root$printFormatters$s, self$root$printFormatters$l, self$root$printFormatters$h)
+  else mySeparator <- paste0(self$root$printFormatters$s, self$root$printFormatters$j, self$root$printFormatters$h)
   return (paste0(.parentSeparator(self$parent), mySeparator))
 }
 
 #' @export
 .parentSeparator <- function(self) {
   if (isRoot(self)) return("")
-  if (self$position == self$parent$count) mySeparator <- "    "
-  else mySeparator <- paste0(" ", "\u00A6", "  ")
+  
+  if (self$position == self$parent$count) mySeparator <- paste0(rep(self$root$printFormatters$s, 4), collapse = "")
+  else mySeparator <- paste0(self$root$printFormatters$s, self$root$printFormatters$v, self$root$printFormatters$s, self$root$printFormatters$s)
   paste0(.parentSeparator(self$parent), mySeparator)
-
+  
 }
 
 #' Calculate the average number of branches each non-leaf has
 #'
-#' @param node The node
+#' @param node The node to calculate the average branching factor for
 #' @export
 averageBranchingFactor <- function(node) {
   t <- Traverse(node, filterFun = isNotLeaf)

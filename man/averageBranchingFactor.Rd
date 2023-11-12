@@ -7,7 +7,7 @@
 averageBranchingFactor(node)
 }
 \arguments{
-\item{node}{The node}
+\item{node}{The node to calculate the average branching factor for}
 }
 \description{
 Calculate the average number of branches each non-leaf has

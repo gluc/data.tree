@@ -211,6 +211,13 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \describe{
 \item{\code{name}}{Gets or sets the name of a \code{Node}. For example \code{Node$name <- "Acme"}.}
 
+\item{\code{printFormatters}}{gets or sets the formatters used to print a \code{Node}.
+Set this as a list to a root node.
+The different formatters are h (horizontal), v (vertical), l (L), j (junction), and s (separator). 
+For example, you can set the formatters to \code{list(h = "\u2500" , v = "\u2502", l = "\u2514",  j = "\u251C", s = " ")}
+to get a similar behavior as in \code{fs::dir_tree()}.
+The defaults are: \code{list(h = "--" , v = "\u00A6", l = "\u00B0", j = "\u00A6", s = " ")}}
+
 \item{\code{parent}}{Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
 
 \item{\code{children}}{Gets or sets the children \code{list} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!}
@@ -260,27 +267,27 @@ For more details see the \code{\link{data.tree}} documentations, or the \code{da
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Node$new()}}
-\item \href{#method-AddChild}{\code{Node$AddChild()}}
-\item \href{#method-AddChildNode}{\code{Node$AddChildNode()}}
-\item \href{#method-AddSibling}{\code{Node$AddSibling()}}
-\item \href{#method-AddSiblingNode}{\code{Node$AddSiblingNode()}}
-\item \href{#method-RemoveChild}{\code{Node$RemoveChild()}}
-\item \href{#method-RemoveAttribute}{\code{Node$RemoveAttribute()}}
-\item \href{#method-Sort}{\code{Node$Sort()}}
-\item \href{#method-Revert}{\code{Node$Revert()}}
-\item \href{#method-Prune}{\code{Node$Prune()}}
-\item \href{#method-Climb}{\code{Node$Climb()}}
-\item \href{#method-Navigate}{\code{Node$Navigate()}}
-\item \href{#method-Get}{\code{Node$Get()}}
-\item \href{#method-Do}{\code{Node$Do()}}
-\item \href{#method-Set}{\code{Node$Set()}}
-\item \href{#method-clone}{\code{Node$clone()}}
+\item \href{#method-Node-new}{\code{Node$new()}}
+\item \href{#method-Node-AddChild}{\code{Node$AddChild()}}
+\item \href{#method-Node-AddChildNode}{\code{Node$AddChildNode()}}
+\item \href{#method-Node-AddSibling}{\code{Node$AddSibling()}}
+\item \href{#method-Node-AddSiblingNode}{\code{Node$AddSiblingNode()}}
+\item \href{#method-Node-RemoveChild}{\code{Node$RemoveChild()}}
+\item \href{#method-Node-RemoveAttribute}{\code{Node$RemoveAttribute()}}
+\item \href{#method-Node-Sort}{\code{Node$Sort()}}
+\item \href{#method-Node-Revert}{\code{Node$Revert()}}
+\item \href{#method-Node-Prune}{\code{Node$Prune()}}
+\item \href{#method-Node-Climb}{\code{Node$Climb()}}
+\item \href{#method-Node-Navigate}{\code{Node$Navigate()}}
+\item \href{#method-Node-Get}{\code{Node$Get()}}
+\item \href{#method-Node-Do}{\code{Node$Do()}}
+\item \href{#method-Node-Set}{\code{Node$Set()}}
+\item \href{#method-Node-clone}{\code{Node$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Node-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{Node} object. This is often used to create the root of a tree when creating a tree programmatically.
 \subsection{Usage}{
@@ -318,8 +325,8 @@ node$y
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AddChild"></a>}}
-\if{latex}{\out{\hypertarget{method-AddChild}{}}}
+\if{html}{\out{<a id="method-Node-AddChild"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-AddChild}{}}}
 \subsection{Method \code{AddChild()}}{
 Creates a \code{Node} and adds it as the last sibling as a child to the \code{Node} on which this is called.
 \subsection{Usage}{
@@ -360,8 +367,8 @@ print(root, "myname")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AddChildNode"></a>}}
-\if{latex}{\out{\hypertarget{method-AddChildNode}{}}}
+\if{html}{\out{<a id="method-Node-AddChildNode"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-AddChildNode}{}}}
 \subsection{Method \code{AddChildNode()}}{
 Adds a \code{Node} as a child to this node.
 \subsection{Usage}{
@@ -391,8 +398,8 @@ root$AddChildNode(child)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AddSibling"></a>}}
-\if{latex}{\out{\hypertarget{method-AddSibling}{}}}
+\if{html}{\out{<a id="method-Node-AddSibling"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-AddSibling}{}}}
 \subsection{Method \code{AddSibling()}}{
 Creates a new \code{Node} called \code{name} and adds it after this \code{Node} as a sibling.
 \subsection{Usage}{
@@ -431,8 +438,8 @@ sibling <- child$AddSibling("sibling1")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AddSiblingNode"></a>}}
-\if{latex}{\out{\hypertarget{method-AddSiblingNode}{}}}
+\if{html}{\out{<a id="method-Node-AddSiblingNode"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-AddSiblingNode}{}}}
 \subsection{Method \code{AddSiblingNode()}}{
 Adds a \code{Node} after this \code{Node}, as a sibling.
 \subsection{Usage}{
@@ -463,8 +470,8 @@ root$AddChildNode(child)$AddSiblingNode(sibling)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RemoveChild"></a>}}
-\if{latex}{\out{\hypertarget{method-RemoveChild}{}}}
+\if{html}{\out{<a id="method-Node-RemoveChild"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-RemoveChild}{}}}
 \subsection{Method \code{RemoveChild()}}{
 Remove the child \code{Node} called \code{name} from a \code{Node} and returns it.
 \subsection{Usage}{
@@ -493,8 +500,8 @@ node$RemoveChild("mychild")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RemoveAttribute"></a>}}
-\if{latex}{\out{\hypertarget{method-RemoveAttribute}{}}}
+\if{html}{\out{<a id="method-Node-RemoveAttribute"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-RemoveAttribute}{}}}
 \subsection{Method \code{RemoveAttribute()}}{
 Removes attribute called \code{name} from this \code{Node}.
 \subsection{Usage}{
@@ -525,8 +532,8 @@ node
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Sort"></a>}}
-\if{latex}{\out{\hypertarget{method-Sort}{}}}
+\if{html}{\out{<a id="method-Node-Sort"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Sort}{}}}
 \subsection{Method \code{Sort()}}{
 Sort children of a \code{Node} or an entire \code{data.tree} structure
 \subsection{Usage}{
@@ -576,8 +583,8 @@ print(acme, "totalCost")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Revert"></a>}}
-\if{latex}{\out{\hypertarget{method-Revert}{}}}
+\if{html}{\out{<a id="method-Node-Revert"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Revert}{}}}
 \subsection{Method \code{Revert()}}{
 Reverts the sort order of a \code{Node}'s children.
 
@@ -598,8 +605,8 @@ returns the Node invisibly (for chaining)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Prune"></a>}}
-\if{latex}{\out{\hypertarget{method-Prune}{}}}
+\if{html}{\out{<a id="method-Node-Prune"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Prune}{}}}
 \subsection{Method \code{Prune()}}{
 Prunes a tree. 
 
@@ -635,8 +642,8 @@ print(acme, "cost")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Climb"></a>}}
-\if{latex}{\out{\hypertarget{method-Climb}{}}}
+\if{html}{\out{<a id="method-Node-Climb"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Climb}{}}}
 \subsection{Method \code{Climb()}}{
 Climb a tree from parent to children, by provided criteria.
 \subsection{Usage}{
@@ -692,8 +699,8 @@ tree$Climb(c("1", "1"), position = c(2, 2))$path
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Navigate"></a>}}
-\if{latex}{\out{\hypertarget{method-Navigate}{}}}
+\if{html}{\out{<a id="method-Node-Navigate"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Navigate}{}}}
 \subsection{Method \code{Navigate()}}{
 Navigate to another node by relative path.
 \subsection{Usage}{
@@ -732,8 +739,8 @@ Navigate(acme$Research, c("..", "IT", "Outsource"))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Get"></a>}}
-\if{latex}{\out{\hypertarget{method-Get}{}}}
+\if{html}{\out{<a id="method-Node-Get"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Get}{}}}
 \subsection{Method \code{Get()}}{
 Traverse a Tree and Collect Values
 \subsection{Usage}{
@@ -824,8 +831,8 @@ acme$Get(function(x) c(position = x$position, level = x$level), simplify = "regu
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Do"></a>}}
-\if{latex}{\out{\hypertarget{method-Do}{}}}
+\if{html}{\out{<a id="method-Node-Do"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Do}{}}}
 \subsection{Method \code{Do()}}{
 Executes a function on a set of nodes
 \subsection{Usage}{
@@ -882,8 +889,8 @@ print(acme, "expectedCost")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Set"></a>}}
-\if{latex}{\out{\hypertarget{method-Set}{}}}
+\if{html}{\out{<a id="method-Node-Set"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-Set}{}}}
 \subsection{Method \code{Set()}}{
 Traverse a Tree and Assign Values
 \subsection{Usage}{
@@ -949,8 +956,8 @@ print(acme, "departmentId", "head")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Node-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Node-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

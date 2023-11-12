@@ -2,6 +2,12 @@ context("tree methods")
 
 test_that("Node instantiation", {
   
+  expect_equal(
+    Node$new()$name,
+    "",
+    info="Confirm default name is an empty string"
+  )
+  
   n <- Node$new("bla")
   expect_equal(n$name, "bla")
 
@@ -36,7 +42,16 @@ test_that("Node instantiation", {
   expect_that(n <- Node$new("name", check = "whatever"), gives_warning())
   expect_equal(n$name, "name2")
   
-      
+  expect_error(
+    Node$new(NA_character_),
+    regexp="Node name must be a non-NA character"
+  )
+  
+  expect_error(
+    Node$new(c("A", "B")),
+    regexp="Node name must be a scalar"
+  )
+
 })
 
 test_that("Climb NULL", {

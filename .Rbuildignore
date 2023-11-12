@@ -3,7 +3,8 @@
 ^\.travis\.yml$
 data_gen
 cran-comments.md
-cheat-sheet.md
+publish-cheat-sheet.md
+getting-started-with-development.md
 appveyor.yml
 travis-tool.sh.cmd
 Rprof.out
@@ -11,3 +12,4 @@ Rprof.out
 revdep
 README.md
 ^CRAN-RELEASE$
+^\.github$

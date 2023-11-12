@@ -3,7 +3,7 @@ context("tree conversion rpart")
 test_that("Conversion from rpart", {
   skip_if_not_installed("rpart")
 
-  fit  <- rpart(Kyphosis ~ Age + Number + Start, data = kyphosis)
+  fit  <- rpart::rpart(Kyphosis ~ Age + Number + Start, data = rpart::kyphosis)
   tree <- as.Node(fit)
   expect_equal(tree$totalCount,
                NROW(fit$frame))

@@ -4,3 +4,4 @@ points <- c('yes', 'no', 'yes', 'no', 'no')
 edible <- c('toxic', 'edible', 'edible', 'edible', 'edible')
 mushroom <- data.frame(color = color, size = size, points = points, edibility = edible)
 save(mushroom, file = "data/mushroom.rda", compress = "xz")
+

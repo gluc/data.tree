@@ -38,6 +38,7 @@ NODE_RESERVED_NAMES_CONST <- c(
                                 'path',
                                 'pathString',
                                 'position',
+                                'printFormatters',
                                 'Prune',
                                 'Revert',
                                 'RemoveAttribute',
@@ -138,6 +139,11 @@ Node <- R6Class("Node",
                       initialize=function(name, check = c("check", "no-warn", "no-check"), ...) {
                         if (!missing(name)) {
                           name <- as.character(name)
+                          if (length(name) != 1) {
+                            stop("Node name must be a scalar")
+                          } else if (is.na(name)) {
+                            stop("Node name must be a non-NA character scalar")
+                          }
                           name <- CheckNameReservedWord(name, check)
                           private$p_name <- name
                         }
@@ -145,6 +151,7 @@ Node <- R6Class("Node",
                           args <- list(...)
                           mapply(FUN = function(arg, nme) self[[nme]] <- arg, args, names(args))
                         }
+                        
                         invisible (self)
                       },
                       
@@ -550,7 +557,8 @@ Node <- R6Class("Node",
                                 
                       # End Traversal
                       #######################
-                                          
+                           
+                      
                       
                     ),
                 
@@ -563,6 +571,32 @@ Node <- R6Class("Node",
                         else private$p_name <- changeName(self, private$p_name, value)
                       },
                       
+                      #' @field printFormatters gets or sets the formatters used to print a \code{Node}.
+                      #' Set this as a list to a root node.
+                      #' The different formatters are h (horizontal), v (vertical), l (L), j (junction), and s (separator). 
+                      #' For example, you can set the formatters to \code{list(h = "\u2500" , v = "\u2502", l = "\u2514",  j = "\u251C", s = " ")}
+                      #' to get a similar behavior as in \code{fs::dir_tree()}.
+                      #' The defaults are: \code{list(h = "--" , v = "\u00A6", l = "\u00B0", j = "\u00A6", s = " ")}
+                      printFormatters = function(value) {
+                        if (missing(value)) {
+                          # if private$p_print_formatters is not set, return default
+                          if (is.null(private$p_print_formatters)) {
+                            pf <- list(h = "--" , 
+                                       v = "\u00A6", 
+                                       l = "\u00B0", 
+                                       j = "\u00A6",
+                                       s = " "
+                                       )
+                          } else {
+                            pf <- private$p_print_formatters
+                          }
+                          
+                          return (pf)
+                        }
+                        private$p_print_formatters <- value
+                      },   
+                      
+
                       #' @field parent Gets or sets the parent \code{Node} of a \code{Node}. Only set this if you know what you are doing, as you might mess up the tree structure!
                       parent = function(value) {
                         if (missing(value)) return (private$p_parent)
@@ -618,15 +652,13 @@ Node <- R6Class("Node",
                                     
                       #' @field fields Will be deprecated, use \code{attributes} instead
                       fields = function() {
-                        print("Node$fields will be deprecated in the next release. Please use Node$attributes instead.")
-                        # .Deprecated("Node$attributes", old = "Node$fields")
+                        .Deprecated("Node$attributes", old = "Node$fields")
                         return(self$attributes)
                       },
                       
                       #' @field fieldsAll Will be deprecated, use \code{attributesAll} instead
                       fieldsAll = function() {
-                        print("Node$fieldsAll will be deprecated in the next release. Please use Node$attributesAll instead.")
-                        # .Deprecated("Node$attributesAll", old = "Node$fieldsAll")
+                        .Deprecated("Node$attributesAll", old = "Node$fieldsAll")
                         return(self$attributesAll)
                       },
                       

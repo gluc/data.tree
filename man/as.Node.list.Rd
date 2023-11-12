@@ -12,6 +12,7 @@
   nameName = "name",
   childrenName = "children",
   nodeName = NULL,
+  interpretNullAsList = FALSE,
   check = c("check", "no-warn", "no-check"),
   ...
 )
@@ -28,6 +29,7 @@ FromListSimple(
   simpleList,
   nameName = "name",
   nodeName = NULL,
+  interpretNullAsList = FALSE,
   check = c("check", "no-warn", "no-check")
 )
 }
@@ -44,6 +46,9 @@ the children lists are named, or if an automatic name (running number) should be
 
 \item{nodeName}{A name suggestion for x, if the name cannot be deferred otherwise. This is for example the case for
 the root with mode explicit and named lists.}
+
+\item{interpretNullAsList}{If \code{TRUE}, then \code{NULL}-valued lists are interpreted as child nodes. Else, they are interpreted as attributes.
+This has only an effect if \code{mode} is "simple".}
 
 \item{check}{Either
 \itemize{

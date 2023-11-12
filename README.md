@@ -2,7 +2,10 @@ CRAN: [![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](https://c
 
 Master: [![Build Status master](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree) [![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=master&svg=true)](https://ci.appveyor.com/project/gluc/data.tree) [![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=master)](http://codecov.io/github/gluc/data.tree?branch=master)
 
-Dev: [![Build Status dev](https://travis-ci.org/gluc/data.tree.svg?branch=dev)](https://travis-ci.org/gluc/data.tree) [![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=dev&svg=true)](https://ci.appveyor.com/project/gluc/data.tree) [![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=dev)](http://codecov.io/github/gluc/data.tree?branch=dev)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/gluc/data.tree/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gluc/data.tree/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 
 # data.tree
 An R package to manage hierarchical data and tree structures
