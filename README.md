@@ -1,6 +1,5 @@
 CRAN: [![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](https://cran.r-project.org/package=data.tree/) [![CRAN downloads](http://cranlogs.r-pkg.org/badges/data.tree)](https://cran.r-project.org/package=data.tree/)
 
-Master: [![Build Status master](https://travis-ci.org/gluc/data.tree.svg?branch=master)](https://travis-ci.org/gluc/data.tree) [![Windows Build status]( https://ci.appveyor.com/api/projects/status/github/gluc/data.tree?branch=master&svg=true)](https://ci.appveyor.com/project/gluc/data.tree) [![codecov.io](http://codecov.io/github/gluc/data.tree/coverage.svg?branch=master)](http://codecov.io/github/gluc/data.tree?branch=master)
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/gluc/data.tree/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gluc/data.tree/actions/workflows/R-CMD-check.yaml)
