@@ -22,7 +22,7 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' 
 #' Use these methods to style your graph, and to plot it. The functionality is built around the
 #' DiagrammeR package, so for anything that goes beyond simple plotting, it is recommended to read its 
-#' documentation at http://rich-iannone.github.io/DiagrammeR/docs.html. Note that DiagrammeR is only suggested
+#' documentation at https://rich-iannone.github.io/DiagrammeR/docs.html. Note that DiagrammeR is only suggested
 #' by data.tree, so `plot` only works if you have installed it on your system.
 #' 
 #' Use \code{SetNodeStyle} and \code{SetEdgeStyle} to define the style of your plot. Use \code{plot} to display a 
@@ -60,8 +60,8 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #'   \item{\code{tailport}}
 #'   \item{\code{tooltip}}
 #'  }
-#' A good source to understand the attributes is http://graphviz.org/Documentation.php. Another good source
-#' is the DiagrammeR package documentation, or more specifically: http://rich-iannone.github.io/DiagrammeR/docs.html
+#' A good source to understand the attributes is https://graphviz.org/Documentation.php. Another good source
+#' is the DiagrammeR package documentation, or more specifically: https://rich-iannone.github.io/DiagrammeR/docs.html
 #'
 #' In addition to the standard GraphViz functionality, the \code{data.tree} plotting infrastructure takes advantage
 #' of the fact that data.tree structure are always hierarchic. Thus, style attributes are inherited from parents
@@ -79,7 +79,7 @@ plot.Node <- function(x, ..., direction = c("climb", "descend"), pruneFun = NULL
 #' @param root The root \code{\link{Node}} of the data.tree structure to visualize.
 #' @param node The \code{\link{Node}} of the data.tree structure on which you would like to set style attributes.
 #' @param ... For the SetStyle methods, this can be any stlyeName / value pair. See 
-#' http://graphviz.org/Documentation.php for details. For the plot.Node generic method, this is not used.
+#' https://graphviz.org/Documentation.php for details. For the plot.Node generic method, this is not used.
 #' 
 #' @inheritParams Prune
 #' 
@@ -146,7 +146,7 @@ ToDiagrammeRGraph <- function(root, direction = c("climb", "descend"), pruneFun 
   
   
   myargs <- list()
-  #see http://stackoverflow.com/questions/19749923/function-factory-in-r
+  #see https://stackoverflow.com/questions/19749923/function-factory-in-r
   for (style in es) {
     myargs[[style]] <- GetEdgeStyleFactory(style)
   }

@@ -31,7 +31,7 @@ GetDefaultTooltip(node)
 \item{x}{The root node of the data.tree structure to plot}
 
 \item{...}{For the SetStyle methods, this can be any stlyeName / value pair. See 
-http://graphviz.org/Documentation.php for details. For the plot.Node generic method, this is not used.}
+https://graphviz.org/Documentation.php for details. For the plot.Node generic method, this is not used.}
 
 \item{direction}{when converting to a network, should the edges point from root to children ("climb") or from child to parent ("descend")?}
 
@@ -57,7 +57,7 @@ existing style attributes on the node.}
 \description{
 Use these methods to style your graph, and to plot it. The functionality is built around the
 DiagrammeR package, so for anything that goes beyond simple plotting, it is recommended to read its 
-documentation at http://rich-iannone.github.io/DiagrammeR/docs.html. Note that DiagrammeR is only suggested
+documentation at https://rich-iannone.github.io/DiagrammeR/docs.html. Note that DiagrammeR is only suggested
 by data.tree, so `plot` only works if you have installed it on your system.
 }
 \details{
@@ -96,8 +96,8 @@ The most common styles that can be set on the edges are:
   \item{\code{tailport}}
   \item{\code{tooltip}}
  }
-A good source to understand the attributes is http://graphviz.org/Documentation.php. Another good source
-is the DiagrammeR package documentation, or more specifically: http://rich-iannone.github.io/DiagrammeR/docs.html
+A good source to understand the attributes is https://graphviz.org/Documentation.php. Another good source
+is the DiagrammeR package documentation, or more specifically: https://rich-iannone.github.io/DiagrammeR/docs.html
 
 In addition to the standard GraphViz functionality, the \code{data.tree} plotting infrastructure takes advantage
 of the fact that data.tree structure are always hierarchic. Thus, style attributes are inherited from parents

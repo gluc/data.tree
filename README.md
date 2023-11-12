@@ -1,4 +1,4 @@
-CRAN: [![CRAN Version](http://www.r-pkg.org/badges/version/data.tree)](https://cran.r-project.org/package=data.tree/) [![CRAN downloads](http://cranlogs.r-pkg.org/badges/data.tree)](https://cran.r-project.org/package=data.tree/)
+CRAN: [![CRAN Version](https://www.r-pkg.org/badges/version/data.tree)](https://cran.r-project.org/package=data.tree/) [![CRAN downloads](https://cranlogs.r-pkg.org/badges/data.tree)](https://cran.r-project.org/package=data.tree/)
 
 
 <!-- badges: start -->
@@ -23,8 +23,6 @@ To get started, you might want to read the [introduction vignette](https://CRAN.
 
 The manual is [here](https://CRAN.R-project.org/package=data.tree/data.tree.pdf)
 
-Finally, you'll find more examples and background information on my [blog](http://ipub.com/data-tree).
-
 # NOTE:
 The latest from github dev branch may have some breaking changes compared to CRAN. See [NEWS](https://github.com/gluc/data.tree/blob/dev/NEWS) for details.
 
@@ -33,7 +31,7 @@ The latest from github dev branch may have some breaking changes compared to CRA
 
 Coding Conventions: Google Style Guide, see https://google.github.io/styleguide/Rguide.xml
 
-Versioning Conventions: SemanticVersioning. See http://semver.org/ for details
+Versioning Conventions: SemanticVersioning. See https://semver.org/ for details
 
 Branching Conventions: GitFlow. See https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
 

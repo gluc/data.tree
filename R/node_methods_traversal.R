@@ -36,7 +36,7 @@ Traverse = function(node,
                     traversal = c("pre-order", "post-order", "in-order", "level", "ancestor"), 
                     pruneFun = NULL,
                     filterFun = NULL) {
-  #traverses in various orders. See http://en.wikipedia.org/wiki/Tree_traversal
+  #traverses in various orders. See https://en.wikipedia.org/wiki/Tree_traversal
   
   nodes <- list()
  

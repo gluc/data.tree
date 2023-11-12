@@ -483,7 +483,7 @@ plot(acme)
 
 ![acme](assets/acmestyle.png)
 
-For details on the styling attributes, see http://graphviz.org/Documentation.php .
+For details on the styling attributes, see https://graphviz.org/Documentation.php .
 
 Note that, by default, most Node style attributes will be inherited. Though, for example, `label` will not be inherited. However, inheritance can be avoided for all style attributes, as for the Accounting node in the following example:
 
@@ -651,7 +651,7 @@ There are also conversions to igraph objects, to phylo / ape, to dendrogram, and
 
 # Tree Traversal
 
-Tree traversal is one of the core concepts of trees. See, for example, here: [Tree Traversal on Wikipedia](http://en.wikipedia.org/wiki/Tree_traversal).
+Tree traversal is one of the core concepts of trees. See, for example, here: [Tree Traversal on Wikipedia](https://en.wikipedia.org/wiki/Tree_traversal).
 
 ## `Get`
 
@@ -1041,6 +1041,6 @@ c(user = 0.69, system = 0.00, elapsed = 0.69)
 
 data.tree structures have a relatively large memory footprint. However, for every-day applications using modern computers, this will not normally have an impact on your work **except when saving a `data.tree` structure to disk**. 
 
-For an explanation why that is the case, you might want to read this answer on [Stack Overflow](http://stackoverflow.com/questions/13912867/empty-r-environment-becomes-large-file-when-saved).
+For an explanation why that is the case, you might want to read this answer on [Stack Overflow](https://stackoverflow.com/questions/13912867/empty-r-environment-becomes-large-file-when-saved).
 
 Depending on your development environment, you might want to turn off the option to save the workspace to .RData on exit.

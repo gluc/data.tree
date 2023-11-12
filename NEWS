@@ -155,7 +155,7 @@ Upgrade to R 3.4.x and newest package versions.
 
 
 ## Version 0.2.4
-- FIX: applications vignette, changed from http://htmlwidgets.org to http://www.htmlwidgets.org, as requested by CRAN
+- FIX: applications vignette, changed from https://htmlwidgets.org to https://www.htmlwidgets.org, as requested by CRAN
 
 ## Version 0.2.3
 - FIX #33: applications vignette doesn't build because of DiagrammeR update

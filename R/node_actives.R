@@ -46,7 +46,6 @@ changeName <- function(node, oldName, newName) {
   return (newName)
 }
 
-#' @export
 .separator <- function(self) {
   if (isRoot(self)) return("")
   if (self$position == self$parent$count) mySeparator <- paste0(self$root$printFormatters$s, self$root$printFormatters$l, self$root$printFormatters$h)
@@ -54,7 +53,6 @@ changeName <- function(node, oldName, newName) {
   return (paste0(.parentSeparator(self$parent), mySeparator))
 }
 
-#' @export
 .parentSeparator <- function(self) {
   if (isRoot(self)) return("")
   
