@@ -1,56 +1,95 @@
 ## General Comments
 
-The devel checks on CRAN were failing due to a fix in R base. I adjusted the package accordingly.
-Otherwise, a few improvements (code and documentation).
+This release was done as requested by Kurt Hornik, because of a problem with roxygen2. I now used "_PACKAGE" and it should solvel the problem.
+Also I added a few features and fixed a few bugs. Finally, I deprecated two functions, as anounced earlier ($fields and $fieldsAll).
+
 Best Regards, Christoph
 
 ## Test environments
 
-* linux / travis (release, oldrel, devel) -> OK
-* Win / appveyor (devel 32, release 64, stable, patched) -> devel fails because utf8 not available (unrelated to my package). release and stable OK
-* rhub::check_on_solaris -> OK
-* rhub::check(".", platform = "macos-highsierra-release-cran") -> OK
-* rhub::check_for_cran -> OK for WIN. PREPERROR for linux platforms. I believe this is unrelated to my package. I commented on an existing issue  mentioned in github: https://github.com/r-hub/rhub/issues/173#issuecomment-666947965
+* github -> (macos-latest release, windows-latest release, ubuntu-latest devel, ubuntu-latest release, ubuntu-latest oldrel-1) -> OK
+* rhub::check_for_cran -> 
 
 ## R CMD check results
 
 There were no ERRORs or WARNINGs.
 
-## Downstream dependencies checked
+## revdepcheck results
 
-The following downstream dependencies were checked:
+We checked 53 reverse dependencies (46 from CRAN + 7 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
 
-✓ ahp 0.2.12                             ── E: 0     | W: 0     | N: 0    
-✓ behaviorchange 0.2.2                   ── E: 0     | W: 0     | N: 1    
-✓ Cluster.OBeu 1.2.3                     ── E: 0     | W: 0     | N: 0    
-✓ cola 1.4.1                             ── E: 0     | W: 0     | N: 1    
-✓ collapsibleTree 0.1.7                  ── E: 0     | W: 0     | N: 1    
-✓ DecisionAnalysis 1.1.0                 ── E: 0     | W: 0     | N: 1    
-✓ directotree 1.0.0                      ── E: 0     | W: 0     | N: 0    
-✓ echarts4r 0.3.2                        ── E: 0     | W: 0     | N: 0    
-I finbif 0.3.0                           ── E: 1     | W: 0     | N: 1    (finbif broken, unrelated to data.tree)
-✓ forestry 0.1.0                         ── E: 0     | W: 0     | N: 0    
-✓ GE 0.1.4                               ── E: 0     | W: 0     | N: 0    
-✓ gimme 0.7-1                            ── E: 0     | W: 0     | N: 0    
-✓ HCD 0.1                                ── E: 0     | W: 0     | N: 0    
-✓ hR 0.2.2                               ── E: 0     | W: 0     | N: 0    
-✓ justifier 0.1.0                        ── E: 0     | W: 0     | N: 0    
-✓ magclass 5.7.3                         ── E: 0     | W: 0     | N: 0    
-✓ mindr 1.2.3                            ── E: 0     | W: 0     | N: 0    
-✓ momentuHMM 1.5.1                       ── E: 0     | W: 0     | N: 1    
-✓ nonlinearICP 0.1.2.1                   ── E: 0     | W: 0     | N: 0    
-✓ prof.tree 0.1.0                        ── E: 0     | W: 0     | N: 0    
-✓ radiant.model 1.3.10                   ── E: 1     | W: 0     | N: 0    
-✓ rock 0.1.0                             ── E: 0     | W: 0     | N: 0    
-✓ Rodam 0.1.6                            ── E: 0     | W: 0     | N: 0    
-✓ SACCR 2.3                              ── E: 0     | W: 0     | N: 0    
-✓ stoRy 0.1.5                            ── E: 0     | W: 0     | N: 2    
-✓ styler 1.3.2                           ── E: 0     | W: 0     | N: 0    
-✓ tidygraph 1.2.0                        ── E: 0     | W: 0     | N: 0    
-✓ triversity 1.0                         ── E: 0     | W: 0     | N: 0    
-✓ UniprotR 1.4.0                         ── E: 0     | W: 0     | N: 0    
-✓ userfriendlyscience 0.7.2              ── E: 0     | W: 0     | N: 0    
-✓ voronoiTreemap 0.2.0                   ── E: 0     | W: 0     | N: 0    
-✓ webchem 1.0.0                          ── E: 0     | W: 0     | N: 1    
-✓ wrMisc 1.3.0                           ── E: 0     | W: 0     | N: 0    
-✓ yum 0.0.1                              ── E: 0     | W: 0     | N: 0    
+ * We saw 3 new problems
+ * We failed to check 0 packages
+
+Issues with CRAN packages are summarised below.
+
+### New problems
+(This reports the first line of each new failure)
+
+* collapsibleTree
+  checking examples ... WARNING
+
+* directotree
+  checking examples ... WARNING
+
+* forestry
+  checking examples ... WARNING
+  
+✔ behaviorchange 0.5.5                   ── E: 0     | W: 0     | N: 0  
+✖ collapsibleTree 0.1.7                  ── E: 0     | W: 0  +1 | N: 2   
+✔ covid19dbcand 0.1.1                    ── E: 0     | W: 0     | N: 0  
+✔ Cluster.OBeu 1.2.3                     ── E: 0     | W: 0     | N: 0   
+✔ CondCopulas 0.1.3                      ── E: 0     | W: 0     | N: 0   
+✖ directotree 1.0.0                      ── E: 0     | W: 0  +1 | N: 1    
+✔ CovRegRF 1.0.4                         ── E: 0     | W: 0     | N: 0   
+✔ echarty 1.6.2                          ── E: 0     | W: 0     | N: 0   
+✔ changepoints 1.1.0                     ── E: 0     | W: 0     | N: 0   
+✔ filterNHP 0.1.2                        ── E: 0     | W: 0     | N: 1    
+✖ forestry 0.1.0                         ── E: 0     | W: 0  +1 | N: 0   
+✔ echarts4r 0.4.5                        ── E: 0     | W: 0     | N: 0   
+✔ GE 0.4.0                               ── E: 0     | W: 0     | N: 0   
+✔ gimme 0.7.15                           ── E: 0     | W: 0     | N: 0   
+✔ galah 1.5.4                            ── E: 0     | W: 0     | N: 0   
+✔ icesTAF 4.2.0                          ── E: 0     | W: 0     | N: 0   
+✔ htetree 0.1.17                         ── E: 0     | W: 0     | N: 0  
+✔ justifier 0.2.6                        ── E: 0     | W: 0     | N: 0  
+✔ LinTInd 1.6.0                          ── E: 1     | W: 0     | N: 2  
+✔ cola 2.8.0                             ── E: 1     | W: 0     | N: 1   
+✔ nmarank 0.3.0                          ── E: 0     | W: 0     | N: 0   
+✔ LACE 2.6.0                             ── E: 0     | W: 0     | N: 1   
+✔ momentuHMM 1.5.5                       ── E: 1     | W: 0     | N: 0   
+✔ pmxTools 1.3                           ── E: 0     | W: 1     | N: 0   
+✔ nonlinearICP 0.1.2.1                   ── E: 0     | W: 0     | N: 0  
+✔ radiant.model 1.6.3                    ── E: 0     | W: 0     | N: 0  
+✔ Pi 2.14.0                              ── E: 0     | W: 0     | N: 1  
+✔ ranktreeEnsemble 0.22                  ── E: 0     | W: 0     | N: 0  
+✔ randomForestSRC 3.2.2                  ── E: 0     | W: 0     | N: 0 
+✔ RFpredInterval 1.0.7                   ── E: 0     | W: 0     | N: 0 
+✔ Rgff 0.1.6                             ── E: 0     | W: 0     | N: 1  
+✔ SACCR 3.2                              ── E: 0     | W: 0     | N: 0   
+✔ shinyTree 0.3.1                        ── E: 0     | W: 0     | N: 0  
+✔ ClassifyR 3.6.2                        ── E: 1     | W: 0     | N: 3  
+✔ rock 0.6.7                             ── E: 0     | W: 0     | N: 0  
+✔ scicomptools 1.0.0                     ── E: 0     | W: 0     | N: 0  
+✔ SoilTaxonomy 0.2.3                     ── E: 0     | W: 0     | N: 0  
+✔ rocTree 1.1.1                          ── E: 0     | W: 0     | N: 1   
+✔ styler 1.10.2                          ── E: 0     | W: 0     | N: 0   
+✔ supportR 1.2.0                         ── E: 0     | W: 0     | N: 0   
+✔ tidygraph 1.2.3                        ── E: 0     | W: 0     | N: 0   
+✔ starvz 0.7.1                           ── E: 0     | W: 0     | N: 0 
+✔ triversity 1.0                         ── E: 0     | W: 0     | N: 0 
+✔ TT 0.98                                ── E: 0     | W: 0     | N: 0  
+✔ VERSO 1.12.0                           ── E: 0     | W: 0     | N: 0  
+✔ voronoiTreemap 0.2.0                   ── E: 0     | W: 0     | N: 0  
+✔ TKCat 1.0.7                            ── E: 0     | W: 0     | N: 0  
+✔ webchem 1.3.0                          ── E: 0     | W: 0     | N: 0 
+✔ yum 0.1.0                              ── E: 0     | W: 0     | N: 0 
+✔ wrTopDownFrag 1.0.2                    ── E: 0     | W: 0     | N: 1 
+✔ scAnnotatR 1.8.0                       ── E: 0     | W: 0     | N: 0  
+✔ wrMisc 1.13.0                          ── E: 0     | W: 0     | N: 0 
+✔ UniprotR 2.3.0                         ── E: 0     | W: 0     | N: 0 
+
+### Problems Description
+
+All three problems are a result of the deprecated functions.
+I notified the maintainers of the packages.
