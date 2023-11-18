@@ -22,7 +22,8 @@ FromDataFrameTable(
   pathDelimiter = "/",
   colLevels = NULL,
   na.rm = TRUE,
-  check = c("check", "no-warn", "no-check")
+  check = c("check", "no-warn", "no-check"),
+  suffix = "_attr"
 )
 
 FromDataFrameNetwork(network, check = c("check", "no-warn", "no-check"))

@@ -300,7 +300,8 @@ FromDataFrameTable <- function(table,
                                pathDelimiter = '/',
                                colLevels = NULL,
                                na.rm = TRUE,
-                               check = c("check", "no-warn", "no-check")
+                               check = c("check", "no-warn", "no-check"),
+                               suffix = '_attr'
                                ) {
   
   if (!is(table, "data.frame")) stop("table must be a data.frame")
@@ -309,6 +310,23 @@ FromDataFrameTable <- function(table,
   
   table[[pathName]] <- as.character(table[[pathName]])
   root <- NULL
+  
+  # retrieve all paths, except the root
+  all_paths <- strsplit(table[[pathName]], pathDelimiter, fixed = TRUE)
+  all_paths <- sapply(all_paths, function(x) x[-1])
+  all_paths <- unlist(all_paths)
+  
+  trouble_names <- intersect(names(table)[!(names(table) %in% pathName)], all_paths)
+  if (length(trouble_names) > 0) {
+    names(table)[names(table) %in% trouble_names] <- paste0(trouble_names, suffix)
+    warning('Some columns of x have the same name as a path element. Changed column names to:\n', 
+                  paste0(trouble_names, ' --> ', paste0(trouble_names, suffix), '\n'), 
+            'Set argument "suffix" if you do no like the changed column names.')
+    #stop('column names of table should not match the name of any path element')
+  }
+  
+  
+  
   mycols <- names(table)[ !(names(table) %in% c(NODE_RESERVED_NAMES_CONST, pathName)) ]
   for (i in 1:nrow(table)) {
     myrow <- table[ i, , drop = FALSE]
@@ -328,7 +346,7 @@ FromDataFrameTable <- function(table,
       path <- CheckNameReservedWord(path, check)
 
       child <- Climb(mynode, path)
-
+      
       if( is.null(child)) {
         mynode <- mynode$AddChild(path)
       } else {
