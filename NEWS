@@ -1,5 +1,8 @@
 # All changes to data.tree are documented here.
 
+## Version 1.1.1
+- FIX: Remove Node$fields and Node$fieldsAll which have been deprecated two years ago, see #173 and #166 for details
+
 ## Version 1.1.0
 - IMPROVE: Node names may no longer be `NA`.  It was not fully supported, and now it is an error. (#152)
 - FIX: changed lock_object to lock_objects (#149 thx to Olly Beagly)

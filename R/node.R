@@ -20,8 +20,6 @@ NODE_RESERVED_NAMES_CONST <- c(
                                 'clone',
                                 'count',
                                 'Do',
-                                'fields',
-                                'fieldsAll',
                                 'Get',
                                 'GetAttribute',
                                 'height',
@@ -648,18 +646,6 @@ Node <- R6Class("Node",
                         result <- which(names(private$p_parent$children) == self$name)
                         # match(self$name, names(private$p_parent$children))
                         return (result)
-                      },
-                                    
-                      #' @field fields Will be deprecated, use \code{attributes} instead
-                      fields = function() {
-                        .Deprecated("Node$attributes", old = "Node$fields")
-                        return(self$attributes)
-                      },
-                      
-                      #' @field fieldsAll Will be deprecated, use \code{attributesAll} instead
-                      fieldsAll = function() {
-                        .Deprecated("Node$attributesAll", old = "Node$fieldsAll")
-                        return(self$attributesAll)
                       },
                       
                       #' @field attributes The attributes defined on this specific node        
