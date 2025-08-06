@@ -38,7 +38,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
  
 
-      - name: Show testthat output
+      - name: Show testthat Output
         if: always()
         run: |
           ## --------------------------------------------------------------------
