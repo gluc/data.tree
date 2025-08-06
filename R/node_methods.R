@@ -118,7 +118,7 @@ Aggregate = function(node,
   values <- sapply(node$children,
                    function(x) {
                      v <- GetAttribute(x, attribute, format = identity, ...)
-                     if (length(v) > 0 && !is.na(v)) return(v)
+                     if (length(v) > 0 && !any(is.na(v))) return(v)
                      Aggregate(x, attribute, aggFun, ...)
                    })
   result <- unname(aggFun(values))
