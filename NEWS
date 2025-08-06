@@ -4,11 +4,12 @@
 
 - FIX: Workaround for the issue in as.Node.data.frame when one node and one column of the data.frame share the same name.
 Note: the suggested workaround adds a new argument (suffix) to the function, suffixis then pasted to the column name.(#160 thx to simschul)
+- FIX: added Rd cross references for external packages
 
 
 ## Version 1.1.1
 
-- FIX: Remove Node$fields and Node$fieldsAll which have been deprecated two years ago, see #173 and #166 for details (thx to jranke)
+- FIX: Remove Node$fields and Node$fieldsAll from sample data, see #173 and #166 for details (thx to jranke)
 
 ## Version 1.1.0
 

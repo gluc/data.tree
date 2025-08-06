@@ -54,6 +54,8 @@ describing the path of each row.}
  \item{\code{"no-check" or FALSE}: if the name conformance should not be checked; use this if performance is critical. However, in case of non-conformance, expect cryptic follow-up errors}
 }}
 
+\item{suffix}{optional suffix added to the column name in case the column name is the same as a path element. Defaults to '_attr'}
+
 \item{network}{A \code{data.frame} in network format, i.e.
 it must adhere to the following requirements:
 \itemize{

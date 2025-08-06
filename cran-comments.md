@@ -1,8 +1,6 @@
 ## General Comments
 
-This release was done as requested by Kurt Hornik, because of a problem with roxygen2. I now used "_PACKAGE" and it should solvel the problem.
-Also I added a few features and fixed a few bugs. Finally, I deprecated two functions, as anounced earlier ($fields and $fieldsAll).
-
+This release was done as requested by Kurt Hornik, because of a problem with cross references. I added the cross references, plus a few fixes.
 Best Regards, Christoph
 
 ## Test environments
@@ -14,54 +12,7 @@ Best Regards, Christoph
 
 All finished with SUCCESS. There were no ERRORs or WARNINGs.
 
-### Maintainer Changed
 
-On all environments, I'm getting:
-
-```
-Maintainer: ‘Christoph Glur <christoph.glur@powerpartners.pro>’
-
-New maintainer:
-  Christoph Glur <christoph.glur@powerpartners.pro>
-Old maintainer(s):
-  Christoph Glur <christoph.glur@ipub.com>
-```
-
-This is expected.
-
-### Lunux: tiny NOTE on linux
-
-On both Ubuntu and Fedora, I'm getting:
-
-```
-* checking HTML version of manual ... NOTE
-Skipping checking HTML validation: no command 'tidy' found
-```
-
-I don't think that this is a problem at my end.
-
-### Windows: 'NULL' directory and 'lastMiKTeXException?
-
-I'm getting funny NOTES on rhub::check_for_cran for windows.
-
-```
-Found the following files/directories:
-  ''NULL''
-```
-I couldn't reproduce this anywhere else, and I'm not sure if this is an issue with my code or with the check environment.
-This could be an rhub problem: https://github.com/r-hub/rhub/issues/560
-
-I'm also getting this NOTE on rhub::check_for_cran for Windows:
-
-```
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
-```
-
-This could be related to : https://github.com/r-hub/rhub/issues/503
-
-Let me know if I was careless and there is anything for me to fix.
 
 
 ## revdepcheck results
