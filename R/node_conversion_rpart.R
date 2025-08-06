@@ -1,8 +1,8 @@
-#' Convert an \code{\link{rpart}} object to a \code{data.tree} structure
+#' Convert an \code{\link[rpart:rpart]{rpart}} object to a \code{data.tree} structure
 #'
 #' @param x the \code{rpart} object to be converted
 #' @param digits the number of digits to be used for numeric values in labels
-#' @param use.n logical. Add cases to labels, see \code{\link{text.rpart}} for further
+#' @param use.n logical. Add cases to labels, see \code{text.rpart} for further
 #'              information
 #' @param ... any other argument to be passed to generic sub implementations
 #'

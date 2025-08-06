@@ -5,7 +5,7 @@
 \alias{Node}
 \title{Create a \code{data.tree} Structure With \code{Nodes}}
 \format{
-An \code{\link{R6Class}} generator object
+An \code{\link[R6:R6Class]{R6Class}} generator object
 }
 \usage{
 # n1 <- Node$new("Node 1")
@@ -235,10 +235,6 @@ The defaults are: \code{list(h = "--" , v = "\u00A6", l = "\u00B0", j = "\u00A6"
 \item{\code{pathString}}{Returns a string representing the path to this \code{Node}, separated by backslash}
 
 \item{\code{position}}{The position of a \code{Node} within its siblings}
-
-\item{\code{fields}}{Will be deprecated, use \code{attributes} instead}
-
-\item{\code{fieldsAll}}{Will be deprecated, use \code{attributesAll} instead}
 
 \item{\code{attributes}}{The attributes defined on this specific node}
 

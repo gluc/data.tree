@@ -117,7 +117,7 @@ NODE_RESERVED_NAMES_CONST <- c(
 #'
 #'    
 #' @export
-#' @format An \code{\link{R6Class}} generator object
+#' @format An \code{\link[R6:R6Class]{R6Class}} generator object
 Node <- R6Class("Node",
                 lock_objects = FALSE,
                 lock_class = TRUE,

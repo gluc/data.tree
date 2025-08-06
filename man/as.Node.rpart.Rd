@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_conversion_rpart.R
 \name{as.Node.rpart}
 \alias{as.Node.rpart}
-\title{Convert an \code{\link{rpart}} object to a \code{data.tree} structure}
+\title{Convert an \code{\link[rpart:rpart]{rpart}} object to a \code{data.tree} structure}
 \usage{
 \method{as.Node}{rpart}(x, digits = getOption("digits") - 3, use.n = FALSE, ...)
 }
@@ -11,7 +11,7 @@
 
 \item{digits}{the number of digits to be used for numeric values in labels}
 
-\item{use.n}{logical. Add cases to labels, see \code{\link{text.rpart}} for further
+\item{use.n}{logical. Add cases to labels, see \code{text.rpart} for further
 information}
 
 \item{...}{any other argument to be passed to generic sub implementations}
@@ -21,7 +21,7 @@ a \code{data.tree} object. The tree contains a field \code{rpart.id} which
         references back to the original node id in the row names of the \code{rpart} object.
 }
 \description{
-Convert an \code{\link{rpart}} object to a \code{data.tree} structure
+Convert an \code{\link[rpart:rpart]{rpart}} object to a \code{data.tree} structure
 }
 \examples{
 if (require(rpart)) {

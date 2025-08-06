@@ -1,9 +1,17 @@
-# All changes to data.tree are documented here.
+# All changes to data.tree are documented here
+
+## Version 1.2.0
+
+- FIX: Workaround for the issue in as.Node.data.frame when one node and one column of the data.frame share the same name.
+Note: the suggested workaround adds a new argument (suffix) to the function, suffixis then pasted to the column name.(#160 thx to simschul)
+
 
 ## Version 1.1.1
-- FIX: Remove Node$fields and Node$fieldsAll which have been deprecated two years ago, see #173 and #166 for details
+
+- FIX: Remove Node$fields and Node$fieldsAll which have been deprecated two years ago, see #173 and #166 for details (thx to jranke)
 
 ## Version 1.1.0
+
 - IMPROVE: Node names may no longer be `NA`.  It was not fully supported, and now it is an error. (#152)
 - FIX: changed lock_object to lock_objects (#149 thx to Olly Beagly)
 - FIX: help('data.tree') works again
@@ -11,6 +19,7 @@
 - IMPROVE: added parameter `row.names = FALSE`in `print.Node()` to hide row numbers when printing a data.tree.
 
 ## Version 1.0.0
+
 - IMPROVE: Replaced dependency on stringr by dependency on stringi, which make data.tree even more light-weight
 - CHANGE: Node serialization changed. In many cases, you might still be able to load previously saved data.tree objects, but then they do not correspond to the latest version.
 - CHANGE: New reserved words for Node: attributes and attributesAll
@@ -22,44 +31,54 @@
 - IMPROVE: Adding reserved word check to FromDataFrameNetwork (#147 thx to wkumler)
 
 ## Version 0.7.11
+
 - IMPROVE: diagrammeR is now only suggested, so data.tree is much more lightweight if plotting is not needed (#143 thx to Russ Hyde)
 - FIX: plot now also works with quotations in names (#137 thx to thotal)
 - IMPROVE: as.list and other conversions to list now contain pruneFun argument (#142)
 
 ## Version 0.7.10
+
 - IMPROVE: various spell errors fixed in vignettes
 
 ## Version 0.7.9
+
 - FIX: Bug in as.data.frame.Node: NA for certain lists slots (#135)
 - FIX: Get prints Null as NA by default (#128)
 
 ## Version 0.7.8
+
 - FIX: wrong export of S3
 
 ## Version 0.7.7
+
 - IMPROVE: if an attribute of a node has n dimensions, then Get will return an array of dim n+1, with the names of the first dimension being equal to the node names (thanks to Chris Hammil)
 - FIX: fieldsAll now doesn't simplify (thanks to Vaclav Slimacek)
 
 ## Version 0.7.6
+
 - IMPROVE: plot now also works for trees with a single root node (thx to Pierre Neuvial)
 - IMPROVE: ellipsis parameters are not passed to DiagrammeR for plotting (#109)
 - FIX: Dependency on DiagrammeR (>= 1.0.0) explicitly stated (#111)
 - IMPROVE: Allow tibble in FromDataFrameNetwork and FromDataFrameTable (#115)
 
 ## Version 0.7.5
+
 - IMPROVE: namesNotUnique parameter in as.Node.phylo (#106)
 - FIX: fixed incompatibility issue with DiagrammeR (#110)
 
 ## Version 0.7.4
+
 - IMPROVE: print now has an explicit arg pruneFun
 - FIX: partykit tests now pass
 - FIX: DESCRIPTION now in line with latest changes from CRAN (rmarkdown declared)
 - FIX: Skipped tests in testMethods included
 
 ## Version 0.7.3
+
 - FIX: Various typos in documentation
 
 ## Version 0.7.2
+
 Upgrade to R 3.4.x and newest package versions.
 - FIX: plot: global graph attributes now work (#88)
 - FIX: typo in vignette data.tree vignette('applications', package = "data.tree")
@@ -68,15 +87,18 @@ Upgrade to R 3.4.x and newest package versions.
 - FIX: as.data.frame created warnings for values that were of length 0
 
 ## Version 0.7.0
+
 - ADD: ToDiagrammeRGraph to convert to a DiagrammeR graph object
 - REMOVE: ToGraphViz (replaced with ToDiagrammeRGraph, to support the latest features in the DiagrammeR package). You can still get the dot representation by using DiagrammeR::generate_dot(ToDiagrammeRGraph(node))
 - CHANGE: plot.Node 's last parameter is now 'graph', and not 'engine' anymore.
 - FIX: minor typos fixed
 
 ## Version 0.6.2
+
 - ADD: new Distance function to measure distance from one Node to another in the same tree
 
 ## Version 0.6.1
+
 - IMPROVE: FromListSimple now accepts subclasses of lists (#79)
 - IMPROVE: FromDataFrameTable now supports tibbles (#89)
 - IMPROVE: print.Node and as.data.frame.Node now also work for node fields with length > 1 (#81)
@@ -85,6 +107,7 @@ Upgrade to R 3.4.x and newest package versions.
 - REMOVE: node$Sort, node$Prune, and node$Revert are now deprecated. Use Sort(node, ...), Prune(node, ...) and Revert(node, ...) instead
 
 ## Version 0.5.0
+
 - IMPROVE: Performance improvement for many functions. For example, as.Node roughly by factor 4 for large dataset (#74)
 - CHANGE: by default, as.data.frame.Node (and derivatives) do not format anymore (use the format parameter if you want to format)
 - IMPROVE: Allow the possibility to keep only some fields when converting to list using as.list.Node (#76)
@@ -94,6 +117,7 @@ Upgrade to R 3.4.x and newest package versions.
 
 
 ## Version 0.4.0
+
 - IMPROVE: as.Node.data.frame and FromDataFrameTable now support paths containing reserved words (#65)
 - CHANGE: Node$new now checks that names are not reserved names. As a consequence, many conversions to Node now contain a check parameter.
 - IMPROVE: Climb is now much faster when climbing by name (#71)
@@ -101,12 +125,14 @@ Upgrade to R 3.4.x and newest package versions.
 
 
 ## Version 0.3.7
+
 - ADD: Traverse can now also take custom function as a traversal argument
 - ADD: Navigate method
 - ADD: as.Node.BinaryTree Convert SplittingNode from party package to data.tree (#6)
 - ADD: as.Node.party Convert party class from partykit package to data.tree (#6)
 
 ## Version 0.3.6
+
 - FIX: GetDefaultTooltip now also works for attributes which are functions
 - FIX: GetAttribute now returns attributes with length 0 (e.g. an empty list)
 - ADD: Sort, Revert and Prune are now also available in traditional format (e.g. Prune(node, pruneFun))
@@ -117,22 +143,27 @@ Upgrade to R 3.4.x and newest package versions.
 
 
 ## Version 0.3.5
+
 - FIX: minor correction in documentation
 
 ## Version 0.3.4
+
 - FIX: minor correction in documentation
 
 ## Version 0.3.3
+
 - CHANGE: Renamed Find method to FindNode, in order to avoid masking from base
 - FIX: upgrade to latest version of treemap package
 - FIX: a few typos in documentation
 
 
 ## Version 0.3.2
+
 - ADD: FromListExplicit now interprets character vectors as a list of nodes (#58)
 
 
 ## Version 0.3.1
+
 - IMPROVE: as.list.Node 
   - now generates auto name if unique name is not available (#54)
   - now has warn arg, warning if source data contains reserved names
@@ -141,6 +172,7 @@ Upgrade to R 3.4.x and newest package versions.
 - ADD: Find method to find a single Node in a (sub-)tree (#52)
 
 ## Version 0.3.0 Pine Tree
+
 - REMOVE: Removed the cacheAttribute parameter from Aggregate and Cumulate (they were confusing, even to me. Use Do instead to manually store aggregate values in the tree)
 - ADD: plot function (see ?plot.Node)
 - ADD: ToDataFrameTypeCol to export e.g. the path to columns by level in columns: ToDataFrameTypeCol(acme)
@@ -158,14 +190,17 @@ Upgrade to R 3.4.x and newest package versions.
 
 
 ## Version 0.2.4
+
 - FIX: applications vignette, changed from https://htmlwidgets.org to https://www.htmlwidgets.org, as requested by CRAN
 
 ## Version 0.2.3
+
 - FIX #33: applications vignette doesn't build because of DiagrammeR update
 - FIX #32: Cannot subclass Node
 - FIX #30: strange errors when using data.tree multiple times
 
 ## Version 0.2.2
+
 - FIX: Get can now fetch vectors and matrices too
 - ADD: Node$siblings
 

@@ -291,6 +291,7 @@ as.Node.data.frame <- function(x,
 #' @param pathName The name of the column in x containing the path of the row
 #' @param pathDelimiter The delimiter used to separate nodes in \code{pathName}
 #' @param colLevels Nested list of column names, determining on what node levels the attributes are written to.
+#' @param suffix optional suffix added to the column name in case the column name is the same as a path element. Defaults to '_attr'
 #'
 #' @inheritParams CheckNameReservedWord
 #'

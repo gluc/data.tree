@@ -1,8 +1,9 @@
 Package: data.tree
 Type: Package
 Title: General Purpose Hierarchical Data Structure
-Version: 1.1.1
-Date: 2025-02-19
+Version: 1.2.0
+Language: en-US
+Date: 2025-08-06
 Authors@R: c(
       person(
         "Russ", "Hyde",
