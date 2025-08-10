@@ -12,4 +12,6 @@ To develop on a new environment, you need to:
   3. tinytex:::install_yihui_pkgs()
 5. re-start RStudio
 6. install devtools by running `install.packages("devtools")`
+7. run `devtools::install(dependencies = c("Imports", "Suggests", "Enhances"))` to install all the dependencies.
+
  
